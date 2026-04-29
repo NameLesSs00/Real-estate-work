@@ -1,0 +1,244 @@
+/* ===== Popular Spots Section ===== */
+.popular-spots-section {
+  padding: 100px 0 120px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.popular-spots-container {
+  max-width: 1280px;
+  width: 100%;
+  padding: 0 24px;
+}
+
+/* ===== Header ===== */
+.popular-spots-header {
+  text-align: center;
+  margin-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.popular-spots-tag {
+  font-family: var(--font-poppins);
+  color: #c7b7a1;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.popular-spots-title {
+  font-family: var(--font-radley);
+  color: #1b2134;
+  font-size: 48px;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+
+.popular-spots-title span {
+  color: #c7b7a1;
+}
+
+.popular-spots-subtitle {
+  font-family: var(--font-poppins);
+  color: #555555;
+  font-size: 17px;
+  max-width: 680px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.popular-spots-accent-line {
+  width: 160px;
+  height: 4px;
+  background-color: #c7b7a1;
+  border-radius: 2px;
+}
+
+/* ===== Grid ===== */
+/*
+  Layout (3 columns, 2 rows):
+  Col 1 (~27%): El Guona (row 1) | Soma Bay (row 2)
+  Col 2 (~37%): Sahl Hasheesh (row 1) | Makadi Heights (row 2)
+  Col 3 (~36%): Hurghada South (spans both rows)
+*/
+.popular-spots-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1.35fr;
+  grid-template-rows: 270px 260px;
+  gap: 18px;
+}
+
+/* ===== Cards ===== */
+.spot-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  display: block;
+}
+
+.spot-card:hover .spot-card-img {
+  transform: scale(1.06);
+}
+
+.spot-card:hover .spot-card-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.18) 55%,
+    transparent 100%
+  );
+}
+
+/* Column / row placements */
+.spot-card--el-guona {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.spot-card--sahl-hasheesh {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.spot-card--hurghada {
+  grid-column: 3;
+  grid-row: 1 / 3; /* spans both rows */
+}
+
+.spot-card--soma-bay {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.spot-card--makadi {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Image wrapper */
+.spot-card-image-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.spot-card-img {
+  object-fit: cover;
+  transition: transform 0.55s ease;
+}
+
+/* Dark gradient overlay at bottom */
+.spot-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.12) 50%,
+    transparent 100%
+  );
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+/* Text over image */
+.spot-card-info {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: #ffffff;
+  z-index: 2;
+}
+
+.spot-card-name {
+  font-family: var(--font-poppins);
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Hurghada (tall card) has bigger text */
+.spot-card--hurghada .spot-card-name {
+  font-size: 22px;
+}
+
+.spot-card-count {
+  font-family: var(--font-poppins);
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.92;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .popular-spots-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 240px 240px 380px;
+  }
+
+  .spot-card--el-guona {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .spot-card--sahl-hasheesh {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .spot-card--soma-bay {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .spot-card--makadi {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .spot-card--hurghada {
+    grid-column: 1 / 3;
+    grid-row: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .popular-spots-section {
+    padding: 70px 0 80px;
+  }
+
+  .popular-spots-title {
+    font-size: 34px;
+  }
+
+  .popular-spots-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(5, 240px);
+    gap: 14px;
+  }
+
+  .spot-card--el-guona,
+  .spot-card--sahl-hasheesh,
+  .spot-card--hurghada,
+  .spot-card--soma-bay,
+  .spot-card--makadi {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .spot-card--hurghada {
+    grid-row: auto;
+  }
+}
