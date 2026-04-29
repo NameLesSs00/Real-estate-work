@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 import './ExploreUnits.css';
@@ -73,6 +75,8 @@ const tabs = [
 ];
 
 const ExploreUnits = () => {
+  const [activeTab, setActiveTab] = useState(0);
+
   return (
     <section className="explore-units-section">
       <div className="explore-units-container">
@@ -88,7 +92,11 @@ const ExploreUnits = () => {
 
         <div className="explore-tabs">
           {tabs.map((tab, index) => (
-            <button key={index} className={`explore-tab ${tab.active ? 'active' : ''}`}>
+            <button 
+              key={index} 
+              className={`explore-tab ${activeTab === index ? 'active' : ''}`}
+              onClick={() => setActiveTab(index)}
+            >
               <Image 
                 src={tab.icon} 
                 alt={tab.name} 

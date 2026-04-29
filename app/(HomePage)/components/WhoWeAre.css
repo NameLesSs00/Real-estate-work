@@ -1,0 +1,173 @@
+.who-we-are-section {
+  padding: 100px 0;
+  background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.who-we-are-container {
+  max-width: 1280px;
+  width: 100%;
+  padding: 0 24px;
+  z-index: 2;
+}
+
+.who-we-are-header {
+  text-align: center;
+  margin-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.who-we-are-tag {
+  font-family: var(--font-poppins);
+  color: #c7b7a1;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 2.8px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.who-we-are-title {
+  font-family: var(--font-radley);
+  color: #1b2134;
+  font-size: 48px;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+.who-we-are-subtitle {
+  font-family: var(--font-poppins);
+  color: #555555;
+  font-size: 18px;
+  max-width: 800px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.who-we-are-accent-line {
+  width: 160px;
+  height: 4px;
+  background-color: #c7b7a1;
+  border-radius: 2px;
+}
+
+.who-we-are-content {
+  display: flex;
+  gap: 60px;
+  align-items: stretch;
+}
+
+.who-we-are-images {
+  flex: 1;
+  position: relative;
+}
+
+.who-we-are-main-img {
+  object-fit: contain;
+  border-radius: 20px;
+}
+
+.who-we-are-info-box {
+  flex: 1;
+  background-color: #1b2134;
+  padding: 60px;
+  border-radius: 20px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-item-title {
+  font-family: var(--font-allura);
+  color: #c7b7a1;
+  font-size: 44px;
+  line-height: 1;
+}
+
+.info-item-text {
+  font-family: var(--font-poppins);
+  color: #ffffff;
+  font-size: 18px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.view-more-btn-wrapper {
+  margin-top: 10px;
+}
+
+.view-more-btn {
+  background-color: #ffffff;
+  color: #1b2134;
+  padding: 14px 40px;
+  border-radius: 50px;
+  font-family: var(--font-poppins);
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-more-btn:hover {
+  background-color: #c7b7a1;
+  color: #ffffff;
+}
+
+.bg-ellipse-1 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: auto;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.bg-ellipse-2 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 250px;
+  height: auto;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+@media (max-width: 1024px) {
+  .who-we-are-content {
+    flex-direction: column;
+  }
+  
+  .who-we-are-info-box {
+    padding: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .who-we-are-title {
+    font-size: 32px;
+  }
+  
+  .info-item-title {
+    font-size: 36px;
+  }
+  
+  .info-item-text {
+    font-size: 16px;
+  }
+}

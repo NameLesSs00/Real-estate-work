@@ -1,1 +1,0 @@
-now i wouldl like to create the next section that is articles.png for this one it gonaa be a bit harder to create si i have given you the iamges pre cuted so that you could use them as them you just need to recreate the design you will find the needed iamges in the corsponding folder and you will also find the design and please follow it just as it is 

@@ -68,29 +68,36 @@
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
+  gap: 24px;
 }
 
 .category-card {
   background-color: #ffffff;
-  border-radius: 12px;
+  border-radius: 16px;
+  border: 1px solid #e8e8e8;
   overflow: hidden;
   display: flex;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  align-items: stretch;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  height: 200px;
+  height: 160px;
+  position: relative;
 }
 
 .category-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .category-image-wrapper {
-  width: 40%;
+  width: 200px;
+  min-width: 200px;
+  height: 100%;
   position: relative;
   overflow: hidden;
+  border-radius: 0;
+  flex-shrink: 0;
 }
 
 .category-image {
@@ -99,12 +106,12 @@
 }
 
 .category-card:hover .category-image {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .category-content {
-  width: 60%;
-  padding: 30px;
+  flex: 1;
+  padding: 28px 32px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -113,15 +120,16 @@
 .category-name {
   font-family: var(--font-poppins);
   color: #1b2134;
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 8px;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .category-count {
   font-family: var(--font-poppins);
-  color: #888888;
+  color: #999999;
   font-size: 16px;
+  font-weight: 400;
 }
 
 @media (max-width: 1024px) {
@@ -140,15 +148,39 @@
   }
   
   .category-card {
-    height: auto;
-    flex-direction: column;
+    height: 140px;
+  }
+
+  .category-image-wrapper {
+    width: 160px;
+    min-width: 160px;
+    height: 100%;
+  }
+
+  .category-name {
+    font-size: 20px;
   }
   
+  .category-content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-card {
+    flex-direction: column;
+    height: auto;
+    overflow: hidden;
+  }
+
   .category-image-wrapper {
     width: 100%;
-    height: 200px;
+    min-width: 100%;
+    height: 160px;
+    margin-left: 0;
+    border-radius: 12px 12px 0 0;
   }
-  
+
   .category-content {
     width: 100%;
     padding: 20px;

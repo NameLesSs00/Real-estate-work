@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const Hero = () => {
   return (
-    <section className="relative w-full h-screen flex flex-col items-center justify-center pt-20">
+    <section className="relative w-full min-h-screen flex flex-col items-center justify-center pt-20 pb-20">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -12,7 +12,10 @@ const Hero = () => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/20"></div>
+        <div 
+          className="absolute inset-0 mix-blend-screen" 
+          style={{ background: 'linear-gradient(180deg, rgba(217, 217, 217, 0) 0%, rgba(115, 115, 115, 0.7) 100%)' }}
+        ></div>
       </div>
 
       {/* Hero Content */}

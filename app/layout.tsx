@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Work_Sans, Radley } from "next/font/google";
+import { Poppins, Work_Sans, Radley, Allura } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -22,6 +22,12 @@ const radley = Radley({
   weight: ["400"],
 });
 
+const allura = Allura({
+  variable: "--font-allura",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
 export const metadata: Metadata = {
   title: "Modern Real Estate",
   description: "Find your dream home with our premium real estate services.",
@@ -35,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} ${workSans.variable} ${radley.variable} h-full antialiased`}
+      className={`${poppins.variable} ${workSans.variable} ${radley.variable} ${allura.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-poppins">
         <Header />
