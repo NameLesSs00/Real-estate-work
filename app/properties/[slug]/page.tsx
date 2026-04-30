@@ -3,10 +3,10 @@ import Image from "next/image";
 // Icons and Images
 import locationIcon from "@/public/assists/PropertyDetails/location.png";
 import mainImg from "@/public/assists/PropertyDetails/mainImg.png";
-import img1 from "@/public/assists/PropertyDetails/img1.PNG";
-import img2 from "@/public/assists/PropertyDetails/img2.PNG";
-import img3 from "@/public/assists/PropertyDetails/img3.PNG";
-import img4 from "@/public/assists/PropertyDetails/img4.PNG";
+import img1 from "@/public/assists/PropertyDetails/img1.png";
+import img2 from "@/public/assists/PropertyDetails/img2.png";
+import img3 from "@/public/assists/PropertyDetails/img3.png";
+import img4 from "@/public/assists/PropertyDetails/img4.png";
 
 import bedIcon from "@/public/assists/PropertyDetails/lucide_bed.png";
 import bathIcon from "@/public/assists/PropertyDetails/cil_bath.png";
