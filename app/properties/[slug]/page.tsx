@@ -1,27 +1,26 @@
 import Image from "next/image";
 import { Home, ArrowLeft, ArrowRight } from "lucide-react";
 
-// Icons and Images
-import locationIcon from "../../../public/assists/PropertyDetails/location.png";
-import mainImg from "../../../public/assists/PropertyDetails/mainImg.png";
-import img1 from "../../../public/assists/PropertyDetails/img1.png";
-import img2 from "../../../public/assists/PropertyDetails/img2.png";
-import img3 from "../../../public/assists/PropertyDetails/img3.png";
-import img4 from "../../../public/assists/PropertyDetails/img4.png";
-
-import bedIcon from "../../../public/assists/PropertyDetails/lucide_bed.png";
-import bathIcon from "../../../public/assists/PropertyDetails/cil_bath.png";
-import carIcon from "../../../public/assists/PropertyDetails/ion_car-sport-outline.png";
-import sizeIcon from "../../../public/assists/PropertyDetails/fluent_slide-size-24-regular.png";
-import calendarIcon from "../../../public/assists/PropertyDetails/uil_calender.png";
-import homeIcon from "../../../public/assists/PropertyDetails/home-2.png";
-import checkIcon from "../../../public/assists/PropertyDetails/weui_done2-outlined.png";
-import starIcon from "../../../public/assists/PropertyDetails/Star 1.png";
-import profileImg from "../../../public/assists/PropertyDetails/profile.png";
-import sendIcon from "../../../public/assists/PropertyDetails/send.png";
-import arrowLeft from "../../../public/assists/PropertyDetails/famicons_arrow-back-outline.png";
-import arrowRight from "../../../public/assists/PropertyDetails/famicons_arrow-back-outline (1).png";
-import groupQuoteIcon from "../../../public/assists/PropertyDetails/Group.png";
+// Static asset URL paths — files in /public are served by the web server,
+// they must NOT be imported as ES modules (this also avoids git case issues).
+const BASE = "/assists/PropertyDetails";
+const locationIcon   = `${BASE}/location.png`;
+const mainImg        = `${BASE}/mainImg.png`;
+const img1           = `${BASE}/img1.png`;
+const img2           = `${BASE}/img2.png`;
+const img3           = `${BASE}/img3.png`;
+const img4           = `${BASE}/img4.png`;
+const bedIcon        = `${BASE}/lucide_bed.png`;
+const bathIcon       = `${BASE}/cil_bath.png`;
+const carIcon        = `${BASE}/ion_car-sport-outline.png`;
+const sizeIcon       = `${BASE}/fluent_slide-size-24-regular.png`;
+const calendarIcon   = `${BASE}/uil_calender.png`;
+const homeIcon       = `${BASE}/home-2.png`;
+const checkIcon      = `${BASE}/weui_done2-outlined.png`;
+const starIcon       = `${BASE}/Star 1.png`;
+const profileImg     = `${BASE}/profile.png`;
+const sendIcon       = `${BASE}/send.png`;
+const groupQuoteIcon = `${BASE}/Group.png`;
 
 type Props = {
   params: Promise<{ slug: string }>;
