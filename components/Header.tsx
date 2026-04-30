@@ -34,30 +34,40 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-2">
-            <Link
-              href="/"
-              className="px-6 py-2 bg-[#F8F5F0] rounded-[30px] text-[18px] font-medium text-brand-primary"
-            >
-              Home
-            </Link>
-            <div className="flex items-center gap-10 ml-6">
-              <Link href="#projects" className="flex items-center gap-2 text-[18px] font-medium text-brand-primary">
-                Projects
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
+          <nav className="hidden lg:flex items-center gap-12">
+            <div className="flex items-center gap-10">
+              <Link
+                href="/"
+                className="text-[18px] font-medium text-brand-primary"
+              >
+                Home
               </Link>
-              <Link href="#about" className="text-[18px] font-medium text-brand-primary">About Us</Link>
-              <Link href="#properties" className="flex items-center gap-2 text-[18px] font-medium text-brand-primary">
-                Properties
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </Link>
-              <Link href="#contact" className="text-[18px] font-medium text-brand-primary">Contact Us</Link>
-              <Link href="#blogs" className="text-[18px] font-medium text-brand-primary">Blogs</Link>
+              <div className="flex items-center gap-6">
+                <Link href="#projects" className="flex items-center gap-2 text-[18px] font-medium text-brand-primary">
+                  Projects
+                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </Link>
+                <Link href="#about" className="text-[18px] font-medium text-brand-primary">About Us</Link>
+                <Link href="#properties" className="flex items-center gap-2 text-[18px] font-medium text-brand-primary">
+                  Properties
+                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </Link>
+                <Link href="#contact" className="text-[18px] font-medium text-brand-primary">Contact Us</Link>
+                <Link href="#blogs" className="text-[18px] font-medium text-brand-primary">Blogs</Link>
+              </div>
             </div>
+
+            {/* List Your Property Button */}
+            <Link 
+              href="/list-property"
+              className="bg-brand-primary text-white px-8 py-3 rounded-full text-[16px] font-medium hover:bg-brand-secondary transition-colors"
+            >
+              List Your Property
+            </Link>
           </nav>
 
           {/* Mobile Hamburger Menu */}
