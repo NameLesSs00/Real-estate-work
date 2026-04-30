@@ -27,7 +27,7 @@ type Props = {
 };
 
 // Mock data that would normally come from an API endpoint
-const getPropertyData = async (_slug: string) => {
+const getPropertyData = async () => {
   return {
     id: "HZ28",
     title: "Modern Sea View Apartment",
@@ -75,8 +75,8 @@ Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming 
 };
 
 export default async function PropertyDetailsPage({ params }: Props) {
-  const { slug } = await params;
-  const data = await getPropertyData(slug);
+  await params;
+  const data = await getPropertyData();
 
   return (
     <div className="container mx-auto px-4 pt-32 pb-16 lg:pb-24 max-w-7xl">
