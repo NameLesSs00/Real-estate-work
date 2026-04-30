@@ -1,13 +1,12 @@
 import Image from "next/image";
-import Link from "next/link";
 
 // Icons and Images
 import locationIcon from "@/public/assists/PropertyDetails/location.png";
 import mainImg from "@/public/assists/PropertyDetails/mainImg.png";
-import img1 from "@/public/assists/PropertyDetails/img1.PNG";
-import img2 from "@/public/assists/PropertyDetails/img2.PNG";
-import img3 from "@/public/assists/PropertyDetails/img3.PNG";
-import img4 from "@/public/assists/PropertyDetails/img4.PNG";
+import img1 from "@/public/assists/PropertyDetails/img1.png";
+import img2 from "@/public/assists/PropertyDetails/img2.png";
+import img3 from "@/public/assists/PropertyDetails/img3.png";
+import img4 from "@/public/assists/PropertyDetails/img4.png";
 
 import bedIcon from "@/public/assists/PropertyDetails/lucide_bed.png";
 import bathIcon from "@/public/assists/PropertyDetails/cil_bath.png";
@@ -22,7 +21,6 @@ import sendIcon from "@/public/assists/PropertyDetails/send.png";
 import arrowLeft from "@/public/assists/PropertyDetails/famicons_arrow-back-outline.png";
 import arrowRight from "@/public/assists/PropertyDetails/famicons_arrow-back-outline (1).png";
 
-import homeOutline from "@/public/assists/PropertyDetails/home-2.png"; // We can reuse or use standard icon
 import { Home } from "lucide-react";
 
 type Props = {
@@ -30,7 +28,7 @@ type Props = {
 };
 
 // Mock data that would normally come from an API endpoint
-const getPropertyData = async (slug: string) => {
+const getPropertyData = async (_slug: string) => {
   return {
     id: "HZ28",
     title: "Modern Sea View Apartment",
@@ -233,7 +231,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   <Image src={arrowLeft} alt="Previous" className="w-6 h-6 invert" />
                 </button>
                 <div className="bg-[#fcfbf9] rounded-[2rem] p-8 shadow-sm flex-grow max-w-md relative">
-                  <div className="absolute top-8 right-8 text-6xl text-brand-primary opacity-20 font-serif leading-none">"</div>
+                  <div className="absolute top-8 right-8 text-6xl text-brand-primary opacity-20 font-serif leading-none">&quot;</div>
                   <div className="flex items-center gap-4 mb-4">
                     <Image src={data.reviews.featured.avatar} alt={data.reviews.featured.name} className="w-14 h-14 rounded-full" />
                     <div>
