@@ -1,26 +1,26 @@
 import Image from "next/image";
 
 // Icons and Images
-import locationIcon from "@/public/assists/PropertyDetails/location.png";
-import mainImg from "@/public/assists/PropertyDetails/mainImg.png";
-import img1 from "@/public/assists/PropertyDetails/img1.png";
-import img2 from "@/public/assists/PropertyDetails/img2.png";
-import img3 from "@/public/assists/PropertyDetails/img3.png";
-import img4 from "@/public/assists/PropertyDetails/img4.png";
+import locationIcon from "../../../public/assists/PropertyDetails/location.png";
+import mainImg from "../../../public/assists/PropertyDetails/mainImg.png";
+import img1 from "../../../public/assists/PropertyDetails/img1.png";
+import img2 from "../../../public/assists/PropertyDetails/img2.png";
+import img3 from "../../../public/assists/PropertyDetails/img3.png";
+import img4 from "../../../public/assists/PropertyDetails/img4.png";
 
-import bedIcon from "@/public/assists/PropertyDetails/lucide_bed.png";
-import bathIcon from "@/public/assists/PropertyDetails/cil_bath.png";
-import carIcon from "@/public/assists/PropertyDetails/ion_car-sport-outline.png";
-import sizeIcon from "@/public/assists/PropertyDetails/fluent_slide-size-24-regular.png";
-import calendarIcon from "@/public/assists/PropertyDetails/uil_calender.png";
-import homeIcon from "@/public/assists/PropertyDetails/home-2.png";
-import checkIcon from "@/public/assists/PropertyDetails/weui_done2-outlined.png";
-import starIcon from "@/public/assists/PropertyDetails/Star 1.png";
-import profileImg from "@/public/assists/PropertyDetails/profile.png";
-import sendIcon from "@/public/assists/PropertyDetails/send.png";
-import arrowLeft from "@/public/assists/PropertyDetails/famicons_arrow-back-outline.png";
-import arrowRight from "@/public/assists/PropertyDetails/famicons_arrow-back-outline (1).png";
-import groupQuoteIcon from "@/public/assists/PropertyDetails/Group.png";
+import bedIcon from "../../../public/assists/PropertyDetails/lucide_bed.png";
+import bathIcon from "../../../public/assists/PropertyDetails/cil_bath.png";
+import carIcon from "../../../public/assists/PropertyDetails/ion_car-sport-outline.png";
+import sizeIcon from "../../../public/assists/PropertyDetails/fluent_slide-size-24-regular.png";
+import calendarIcon from "../../../public/assists/PropertyDetails/uil_calender.png";
+import homeIcon from "../../../public/assists/PropertyDetails/home-2.png";
+import checkIcon from "../../../public/assists/PropertyDetails/weui_done2-outlined.png";
+import starIcon from "../../../public/assists/PropertyDetails/Star 1.png";
+import profileImg from "../../../public/assists/PropertyDetails/profile.png";
+import sendIcon from "../../../public/assists/PropertyDetails/send.png";
+import arrowLeft from "../../../public/assists/PropertyDetails/famicons_arrow-back-outline.png";
+import arrowRight from "../../../public/assists/PropertyDetails/famicons_arrow-back-outline (1).png";
+import groupQuoteIcon from "../../../public/assists/PropertyDetails/Group.png";
 
 import { Home, ArrowLeft, ArrowRight } from "lucide-react";
 
