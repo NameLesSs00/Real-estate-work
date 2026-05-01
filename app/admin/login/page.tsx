@@ -1,14 +1,34 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (username === 'aaa' && password === 'kiki') {
+      // Simulate a small loading delay for a better feel
+      router.push('/admin/dashboard');
+    } else {
+      setError('Invalid username or password');
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-white font-inter overflow-x-hidden">
-      {/* Main Container - The "dev" container */}
+      {/* Main Container */}
       <div className="relative w-full max-w-[850px] mx-4 pt-10 pb-20">
         
-        {/* The White Circle Shape from Figma (260x260) */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[260px] bg-white rounded-full z-20 flex items-end justify-center pb-8">
+        {/* The Single White Circle Shape (260x260) */}
+        <div className="absolute top-[-125px] left-1/2 -translate-x-1/2 w-[260px] h-[260px] bg-white rounded-full z-20 flex items-end justify-center pb-10">
            <div className="relative w-48 h-20 mb-2">
               <Image 
                 src="/admin/login/logo.png" 
@@ -21,11 +41,9 @@ export default function LoginPage() {
         </div>
 
         {/* Login Card */}
-        <div className="bg-[#16273B] rounded-[50px] pt-40 pb-24 px-16 md:px-32 shadow-2xl relative overflow-hidden">
-          {/* Background circle cutout effect to create the "U" shape */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[260px] bg-white rounded-full z-10 shadow-inner"></div>
-          
-          <form className="space-y-6 mt-4 relative z-20">
+        <div className="bg-[#16273B] rounded-[50px] pt-40 pb-24 px-16 md:px-32 shadow-2xl relative">
+          {/* Form Content */}
+          <form onSubmit={handleSubmit} className="space-y-6 mt-4 relative z-20">
             {/* Username Field */}
             <div className="space-y-2">
               <label htmlFor="username" className="text-white text-lg font-medium block ml-1">
@@ -38,8 +56,11 @@ export default function LoginPage() {
                 <input
                   type="text"
                   id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   placeholder="Username"
                   className="w-full bg-white rounded-xl py-3.5 pl-14 pr-6 text-[#16273B] placeholder-[#D1D5DC] focus:outline-none focus:ring-2 focus:ring-white/20 transition-all font-inter text-base"
+                  required
                 />
               </div>
             </div>
@@ -56,17 +77,24 @@ export default function LoginPage() {
                 <input
                   type="password"
                   id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                   className="w-full bg-white rounded-xl py-3.5 pl-14 pr-6 text-[#16273B] placeholder-[#D1D5DC] focus:outline-none focus:ring-2 focus:ring-white/20 transition-all font-inter text-base"
+                  required
                 />
               </div>
             </div>
 
-            {/* Login Button */}
+            {error && (
+              <p className="text-red-400 text-sm ml-1 animate-pulse">{error}</p>
+            )}
+
+            {/* Login Button with animations */}
             <div className="pt-6">
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-[2px] bg-white text-[#16273B] font-bold h-[45px] p-2 rounded-[16px] hover:bg-white/95 transition-all text-xl active:scale-[0.99] shadow-lg"
+                className="w-full flex items-center justify-center gap-[2px] bg-white text-[#16273B] font-bold h-[45px] p-2 rounded-[16px] transition-all duration-300 hover:bg-[#f8f8f8] hover:scale-[1.02] active:scale-[0.97] active:bg-[#eeeeee] shadow-lg text-xl"
                 style={{
                   display: 'flex',
                   height: '45px',
@@ -75,7 +103,6 @@ export default function LoginPage() {
                   alignItems: 'center',
                   gap: '2px',
                   borderRadius: '16px',
-                  background: '#FFF'
                 }}
               >
                 Login

@@ -1,4 +1,5 @@
 import React from 'react';
+import AdminLayoutWrapper from '@/components/admin/AdminLayoutWrapper';
 
 export default function AdminLayout({
   children,
@@ -6,8 +7,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#F8F9FA]">
+    <AdminLayoutWrapper>
       {children}
-    </div>
+    </AdminLayoutWrapper>
   );
 }
