@@ -1,26 +1,24 @@
 import Image from "next/image";
 import { Home, ArrowLeft, ArrowRight } from "lucide-react";
 
-// Static asset URL paths — files in /public are served by the web server,
-// they must NOT be imported as ES modules (this also avoids git case issues).
-const BASE = "/assists/PropertyDetails";
-const locationIcon   = `${BASE}/location.png`;
-const mainImg        = `${BASE}/mainImg.png`;
-const img1           = `${BASE}/img1.png`;
-const img2           = `${BASE}/img2.png`;
-const img3           = `${BASE}/img3.png`;
-const img4           = `${BASE}/img4.png`;
-const bedIcon        = `${BASE}/lucide_bed.png`;
-const bathIcon       = `${BASE}/cil_bath.png`;
-const carIcon        = `${BASE}/ion_car-sport-outline.png`;
-const sizeIcon       = `${BASE}/fluent_slide-size-24-regular.png`;
-const calendarIcon   = `${BASE}/uil_calender.png`;
-const homeIcon       = `${BASE}/home-2.png`;
-const checkIcon      = `${BASE}/weui_done2-outlined.png`;
-const starIcon       = `${BASE}/Star1.png`;
-const profileImg     = `${BASE}/profile.png`;
-const sendIcon       = `${BASE}/send.png`;
-const groupQuoteIcon = `${BASE}/Group.png`;
+// Static image imports — bundled at build time, zero HTTP requests on Vercel
+import imgMain       from "@/public/assists/PropertyDetails/mainImg.png";
+import imgGallery1   from "@/public/assists/PropertyDetails/img1.png";
+import imgGallery2   from "@/public/assists/PropertyDetails/img2.png";
+import imgGallery3   from "@/public/assists/PropertyDetails/img3.png";
+import imgGallery4   from "@/public/assists/PropertyDetails/img4.png";
+import icoLocation   from "@/public/assists/PropertyDetails/location.png";
+import icoBed        from "@/public/assists/PropertyDetails/lucide_bed.png";
+import icoBath       from "@/public/assists/PropertyDetails/cil_bath.png";
+import icoCar        from "@/public/assists/PropertyDetails/ion_car-sport-outline.png";
+import icoSize       from "@/public/assists/PropertyDetails/fluent_slide-size-24-regular.png";
+import icoCalendar   from "@/public/assists/PropertyDetails/uil_calender.png";
+import icoHome       from "@/public/assists/PropertyDetails/home-2.png";
+import icoCheck      from "@/public/assists/PropertyDetails/weui_done2-outlined.png";
+import icoStar       from "@/public/assists/PropertyDetails/Star1.png";
+import imgProfile    from "@/public/assists/PropertyDetails/profile.png";
+import icoSend       from "@/public/assists/PropertyDetails/send.png";
+import icoGroupQuote from "@/public/assists/PropertyDetails/Group.png";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -42,8 +40,8 @@ const getPropertyData = async () => {
     location: "El Gouna, Hurghada, Red Sea Governorate, Egypt",
     breadcrumbs: ["Home", "Apartment", "Property Details"],
     images: {
-      main: mainImg,
-      thumbnails: [img1, img2, img3, img4],
+      main: imgMain,
+      thumbnails: [imgGallery1, imgGallery2, imgGallery3, imgGallery4],
     },
     overview: {
       type: "Apartment",
@@ -75,7 +73,7 @@ Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming 
         name: "Cameron Williamson",
         role: "Designer",
         rating: 4.75,
-        avatar: profileImg,
+        avatar: imgProfile,
         text: "Searches for multiplexes, property comparisons, and the loan estimator. Works great. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dores.",
       }
     }
@@ -107,7 +105,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
           {data.title}
         </h1>
         <div className="flex items-center text-gray-500 text-lg">
-          <Image src={locationIcon} alt="Location" width={20} height={20} className="w-5 h-5 mr-3 opacity-70" />
+          <Image src={icoLocation} alt="Location" width={20} height={20} className="w-5 h-5 mr-3 opacity-70" />
           <span>{data.location}</span>
         </div>
       </div>
@@ -148,42 +146,42 @@ export default async function PropertyDetailsPage({ params }: Props) {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={homeIcon} alt="Type" width={32} height={32} className="w-8 h-8" />
+                  <Image src={icoHome} alt="Type" width={32} height={32} className="w-8 h-8" />
                 </div>
                 <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.type}</span>
                 <span className="text-gray-400 text-sm">Property Type</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={bedIcon} alt="Bedrooms" width={32} height={32} className="w-8 h-8" />
+                  <Image src={icoBed} alt="Bedrooms" width={32} height={32} className="w-8 h-8" />
                 </div>
                 <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.bedrooms}</span>
                 <span className="text-gray-400 text-sm">Bedrooms</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={bathIcon} alt="Bathrooms" width={32} height={32} className="w-8 h-8" />
+                  <Image src={icoBath} alt="Bathrooms" width={32} height={32} className="w-8 h-8" />
                 </div>
                 <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.bathrooms}</span>
                 <span className="text-gray-400 text-sm">Bathrooms</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={carIcon} alt="Garage" width={32} height={32} className="w-8 h-8" />
+                  <Image src={icoCar} alt="Garage" width={32} height={32} className="w-8 h-8" />
                 </div>
                 <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.garage}</span>
                 <span className="text-gray-400 text-sm">Garage</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={sizeIcon} alt="Area Size" width={32} height={32} className="w-8 h-8" />
+                  <Image src={icoSize} alt="Area Size" width={32} height={32} className="w-8 h-8" />
                 </div>
                 <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.area}</span>
                 <span className="text-gray-400 text-sm">Area Size</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={calendarIcon} alt="Year Built" width={32} height={32} className="w-8 h-8" />
+                  <Image src={icoCalendar} alt="Year Built" width={32} height={32} className="w-8 h-8" />
                 </div>
                 <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.year}</span>
                 <span className="text-gray-400 text-sm">Year Built</span>
@@ -208,7 +206,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
               {data.features.map((feature, index) => (
                 <div key={index} className="flex items-center text-gray-700 group">
                   <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center mr-4 group-hover:bg-brand-primary transition-colors">
-                    <Image src={checkIcon} alt="Check" width={14} height={14} className="w-3.5 h-3.5 group-hover:invert" />
+                    <Image src={icoCheck} alt="Check" width={14} height={14} className="w-3.5 h-3.5 group-hover:invert" />
                   </div>
                   <span className="text-lg">{feature}</span>
                 </div>
@@ -272,7 +270,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
               >
                 <span className="text-lg">Book a Visit</span>
                 <div className="bg-white/20 p-1.5 rounded-full ml-3 group-hover:translate-x-1 transition-transform">
-                  <Image src={sendIcon} alt="Send" width={16} height={16} className="w-4 h-4 invert" />
+                  <Image src={icoSend} alt="Send" width={16} height={16} className="w-4 h-4 invert" />
                 </div>
               </button>
             </form>
@@ -290,7 +288,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
               <div className="flex-1 flex flex-col items-center justify-center sm:border-r border-gray-100 sm:pr-8 mb-8 sm:mb-0">
                 <div className="flex items-center gap-4 mb-6">
                   <span className="text-7xl lg:text-8xl font-bold text-brand-primary tracking-tighter">4.5</span>
-                  <Image src={starIcon} alt="Star" width={48} height={48} className="w-12 h-12" />
+                  <Image src={icoStar} alt="Star" width={48} height={48} className="w-12 h-12" />
                 </div>
                 <button className="bg-[#1B2134] text-white px-8 py-3 rounded-2xl text-sm font-bold shadow-xl hover:bg-brand-secondary transition-all">
                   653 reviews
@@ -300,7 +298,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 {[5, 4, 3, 2, 1].map((star) => (
                   <div key={star} className="flex items-center gap-3 text-sm font-bold text-gray-400">
                     <span className="w-3 text-right">{star}</span>
-                    <Image src={starIcon} alt="Star" width={16} height={16} className="w-4 h-4 opacity-40" />
+                    <Image src={icoStar} alt="Star" width={16} height={16} className="w-4 h-4 opacity-40" />
                     <div className="flex-grow h-2 bg-gray-50 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-[#FFB800] rounded-full" 
@@ -322,7 +320,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
               {/* Featured Review Card */}
               <div className="bg-[#FCFBF9] rounded-[2.5rem] p-8 lg:p-12 shadow-sm border border-[#F2EFE9] flex-1 w-full relative flex flex-col h-full justify-center">
                 <div className="absolute top-10 right-10 w-12 h-12 opacity-80">
-                  <Image src={groupQuoteIcon} alt="Quote" width={48} height={48} className="w-full h-full object-contain" />
+                  <Image src={icoGroupQuote} alt="Quote" width={48} height={48} className="w-full h-full object-contain" />
                 </div>
                 
                 <div className="flex items-center gap-6 mb-8 relative z-10">
@@ -333,7 +331,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     <h4 className="font-bold text-brand-primary text-2xl mb-1">{data.reviews.featured.name}</h4>
                     <p className="text-lg text-gray-400 mb-2">{data.reviews.featured.role}</p>
                     <div className="flex items-center gap-2">
-                      <Image src={starIcon} alt="Star" width={24} height={24} className="w-6 h-6" />
+                      <Image src={icoStar} alt="Star" width={24} height={24} className="w-6 h-6" />
                       <span className="text-2xl font-bold text-brand-primary">4.75</span>
                     </div>
                   </div>
@@ -364,7 +362,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <div key={star} className="p-1 cursor-pointer">
-                  <Image src={starIcon} alt="Star" width={20} height={20} className="w-5 h-5 opacity-20 grayscale hover:grayscale-0 hover:opacity-100 transition-all" />
+                  <Image src={icoStar} alt="Star" width={20} height={20} className="w-5 h-5 opacity-20 grayscale hover:grayscale-0 hover:opacity-100 transition-all" />
                 </div>
               ))}
             </div>
