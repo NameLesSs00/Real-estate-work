@@ -40,8 +40,10 @@ const Footer = () => {
               Projects <ChevronDown size={16} />
             </li>
             <li><Link href="#about" className="hover:text-white transition-colors">About Us</Link></li>
-            <li className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
-              Properties <ChevronDown size={16} />
+            <li>
+              <Link href="/properties" className="flex items-center gap-2 hover:text-white transition-colors">
+                Properties <ChevronDown size={16} />
+              </Link>
             </li>
             <li><Link href="#blogs" className="hover:text-white transition-colors">Blogs</Link></li>
             <li><Link href="#contact" className="hover:text-white transition-colors">Contact Us</Link></li>

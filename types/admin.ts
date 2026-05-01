@@ -8,3 +8,16 @@ export interface Unit {
   location: string;
   description?: string;
 }
+
+export interface Project {
+  id: number;
+  title: string;
+  developer: string;
+  location: string;
+  unitCount: number;
+  image: string;
+  description?: string;
+  price?: string;
+  deliveryDate?: string;
+  unitSize?: string;
+}

@@ -101,7 +101,7 @@ export default function UnitsPage() {
           </div>
           <button 
             onClick={handleOpenAddModal}
-            className="flex items-center gap-2 bg-[#16273B] hover:bg-[#1a304a] text-white px-8 py-4 rounded-full font-semibold transition-colors shadow-sm"
+            className="flex items-center gap-2 bg-[#16273B] hover:bg-[#1a304a] text-white px-8 py-4 rounded-full font-semibold transition-colors shadow-sm cursor-pointer"
           >
             <Image src="/admin/units/add.png" alt="Add" width={22} height={22} className="object-contain" />
             <span>Add New Unit</span>
@@ -129,12 +129,12 @@ export default function UnitsPage() {
               <span>Filter:</span>
             </div>
             
-            <button className="flex items-center justify-between gap-10 bg-white border border-gray-100 rounded-full py-4 px-8 shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap text-gray-600 min-w-[180px]">
+            <button className="flex items-center justify-between gap-10 bg-white border border-gray-100 rounded-full py-4 px-8 shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap text-gray-600 min-w-[180px] cursor-pointer">
               <span className="font-medium">All Status</span>
               <Image src="/admin/units/arrow-down.png" alt="Dropdown" width={18} height={18} className="opacity-60" />
             </button>
             
-            <button className="flex items-center justify-between gap-10 bg-white border border-gray-100 rounded-full py-4 px-8 shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap text-gray-600 min-w-[180px]">
+            <button className="flex items-center justify-between gap-10 bg-white border border-gray-100 rounded-full py-4 px-8 shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap text-gray-600 min-w-[180px] cursor-pointer">
               <span className="font-medium">All Types</span>
               <Image src="/admin/units/arrow-down.png" alt="Dropdown" width={18} height={18} className="opacity-60" />
             </button>

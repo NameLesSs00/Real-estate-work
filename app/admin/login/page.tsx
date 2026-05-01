@@ -14,7 +14,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
 
-    if (username === 'aaa' && password === 'kiki') {
+    if (username === 'admin' && password === 'aadmin') {
       // Simulate a small loading delay for a better feel
       router.push('/admin/dashboard');
     } else {

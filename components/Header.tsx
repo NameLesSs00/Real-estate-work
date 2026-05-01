@@ -9,7 +9,6 @@ const Header = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProjectsExpanded, setIsProjectsExpanded] = useState(true);
-  const [isPropertiesExpanded, setIsPropertiesExpanded] = useState(true);
 
   const subLocations = [
     ["El Gouna", "El kawther"],
@@ -55,7 +54,7 @@ const Header = () => {
                   </svg>
                 </Link>
                 <Link href="#about" className="text-[18px] font-medium text-brand-primary">About Us</Link>
-                <Link href="#properties" className="flex items-center gap-2 text-[18px] font-medium text-brand-primary">
+                <Link href="/properties" className="flex items-center gap-2 text-[18px] font-medium text-brand-primary">
                   Properties
                   <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -161,33 +160,14 @@ const Header = () => {
             </div>
 
             {/* Properties */}
-            <div className="flex flex-col">
-              <button 
-                className="flex items-center gap-3 text-[18px] font-medium text-[#1b2134] text-left outline-none"
-                onClick={() => setIsPropertiesExpanded(!isPropertiesExpanded)}
+            <div>
+              <Link 
+                href="/properties"
+                className="text-[18px] font-medium text-[#1b2134] text-left outline-none"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Properties
-                <svg className={`w-[14px] h-[8px] transition-transform duration-300 ${isPropertiesExpanded ? 'rotate-180' : ''}`} viewBox="0 0 12 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                  <path d="M1 1L6 6L11 1" />
-                </svg>
-              </button>
-              
-              {isPropertiesExpanded && (
-                <div className="mt-8 mb-4 px-4">
-                  <div className="w-full grid grid-cols-2">
-                    {subLocations.map((row, i) => (
-                      <React.Fragment key={i}>
-                        <div className={`py-4 text-center text-[15px] text-[#444] border-r border-[#e5e5e5] ${i !== subLocations.length - 1 ? 'border-b border-[#e5e5e5]' : ''}`}>
-                          {row[0]}
-                        </div>
-                        <div className={`py-4 text-center text-[15px] text-[#444] ${i !== subLocations.length - 1 ? 'border-b border-[#e5e5e5]' : ''}`}>
-                          {row[1]}
-                        </div>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
-              )}
+              </Link>
             </div>
 
             {/* Contact Us */}

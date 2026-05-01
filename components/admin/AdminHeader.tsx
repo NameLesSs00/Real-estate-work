@@ -55,7 +55,7 @@ export default function AdminHeader() {
       <div className="relative min-w-[50px] flex justify-end">
         <button 
           onClick={() => setShowNotifications(!showNotifications)}
-          className="p-2 relative text-white hover:text-gray-300 transition-colors"
+          className="p-2 relative text-white hover:text-gray-300 transition-colors cursor-pointer"
         >
           <Bell size={26} />
           {/* Notification Dot */}
@@ -80,7 +80,7 @@ export default function AdminHeader() {
                   </p>
                   <button 
                     onClick={() => setShowNotifications(false)}
-                    className="mt-6 w-full py-3 bg-[#F8F9FA] hover:bg-gray-100 text-[#16273B] font-medium rounded-xl transition-colors"
+                    className="mt-6 w-full py-3 bg-[#F8F9FA] hover:bg-gray-100 text-[#16273B] font-medium rounded-xl transition-colors cursor-pointer"
                   >
                     Got it
                   </button>
