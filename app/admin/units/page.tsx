@@ -1,8 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { MapPin } from 'lucide-react';
+import AddUnitModal from '@/components/admin/AddUnitModal';
+import DeleteUnitModal from '@/components/admin/DeleteUnitModal';
+import UnitDetailsModal from '@/components/admin/UnitDetailsModal';
 
 // Mock data based on the design
 const unitsData = [
@@ -63,6 +66,28 @@ const getStatusBadgeStyle = (status: string) => {
 };
 
 export default function UnitsPage() {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingUnit, setEditingUnit] = useState<any>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [unitToDelete, setUnitToDelete] = useState<any>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [viewingUnit, setViewingUnit] = useState<any>(null);
+
+  const handleOpenAddModal = () => {
+    setEditingUnit(null);
+    setIsAddModalOpen(true);
+  };
+
+  const handleOpenEditModal = (unit: any) => {
+    setEditingUnit(unit);
+    setIsAddModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsAddModalOpen(false);
+    setEditingUnit(null);
+  };
+
   return (
     <div className="p-10 min-h-screen font-inter" style={{ backgroundColor: '#F9F9F980' }}>
       <div className="max-w-[1450px] mx-auto space-y-10">
@@ -73,7 +98,10 @@ export default function UnitsPage() {
             <h2 className="text-[30px] font-bold text-[#16273B] mb-1">Units Management</h2>
             <p className="text-gray-500 text-base">Manage all property units</p>
           </div>
-          <button className="flex items-center gap-2 bg-[#16273B] hover:bg-[#1a304a] text-white px-8 py-4 rounded-full font-semibold transition-colors shadow-sm">
+          <button 
+            onClick={handleOpenAddModal}
+            className="flex items-center gap-2 bg-[#16273B] hover:bg-[#1a304a] text-white px-8 py-4 rounded-full font-semibold transition-colors shadow-sm"
+          >
             <Image src="/admin/units/add.png" alt="Add" width={22} height={22} className="object-contain" />
             <span>Add New Unit</span>
           </button>
@@ -114,8 +142,8 @@ export default function UnitsPage() {
 
         {/* Table Section */}
         <div className="bg-white rounded-[28px] shadow-sm border border-gray-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1100px] text-left border-collapse">
+          <div className="overflow-x-auto scrollbar-hide">
+            <table className="w-full min-w-[1100px] text-left border-collapse text-lg">
               <thead>
                 <tr className="border-b border-gray-100 text-[16px] font-bold text-[#16273B]">
                   <th className="py-7 px-10 whitespace-nowrap">Image</th>
@@ -164,13 +192,22 @@ export default function UnitsPage() {
                     </td>
                     <td className="py-7 px-10">
                       <div className="flex items-center justify-end gap-5">
-                        <button className="hover:scale-125 transition-transform duration-200">
+                        <button
+                          onClick={() => { setViewingUnit(unit); setIsDetailsModalOpen(true); }}
+                          className="hover:scale-125 transition-transform duration-200 cursor-pointer"
+                        >
                           <Image src="/admin/units/view.png" alt="View" width={28} height={28} className="object-contain" />
                         </button>
-                        <button className="hover:scale-125 transition-transform duration-200">
+                        <button 
+                          onClick={() => handleOpenEditModal(unit)}
+                          className="hover:scale-125 transition-transform duration-200 cursor-pointer"
+                        >
                           <Image src="/admin/units/edit.png" alt="Edit" width={28} height={28} className="object-contain" />
                         </button>
-                        <button className="hover:scale-125 transition-transform duration-200">
+                        <button 
+                          onClick={() => { setUnitToDelete(unit); setIsDeleteModalOpen(true); }}
+                          className="hover:scale-125 transition-transform duration-200 cursor-pointer"
+                        >
                           <Image src="/admin/units/delete.png" alt="Delete" width={28} height={28} className="object-contain" />
                         </button>
                       </div>
@@ -183,6 +220,30 @@ export default function UnitsPage() {
         </div>
 
       </div>
+
+      <AddUnitModal 
+        isOpen={isAddModalOpen} 
+        onClose={handleCloseModal}
+        editData={editingUnit}
+      />
+
+      <DeleteUnitModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => { setIsDeleteModalOpen(false); setUnitToDelete(null); }}
+        unitTitle={unitToDelete?.title}
+        onConfirm={() => {
+          // Placeholder for actual delete logic
+          console.log('Deleting unit:', unitToDelete?.id);
+          setIsDeleteModalOpen(false);
+          setUnitToDelete(null);
+        }}
+      />
+
+      <UnitDetailsModal
+        isOpen={isDetailsModalOpen}
+        onClose={() => { setIsDetailsModalOpen(false); setViewingUnit(null); }}
+        unit={viewingUnit}
+      />
     </div>
   );
 }

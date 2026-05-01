@@ -57,6 +57,12 @@ export default function DashboardPage() {
     <div className="p-10 min-h-screen font-inter" style={{ backgroundColor: '#F9F9F980' }}>
       <div className="max-w-[1400px] mx-auto">
         
+        {/* Dashboard Title & Subtitle */}
+        <div className="mb-10">
+          <h2 className="text-[32px] font-bold text-[#16273B] mb-2">Dashboard Overview</h2>
+          <p className="text-[#64748B] text-lg">Welcome back! Here's what's happening today.</p>
+        </div>
+
         {/* 4 Stat Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {stats.map((stat, idx) => (
