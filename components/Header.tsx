@@ -68,7 +68,7 @@ const Header = () => {
 
             {/* List Your Property Button */}
             <Link 
-              href="/list-property"
+              href="/admin/units"
               className="bg-brand-primary text-white px-8 py-3 rounded-full text-[16px] font-medium hover:bg-brand-secondary transition-colors"
             >
               List Your Property
