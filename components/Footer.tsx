@@ -1,8 +1,15 @@
+'use client';
+
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, Earth, MapPin, ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith('/admin')) return null;
+
   return (
     <footer className="bg-[#1B2134] text-white py-16 px-6 md:px-20 font-poppins">
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">

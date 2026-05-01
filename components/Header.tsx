@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProjectsExpanded, setIsProjectsExpanded] = useState(true);
   const [isPropertiesExpanded, setIsPropertiesExpanded] = useState(true);
@@ -14,6 +16,9 @@ const Header = () => {
     ["Arabia", "Al Ahyaa"],
     ["sheraton", "Makadi Bay"]
   ];
+
+  // Hide header on admin pages
+  if (pathname?.startsWith('/admin')) return null;
 
   return (
     <>
