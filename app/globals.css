@@ -29,3 +29,13 @@ body {
 .animate-loading-bar {
   animation: loading-bar 2s infinite ease-in-out;
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
