@@ -1,0 +1,125 @@
+.properties-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.properties-hero {
+  background-color: #ffffff;
+  padding: 180px 0 40px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.properties-hero-content {
+  max-width: 1200px;
+}
+
+.properties-hero-title {
+  font-family: var(--font-poppins);
+  color: #1b2134;
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.properties-hero-subtitle {
+  font-family: var(--font-poppins);
+  color: #949494;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 950px;
+}
+
+.properties-filters-wrapper {
+  padding: 0 20px;
+  width: 100%;
+}
+
+.properties-grid-section {
+  padding: 40px 0 100px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.properties-container {
+  max-width: 1536px;
+  width: 100%;
+  padding: 0 40px;
+}
+
+.properties-grid-header {
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.properties-grid-title {
+  font-family: var(--font-poppins);
+  color: #1b2134;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.properties-grid-subtitle {
+  font-family: var(--font-poppins);
+  color: #949494;
+  font-size: 16px;
+}
+
+.properties-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.load-more-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.load-more-button {
+  padding: 18px 40px;
+  border-radius: 50px;
+  border: 1.5px solid #1b2134;
+  background-color: transparent;
+  font-family: var(--font-poppins);
+  font-size: 18px;
+  font-weight: 600;
+  color: #1b2134;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.load-more-button:hover {
+  background-color: #1b2134;
+  color: #ffffff;
+}
+
+@media (max-width: 1200px) {
+  .properties-list-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .properties-hero-title {
+    font-size: 36px;
+  }
+  
+  .properties-list-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .properties-grid-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

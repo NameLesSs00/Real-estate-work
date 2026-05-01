@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { MapPin } from 'lucide-react';
+import PropertyCard from '@/components/PropertyCard';
 import './ExploreUnits.css';
 
 const units = [
@@ -111,44 +111,18 @@ const ExploreUnits = () => {
 
         <div className="units-grid">
           {units.map((unit, index) => (
-            <div key={index} className="unit-card">
-              <div className="unit-image-wrapper">
-                <Image
-                  src={unit.image}
-                  alt={unit.title}
-                  fill
-                  className="unit-image"
-                />
-                <div className="unit-price-tag">{unit.price}</div>
-                <div className="unit-status-tag">For Sale</div>
-              </div>
-              <div className="unit-content">
-                <h3 className="unit-title">{unit.title}</h3>
-                <div className="unit-details-grid">
-                  <div className="unit-detail">
-                    <Image src="/assists/card/buildings-2.png" alt="Type" width={24} height={24} className="unit-detail-icon" />
-                    <span>{unit.type}</span>
-                  </div>
-                  <div className="unit-detail">
-                    <MapPin size={24} className="unit-detail-icon" />
-                    <span>{unit.location}</span>
-                  </div>
-                  <div className="unit-detail">
-                    <Image src="/assists/card/lucide_bed.png" alt="Beds" width={24} height={24} className="unit-detail-icon" />
-                    <span>{unit.beds} Bedroom</span>
-                  </div>
-                  <div className="unit-detail">
-                    <Image src="/assists/card/cil_bath.png" alt="Baths" width={24} height={24} className="unit-detail-icon" />
-                    <span>{unit.baths} Bathroom</span>
-                  </div>
-                  <div className="unit-detail">
-                    <Image src="/assists/card/fluent_slide-size-24-regular.png" alt="Area" width={24} height={24} className="unit-detail-icon" />
-                    <span>{unit.area}</span>
-                  </div>
-                </div>
-                <button className="unit-button">View Details</button>
-              </div>
-            </div>
+            <PropertyCard
+              key={index}
+              title={unit.title}
+              type={unit.type}
+              location={unit.location}
+              price={unit.price}
+              beds={unit.beds}
+              baths={unit.baths}
+              area={unit.area}
+              image={unit.image}
+              status="For Sale"
+            />
           ))}
         </div>
 
