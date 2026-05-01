@@ -17,7 +17,7 @@ const sizeIcon       = `${BASE}/fluent_slide-size-24-regular.png`;
 const calendarIcon   = `${BASE}/uil_calender.png`;
 const homeIcon       = `${BASE}/home-2.png`;
 const checkIcon      = `${BASE}/weui_done2-outlined.png`;
-const starIcon       = `${BASE}/Star%201.png`;
+const starIcon       = `${BASE}/Star1.png`;
 const profileImg     = `${BASE}/profile.png`;
 const sendIcon       = `${BASE}/send.png`;
 const groupQuoteIcon = `${BASE}/Group.png`;
@@ -25,6 +25,14 @@ const groupQuoteIcon = `${BASE}/Group.png`;
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+// Required for Vercel static rendering of dynamic routes
+export async function generateStaticParams() {
+  return [
+    { slug: 'modern-sea-view-apartment' },
+    { slug: 'luxury-villa-with-pool-access' },
+  ];
+}
 
 // Mock data that would normally come from an API endpoint
 const getPropertyData = async () => {
