@@ -21,3 +21,12 @@ export interface Project {
   deliveryDate?: string;
   unitSize?: string;
 }
+
+export interface Developer {
+  id: number;
+  logo: string;
+  name: string;
+  contactEmail: string;
+  contactPhone: string;
+  projectCount: number;
+}
