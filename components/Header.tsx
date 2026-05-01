@@ -67,8 +67,8 @@ const Header = () => {
 
             {/* List Your Property Button */}
             <Link 
-              href="/admin/units"
-              className="bg-brand-primary text-white px-8 py-3 rounded-full text-[16px] font-medium hover:bg-brand-secondary transition-colors"
+              href="/list-property"
+              className="hidden lg:block bg-[#16273B] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#1a304a] transition-all whitespace-nowrap"
             >
               List Your Property
             </Link>
@@ -181,6 +181,17 @@ const Header = () => {
             <div>
               <Link href="#blogs" onClick={() => setIsMenuOpen(false)} className="text-[18px] font-medium text-[#1b2134]">
                 Blogs
+              </Link>
+            </div>
+
+            {/* List Your Property Button (Mobile) */}
+            <div className="mt-4">
+              <Link 
+                href="/list-property" 
+                onClick={() => setIsMenuOpen(false)}
+                className="block w-full bg-[#16273B] text-white text-center py-5 rounded-full font-bold text-[18px] shadow-lg active:scale-95 transition-all"
+              >
+                List Your Property
               </Link>
             </div>
 
