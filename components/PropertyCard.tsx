@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { MapPin } from 'lucide-react';
 import './PropertyCard.css';
 
@@ -62,7 +63,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             <span>{area}</span>
           </div>
         </div>
-        <button className="unit-button">View Details</button>
+        <Link 
+          href={`/properties/${title.toLowerCase().replace(/ /g, '-')}`}
+          className="unit-button text-center inline-block"
+        >
+          View Details
+        </Link>
       </div>
     </div>
   );
