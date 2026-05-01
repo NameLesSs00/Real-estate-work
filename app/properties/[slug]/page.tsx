@@ -1,24 +1,25 @@
 import Image from "next/image";
 import { Home, ArrowLeft, ArrowRight } from "lucide-react";
 
-// Static image imports — bundled at build time, zero HTTP requests on Vercel
-import imgMain       from "@/public/assists/PropertyDetails/mainImg.png";
-import imgGallery1   from "@/public/assists/PropertyDetails/img1.png";
-import imgGallery2   from "@/public/assists/PropertyDetails/img2.png";
-import imgGallery3   from "@/public/assists/PropertyDetails/img3.png";
-import imgGallery4   from "@/public/assists/PropertyDetails/img4.png";
-import icoLocation   from "@/public/assists/PropertyDetails/location.png";
-import icoBed        from "@/public/assists/PropertyDetails/lucide_bed.png";
-import icoBath       from "@/public/assists/PropertyDetails/cil_bath.png";
-import icoCar        from "@/public/assists/PropertyDetails/ion_car-sport-outline.png";
-import icoSize       from "@/public/assists/PropertyDetails/fluent_slide-size-24-regular.png";
-import icoCalendar   from "@/public/assists/PropertyDetails/uil_calender.png";
-import icoHome       from "@/public/assists/PropertyDetails/home-2.png";
-import icoCheck      from "@/public/assists/PropertyDetails/weui_done2-outlined.png";
-import icoStar       from "@/public/assists/PropertyDetails/Star1.png";
-import imgProfile    from "@/public/assists/PropertyDetails/profile.png";
-import icoSend       from "@/public/assists/PropertyDetails/send.png";
-import icoGroupQuote from "@/public/assists/PropertyDetails/Group.png";
+// Public folder assets — referenced by URL path, served directly by Next.js/Vercel
+const BASE            = "/assists/PropertyDetails";
+const icoLocation     = `${BASE}/location.png`;
+const imgMain         = `${BASE}/mainImg.png`;
+const imgGallery1     = `${BASE}/img1.PNG`;
+const imgGallery2     = `${BASE}/img2.PNG`;
+const imgGallery3     = `${BASE}/img3.PNG`;
+const imgGallery4     = `${BASE}/img4.PNG`;
+const icoBed          = `${BASE}/lucide_bed.png`;
+const icoBath         = `${BASE}/cil_bath.png`;
+const icoCar          = `${BASE}/ion_car-sport-outline.png`;
+const icoSize         = `${BASE}/fluent_slide-size-24-regular.png`;
+const icoCalendar     = `${BASE}/uil_calender.png`;
+const icoHome         = `${BASE}/home-2.png`;
+const icoCheck        = `${BASE}/weui_done2-outlined.png`;
+const icoStar         = `${BASE}/Star1.png`;
+const imgProfile      = `${BASE}/profile.png`;
+const icoSend         = `${BASE}/send.png`;
+const icoGroupQuote   = `${BASE}/Group.png`;
 
 type Props = {
   params: Promise<{ slug: string }>;
