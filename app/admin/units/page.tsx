@@ -6,9 +6,10 @@ import { MapPin } from 'lucide-react';
 import AddUnitModal from '@/components/admin/AddUnitModal';
 import DeleteUnitModal from '@/components/admin/DeleteUnitModal';
 import UnitDetailsModal from '@/components/admin/UnitDetailsModal';
+import { Unit } from '@/types/admin';
 
 // Mock data based on the design
-const unitsData = [
+const unitsData: Unit[] = [
   {
     id: 1,
     title: "Luxury Penthouse Suite",
@@ -67,18 +68,18 @@ const getStatusBadgeStyle = (status: string) => {
 
 export default function UnitsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [editingUnit, setEditingUnit] = useState<any>(null);
+  const [editingUnit, setEditingUnit] = useState<Unit | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [unitToDelete, setUnitToDelete] = useState<any>(null);
+  const [unitToDelete, setUnitToDelete] = useState<Unit | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [viewingUnit, setViewingUnit] = useState<any>(null);
+  const [viewingUnit, setViewingUnit] = useState<Unit | null>(null);
 
   const handleOpenAddModal = () => {
     setEditingUnit(null);
     setIsAddModalOpen(true);
   };
 
-  const handleOpenEditModal = (unit: any) => {
+  const handleOpenEditModal = (unit: Unit) => {
     setEditingUnit(unit);
     setIsAddModalOpen(true);
   };

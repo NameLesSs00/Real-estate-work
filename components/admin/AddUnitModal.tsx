@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
+import { Unit } from '@/types/admin';
 
 interface UnitModalProps {
   isOpen: boolean;
   onClose: () => void;
-  editData?: any; // Passing null or undefined means "Add Mode"
+  editData?: Unit | null; // Passing null or undefined means "Add Mode"
 }
 
 export default function AddUnitModal({ isOpen, onClose, editData }: UnitModalProps) {

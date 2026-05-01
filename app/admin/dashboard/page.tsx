@@ -60,7 +60,7 @@ export default function DashboardPage() {
         {/* Dashboard Title & Subtitle */}
         <div className="mb-10">
           <h2 className="text-[32px] font-bold text-[#16273B] mb-2">Dashboard Overview</h2>
-          <p className="text-[#64748B] text-lg">Welcome back! Here's what's happening today.</p>
+          <p className="text-[#64748B] text-lg">Welcome back! Here&apos;s what&apos;s happening today.</p>
         </div>
 
         {/* 4 Stat Cards */}

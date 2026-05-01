@@ -1,10 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
+import { Unit } from '@/types/admin';
 
 interface UnitDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  unit?: any;
+  unit?: Unit | null;
 }
 
 // Info card helper
