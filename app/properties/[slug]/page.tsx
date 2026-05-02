@@ -316,7 +316,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 
                 <div className="flex-grow relative z-10">
                   <p className="text-gray-600 text-lg lg:text-xl leading-[1.7] font-medium max-w-3xl">
-                    "This property exceeded all my expectations. The attention to detail and the quality of the finish are outstanding. I highly recommend it to anyone looking for a premium living experience."
+                    &quot;This property exceeded all my expectations. The attention to detail and the quality of the finish are outstanding. I highly recommend it to anyone looking for a premium living experience.&quot;
                   </p>
                 </div>
               </div>
