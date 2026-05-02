@@ -103,6 +103,7 @@ export default function PropertiesPage() {
             {units.map((unit, index) => (
               <PropertyCard
                 key={index}
+                id={index + 1}
                 title={unit.title}
                 type={unit.type}
                 location={unit.location}
