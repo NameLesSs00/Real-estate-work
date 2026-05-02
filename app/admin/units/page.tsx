@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import AddUnitModal from '@/components/admin/AddUnitModal';
 import DeleteUnitModal from '@/components/admin/DeleteUnitModal';
