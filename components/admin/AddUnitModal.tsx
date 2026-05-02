@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { addUnitToProject, updateUnit, ApiUnit } from '@/lib/api/projects';
+import { addUnitToProject, updateUnit, getUnitById, ApiUnit, UnitDetail } from '@/lib/api/projects';
 import { getProjects } from '@/lib/api/projects';
 
 interface AddUnitModalProps {
@@ -35,6 +35,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const [projects, setProjects] = useState<{ id: number; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fetchedDetail, setFetchedDetail] = useState<UnitDetail | null>(null);
 
   const isEditMode = !!editData;
 
@@ -72,30 +73,58 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     return parseInt(val, 10) || 0;
   };
 
-  // Populate form when editing
+  // Initialize or populate form when modal opens or editData changes
   useEffect(() => {
-    if (editData) {
-      setForm({
-        name: editData.name ?? '',
-        description: editData.description ?? '',
-        price: editData.price ?? 0,
-        propertyType: getPropertyTypeValue(editData.propertyType),
-        noBathRoom: editData.noBathRoom ?? 0,
-        noBedRoom: editData.noBedRoom ?? 0,
-        floorNumber: editData.floorNumber ?? 0,
-        area: editData.area ?? 0,
-        noKithchen: editData.noKitchen ?? 0,
-        floorName: editData.floorName ?? '',
-        view: editData.view ?? 0,
-        isFeatured: editData.isFeatured ?? false,
-        paymentPlans: [],
-      });
+    if (!isOpen) {
+      setForm(EMPTY_FORM);
+      setFetchedDetail(null);
+      setError('');
+      return;
+    }
+
+    if (isEditMode && editData) {
+      const loadEditData = async () => {
+        // First populate with list data
+        setForm({
+          name: editData.name ?? '',
+          description: editData.description ?? '',
+          price: editData.price ?? 0,
+          propertyType: getPropertyTypeValue(editData.propertyType),
+          noBathRoom: editData.noBathRoom ?? 0,
+          noBedRoom: editData.noBedRoom ?? 0,
+          floorNumber: editData.floorNumber ?? 0,
+          area: editData.area ?? 0,
+          noKithchen: editData.noKitchen ?? 0,
+          floorName: editData.floorName ?? '',
+          view: editData.view ?? 0,
+          isFeatured: editData.isFeatured ?? false,
+          paymentPlans: [], // Will be filled by fetch
+        });
+
+        // Then fetch full details for payment plans
+        try {
+          const detail = await getUnitById(editData.id);
+          setFetchedDetail(detail);
+          setForm(prev => ({
+            ...prev,
+            paymentPlans: (detail.paymentPlans || []).map(p => ({
+              installmentMonthes: (p as any).installmentMothes ?? (p as any).installmentMonthes ?? 0,
+              installmentDownPayment: p.installmentDownPayment ?? 0,
+              paymentType: p.paymentType ?? 'Installment'
+            }))
+          }));
+        } catch (err) {
+          console.error('[AddUnitModal] Failed to fetch unit detail', err);
+        }
+      };
+      loadEditData();
     } else {
       setForm(EMPTY_FORM);
       setSelectedProjectId(projectId ?? null);
+      setFetchedDetail(null);
     }
     setError('');
-  }, [editData, isOpen, projectId]);
+  }, [isOpen, editData, projectId]);
 
   if (!isOpen) return null;
 
@@ -112,6 +141,23 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const handleSubmit = async () => {
     if (!form.name.trim()) { setError('Unit name is required.'); return; }
     if (!isEditMode && !selectedProjectId) { setError('Please select a project.'); return; }
+    if (!form.area || Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
+    
+    // Validate and clean up payment plans
+    const validatedPlans = form.paymentPlans.map(p => {
+      const isCash = p.paymentType === 'Cash';
+      return {
+        installmentMonthes: isCash ? 0 : Number(p.installmentMonthes),
+        installmentDownPayment: isCash ? 0 : Number(p.installmentDownPayment),
+        paymentType: p.paymentType
+      };
+    });
+
+    if (validatedPlans.some(p => p.paymentType === 'Installment' && p.installmentMonthes <= 0)) {
+      setError('Installment plans must have months greater than 0.');
+      return;
+    }
+    
     setIsLoading(true); setError('');
     try {
       if (isEditMode && editData) {
@@ -125,7 +171,9 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           noBedRoom: Number(form.noBedRoom),
           noKitchen: Number(form.noKithchen),
           floorName: form.floorName,
+          view: Number(form.view),
           isFeatured: form.isFeatured,
+          paymentPlans: validatedPlans,
         });
       } else {
         await addUnitToProject({
@@ -142,11 +190,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             noKithchen: Number(form.noKithchen),
             floorName: form.floorName,
             view: Number(form.view),
-            paymentPlans: form.paymentPlans.map(p => ({
-              installmentMonthes: Number(p.installmentMonthes),
-              installmentDownPayment: Number(p.installmentDownPayment),
-              paymentType: p.paymentType
-            })),
+            paymentPlans: validatedPlans,
             isFeatured: form.isFeatured,
             facilityIds: [],
             servicesIds: [],
@@ -257,7 +301,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 type="button"
                 onClick={() => setForm(prev => ({
                   ...prev,
-                  paymentPlans: [...prev.paymentPlans, { installmentMonthes: 0, installmentDownPayment: 0, paymentType: '' }]
+                  paymentPlans: [...prev.paymentPlans, { installmentMonthes: 1, installmentDownPayment: 0, paymentType: 'Installment' }]
                 }))}
                 className="text-sm bg-gray-100 hover:bg-gray-200 text-[#16273B] px-3 py-1.5 rounded-lg font-medium transition-colors"
               >
@@ -276,11 +320,12 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                         value={plan.installmentMonthes}
                         onChange={(e) => {
                           const val = e.target.value === '' ? '' : Number(e.target.value);
-                          setForm(prev => {
-                            const newPlans = [...prev.paymentPlans];
-                            newPlans[index].installmentMonthes = val;
-                            return { ...prev, paymentPlans: newPlans };
-                          });
+                          setForm(prev => ({
+                            ...prev,
+                            paymentPlans: prev.paymentPlans.map((p, i) => 
+                              i === index ? { ...p, installmentMonthes: val } : p
+                            )
+                          }));
                         }}
                         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
                       />
@@ -293,11 +338,12 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                         value={plan.installmentDownPayment}
                         onChange={(e) => {
                           const val = e.target.value === '' ? '' : Number(e.target.value);
-                          setForm(prev => {
-                            const newPlans = [...prev.paymentPlans];
-                            newPlans[index].installmentDownPayment = val;
-                            return { ...prev, paymentPlans: newPlans };
-                          });
+                          setForm(prev => ({
+                            ...prev,
+                            paymentPlans: prev.paymentPlans.map((p, i) => 
+                              i === index ? { ...p, installmentDownPayment: val } : p
+                            )
+                          }));
                         }}
                         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
                       />
@@ -305,19 +351,22 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-gray-700">Payment Type</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Monthly, Quarterly"
+                    <select
                       value={plan.paymentType}
                       onChange={(e) => {
-                        setForm(prev => {
-                          const newPlans = [...prev.paymentPlans];
-                          newPlans[index].paymentType = e.target.value;
-                          return { ...prev, paymentPlans: newPlans };
-                        });
+                        const val = e.target.value;
+                        setForm(prev => ({
+                          ...prev,
+                          paymentPlans: prev.paymentPlans.map((p, i) => 
+                            i === index ? { ...p, paymentType: val } : p
+                          )
+                        }));
                       }}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
-                    />
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 bg-white"
+                    >
+                      <option value="Installment">Installment</option>
+                      <option value="Cash">Cash</option>
+                    </select>
                   </div>
                 </div>
                 <button

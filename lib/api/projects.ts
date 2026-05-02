@@ -18,6 +18,7 @@ export interface ApiUnit {
   view: number;
   isFeatured: boolean;
   imageUrls: string[];
+  paymentPlans?: PaymentPlan[];
 }
 
 export interface Project {
@@ -66,6 +67,7 @@ export interface PaymentPlan {
   installmentMonthes: number;
   installmentDownPayment: number;
   paymentType: string;
+  planStatus?: string;
 }
 
 export interface UnitPayload {
@@ -101,7 +103,9 @@ export interface UpdateUnitPayload {
   noBedRoom: number;
   noKitchen: number;
   floorName: string;
+  view: number;
   isFeatured: boolean;
+  paymentPlans?: PaymentPlan[];
 }
 
 // Rich unit from GET /api/Units/{id}

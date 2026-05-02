@@ -155,9 +155,10 @@ export default function UnitsPage() {
                 <tr className="border-b border-gray-50 text-[15px] font-bold text-[#16273B]">
                   <th className="py-7 px-10">Name</th>
                   <th className="py-7 px-4">Price</th>
-                  <th className="py-7 px-4 text-center">Beds</th>
+                   <th className="py-7 px-4 text-center">Beds</th>
                   <th className="py-7 px-4 text-center">Baths</th>
                   <th className="py-7 px-4 text-center">Area</th>
+                  <th className="py-7 px-4 text-center">Plans</th>
                   <th className="py-7 px-4 text-center">Featured</th>
                   <th className="py-7 px-10 text-right">Actions</th>
                 </tr>
@@ -185,8 +186,13 @@ export default function UnitsPage() {
                     <td className="py-6 px-4 text-center">
                       <span className="inline-flex px-4 py-1.5 rounded-full bg-[#F3E8FF] text-[#8200DB] text-[13px] font-bold">{unit.noBathRoom}</span>
                     </td>
-                    <td className="py-6 px-4 text-center">
+                     <td className="py-6 px-4 text-center">
                       <span className="text-[14px] text-[#64748B]">{unit.area} m²</span>
+                    </td>
+                    <td className="py-6 px-4 text-center">
+                      <span className={`inline-flex px-3 py-1 rounded-full text-[13px] font-bold ${unit.paymentPlans?.length ? 'bg-[#DCFCE7] text-[#166534]' : 'bg-gray-100 text-gray-400'}`}>
+                        {unit.paymentPlans?.length || 0} Plans
+                      </span>
                     </td>
                     <td className="py-6 px-4 text-center">
                       {unit.isFeatured
