@@ -11,7 +11,6 @@ const AdminSplash = () => {
           alt="Background Buildings"
           fill
           className="object-cover object-bottom pointer-events-none select-none grayscale invert contrast-125"
-          priority
         />
       </div>
 
@@ -23,7 +22,6 @@ const AdminSplash = () => {
             alt="The Gate Estates Logo"
             fill
             className="object-contain"
-            priority
           />
         </div>
       </div>

@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { handleLogout } from '@/lib/auth/logout';
 
 const menuItems = [
   { name: 'Dashboard', path: '/admin/dashboard', icon: '/admin/sidebar/home-2.png' },
@@ -68,9 +69,9 @@ export default function Sidebar() {
 
       {/* Logout Button */}
       <div className="px-6 pb-12 pt-4 mt-auto">
-        <Link 
-          href="/admin/login"
-          className="flex items-center gap-4 px-6 py-4 rounded-xl text-white transition-all duration-300 group hover:bg-white hover:text-[#16273B]"
+        <button 
+          onClick={() => handleLogout()}
+          className="w-full flex items-center gap-4 px-6 py-4 rounded-xl text-white transition-all duration-300 group hover:bg-white hover:text-[#16273B] cursor-pointer"
         >
           <div 
             className="w-6 h-6 bg-white transition-colors duration-300 group-hover:bg-[#16273B]"
@@ -80,7 +81,7 @@ export default function Sidebar() {
             }}
           />
           <span className="text-[17px] font-medium">Logout</span>
-        </Link>
+        </button>
       </div>
     </aside>
   );

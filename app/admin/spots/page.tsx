@@ -1,113 +1,119 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import AddSpotModal from '@/components/admin/AddSpotModal';
 import DeleteSpotModal from '@/components/admin/DeleteSpotModal';
-
-interface Spot {
-  id: number;
-  title: string;
-  location: string;
-  description: string;
-  image: string;
-}
-
-const mockSpots: Spot[] = [
-  {
-    id: 1,
-    title: 'Makadi Height',
-    location: 'Makadi, NY',
-    description: 'Iconic urban park in the heart of Manhattan',
-    image: '/admin/spots/img.png',
-  },
-  {
-    id: 2,
-    title: 'Makadi Height',
-    location: 'Makadi, NY',
-    description: 'Iconic urban park in the heart of Manhattan',
-    image: '/admin/spots/img.png',
-  },
-  {
-    id: 3,
-    title: 'Makadi Height',
-    location: 'Makadi, NY',
-    description: 'Iconic urban park in the heart of Manhattan',
-    image: '/admin/spots/img.png',
-  },
-  {
-    id: 4,
-    title: 'Makadi Height',
-    location: 'Makadi, NY',
-    description: 'Iconic urban park in the heart of Manhattan',
-    image: '/admin/spots/img.png',
-  },
-];
+import { getLocations, Location } from '@/lib/api/locations';
 
 export default function SpotsPage() {
-  const [spots] = useState<Spot[]>(mockSpots);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [editingSpot, setEditingSpot] = useState<Spot | null>(null);
+  const [editingLocation, setEditingLocation] = useState<Location | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  const fetchLocations = useCallback(async (page = 1) => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const data = await getLocations(page);
+      setLocations(data.items);
+      setTotalPages(data.totalPages);
+      setTotalCount(data.totalCount);
+      setCurrentPage(data.pageNumber);
+    } catch (err) {
+      console.error('[SpotsPage] Fetch error:', err);
+      setError('Failed to load locations. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLocations(1);
+  }, [fetchLocations]);
 
   const handleAddNew = () => {
-    setEditingSpot(null);
+    setEditingLocation(null);
     setIsAddModalOpen(true);
   };
 
-  const handleEdit = (spot: Spot) => {
-    setEditingSpot(spot);
+  const handleEdit = (location: Location) => {
+    setEditingLocation(location);
     setIsAddModalOpen(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (id: number) => {
+    setDeletingId(id);
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    setIsDeleteModalOpen(false);
+  const handleSuccess = () => {
+    fetchLocations(currentPage);
   };
 
-  // Filtering spots based on search query
-  const filteredSpots = spots.filter(spot =>
-    spot.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    spot.location.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Client-side search filter
+  const filteredLocations = locations.filter((loc) => {
+    const q = searchQuery.toLowerCase();
+    return (
+      loc.city.toLowerCase().includes(q) ||
+      loc.district.toLowerCase().includes(q) ||
+      (loc.country || '').toLowerCase().includes(q) ||
+      (loc.street || '').toLowerCase().includes(q)
+    );
+  });
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  };
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] p-8 md:p-10">
-      
+
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-[28px] font-bold text-[#1B2134] font-poppins mb-1">Featured Spots</h1>
-          <p className="text-[15px] text-[#666] font-poppins">Manage featured locations and landmarks</p>
+          <h1 className="text-[28px] font-bold text-[#1B2134] font-poppins mb-1">Locations</h1>
+          <p className="text-[15px] text-[#666] font-poppins">
+            {totalCount} location{totalCount !== 1 ? 's' : ''} total
+          </p>
         </div>
-        
-        <button 
+        <button
           onClick={handleAddNew}
           className="bg-[#1B2134] text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-[#252d46] transition-colors font-poppins font-medium cursor-pointer"
         >
           <Image src="/admin/spots/add.png" alt="Add" width={20} height={20} className="object-contain" />
-          Add New Spot
+          Add New Location
         </button>
       </div>
 
       {/* Search Bar */}
-      <div className="mb-10">
+      <div className="mb-8">
         <div className="relative max-w-full md:max-w-2xl">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
           </div>
           <input
             type="text"
-            placeholder="Search project"
+            placeholder="Search by city, district or country..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-white border border-[#E2E8F0] rounded-[20px] py-4 pl-12 pr-4 text-[#4A5568] placeholder-[#A0AEC0] focus:outline-none focus:border-[#1B2134] focus:ring-1 focus:ring-[#1B2134] transition-all font-poppins shadow-sm"
@@ -115,67 +121,132 @@ export default function SpotsPage() {
         </div>
       </div>
 
-      {/* Spots Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredSpots.map((spot) => (
-          <div key={spot.id} className="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-[#F0EDE8] flex flex-col">
-            
-            {/* Image */}
-            <div className="relative w-full aspect-[4/3]">
-              <Image 
-                src={spot.image} 
-                alt={spot.title} 
-                fill 
-                className="object-cover"
-              />
-            </div>
-
-            {/* Content */}
-            <div className="p-6 flex-1 flex flex-col">
-              <h3 className="text-[18px] font-bold text-[#1B2134] font-poppins mb-2">{spot.title}</h3>
-              
-              <div className="flex items-center gap-1.5 mb-3">
-                <Image src="/admin/spots/locatoin.png" alt="Location" width={14} height={14} className="object-contain" />
-                <span className="text-[13px] text-[#A0AEC0] font-poppins">{spot.location}</span>
-              </div>
-              
-              <p className="text-[14px] text-[#718096] font-poppins leading-relaxed mb-6 flex-1">
-                {spot.description}
-              </p>
-              
-              {/* Actions */}
-              <div className="flex items-center gap-3 mt-auto">
-                <button 
-                  onClick={() => handleEdit(spot)}
-                  className="flex-1 border border-[#E2E8F0] rounded-[10px] py-2.5 flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <Image src="/admin/spots/edit.png" alt="Edit" width={16} height={16} />
-                  <span className="text-[14px] font-medium text-[#1B2134] font-poppins">Edit</span>
-                </button>
-                <button 
-                  onClick={handleDelete}
-                  className="border border-[#FEB2B2] rounded-[10px] p-2.5 flex items-center justify-center hover:bg-red-50 transition-colors aspect-square cursor-pointer"
-                >
-                  <Image src="/admin/spots/delete.png" alt="Delete" width={18} height={18} />
-                </button>
-              </div>
-            </div>
-
+      {/* Table */}
+      <div className="bg-white rounded-[20px] shadow-sm border border-[#F0EDE8] overflow-hidden">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-24">
+            <div className="w-10 h-10 border-4 border-[#1B2134] border-t-transparent rounded-full animate-spin" />
           </div>
-        ))}
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-4">
+            <p className="text-red-500 font-poppins">{error}</p>
+            <button
+              onClick={() => fetchLocations(currentPage)}
+              className="bg-[#1B2134] text-white px-6 py-2 rounded-full font-poppins text-sm cursor-pointer"
+            >
+              Retry
+            </button>
+          </div>
+        ) : filteredLocations.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-2">
+            <p className="text-[#666] font-poppins text-lg">No locations found.</p>
+            {searchQuery && (
+              <p className="text-[#A0AEC0] font-poppins text-sm">Try adjusting your search.</p>
+            )}
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full font-poppins">
+              <thead>
+                <tr className="bg-[#F8F9FA] border-b border-[#F0EDE8]">
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">#</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">City</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">District</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">Street</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">Country</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">Created</th>
+                  <th className="text-center px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#F0EDE8]">
+                {filteredLocations.map((loc, idx) => (
+                  <tr key={loc.id} className="hover:bg-[#FAFAFA] transition-colors group">
+                    <td className="px-6 py-4 text-[14px] text-[#A0AEC0] font-medium">
+                      {(currentPage - 1) * 10 + idx + 1}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-[15px] font-semibold text-[#1B2134]">{loc.city}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium bg-[#F0EDE8] text-[#1B2134]">
+                        {loc.district}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-[14px] text-[#718096]">
+                      {loc.street || <span className="text-[#CBD5E0] italic">—</span>}
+                    </td>
+                    <td className="px-6 py-4 text-[14px] text-[#718096]">
+                      {loc.country || <span className="text-[#CBD5E0] italic">—</span>}
+                    </td>
+                    <td className="px-6 py-4 text-[13px] text-[#A0AEC0]">
+                      {formatDate(loc.createdAt)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center gap-2">
+                        {/* Edit */}
+                        <button
+                          onClick={() => handleEdit(loc)}
+                          title="Edit"
+                          className="w-9 h-9 flex items-center justify-center rounded-lg border border-[#E2E8F0] hover:bg-[#F8F9FA] transition-colors cursor-pointer"
+                        >
+                          <Image src="/admin/spots/edit.png" alt="Edit" width={16} height={16} />
+                        </button>
+                        {/* Delete */}
+                        <button
+                          onClick={() => handleDelete(loc.id)}
+                          title="Delete"
+                          className="w-9 h-9 flex items-center justify-center rounded-lg border border-[#FEB2B2] hover:bg-red-50 transition-colors cursor-pointer"
+                        >
+                          <Image src="/admin/spots/delete.png" alt="Delete" width={16} height={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {!isLoading && !error && totalPages > 1 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t border-[#F0EDE8]">
+            <p className="text-[13px] text-[#A0AEC0] font-poppins">
+              Page {currentPage} of {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => fetchLocations(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-lg border border-[#E2E8F0] text-[14px] font-medium text-[#1B2134] hover:bg-[#F8F9FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => fetchLocations(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded-lg border border-[#E2E8F0] text-[14px] font-medium text-[#1B2134] hover:bg-[#F8F9FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modals */}
-      <AddSpotModal 
+      <AddSpotModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        editData={editingSpot}
+        onSuccess={handleSuccess}
+        editData={editingLocation}
       />
 
-      <DeleteSpotModal 
+      <DeleteSpotModal
         isOpen={isDeleteModalOpen}
+        locationId={deletingId}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={confirmDelete}
+        onSuccess={handleSuccess}
       />
     </div>
   );

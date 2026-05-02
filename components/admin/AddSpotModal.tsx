@@ -1,120 +1,173 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-
-interface SpotData {
-  id: number;
-  title: string;
-  location: string;
-  description: string;
-  image: string;
-  propertyCount?: number;
-}
+import { createLocation, updateLocation, Location } from '@/lib/api/locations';
 
 interface AddSpotModalProps {
   isOpen: boolean;
   onClose: () => void;
-  editData?: SpotData | null;
+  onSuccess: () => void;
+  editData?: Location | null;
 }
 
-export default function AddSpotModal({ isOpen, onClose, editData }: AddSpotModalProps) {
+const EMPTY_FORM = { city: '', district: '', street: '', country: '' };
+
+export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: AddSpotModalProps) {
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // When the modal opens for editing, populate the form
+  useEffect(() => {
+    if (editData) {
+      setForm({
+        city: editData.city || '',
+        district: editData.district || '',
+        street: editData.street || '',
+        country: editData.country || '',
+      });
+    } else {
+      setForm(EMPTY_FORM);
+    }
+    setError('');
+  }, [editData, isOpen]);
+
   if (!isOpen) return null;
 
   const isEditMode = !!editData;
-  const modalTitle = isEditMode ? 'Edit Spot' : 'Add New Spot';
-  const submitText = isEditMode ? 'Save Update' : 'Add Spot';
+
+  const handleChange = (field: keyof typeof EMPTY_FORM) =>
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+
+  const handleSubmit = async () => {
+    if (!form.city.trim() || !form.district.trim()) {
+      setError('City and District are required.');
+      return;
+    }
+    setIsLoading(true);
+    setError('');
+    try {
+      if (isEditMode && editData) {
+        await updateLocation({
+          id: editData.id,
+          city: form.city,
+          district: form.district,
+          street: form.street,
+          country: form.country,
+          latitude: null,
+          longitude: null,
+        });
+      } else {
+        await createLocation({
+          city: form.city,
+          district: form.district,
+          street: form.street,
+          country: form.country,
+          latitude: null,
+          longitude: null,
+        });
+      }
+      onSuccess();
+      onClose();
+    } catch (err) {
+      console.error('[AddSpotModal] Submit error:', err);
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter"
       onClick={onClose}
     >
-      {/* Modal Container */}
-      <div 
-        className="bg-white rounded-[24px] w-full max-w-[800px] max-h-[90vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+      <div
+        className="bg-white rounded-[24px] w-full max-w-[600px] flex flex-col shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        
         {/* Header */}
-        <div className="bg-[#16273B] rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
-          <h2 className="text-white text-[22px] font-bold">{modalTitle}</h2>
+        <div className="bg-[#16273B] rounded-t-[24px] px-8 py-5 flex items-center justify-between">
+          <h2 className="text-white text-[22px] font-bold">
+            {isEditMode ? 'Edit Location' : 'Add New Location'}
+          </h2>
           <button onClick={onClose} className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none">
             <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={24} height={24} />
           </button>
         </div>
 
-        {/* Body (Scrollable) */}
-        <div className="p-8 overflow-y-auto space-y-6 scrollbar-hide">
-          
-          {/* Spot Name */}
+        {/* Body */}
+        <div className="p-8 space-y-5">
+
+          {/* City */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Spot Name *</label>
-            <input 
-              type="text" 
-              defaultValue={editData?.title || ''}
-              placeholder="Enter spot name" 
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-[#16273B] placeholder-gray-400"
+            <label className="text-[#16273B] font-semibold text-[15px]">City *</label>
+            <input
+              type="text"
+              value={form.city}
+              onChange={handleChange('city')}
+              placeholder="e.g. Cairo"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
             />
           </div>
 
-          {/* Location */}
+          {/* District */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Location</label>
-            <input 
-              type="text" 
-              defaultValue={editData?.location || ''}
-              placeholder="Enter location" 
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-[#16273B] placeholder-gray-400" 
+            <label className="text-[#16273B] font-semibold text-[15px]">District *</label>
+            <input
+              type="text"
+              value={form.district}
+              onChange={handleChange('district')}
+              placeholder="e.g. New Cairo"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
             />
           </div>
 
-          {/* Number of Properties */}
+          {/* Street */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Number of Properties</label>
-            <input 
-              type="number" 
-              defaultValue={editData?.propertyCount || ''}
-              placeholder="0" 
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-[#16273B] placeholder-gray-400" 
+            <label className="text-[#16273B] font-semibold text-[15px]">Street</label>
+            <input
+              type="text"
+              value={form.street}
+              onChange={handleChange('street')}
+              placeholder="e.g. 90th Street (optional)"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
             />
           </div>
 
-          {/* Image Upload Area */}
+          {/* Country */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Image</label>
-            <div className="border border-dashed border-gray-300 rounded-[16px] p-8 flex flex-col items-center justify-center bg-gray-50/50 hover:bg-gray-100/50 transition-colors cursor-pointer">
-              <Image src="/admin/units/addUnit/upload.png" alt="Upload" width={40} height={40} className="mb-4 opacity-70" />
-              <p className="text-gray-500 font-medium mb-1">Click to upload or drag and drop</p>
-              <p className="text-gray-400 text-[13px] mb-6">PNG, JPG up to 10MB</p>
-              
-              <input type="file" id="image-upload" className="hidden" accept="image/png, image/jpeg" />
-              <label 
-                htmlFor="image-upload" 
-                className="cursor-pointer bg-white border border-gray-200 text-[#16273B] font-semibold px-6 py-2.5 rounded-xl shadow-sm hover:bg-gray-50 transition-colors"
-              >
-                Browse Files
-              </label>
-            </div>
+            <label className="text-[#16273B] font-semibold text-[15px]">Country</label>
+            <input
+              type="text"
+              value={form.country}
+              onChange={handleChange('country')}
+              placeholder="e.g. Egypt (optional)"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
+            />
           </div>
 
+          {error && <p className="text-red-500 text-sm">{error}</p>}
         </div>
 
         {/* Footer */}
-        <div className="p-8 pt-4 border-t border-gray-100 flex gap-4 shrink-0 bg-white rounded-b-[24px]">
-          <button 
+        <div className="p-8 pt-0 flex gap-4">
+          <button
             onClick={onClose}
             className="flex-1 py-4 rounded-xl border border-gray-200 text-[#16273B] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
           >
             Cancel
           </button>
-          <button 
-            className="flex-1 py-4 rounded-xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer"
+          <button
+            onClick={handleSubmit}
+            disabled={isLoading}
+            className="flex-1 py-4 rounded-xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {submitText}
+            {isLoading ? 'Saving...' : isEditMode ? 'Save Changes' : 'Add Location'}
           </button>
         </div>
-
       </div>
     </div>
   );

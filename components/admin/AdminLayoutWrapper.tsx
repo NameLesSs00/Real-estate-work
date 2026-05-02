@@ -4,6 +4,7 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import Sidebar from './Sidebar';
 import AdminHeader from './AdminHeader';
+import TokenRefresher from '@/lib/auth/TokenRefresher';
 
 export default function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -11,6 +12,7 @@ export default function AdminLayoutWrapper({ children }: { children: React.React
 
   return (
     <div className="flex min-h-screen bg-[#F8F9FA]">
+      {!isAuthPage && <TokenRefresher />}
       {!isAuthPage && <Sidebar />}
       <main className={`flex-1 transition-all duration-300 flex flex-col ${!isAuthPage ? 'ml-[280px]' : ''}`}>
         {!isAuthPage && <AdminHeader />}
