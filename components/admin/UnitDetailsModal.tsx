@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { getUnitById, markUnitSold, UnitDetail, resolveProjectImageUrl } from '@/lib/api/projects';
+import { getUnitById, markUnitSold, UnitDetail, resolveProjectImageUrl, uploadUnitImages, deleteUnitImages } from '@/lib/api/projects';
 
 interface UnitDetailsModalProps {
   isOpen: boolean;
@@ -23,6 +23,8 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isMarkingSold, setIsMarkingSold] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDeletingImg, setIsDeletingImg] = useState(false);
 
   const fetchUnit = useCallback(async () => {
     if (!unitId) return;
@@ -45,6 +47,35 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
   }, [isOpen, unitId, fetchUnit]);
 
   if (!isOpen) return null;
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length || !unit) return;
+    setIsUploading(true);
+    try {
+      await uploadUnitImages(unit.id, files);
+      await fetchUnit(); onUpdate?.();
+    } catch (err) {
+      console.error('[UnitDetailsModal] Upload error:', err);
+      setError('Failed to upload images.');
+    } finally {
+      setIsUploading(false); e.target.value = '';
+    }
+  };
+
+  const handleDeleteImage = async () => {
+    if (!unit) return;
+    setIsDeletingImg(true);
+    try {
+      await deleteUnitImages(unit.id);
+      await fetchUnit(); onUpdate?.();
+    } catch (err) {
+      console.error('[UnitDetailsModal] Delete image error:', err);
+      setError('Failed to delete image.');
+    } finally {
+      setIsDeletingImg(false);
+    }
+  };
 
   const handleMarkSold = async () => {
     if (!unit) return;
@@ -87,18 +118,43 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
           ) : unit ? (
             <>
               {/* Images */}
-              {unit.imageUrls && unit.imageUrls.length > 0 && (
-                <div className="grid grid-cols-3 gap-3">
-                  {unit.imageUrls.map((url, i) => {
-                    const resolved = resolveProjectImageUrl(url);
-                    return resolved ? (
-                      <div key={i} className={`relative rounded-2xl overflow-hidden ${i === 0 ? 'col-span-2 row-span-2 aspect-video' : 'aspect-video'}`}>
-                        <Image src={resolved} alt={`Unit image ${i + 1}`} fill className="object-cover" />
-                      </div>
-                    ) : null;
-                  })}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-[18px] font-bold text-[#16273B]">
+                    Images <span className="text-[14px] font-normal text-gray-400">({unit.imageUrls?.length || 0})</span>
+                  </h4>
+                  <div className="flex gap-3 items-center">
+                    {unit.imageUrls && unit.imageUrls.length > 0 && (
+                      <button onClick={handleDeleteImage} disabled={isDeletingImg}
+                        className="text-[13px] font-semibold border border-red-200 text-red-500 px-4 py-2 rounded-full cursor-pointer hover:bg-red-50 transition-colors disabled:opacity-50">
+                        {isDeletingImg ? 'Removing...' : 'Remove All'}
+                      </button>
+                    )}
+                    <label htmlFor="unit-detail-upload"
+                      className={`flex items-center gap-2 bg-[#16273B] text-white px-5 py-2.5 rounded-full text-[14px] font-semibold cursor-pointer hover:bg-[#1a304a] transition-colors ${isUploading ? 'opacity-60 pointer-events-none' : ''}`}>
+                      {isUploading ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Uploading...</> : <><span className="text-lg leading-none">+</span> Add Images</>}
+                    </label>
+                    <input type="file" id="unit-detail-upload" className="hidden" accept="image/*" multiple onChange={handleImageUpload} />
+                  </div>
                 </div>
-              )}
+
+                {!unit.imageUrls || unit.imageUrls.length === 0 ? (
+                  <div className="border-2 border-dashed border-gray-200 rounded-2xl p-10 text-center text-gray-400">
+                    <p className="text-sm">No images yet. Click &quot;Add Images&quot; to upload.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 gap-3">
+                    {unit.imageUrls.map((url, i) => {
+                      const resolved = resolveProjectImageUrl(url);
+                      return resolved ? (
+                        <div key={i} className={`relative rounded-2xl overflow-hidden ${i === 0 ? 'col-span-2 row-span-2 aspect-video' : 'aspect-video bg-gray-100 border border-gray-100'}`}>
+                          <Image src={resolved} alt={`Unit image ${i + 1}`} fill className="object-cover" />
+                        </div>
+                      ) : null;
+                    })}
+                  </div>
+                )}
+              </div>
 
               {/* Name + Status badges */}
               <div className="flex flex-wrap items-center gap-3">
