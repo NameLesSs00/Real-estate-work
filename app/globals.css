@@ -8,6 +8,8 @@
   
   --font-poppins: var(--font-poppins);
   --font-work-sans: var(--font-work-sans);
+  --font-radley: var(--font-radley);
+  --font-allura: var(--font-allura);
 }
 
 :root {

@@ -39,7 +39,7 @@ const Footer = () => {
             <li className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors">
               Projects <ChevronDown size={16} />
             </li>
-            <li><Link href="#about" className="hover:text-white transition-colors">About Us</Link></li>
+            <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
             <li>
               <Link href="/properties" className="flex items-center gap-2 hover:text-white transition-colors">
                 Properties <ChevronDown size={16} />

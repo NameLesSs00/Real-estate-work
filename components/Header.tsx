@@ -53,7 +53,7 @@ const Header = () => {
                     <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </Link>
-                <Link href="#about" className="text-[18px] font-medium text-brand-primary">About Us</Link>
+                <Link href="/about" className="text-[18px] font-medium text-brand-primary">About Us</Link>
                 <Link href="/properties" className="flex items-center gap-2 text-[18px] font-medium text-brand-primary">
                   Properties
                   <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -154,7 +154,7 @@ const Header = () => {
 
             {/* About Us */}
             <div>
-              <Link href="#about" onClick={() => setIsMenuOpen(false)} className="text-[18px] font-medium text-[#1b2134]">
+              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-[18px] font-medium text-[#1b2134]">
                 About Us
               </Link>
             </div>
