@@ -41,8 +41,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
   }
 
   const breadcrumbs = ["Home", unitData.propertyType || "Property", "Property Details"];
-  const mainImage = unitData.imageUrls?.[0] ? resolveProjectImageUrl(unitData.imageUrls[0]) : `${BASE}/mainImg.png`;
-  const thumbnails = unitData.imageUrls?.slice(1, 5).map(url => resolveProjectImageUrl(url)) || [];
+  const mainImage = (unitData.imageUrls?.[0] ? resolveProjectImageUrl(unitData.imageUrls[0]) : null) ?? `${BASE}/mainImg.png`;
+  const thumbnails = (unitData.imageUrls?.slice(1, 5).map(url => resolveProjectImageUrl(url)) || []).filter((url): url is string => url !== null);
 
   return (
     <div className="container mx-auto px-4 pt-32 pb-16 lg:pb-24 max-w-7xl">
