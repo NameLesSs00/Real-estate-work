@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'api.thegate-estates.com',
+      },
+      {
+        protocol: 'https',
         hostname: 'websiterealstate.runasp.net',
       },
     ],
@@ -18,7 +22,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/backend/:path*',
-        destination: 'https://websiterealstate.runasp.net/:path*',
+        destination: 'https://api.thegate-estates.com/:path*',
       },
     ];
   },
