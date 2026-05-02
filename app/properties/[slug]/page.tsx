@@ -1,14 +1,12 @@
 import Image from "next/image";
 import { Home, ArrowLeft, ArrowRight } from "lucide-react";
+import { getUnitById, resolveProjectImageUrl } from "@/lib/api/projects";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-// Public folder assets — referenced by URL path, served directly by Next.js/Vercel
+// Public folder assets
 const BASE            = "/assists/PropertyDetails";
 const icoLocation     = `${BASE}/location.png`;
-const imgMain         = `${BASE}/mainImg.png`;
-const imgGallery1     = `${BASE}/img1.PNG`;
-const imgGallery2     = `${BASE}/img2.PNG`;
-const imgGallery3     = `${BASE}/img3.PNG`;
-const imgGallery4     = `${BASE}/img4.PNG`;
 const icoBed          = `${BASE}/lucide_bed.png`;
 const icoBath         = `${BASE}/cil_bath.png`;
 const icoCar          = `${BASE}/ion_car-sport-outline.png`;
@@ -25,77 +23,43 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-// Required for Vercel static rendering of dynamic routes
-export async function generateStaticParams() {
-  return [
-    { slug: 'modern-sea-view-apartment' },
-    { slug: 'luxury-villa-with-pool-access' },
-  ];
-}
-
-// Mock data that would normally come from an API endpoint
-const getPropertyData = async () => {
-  return {
-    id: "HZ28",
-    title: "Modern Sea View Apartment",
-    location: "El Gouna, Hurghada, Red Sea Governorate, Egypt",
-    breadcrumbs: ["Home", "Apartment", "Property Details"],
-    images: {
-      main: imgMain,
-      thumbnails: [imgGallery1, imgGallery2, imgGallery3, imgGallery4],
-    },
-    overview: {
-      type: "Apartment",
-      bedrooms: 3,
-      bathrooms: 2, // design says Bedrooms again with a bath icon, we'll fix it to bathrooms
-      garage: 1,
-      area: "1789 Sq Ft",
-      year: 2016,
-    },
-    description: `Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
-Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.`,
-    features: [
-      "Air conditioning", "Laundry", "Sauna",
-      "Dryer", "Sauna", "Sauna",
-      "swimming pool", "Garage", "Sauna",
-      "WiFi"
-    ],
-    reviews: {
-      rating: 4.5,
-      total: 653,
-      distribution: {
-        5: 80,
-        4: 60,
-        3: 40,
-        2: 20,
-        1: 10,
-      },
-      featured: {
-        name: "Cameron Williamson",
-        role: "Designer",
-        rating: 4.75,
-        avatar: imgProfile,
-        text: "Searches for multiplexes, property comparisons, and the loan estimator. Works great. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dores.",
-      }
-    }
-  };
-};
-
 export default async function PropertyDetailsPage({ params }: Props) {
-  await params;
-  const data = await getPropertyData();
+  const { slug } = await params;
+  
+  // Extract ID from slug format: "123-modern-sea-view"
+  const unitId = parseInt(slug.split('-')[0], 10);
+  
+  if (isNaN(unitId)) {
+    notFound();
+  }
+
+  let unitData;
+  try {
+    unitData = await getUnitById(unitId);
+  } catch (error) {
+    console.error("Failed to fetch property details:", error);
+    notFound();
+  }
+
+  const breadcrumbs = ["Home", unitData.propertyType || "Property", "Property Details"];
+  const mainImage = unitData.imageUrls?.[0] ? resolveProjectImageUrl(unitData.imageUrls[0]) : `${BASE}/mainImg.png`;
+  const thumbnails = unitData.imageUrls?.slice(1, 5).map(url => resolveProjectImageUrl(url)) || [];
 
   return (
     <div className="container mx-auto px-4 pt-32 pb-16 lg:pb-24 max-w-7xl">
       {/* Breadcrumbs */}
       <div className="flex items-center text-sm text-gray-500 mb-8">
         <Home className="w-4 h-4 mr-2" />
-        {data.breadcrumbs.map((crumb, index) => (
+        {breadcrumbs.map((crumb, index) => (
           <span key={index} className="flex items-center">
             {index > 0 && <span className="mx-2 font-light text-gray-300">{'>'}</span>}
-            <span className={index === data.breadcrumbs.length - 1 ? "text-brand-primary font-medium" : "hover:text-brand-primary transition-colors"}>
-              {crumb}
-            </span>
+            {index === 0 ? (
+              <Link href="/" className="hover:text-brand-primary transition-colors">{crumb}</Link>
+            ) : (
+              <span className={index === breadcrumbs.length - 1 ? "text-brand-primary font-medium" : "hover:text-brand-primary transition-colors"}>
+                {crumb}
+              </span>
+            )}
           </span>
         ))}
       </div>
@@ -103,11 +67,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
       {/* Title & Location */}
       <div className="mb-10">
         <h1 className="text-4xl lg:text-5xl font-semibold text-brand-primary mb-4 tracking-tight">
-          {data.title}
+          {unitData.name || "Untitled Property"}
         </h1>
         <div className="flex items-center text-gray-500 text-lg">
           <Image src={icoLocation} alt="Location" width={20} height={20} className="w-5 h-5 mr-3 opacity-70" />
-          <span>{data.location}</span>
+          <span>{unitData.floorName || "Location details not available"}</span>
         </div>
       </div>
 
@@ -120,20 +84,22 @@ export default async function PropertyDetailsPage({ params }: Props) {
           <div className="space-y-6">
             <div className="relative w-full aspect-[16/9] rounded-[2.5rem] overflow-hidden shadow-sm">
               <Image 
-                src={data.images.main} 
-                alt={data.title} 
+                src={mainImage} 
+                alt={unitData.name || "Property Image"} 
                 fill 
                 className="object-cover"
                 priority
               />
             </div>
-            <div className="grid grid-cols-4 gap-6">
-              {data.images.thumbnails.map((thumb, index) => (
-                <div key={index} className="relative w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden cursor-pointer hover:ring-2 hover:ring-brand-primary transition-all shadow-sm">
-                  <Image src={thumb} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
-                </div>
-              ))}
-            </div>
+            {thumbnails.length > 0 && (
+              <div className="grid grid-cols-4 gap-6">
+                {thumbnails.map((thumb, index) => (
+                  <div key={index} className="relative w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden cursor-pointer hover:ring-2 hover:ring-brand-primary transition-all shadow-sm">
+                    <Image src={thumb} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Overview Section */}
@@ -141,7 +107,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
             <div className="flex justify-between items-center mb-10 border-b border-gray-100 pb-8">
               <h2 className="text-2xl font-semibold text-brand-primary">Overview</h2>
               <div className="text-gray-400 font-medium">
-                Property ID: <span className="text-brand-primary">{data.id}</span>
+                Property ID: <span className="text-brand-primary">#{unitData.id}</span>
               </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
@@ -149,43 +115,43 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
                   <Image src={icoHome} alt="Type" width={32} height={32} className="w-8 h-8" />
                 </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.type}</span>
+                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.propertyType || "Unit"}</span>
                 <span className="text-gray-400 text-sm">Property Type</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
                   <Image src={icoBed} alt="Bedrooms" width={32} height={32} className="w-8 h-8" />
                 </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.bedrooms}</span>
+                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.noBedRoom || 0}</span>
                 <span className="text-gray-400 text-sm">Bedrooms</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
                   <Image src={icoBath} alt="Bathrooms" width={32} height={32} className="w-8 h-8" />
                 </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.bathrooms}</span>
+                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.noBathRoom || 0}</span>
                 <span className="text-gray-400 text-sm">Bathrooms</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={icoCar} alt="Garage" width={32} height={32} className="w-8 h-8" />
+                  <Image src={icoCar} alt="Kitchens" width={32} height={32} className="w-8 h-8" />
                 </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.garage}</span>
-                <span className="text-gray-400 text-sm">Garage</span>
+                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.noKitchen || 0}</span>
+                <span className="text-gray-400 text-sm">Kitchens</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
                   <Image src={icoSize} alt="Area Size" width={32} height={32} className="w-8 h-8" />
                 </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.area}</span>
+                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.area || 0}</span>
                 <span className="text-gray-400 text-sm">Area Size</span>
               </div>
               <div className="flex flex-col items-center text-center group">
                 <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={icoCalendar} alt="Year Built" width={32} height={32} className="w-8 h-8" />
+                  <Image src={icoCalendar} alt="Floor" width={32} height={32} className="w-8 h-8" />
                 </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{data.overview.year}</span>
-                <span className="text-gray-400 text-sm">Year Built</span>
+                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.floorNumber || 0}</span>
+                <span className="text-gray-400 text-sm">Floor</span>
               </div>
             </div>
           </div>
@@ -193,27 +159,35 @@ export default async function PropertyDetailsPage({ params }: Props) {
           {/* Description Section */}
           <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-50">
             <h2 className="text-2xl font-semibold text-brand-primary mb-8 border-b border-gray-100 pb-8">Description</h2>
-            <div className="text-gray-500 leading-relaxed text-lg space-y-6">
-              {data.description.split('\n').map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
+            <div className="text-gray-500 leading-relaxed text-lg space-y-6 whitespace-pre-wrap">
+              {unitData.description || "No description provided."}
             </div>
           </div>
 
           {/* Features Section */}
-          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-50">
-            <h2 className="text-2xl font-semibold text-brand-primary mb-8 border-b border-gray-100 pb-8">Features</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-10">
-              {data.features.map((feature, index) => (
-                <div key={index} className="flex items-center text-gray-700 group">
-                  <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center mr-4 group-hover:bg-brand-primary transition-colors">
-                    <Image src={icoCheck} alt="Check" width={14} height={14} className="w-3.5 h-3.5 group-hover:invert" />
+          {((unitData.facilities && unitData.facilities.length > 0) || (unitData.services && unitData.services.length > 0)) && (
+            <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-50">
+              <h2 className="text-2xl font-semibold text-brand-primary mb-8 border-b border-gray-100 pb-8">Features & Services</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-10">
+                {unitData.facilities?.map((feature, index) => (
+                  <div key={`f-${index}`} className="flex items-center text-gray-700 group">
+                    <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center mr-4 group-hover:bg-brand-primary transition-colors">
+                      <Image src={icoCheck} alt="Check" width={14} height={14} className="w-3.5 h-3.5 group-hover:invert" />
+                    </div>
+                    <span className="text-lg">{feature.name || "Facility"}</span>
                   </div>
-                  <span className="text-lg">{feature}</span>
-                </div>
-              ))}
+                ))}
+                {unitData.services?.map((service, index) => (
+                  <div key={`s-${index}`} className="flex items-center text-gray-700 group">
+                    <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center mr-4 group-hover:bg-brand-primary transition-colors">
+                      <Image src={icoCheck} alt="Check" width={14} height={14} className="w-3.5 h-3.5 group-hover:invert" />
+                    </div>
+                    <span className="text-lg">{service.name || "Service"}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Right Column - Sidebar */}

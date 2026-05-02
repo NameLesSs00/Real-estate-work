@@ -8,7 +8,19 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'thegate-estates.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'websiterealstate.runasp.net',
+      },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/backend/:path*',
+        destination: 'https://websiterealstate.runasp.net/:path*',
+      },
+    ];
   },
 };
 

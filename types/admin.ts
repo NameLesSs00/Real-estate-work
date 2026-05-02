@@ -24,9 +24,13 @@ export interface Project {
 
 export interface Developer {
   id: number;
-  logo: string;
   name: string;
-  contactEmail: string;
-  contactPhone: string;
-  projectCount: number;
+  description: string;
+  logoImage: string | null;
+  gallery: { id: number; imageUrl: string }[];
+  projects: unknown[];
+  createdBy: string;
+  createdAt: string;
+  updatedBy: string;
+  updatedAt: string | null;
 }

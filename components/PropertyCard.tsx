@@ -5,6 +5,7 @@ import { MapPin } from 'lucide-react';
 import './PropertyCard.css';
 
 export interface PropertyCardProps {
+  id: number;
   title: string;
   type: string;
   location: string;
@@ -17,6 +18,7 @@ export interface PropertyCardProps {
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
+  id,
   title,
   type,
   location,
@@ -64,7 +66,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           </div>
         </div>
         <Link 
-          href={`/properties/${title.toLowerCase().replace(/ /g, '-')}`}
+          href={`/properties/${id}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
           className="unit-button text-center inline-block"
         >
           View Details

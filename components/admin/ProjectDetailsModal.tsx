@@ -1,124 +1,175 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { Project } from '@/types/admin';
+import { getProjectById, uploadProjectImages, deleteProjectImage, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 
 interface ProjectDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  project?: Project | null;
+  projectId: number | null;
+  onUpdate?: () => void;
 }
 
-// Info card helper
-const InfoCard = ({ icon, label, value }: { icon: string; label: string; value: string }) => (
-  <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5 flex flex-col justify-center">
-    <div className="flex items-center gap-2 text-gray-500 text-[14px] mb-1">
-      <div className="relative w-4 h-4 flex items-center justify-center">
-        <Image src={icon} alt={label} width={16} height={16} className="object-contain opacity-70" />
-      </div>
-      <span className="capitalize">{label}</span>
-    </div>
-    <p className="text-[#16273B] text-[18px] font-bold">{value}</p>
-  </div>
-);
+export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpdate }: ProjectDetailsModalProps) {
+  const [project, setProject] = useState<Project | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDeletingImg, setIsDeletingImg] = useState(false);
 
-export default function ProjectDetailsModal({ isOpen, onClose, project }: ProjectDetailsModalProps) {
-  if (!isOpen || !project) return null;
+  const fetchProject = useCallback(async () => {
+    if (!projectId) return;
+    setIsLoading(true); setError('');
+    try {
+      const data = await getProjectById(projectId);
+      setProject(data);
+    } catch (err) {
+      console.error('[ProjectDetailsModal]', err);
+      setError('Failed to load project details.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    if (isOpen && projectId) fetchProject();
+  }, [isOpen, projectId, fetchProject]);
+
+  if (!isOpen) return null;
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length || !project) return;
+    setIsUploading(true);
+    try {
+      await uploadProjectImages(project.id, files);
+      await fetchProject(); onUpdate?.();
+    } catch (err) {
+      console.error('[ProjectDetailsModal] Upload error:', err);
+      setError('Failed to upload images.');
+    } finally {
+      setIsUploading(false); e.target.value = '';
+    }
+  };
+
+  const handleDeleteImage = async () => {
+    if (!project) return;
+    setIsDeletingImg(true);
+    try {
+      await deleteProjectImage(project.id);
+      await fetchProject(); onUpdate?.();
+    } catch (err) {
+      console.error('[ProjectDetailsModal] Delete image error:', err);
+      setError('Failed to delete image.');
+    } finally {
+      setIsDeletingImg(false);
+    }
+  };
+
+  const formatDate = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
   return (
-    <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter"
-      onClick={onClose}
-    >
-      {/* Modal Container */}
-      <div
-        className="bg-white rounded-[32px] w-full max-w-[860px] max-h-[95vh] flex flex-col shadow-2xl animate-in fade-in zoom-in-95 duration-200 overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter" onClick={onClose}>
+      <div className="bg-white rounded-[32px] w-full max-w-[820px] max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+
         {/* Header */}
         <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[20px] font-bold">Project Details</h2>
           <button onClick={onClose} className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none">
-            <Image src="/admin/units/details/close-square.png" alt="Close" width={26} height={26} />
+            <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={26} height={26} />
           </button>
         </div>
 
-        {/* Scrollable Body */}
-        <div className="overflow-y-auto scrollbar-hide flex-1">
-          <div className="p-8 space-y-8">
-
-            {/* Banner Image */}
-            <div className="relative w-full aspect-[21/9] rounded-[24px] overflow-hidden shadow-sm">
-              <Image
-                src={project.image}
-                alt={project.title}
-                fill
-                className="object-cover"
-              />
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide p-8 space-y-8">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="w-10 h-10 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin" />
             </div>
-
-            {/* Title */}
-            <h3 className="text-[28px] font-bold text-[#16273B]">{project.title}</h3>
-
-            {/* Info Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <InfoCard
-                icon="/admin/units/details/price.png"
-                label="Price"
-                value={project.price || '$850,000'}
-              />
-              <InfoCard
-                icon="/admin/units/details/location.png"
-                label="Location"
-                value={project.location}
-              />
-              <InfoCard
-                icon="/admin/units/details/project.png"
-                label="Number of units"
-                value={project.unitCount.toString()}
-              />
-              <InfoCard
-                icon="/admin/units/details/size.png"
-                label="size"
-                value={project.unitSize || '300m'}
-              />
-              <InfoCard
-                icon="/admin/sidebar/receipt-search.png" 
-                label="Delivery time"
-                value={project.deliveryDate || '11/25/2030'}
-              />
-              <InfoCard
-                icon="/admin/sidebar/profile-2user.png"
-                label="Developer"
-                value={project.developer}
-              />
-            </div>
-
-            {/* Description */}
-            <div className="bg-[#F9F6F2] rounded-[24px] px-8 py-6">
-              <div className="flex items-center gap-2 text-gray-500 text-[15px] mb-3">
-                <Image src="/admin/units/details/Description.png" alt="Description" width={18} height={18} className="object-contain opacity-70" />
-                <span className="font-medium">Description</span>
+          ) : error ? (
+            <p className="text-red-500 text-center py-20">{error}</p>
+          ) : project ? (
+            <>
+              {/* Name + meta */}
+              <div>
+                <h3 className="text-[26px] font-bold text-[#16273B]">{project.name}</h3>
+                <p className="text-[13px] text-gray-400 mt-1">
+                  Created {formatDate(project.createdAt)} by <span className="font-medium text-gray-500">{project.createdBy}</span>
+                </p>
               </div>
-              <p className="text-[#16273B] text-[17px] leading-relaxed">
-                {project.description || 'Stunning penthouse with panoramic city views'}
-              </p>
-            </div>
 
-          </div>
+              {/* Info cards */}
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { label: 'Developer', value: project.developerName || '—' },
+                  { label: 'Location', value: project.locationName || '—' },
+                ].map(({ label, value }) => (
+                  <div key={label} className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
+                    <p className="text-[13px] text-gray-500 font-medium mb-1">{label}</p>
+                    <p className="text-[#16273B] text-[16px] font-bold">{value}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Description */}
+              {project.description && (
+                <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
+                  <p className="text-[13px] text-gray-500 font-medium mb-1">Description</p>
+                  <p className="text-[#16273B] text-[15px] leading-relaxed">{project.description}</p>
+                </div>
+              )}
+
+              {/* Images */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-[18px] font-bold text-[#16273B]">
+                    Images <span className="text-[14px] font-normal text-gray-400">({project.imageUrls.length})</span>
+                  </h4>
+                  <div className="flex gap-3 items-center">
+                    {project.imageUrls.length > 0 && (
+                      <button onClick={handleDeleteImage} disabled={isDeletingImg}
+                        className="text-[13px] font-semibold border border-red-200 text-red-500 px-4 py-2 rounded-full cursor-pointer hover:bg-red-50 transition-colors disabled:opacity-50">
+                        {isDeletingImg ? 'Removing...' : 'Remove All'}
+                      </button>
+                    )}
+                    <label htmlFor="proj-detail-upload"
+                      className={`flex items-center gap-2 bg-[#16273B] text-white px-5 py-2.5 rounded-full text-[14px] font-semibold cursor-pointer hover:bg-[#1a304a] transition-colors ${isUploading ? 'opacity-60 pointer-events-none' : ''}`}>
+                      {isUploading ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Uploading...</> : <><span className="text-lg leading-none">+</span> Add Images</>}
+                    </label>
+                    <input type="file" id="proj-detail-upload" className="hidden" accept="image/*" multiple onChange={handleImageUpload} />
+                  </div>
+                </div>
+
+                {project.imageUrls.length === 0 ? (
+                  <div className="border-2 border-dashed border-gray-200 rounded-2xl p-10 text-center text-gray-400">
+                    <p className="text-sm">No images yet. Click &quot;Add Images&quot; to upload.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-3 gap-3">
+                    {project.imageUrls.map((url, i) => {
+                      const resolved = resolveProjectImageUrl(url);
+                      return resolved ? (
+                        <div key={i} className="relative aspect-video rounded-xl overflow-hidden border border-gray-100 bg-gray-100">
+                          <Image src={resolved} alt="Project" fill className="object-cover" />
+                        </div>
+                      ) : null;
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+            </>
+          ) : null}
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-6 border-t border-gray-100 shrink-0 flex justify-end bg-white">
-          <button
-            onClick={onClose}
-            className="bg-[#16273B] hover:bg-[#1a304a] text-white font-bold px-20 py-4 rounded-2xl transition-all active:scale-95 cursor-pointer shadow-lg hover:shadow-xl"
-          >
+        <div className="px-8 py-5 border-t border-gray-100 shrink-0 flex justify-end bg-white">
+          <button onClick={onClose} className="bg-[#16273B] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer">
             Close
           </button>
         </div>
-
       </div>
     </div>
   );

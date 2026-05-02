@@ -1,72 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import PropertyCard from '@/components/PropertyCard';
+import { getUnits, ApiUnit, resolveProjectImageUrl } from '@/lib/api/projects';
 import './ExploreUnits.css';
-
-const units = [
-  {
-    title: 'Modern Sea View Apartment',
-    type: 'Apartment',
-    location: 'El Gouna',
-    price: 'EGP 120,000',
-    beds: 3,
-    baths: 2,
-    area: '120 m²',
-    image: '/assists/exploreUnitsHome/6407c7878c682986eb17ac857954ff029fb9c3a9.png',
-  },
-  {
-    title: 'Luxury Villa with Pool Access',
-    type: 'Villa',
-    location: 'Sahl Hasheesh',
-    price: '$250,000',
-    beds: 4,
-    baths: 3,
-    area: '200 m²',
-    image: '/assists/exploreUnitsHome/a2b0e2fbb0526286d50d2daa20b6d2287d3fea57.png',
-  },
-  {
-    title: 'Modern Sea View Apartment',
-    type: 'Apartment',
-    location: 'El Gouna',
-    price: 'EGP 120,000',
-    beds: 3,
-    baths: 2,
-    area: '120 m²',
-    image: '/assists/exploreUnitsHome/6407c7878c682986eb17ac857954ff029fb9c3a9.png',
-  },
-  {
-    title: 'Modern Sea View Apartment',
-    type: 'Apartment',
-    location: 'El Gouna',
-    price: 'EGP 120,000',
-    beds: 3,
-    baths: 2,
-    area: '120 m²',
-    image: '/assists/exploreUnitsHome/6407c7878c682986eb17ac857954ff029fb9c3a9.png',
-  },
-  {
-    title: 'Modern Sea View Apartment',
-    type: 'Apartment',
-    location: 'El Gouna',
-    price: 'EGP 120,000',
-    beds: 3,
-    baths: 2,
-    area: '120 m²',
-    image: '/assists/exploreUnitsHome/6407c7878c682986eb17ac857954ff029fb9c3a9.png',
-  },
-  {
-    title: 'Modern Sea View Apartment',
-    type: 'Apartment',
-    location: 'El Gouna',
-    price: 'EGP 120,000',
-    beds: 3,
-    baths: 2,
-    area: '120 m²',
-    image: '/assists/exploreUnitsHome/6407c7878c682986eb17ac857954ff029fb9c3a9.png',
-  },
-];
 
 const tabs = [
   { name: 'Hot Deal', icon: '/assists/exploreUnitsHome/mdi_hot.png', active: true },
@@ -76,6 +14,23 @@ const tabs = [
 
 const ExploreUnits = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const [units, setUnits] = useState<ApiUnit[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadUnits() {
+      try {
+        const res = await getUnits(1);
+        // We can just show the first 6 units for the homepage
+        setUnits(res.items.slice(0, 6));
+      } catch (err) {
+        console.error('Failed to load units:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadUnits();
+  }, []);
 
   return (
     <section className="explore-units-section">
@@ -109,22 +64,29 @@ const ExploreUnits = () => {
           ))}
         </div>
 
-        <div className="units-grid">
-          {units.map((unit, index) => (
-            <PropertyCard
-              key={index}
-              title={unit.title}
-              type={unit.type}
-              location={unit.location}
-              price={unit.price}
-              beds={unit.beds}
-              baths={unit.baths}
-              area={unit.area}
-              image={unit.image}
-              status="For Sale"
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="text-center py-20 text-gray-500 font-medium">Loading units...</div>
+        ) : units.length === 0 ? (
+          <div className="text-center py-20 text-gray-500 font-medium">No units available.</div>
+        ) : (
+          <div className="units-grid">
+            {units.map((unit) => (
+              <PropertyCard
+                key={unit.id}
+                id={unit.id}
+                title={unit.name || 'Untitled Unit'}
+                type={String(unit.propertyType) || 'Unit'}
+                location={unit.floorName || 'Unknown Location'}
+                price={`EGP ${unit.price?.toLocaleString()}`}
+                beds={unit.noBedRoom || 0}
+                baths={unit.noBathRoom || 0}
+                area={`${unit.area || 0} m²`}
+                image={resolveProjectImageUrl(unit.imageUrls?.[0]) || '/assists/exploreUnitsHome/6407c7878c682986eb17ac857954ff029fb9c3a9.png'}
+                status={unit.isFeatured ? 'Featured' : 'For Sale'}
+              />
+            ))}
+          </div>
+        )}
 
         <div className="show-more-wrapper">
           <button className="show-more-button">Show More Properties</button>

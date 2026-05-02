@@ -1,215 +1,208 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { MapPin } from 'lucide-react';
 import AddUnitModal from '@/components/admin/AddUnitModal';
 import DeleteUnitModal from '@/components/admin/DeleteUnitModal';
 import UnitDetailsModal from '@/components/admin/UnitDetailsModal';
-import { Unit } from '@/types/admin';
-
-// Mock data based on the design
-const unitsData: Unit[] = [
-  {
-    id: 1,
-    title: "Luxury Penthouse Suite",
-    subtitle: "Sky Tower Residences",
-    price: "$ 850,000",
-    type: "Sell",
-    status: "Available",
-    location: "Downtown Manhattan"
-  },
-  {
-    id: 2,
-    title: "Luxury Penthouse Suite",
-    subtitle: "Sky Tower Residences",
-    price: "$ 850,000",
-    type: "Rent",
-    status: "Available",
-    location: "Downtown Manhattan"
-  },
-  {
-    id: 3,
-    title: "Luxury Penthouse Suite",
-    subtitle: "Sky Tower Residences",
-    price: "$ 850,000",
-    type: "Rent",
-    status: "Available",
-    location: "Downtown Manhattan"
-  },
-  {
-    id: 4,
-    title: "Luxury Penthouse Suite",
-    subtitle: "Sky Tower Residences",
-    price: "$ 850,000",
-    type: "Resale",
-    status: "Sold Out",
-    location: "Downtown Manhattan"
-  }
-];
-
-// Helper to get badge colors based on text
-const getTypeBadgeStyle = (type: string) => {
-  switch (type.toLowerCase()) {
-    case 'sell': return 'bg-[#DBEAFE] text-[#1447E6]'; 
-    case 'rent': return 'bg-[#F3E8FF] text-[#8200DB]'; 
-    case 'resale': return 'bg-[#FFEDD4] text-[#CA3500]'; 
-    default: return 'bg-gray-100 text-gray-600';
-  }
-};
-
-const getStatusBadgeStyle = (status: string) => {
-  switch (status.toLowerCase()) {
-    case 'available': return 'bg-[#DCFCE7] text-[#008236]'; 
-    case 'sold out': return 'bg-[#FEE2E2] text-[#DC2626]'; 
-    default: return 'bg-gray-100 text-gray-600';
-  }
-};
+import { getUnits, getProjects, ApiUnit } from '@/lib/api/projects';
 
 export default function UnitsPage() {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [editingUnit, setEditingUnit] = useState<Unit | null>(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [unitToDelete, setUnitToDelete] = useState<Unit | null>(null);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [viewingUnit, setViewingUnit] = useState<Unit | null>(null);
+  const [units, setUnits] = useState<ApiUnit[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleOpenAddModal = () => {
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
+  // Project filter dropdown
+  const [projects, setProjects] = useState<{ id: number; name: string }[]>([]);
+
+  // Modals
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingUnit, setEditingUnit] = useState<ApiUnit | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletingUnitId, setDeletingUnitId] = useState<number | null>(null);
+  const [deletingUnitName, setDeletingUnitName] = useState('');
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [viewingUnitId, setViewingUnitId] = useState<number | null>(null);
+
+  const fetchUnits = useCallback(async (page = 1) => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const data = await getUnits(page);
+      setUnits(data.items);
+      setTotalPages(data.totalPages);
+      setTotalCount(data.totalCount);
+      setCurrentPage(data.pageNumber);
+    } catch (err) {
+      console.error('[UnitsPage] Fetch error:', err);
+      setError('Failed to load units. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUnits(1);
+  }, [fetchUnits]);
+
+  // Load all projects for the "Add Unit" project selector
+  useEffect(() => {
+    const fetchAllProjects = async () => {
+      let page = 1;
+      let all: typeof projects = [];
+      try {
+        while (true) {
+          const res = await getProjects(page);
+          all = [...all, ...res.items.map((p) => ({ id: p.id, name: p.name }))];
+          if (!res.hasNextPage) break;
+          page++;
+        }
+        setProjects(all);
+      } catch (err) {
+        console.error('[UnitsPage] Load projects error:', err);
+      }
+    };
+    fetchAllProjects();
+  }, []);
+
+  const handleAddNew = () => {
     setEditingUnit(null);
     setIsAddModalOpen(true);
   };
 
-  const handleOpenEditModal = (unit: Unit) => {
+  const handleEdit = (unit: ApiUnit) => {
     setEditingUnit(unit);
     setIsAddModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsAddModalOpen(false);
-    setEditingUnit(null);
+  const handleDelete = (unit: ApiUnit) => {
+    setDeletingUnitId(unit.id);
+    setDeletingUnitName(unit.name);
+    setIsDeleteModalOpen(true);
   };
 
+  const handleView = (unit: ApiUnit) => {
+    setViewingUnitId(unit.id);
+    setIsDetailsModalOpen(true);
+  };
+
+  const handleSuccess = () => fetchUnits(currentPage);
+
+  const filteredUnits = units.filter((u) =>
+    u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (u.description || '').toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="p-10 min-h-screen font-inter" style={{ backgroundColor: '#F9F9F980' }}>
-      <div className="max-w-[1450px] mx-auto space-y-10">
-        
-        {/* Top Section: Title & Add Button */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div>
-            <h2 className="text-[30px] font-bold text-[#16273B] mb-1">Units Management</h2>
-            <p className="text-gray-500 text-base">Manage all property units</p>
-          </div>
-          <button 
-            onClick={handleOpenAddModal}
-            className="flex items-center gap-2 bg-[#16273B] hover:bg-[#1a304a] text-white px-8 py-4 rounded-full font-semibold transition-colors shadow-sm cursor-pointer"
-          >
-            <Image src="/admin/units/add.png" alt="Add" width={22} height={22} className="object-contain" />
-            <span>Add New Unit</span>
-          </button>
+    <div className="p-10 lg:p-14 font-inter bg-[#F8F9FA] min-h-full scrollbar-hide">
+
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+        <div>
+          <h1 className="text-[36px] font-bold text-[#16273B] mb-1">Units</h1>
+          <p className="text-[#64748B] text-[17px]">{totalCount} unit{totalCount !== 1 ? 's' : ''} total</p>
         </div>
+        <button
+          onClick={handleAddNew}
+          className="bg-[#16273B] text-white px-10 py-5 rounded-[24px] flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-xl hover:shadow-2xl active:scale-95 group cursor-pointer"
+        >
+          <Image src="/admin/projects/mingcute_add-fill.png" alt="Add" width={24} height={24} className="group-hover:rotate-90 transition-transform duration-300" />
+          <span className="text-[18px] font-semibold">Add Unit</span>
+        </button>
+      </div>
 
-        {/* Filter & Search Section */}
-        <div className="flex flex-col lg:flex-row justify-between gap-8 items-center">
-          {/* Search Bar */}
-          <div className="w-full lg:w-[480px] relative">
-            <div className="absolute left-6 top-1/2 -translate-y-1/2 opacity-50">
-              <Image src="/admin/units/search-line.png" alt="Search" width={22} height={22} />
-            </div>
-            <input 
-              type="text" 
-              placeholder="Search Unit" 
-              className="w-full bg-white border border-gray-100 rounded-full py-4.5 pl-16 pr-8 text-[#16273B] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-sm text-lg"
-            />
-          </div>
-
-          {/* Filters */}
-          <div className="flex items-center gap-6 w-full lg:w-auto">
-            <div className="flex items-center gap-3 text-gray-700 font-bold whitespace-nowrap px-2 text-lg">
-              <Image src="/admin/units/filter.png" alt="Filter" width={24} height={24} />
-              <span>Filter:</span>
-            </div>
-            
-            <button className="flex items-center justify-between gap-10 bg-white border border-gray-100 rounded-full py-4 px-8 shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap text-gray-600 min-w-[180px] cursor-pointer">
-              <span className="font-medium">All Status</span>
-              <Image src="/admin/units/arrow-down.png" alt="Dropdown" width={18} height={18} className="opacity-60" />
-            </button>
-            
-            <button className="flex items-center justify-between gap-10 bg-white border border-gray-100 rounded-full py-4 px-8 shadow-sm hover:bg-gray-50 transition-colors whitespace-nowrap text-gray-600 min-w-[180px] cursor-pointer">
-              <span className="font-medium">All Types</span>
-              <Image src="/admin/units/arrow-down.png" alt="Dropdown" width={18} height={18} className="opacity-60" />
-            </button>
-          </div>
+      {/* Search */}
+      <div className="relative max-w-full mb-8">
+        <div className="absolute left-8 top-1/2 -translate-y-1/2">
+          <Image src="/admin/projects/search-line.png" alt="Search" width={24} height={24} className="opacity-40" />
         </div>
+        <input
+          type="text"
+          placeholder="Search units..."
+          className="w-full bg-white border border-gray-100 rounded-[28px] py-5 pl-18 pr-10 text-[17px] text-[#16273B] focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 transition-all shadow-sm placeholder:text-[#94A3B8]"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
 
-        {/* Table Section */}
-        <div className="bg-white rounded-[28px] shadow-sm border border-gray-100 overflow-hidden">
+      {/* Table */}
+      <div className="bg-white rounded-[32px] shadow-sm border border-gray-50 overflow-hidden">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-24">
+            <div className="w-10 h-10 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-4">
+            <p className="text-red-500">{error}</p>
+            <button onClick={() => fetchUnits(currentPage)} className="bg-[#16273B] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
+          </div>
+        ) : filteredUnits.length === 0 ? (
+          <div className="flex items-center justify-center py-20">
+            <p className="text-[#64748B] text-[17px]">
+              {searchQuery ? 'No units match your search.' : 'No units yet. Click "Add Unit" to create one!'}
+            </p>
+          </div>
+        ) : (
           <div className="overflow-x-auto scrollbar-hide">
-            <table className="w-full min-w-[1100px] text-left border-collapse text-lg">
+            <table className="w-full min-w-[800px] text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-100 text-[16px] font-bold text-[#16273B]">
-                  <th className="py-7 px-10 whitespace-nowrap">Image</th>
-                  <th className="py-7 px-4 whitespace-nowrap">Title</th>
-                  <th className="py-7 px-4 whitespace-nowrap">Price</th>
-                  <th className="py-7 px-4 whitespace-nowrap text-center">Type</th>
-                  <th className="py-7 px-4 whitespace-nowrap text-center">Status</th>
-                  <th className="py-7 px-4 whitespace-nowrap">Location</th>
-                  <th className="py-7 px-10 whitespace-nowrap text-right">Actions</th>
+                <tr className="border-b border-gray-50 text-[15px] font-bold text-[#16273B]">
+                  <th className="py-7 px-10">Name</th>
+                  <th className="py-7 px-4">Price</th>
+                  <th className="py-7 px-4 text-center">Beds</th>
+                  <th className="py-7 px-4 text-center">Baths</th>
+                  <th className="py-7 px-4 text-center">Area</th>
+                  <th className="py-7 px-4 text-center">Featured</th>
+                  <th className="py-7 px-10 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
-                {unitsData.map((unit) => (
-                  <tr key={unit.id} className="hover:bg-gray-50/50 transition-colors group">
-                    <td className="py-7 px-10">
-                      <Image 
-                        src="/admin/units/placeholder.jpg" 
-                        alt="Unit" 
-                        width={100} 
-                        height={75} 
-                        className="rounded-xl object-cover shadow-sm"
-                      />
-                    </td>
-                    <td className="py-7 px-4">
-                      <h4 className="text-[17px] font-bold text-[#16273B] mb-1">{unit.title}</h4>
-                      <p className="text-[15px] text-gray-500">{unit.subtitle}</p>
-                    </td>
-                    <td className="py-7 px-4">
-                      <span className="text-[17px] font-bold text-[#16273B]">{unit.price}</span>
-                    </td>
-                    <td className="py-7 px-4 text-center">
-                      <span className={`inline-flex px-5 py-2 rounded-xl text-[14px] font-bold ${getTypeBadgeStyle(unit.type)}`}>
-                        {unit.type}
+              <tbody className="divide-y divide-gray-50">
+                {filteredUnits.map((unit) => (
+                  <tr key={unit.id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="py-6 px-10">
+                      <span
+                        className="text-[16px] font-bold text-[#16273B] cursor-pointer hover:text-blue-600 transition-colors"
+                        onClick={() => handleView(unit)}
+                      >
+                        {unit.name}
                       </span>
+                      {unit.description && (
+                        <p className="text-[13px] text-[#94A3B8] mt-0.5 line-clamp-1">{unit.description}</p>
+                      )}
                     </td>
-                    <td className="py-7 px-4 text-center">
-                      <span className={`inline-flex px-5 py-2 rounded-xl text-[14px] font-bold ${getStatusBadgeStyle(unit.status)}`}>
-                        {unit.status}
-                      </span>
+                    <td className="py-6 px-4">
+                      <span className="text-[15px] font-bold text-[#16273B]">EGP {unit.price.toLocaleString()}</span>
                     </td>
-                    <td className="py-7 px-4">
-                      <div className="flex items-center gap-2 text-gray-500 text-[15px]">
-                        <MapPin size={18} className="opacity-70" />
-                        <span>{unit.location}</span>
-                      </div>
+                    <td className="py-6 px-4 text-center">
+                      <span className="inline-flex px-4 py-1.5 rounded-full bg-[#EBF3FF] text-[#1447E6] text-[13px] font-bold">{unit.noBedRoom}</span>
                     </td>
-                    <td className="py-7 px-10">
+                    <td className="py-6 px-4 text-center">
+                      <span className="inline-flex px-4 py-1.5 rounded-full bg-[#F3E8FF] text-[#8200DB] text-[13px] font-bold">{unit.noBathRoom}</span>
+                    </td>
+                    <td className="py-6 px-4 text-center">
+                      <span className="text-[14px] text-[#64748B]">{unit.area} m²</span>
+                    </td>
+                    <td className="py-6 px-4 text-center">
+                      {unit.isFeatured
+                        ? <span className="inline-flex px-4 py-1.5 rounded-full bg-[#FEF9C3] text-[#A16207] text-[13px] font-bold">Yes</span>
+                        : <span className="text-gray-300 text-[13px]">—</span>}
+                    </td>
+                    <td className="py-6 px-10">
                       <div className="flex items-center justify-end gap-5">
-                        <button
-                          onClick={() => { setViewingUnit(unit); setIsDetailsModalOpen(true); }}
-                          className="hover:scale-125 transition-transform duration-200 cursor-pointer"
-                        >
-                          <Image src="/admin/units/view.png" alt="View" width={28} height={28} className="object-contain" />
+                        <button onClick={() => handleView(unit)} className="hover:scale-125 transition-transform duration-200 cursor-pointer" title="View">
+                          <Image src="/admin/units/view.png" alt="View" width={20} height={20} className="opacity-70 hover:opacity-100" />
                         </button>
-                        <button 
-                          onClick={() => handleOpenEditModal(unit)}
-                          className="hover:scale-125 transition-transform duration-200 cursor-pointer"
-                        >
-                          <Image src="/admin/units/edit.png" alt="Edit" width={28} height={28} className="object-contain" />
+                        <button onClick={() => handleEdit(unit)} className="hover:scale-125 transition-transform duration-200 cursor-pointer" title="Edit">
+                          <Image src="/admin/projects/edit.png" alt="Edit" width={18} height={18} className="opacity-70 hover:opacity-100" />
                         </button>
-                        <button 
-                          onClick={() => { setUnitToDelete(unit); setIsDeleteModalOpen(true); }}
-                          className="hover:scale-125 transition-transform duration-200 cursor-pointer"
-                        >
-                          <Image src="/admin/units/delete.png" alt="Delete" width={28} height={28} className="object-contain" />
+                        <button onClick={() => handleDelete(unit)} className="hover:scale-125 transition-transform duration-200 cursor-pointer" title="Delete">
+                          <Image src="/admin/projects/delete.png" alt="Delete" width={18} height={18} className="opacity-70 hover:opacity-100" />
                         </button>
                       </div>
                     </td>
@@ -218,32 +211,52 @@ export default function UnitsPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        )}
 
+        {/* Pagination */}
+        {!isLoading && !error && totalPages > 1 && (
+          <div className="flex items-center justify-between px-10 py-5 border-t border-gray-50">
+            <p className="text-[14px] text-[#94A3B8]">Page {currentPage} of {totalPages}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => fetchUnits(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#16273B] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => fetchUnits(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#16273B] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      <AddUnitModal 
-        isOpen={isAddModalOpen} 
-        onClose={handleCloseModal}
+      {/* Modals */}
+      <AddUnitModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSuccess={handleSuccess}
+        projectId={null}
         editData={editingUnit}
       />
-
       <DeleteUnitModal
         isOpen={isDeleteModalOpen}
-        onClose={() => { setIsDeleteModalOpen(false); setUnitToDelete(null); }}
-        unitTitle={unitToDelete?.title}
-        onConfirm={() => {
-          // Placeholder for actual delete logic
-          console.log('Deleting unit:', unitToDelete?.id);
-          setIsDeleteModalOpen(false);
-          setUnitToDelete(null);
-        }}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onSuccess={handleSuccess}
+        unitId={deletingUnitId}
+        unitName={deletingUnitName}
       />
-
       <UnitDetailsModal
         isOpen={isDetailsModalOpen}
-        onClose={() => { setIsDetailsModalOpen(false); setViewingUnit(null); }}
-        unit={viewingUnit}
+        onClose={() => { setIsDetailsModalOpen(false); setViewingUnitId(null); }}
+        unitId={viewingUnitId}
+        onUpdate={handleSuccess}
       />
     </div>
   );
