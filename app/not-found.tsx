@@ -16,7 +16,7 @@ export default function NotFound() {
             Page Not Found
           </h2>
           <p className="text-gray-600 text-lg">
-            Oops! The page you are looking for doesn't exist, has been moved, or you might not have the correct permissions to view it.
+            Oops! The page you are looking for doesn&apos;t exist, has been moved, or you might not have the correct permissions to view it.
           </p>
         </div>
 
