@@ -5,7 +5,7 @@ import Image from 'next/image';
 import AddUnitModal from '@/components/admin/AddUnitModal';
 import DeleteUnitModal from '@/components/admin/DeleteUnitModal';
 import UnitDetailsModal from '@/components/admin/UnitDetailsModal';
-import { getUnits, getProjects, ApiUnit } from '@/lib/api/projects';
+import { getUnits, ApiUnit } from '@/lib/api/projects';
 
 export default function UnitsPage() {
   const [units, setUnits] = useState<ApiUnit[]>([]);

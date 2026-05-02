@@ -15,7 +15,6 @@ const icoCalendar     = `${BASE}/uil_calender.png`;
 const icoHome         = `${BASE}/home-2.png`;
 const icoCheck        = `${BASE}/weui_done2-outlined.png`;
 const icoStar         = `${BASE}/Star1.png`;
-const imgProfile      = `${BASE}/profile.png`;
 const icoSend         = `${BASE}/send.png`;
 const icoGroupQuote   = `${BASE}/Group.png`;
 

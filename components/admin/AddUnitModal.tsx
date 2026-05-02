@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { addUnitToProject, updateUnit, getUnitById, ApiUnit, UnitDetail } from '@/lib/api/projects';
+import { addUnitToProject, updateUnit, getUnitById, ApiUnit } from '@/lib/api/projects';
 import { getProjects } from '@/lib/api/projects';
 
 interface AddUnitModalProps {
@@ -106,11 +106,14 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
           setForm(prev => ({
             ...prev,
-            paymentPlans: (detail.paymentPlans || []).map(p => ({
-              installmentMonthes: (p as any).installmentMothes ?? (p as any).installmentMonthes ?? 0,
-              installmentDownPayment: p.installmentDownPayment ?? 0,
-              paymentType: p.paymentType ?? 'Installment'
-            }))
+            paymentPlans: (detail.paymentPlans || []).map(p => {
+              const plan = p as { installmentMothes?: number; installmentMonthes?: number; installmentDownPayment?: number; paymentType?: string };
+              return {
+                installmentMonthes: plan.installmentMothes ?? plan.installmentMonthes ?? 0,
+                installmentDownPayment: plan.installmentDownPayment ?? 0,
+                paymentType: plan.paymentType ?? 'Installment'
+              };
+            })
           }));
         } catch (err) {
           console.error('[AddUnitModal] Failed to fetch unit detail', err);
@@ -123,7 +126,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
     }
     setError('');
-  }, [isOpen, editData, projectId]);
+  }, [isOpen, editData, projectId, isEditMode]);
 
   if (!isOpen) return null;
 
@@ -197,7 +200,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         });
       }
       onSuccess(); onClose();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('[AddUnitModal]', err);
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
     } finally {

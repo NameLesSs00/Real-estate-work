@@ -24,7 +24,7 @@ export default function DeleteProjectModal({ isOpen, onClose, onSuccess, project
     try {
       await deleteProject(projectId);
       onSuccess(); onClose();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('[DeleteProjectModal]', err);
       setError(err instanceof Error ? err.message : 'Failed to delete project. Please try again.');
     } finally {
