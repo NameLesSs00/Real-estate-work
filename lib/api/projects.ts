@@ -119,6 +119,13 @@ export interface UnitDetail {
   isActive: boolean;
   locationName: string;
   projectName: string;
+  noBathRoom: number;
+  noBedRoom: number;
+  floorNumber: number;
+  floorName: string;
+  area: number;
+  noKitchen: number;
+  view: number;
   paymentPlans: {
     planStatus: string;
     installmentMothes: number;
