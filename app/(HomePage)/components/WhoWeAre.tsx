@@ -4,7 +4,7 @@ import './WhoWeAre.css';
 
 const WhoWeAre = () => {
   return (
-    <section className="who-we-are-section">
+    <section id="about" className="who-we-are-section">
       <Image 
         src="/assists/whoWeAre/Ellipse 1.png" 
         alt="Background Curve" 
