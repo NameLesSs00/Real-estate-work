@@ -18,8 +18,7 @@ export default function UnitsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
 
-  // Project filter dropdown
-  const [projects, setProjects] = useState<{ id: number; name: string }[]>([]);
+
 
   // Modals
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -51,25 +50,7 @@ export default function UnitsPage() {
     fetchUnits(1);
   }, [fetchUnits]);
 
-  // Load all projects for the "Add Unit" project selector
-  useEffect(() => {
-    const fetchAllProjects = async () => {
-      let page = 1;
-      let all: typeof projects = [];
-      try {
-        while (true) {
-          const res = await getProjects(page);
-          all = [...all, ...res.items.map((p) => ({ id: p.id, name: p.name }))];
-          if (!res.hasNextPage) break;
-          page++;
-        }
-        setProjects(all);
-      } catch (err) {
-        console.error('[UnitsPage] Load projects error:', err);
-      }
-    };
-    fetchAllProjects();
-  }, []);
+
 
   const handleAddNew = () => {
     setEditingUnit(null);
