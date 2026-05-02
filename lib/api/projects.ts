@@ -98,7 +98,7 @@ export interface UpdateUnitPayload {
   name: string;
   description: string;
   price: number;
-  propertyType: any;
+  propertyType: number;
   noBathRoom: number;
   noBedRoom: number;
   noKitchen: number;
@@ -251,9 +251,10 @@ export async function deleteProject(id: number): Promise<void> {
     try {
       const json = JSON.parse(text);
       if (json.message) throw new Error(json.message);
-    } catch (e: any) {
-      if (e.message && e.message !== 'Unexpected end of JSON input' && !e.message.startsWith('Unexpected token')) {
-        throw e;
+    } catch (e: unknown) {
+      const err = e as Error;
+      if (err.message && err.message !== 'Unexpected end of JSON input' && !err.message.startsWith('Unexpected token')) {
+        throw err;
       }
     }
     throw new Error('Failed to delete project.');
@@ -304,9 +305,10 @@ export async function addUnitToProject(payload: AddUnitPayload): Promise<void> {
     try {
       const json = JSON.parse(text);
       if (json.message) throw new Error(json.message);
-    } catch (e: any) {
-      if (e.message && e.message !== 'Unexpected end of JSON input' && !e.message.startsWith('Unexpected token')) {
-        throw e;
+    } catch (e: unknown) {
+      const err = e as Error;
+      if (err.message && err.message !== 'Unexpected end of JSON input' && !err.message.startsWith('Unexpected token')) {
+        throw err;
       }
     }
     throw new Error('Failed to add unit to project.');
@@ -326,9 +328,10 @@ export async function updateUnit(payload: UpdateUnitPayload): Promise<void> {
     try {
       const json = JSON.parse(text);
       if (json.message) throw new Error(json.message);
-    } catch (e: any) {
-      if (e.message && e.message !== 'Unexpected end of JSON input' && !e.message.startsWith('Unexpected token')) {
-        throw e;
+    } catch (e: unknown) {
+      const err = e as Error;
+      if (err.message && err.message !== 'Unexpected end of JSON input' && !err.message.startsWith('Unexpected token')) {
+        throw err;
       }
     }
     throw new Error('Failed to update unit.');
