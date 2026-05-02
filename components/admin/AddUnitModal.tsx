@@ -35,7 +35,6 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const [projects, setProjects] = useState<{ id: number; name: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [fetchedDetail, setFetchedDetail] = useState<UnitDetail | null>(null);
 
   const isEditMode = !!editData;
 
@@ -77,7 +76,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   useEffect(() => {
     if (!isOpen) {
       setForm(EMPTY_FORM);
-      setFetchedDetail(null);
+
       setError('');
       return;
     }
@@ -104,7 +103,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         // Then fetch full details for payment plans
         try {
           const detail = await getUnitById(editData.id);
-          setFetchedDetail(detail);
+
           setForm(prev => ({
             ...prev,
             paymentPlans: (detail.paymentPlans || []).map(p => ({
@@ -121,7 +120,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     } else {
       setForm(EMPTY_FORM);
       setSelectedProjectId(projectId ?? null);
-      setFetchedDetail(null);
+
     }
     setError('');
   }, [isOpen, editData, projectId]);
