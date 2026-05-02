@@ -173,7 +173,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center mr-4 group-hover:bg-brand-primary transition-colors">
                       <Image src={icoCheck} alt="Check" width={14} height={14} className="w-3.5 h-3.5 group-hover:invert" />
                     </div>
-                    <span className="text-lg">{feature.name || "Facility"}</span>
+                    <span className="text-lg">{feature || "Facility"}</span>
                   </div>
                 ))}
                 {unitData.services?.map((service, index) => (
@@ -181,7 +181,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center mr-4 group-hover:bg-brand-primary transition-colors">
                       <Image src={icoCheck} alt="Check" width={14} height={14} className="w-3.5 h-3.5 group-hover:invert" />
                     </div>
-                    <span className="text-lg">{service.name || "Service"}</span>
+                    <span className="text-lg">{service || "Service"}</span>
                   </div>
                 ))}
               </div>
