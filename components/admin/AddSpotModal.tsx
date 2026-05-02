@@ -9,6 +9,7 @@ interface SpotData {
   location: string;
   description: string;
   image: string;
+  propertyCount?: number;
 }
 
 interface AddSpotModalProps {
