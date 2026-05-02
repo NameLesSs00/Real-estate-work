@@ -302,11 +302,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 
                 <div className="flex items-center gap-6 mb-8 relative z-10">
                   <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-md">
-                    <Image src={data.reviews.featured.avatar} alt={data.reviews.featured.name} fill className="object-cover" />
+                    <Image src="/assists/PropertyDetails/profile.png" alt="Featured Reviewer" fill className="object-cover" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-brand-primary text-2xl mb-1">{data.reviews.featured.name}</h4>
-                    <p className="text-lg text-gray-400 mb-2">{data.reviews.featured.role}</p>
+                    <h4 className="font-bold text-brand-primary text-2xl mb-1">Ahmed Hassan</h4>
+                    <p className="text-lg text-gray-400 mb-2">Recent Buyer</p>
                     <div className="flex items-center gap-2">
                       <Image src={icoStar} alt="Star" width={24} height={24} className="w-6 h-6" />
                       <span className="text-2xl font-bold text-brand-primary">4.75</span>
@@ -316,7 +316,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 
                 <div className="flex-grow relative z-10">
                   <p className="text-gray-600 text-lg lg:text-xl leading-[1.7] font-medium max-w-3xl">
-                    {data.reviews.featured.text}
+                    "This property exceeded all my expectations. The attention to detail and the quality of the finish are outstanding. I highly recommend it to anyone looking for a premium living experience."
                   </p>
                 </div>
               </div>
