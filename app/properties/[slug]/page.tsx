@@ -269,18 +269,21 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 </button>
               </div>
               <div className="flex-[1.2] w-full sm:pl-8 flex flex-col justify-center gap-4">
-                {[5, 4, 3, 2, 1].map((star) => (
-                  <div key={star} className="flex items-center gap-3 text-sm font-bold text-gray-400">
-                    <span className="w-3 text-right">{star}</span>
-                    <Image src={icoStar} alt="Star" width={16} height={16} className="w-4 h-4 opacity-40" />
-                    <div className="flex-grow h-2 bg-gray-50 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-[#FFB800] rounded-full" 
-                        style={{ width: `${data.reviews.distribution[star as keyof typeof data.reviews.distribution]}%` }}
-                      ></div>
+                {[5, 4, 3, 2, 1].map((star) => {
+                  const distribution: Record<number, number> = { 5: 85, 4: 10, 3: 3, 2: 1, 1: 1 };
+                  return (
+                    <div key={star} className="flex items-center gap-3 text-sm font-bold text-gray-400">
+                      <span className="w-3 text-right">{star}</span>
+                      <Image src={icoStar} alt="Star" width={16} height={16} className="w-4 h-4 opacity-40" />
+                      <div className="flex-grow h-2 bg-gray-50 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-[#FFB800] rounded-full" 
+                          style={{ width: `${distribution[star]}%` }}
+                        ></div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
