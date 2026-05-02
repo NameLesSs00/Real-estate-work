@@ -11,7 +11,9 @@
   --font-radley: var(--font-radley);
   --font-allura: var(--font-allura);
 }
-
+.empty{
+color: white;
+}
 :root {
   --background: #F8F5F0;
   --foreground: #1B2134;
