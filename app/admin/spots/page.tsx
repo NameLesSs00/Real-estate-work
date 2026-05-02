@@ -45,7 +45,7 @@ const mockSpots: Spot[] = [
 ];
 
 export default function SpotsPage() {
-  const [spots, setSpots] = useState<Spot[]>(mockSpots);
+  const [spots] = useState<Spot[]>(mockSpots);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Modal states

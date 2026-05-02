@@ -3,10 +3,18 @@
 import React from 'react';
 import Image from 'next/image';
 
+interface SpotData {
+  id: number;
+  title: string;
+  location: string;
+  description: string;
+  image: string;
+}
+
 interface AddSpotModalProps {
   isOpen: boolean;
   onClose: () => void;
-  editData?: any | null; // using any for now since Spot type is local to the page
+  editData?: SpotData | null;
 }
 
 export default function AddSpotModal({ isOpen, onClose, editData }: AddSpotModalProps) {
