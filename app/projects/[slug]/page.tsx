@@ -5,10 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, ChevronRight, Loader2 } from 'lucide-react';
 import { getProjectById, resolveProjectImageUrl, Project } from '@/lib/api/projects';
-import { getDeveloperById, resolveImageUrl } from '@/lib/api/developers';
+import { getDeveloperById } from '@/lib/api/developers';
 
 const DEFAULT_IMAGE  = '/assists/defalutImage.jpg';
-const DEFAULT_LOGO   = '/assists/defalutLogo.png';
 
 import ImageGallery from '@/components/ImageGallery';
 
