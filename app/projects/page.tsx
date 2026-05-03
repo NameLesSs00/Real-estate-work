@@ -9,7 +9,6 @@ import { getDeveloperById, resolveImageUrl } from '@/lib/api/developers';
 
 const DEFAULT_IMAGE = '/assists/defalutImage.jpg';
 const DEFAULT_DEVELOPER_LOGO = '/assists/defalutLogo.png';
-const PAGE_SIZE = 6; // items per "Show More" click
 
 interface ProjectWithLogo extends Project {
   developerLogoUrl: string | null;

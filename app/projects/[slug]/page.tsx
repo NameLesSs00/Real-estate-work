@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, ChevronRight, X, ChevronLeft, ChevronRight as ChevronRightIcon, Loader2 } from 'lucide-react';
+import { MapPin, ChevronRight, Loader2 } from 'lucide-react';
 import { getProjectById, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { getDeveloperById, resolveImageUrl } from '@/lib/api/developers';
 
@@ -31,7 +31,6 @@ export default function ProjectDetailsPage({
   const projectId = Number(slug);
 
   const [project,     setProject]     = useState<Project | null>(null);
-  const [developerLogo, setDeveloperLogo] = useState<string>(DEFAULT_LOGO);
   const [loading,     setLoading]     = useState(true);
   const [error,       setError]       = useState<string | null>(null);
 
@@ -48,11 +47,9 @@ export default function ProjectDetailsPage({
 
       if (data.developerId) {
         try {
-          const dev = await getDeveloperById(data.developerId);
-          const logo = resolveImageUrl(dev.logoImage);
-          if (logo) setDeveloperLogo(logo);
+          await getDeveloperById(data.developerId);
         } catch {
-          // keep default logo
+          // silently fall back
         }
       }
     } catch (err: unknown) {
