@@ -19,10 +19,15 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
-    return [
+    // return [
+    //   {
+    //     source: '/backend/:path*',
+    //     destination: 'https://api.thegate-estates.com/:path*',
+    //   },
+      return [
       {
         source: '/backend/:path*',
-        destination: 'https://api.thegate-estates.com/:path*',
+        destination: 'https://websiterealstate.runasp.net/:path*',
       },
     ];
   },
