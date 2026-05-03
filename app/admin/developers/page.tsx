@@ -171,17 +171,14 @@ export default function DevelopersPage() {
                         <div
                           className="w-[110px] h-[60px] relative flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
                           onClick={() => handleView(dev)}
+                          title={!logoUrl ? "Default Logo" : undefined}
                         >
-                          {logoUrl ? (
-                            <Image
-                              src={logoUrl}
-                              alt={dev.name}
-                              fill
-                              className="object-contain"
-                            />
-                          ) : (
-                            <span className="text-[10px] text-gray-400 text-center px-1">No Logo</span>
-                          )}
+                          <Image
+                            src={logoUrl || '/admin/defalutLogo.png'}
+                            alt={dev.name}
+                            fill
+                            className="object-contain"
+                          />
                         </div>
                       </td>
 

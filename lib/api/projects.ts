@@ -280,6 +280,18 @@ export async function uploadProjectImages(id: number, files: File[]): Promise<vo
   if (!res.ok) {
     const text = await res.text();
     console.error('[Projects] Image upload failed:', res.status, text);
+    try {
+      const json = JSON.parse(text);
+      if (json.errors && json.errors.Files) {
+        throw new Error(json.errors.Files[0]);
+      }
+      if (json.message) throw new Error(json.message);
+    } catch (e: unknown) {
+      const err = e as Error;
+      if (err.message && err.message !== 'Unexpected end of JSON input' && !err.message.startsWith('Unexpected token')) {
+        throw err;
+      }
+    }
     throw new Error('Failed to upload project images.');
   }
 }
@@ -370,6 +382,18 @@ export async function uploadUnitImages(id: number, files: File[]): Promise<void>
   if (!res.ok) {
     const text = await res.text();
     console.error('[Projects] Upload unit images failed:', res.status, text);
+    try {
+      const json = JSON.parse(text);
+      if (json.errors && json.errors.Files) {
+        throw new Error(json.errors.Files[0]);
+      }
+      if (json.message) throw new Error(json.message);
+    } catch (e: unknown) {
+      const err = e as Error;
+      if (err.message && err.message !== 'Unexpected end of JSON input' && !err.message.startsWith('Unexpected token')) {
+        throw err;
+      }
+    }
     throw new Error('Failed to upload unit images.');
   }
 }

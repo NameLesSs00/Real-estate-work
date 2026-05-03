@@ -164,17 +164,16 @@ export default function DeveloperDetailsModal({
               <div className="flex items-center gap-6">
                 {/* Logo */}
                 <div className="relative shrink-0">
-                  <div className="w-[140px] h-[80px] relative flex items-center justify-center">
-                    {developer.logoImage ? (
-                      <Image
-                        src={resolveImageUrl(developer.logoImage) ?? ''}
-                        alt={developer.name}
-                        fill
-                        className="object-contain"
-                      />
-                    ) : (
-                      <span className="text-gray-400 text-xs text-center px-2">No Logo</span>
-                    )}
+                  <div 
+                    className="w-[140px] h-[80px] relative flex items-center justify-center"
+                    title={!developer.logoImage ? "Default Logo" : undefined}
+                  >
+                    <Image
+                      src={developer.logoImage ? (resolveImageUrl(developer.logoImage) ?? '/admin/defalutLogo.png') : '/admin/defalutLogo.png'}
+                      alt={developer.name}
+                      fill
+                      className="object-contain"
+                    />
                   </div>
                   {/* Logo actions */}
                   <div className="flex gap-1 mt-2">

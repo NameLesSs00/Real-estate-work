@@ -1,22 +1,13 @@
 import Image from "next/image";
-import { Home, ArrowLeft, ArrowRight } from "lucide-react";
+import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight } from "lucide-react";
 import { getUnitById, resolveProjectImageUrl } from "@/lib/api/projects";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import CopyLinkButton from "@/components/CopyLinkButton";
 
-// Public folder assets
-const BASE            = "/assists/PropertyDetails";
-const icoLocation     = `${BASE}/location.png`;
-const icoBed          = `${BASE}/lucide_bed.png`;
-const icoBath         = `${BASE}/cil_bath.png`;
-const icoCar          = `${BASE}/ion_car-sport-outline.png`;
-const icoSize         = `${BASE}/fluent_slide-size-24-regular.png`;
-const icoCalendar     = `${BASE}/uil_calender.png`;
-const icoHome         = `${BASE}/home-2.png`;
-const icoCheck        = `${BASE}/weui_done2-outlined.png`;
-const icoStar         = `${BASE}/Star1.png`;
-const icoSend         = `${BASE}/send.png`;
-const icoGroupQuote   = `${BASE}/Group.png`;
+const BASE = "/assists/PropertyDetails";
+const icoCheck = `${BASE}/weui_done2-outlined.png`;
+const icoSend  = `${BASE}/send.png`;
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -24,343 +15,215 @@ type Props = {
 
 export default async function PropertyDetailsPage({ params }: Props) {
   const { slug } = await params;
-  
-  // Extract ID from slug format: "123-modern-sea-view"
-  const unitId = parseInt(slug.split('-')[0], 10);
-  
-  if (isNaN(unitId)) {
-    notFound();
-  }
+
+  const unitId = parseInt(slug.split("-")[0], 10);
+  if (isNaN(unitId)) notFound();
 
   let unitData;
   try {
     unitData = await getUnitById(unitId);
-  } catch (error) {
-    console.error("Failed to fetch property details:", error);
+  } catch {
     notFound();
   }
 
-  const breadcrumbs = ["Home", unitData.propertyType || "Property", "Property Details"];
-  const mainImage = (unitData.imageUrls?.[0] ? resolveProjectImageUrl(unitData.imageUrls[0]) : null) ?? `${BASE}/mainImg.png`;
-  const thumbnails = (unitData.imageUrls?.slice(1, 5).map(url => resolveProjectImageUrl(url)) || []).filter((url): url is string => url !== null);
+  const mainImage =
+    (unitData.imageUrls?.[0] ? resolveProjectImageUrl(unitData.imageUrls[0]) : null) ??
+    `${BASE}/mainImg.png`;
+  const thumbnails = (unitData.imageUrls?.slice(1, 5) ?? [])
+    .map((url) => resolveProjectImageUrl(url))
+    .filter((u): u is string => u !== null);
+
+  const overviewStats = [
+    { label: "Property Type", value: unitData.propertyType || "Unit",         icon: <Home        size={16} className="text-gray-500" /> },
+    { label: "Bedrooms",      value: unitData.noBedRoom  || 0,                icon: <BedDouble   size={16} className="text-gray-500" /> },
+    { label: "Bathrooms",     value: unitData.noBathRoom || 0,                icon: <Bath        size={16} className="text-gray-500" /> },
+    { label: "Kitchens",      value: unitData.noKitchen  || 0,                icon: <Utensils    size={16} className="text-gray-500" /> },
+    { label: "Area Size",     value: `${unitData.area || 0} M²`,           icon: <Maximize2   size={16} className="text-gray-500" /> },
+    { label: "Floor",         value: unitData.floorNumber || 0,               icon: <Layers      size={16} className="text-gray-500" /> },
+  ];
 
   return (
-    <div className="container mx-auto px-4 pt-32 pb-16 lg:pb-24 max-w-7xl">
-      {/* Breadcrumbs */}
-      <div className="flex items-center text-sm text-gray-500 mb-8">
-        <Home className="w-4 h-4 mr-2" />
-        {breadcrumbs.map((crumb, index) => (
-          <span key={index} className="flex items-center">
-            {index > 0 && <span className="mx-2 font-light text-gray-300">{'>'}</span>}
-            {index === 0 ? (
-              <Link href="/" className="hover:text-brand-primary transition-colors">{crumb}</Link>
-            ) : (
-              <span className={index === breadcrumbs.length - 1 ? "text-brand-primary font-medium" : "hover:text-brand-primary transition-colors"}>
-                {crumb}
-              </span>
-            )}
-          </span>
-        ))}
-      </div>
+    <div className="min-h-screen bg-[#F8F8F8] pt-36 pb-20">
+      <div className="w-full max-w-7xl xl:max-w-[1440px] mx-auto px-6 lg:px-12">
 
-      {/* Title & Location */}
-      <div className="mb-10">
-        <h1 className="text-4xl lg:text-5xl font-semibold text-brand-primary mb-4 tracking-tight">
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-1 text-[13px] text-gray-400 mb-5 font-poppins">
+          <Home size={14} className="text-gray-400" />
+          <Link href="/" className="hover:text-gray-700 transition-colors">Home</Link>
+          <ChevronRight size={13} />
+          <span>{unitData.propertyType || "Property"}</span>
+          <ChevronRight size={13} />
+          <span className="text-gray-700 font-semibold">Property Details</span>
+        </nav>
+
+        {/* Title + Location */}
+        <h1 className="text-[28px] font-bold text-gray-900 mb-1 font-poppins">
           {unitData.name || "Untitled Property"}
         </h1>
-        <div className="flex items-center text-gray-500 text-lg">
-          <Image src={icoLocation} alt="Location" width={20} height={20} className="w-5 h-5 mr-3 opacity-70" />
-          <span>{unitData.floorName || "Location details not available"}</span>
+        <div className="flex items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-1.5 text-[13px] text-gray-500 font-poppins">
+            <MapPin size={14} className="text-gray-400 flex-shrink-0" />
+            <span>{unitData.floorName || "Location not available"}</span>
+          </div>
+          <CopyLinkButton />
         </div>
-      </div>
 
-      {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
-        {/* Left Column - Main Content */}
-        <div className="lg:col-span-2 space-y-10">
-          
-          {/* Image Gallery */}
-          <div className="space-y-6">
-            <div className="relative w-full aspect-[16/9] rounded-[2.5rem] overflow-hidden shadow-sm">
-              <Image 
-                src={mainImage} 
-                alt={unitData.name || "Property Image"} 
-                fill 
+        {/* ── Main Two-Column Section ── */}
+        <div className="flex flex-col lg:flex-row gap-5 items-start mb-5">
+
+          {/* LEFT: Images (65%) */}
+          <div className="flex-1 flex flex-col gap-3">
+            {/* Main Image */}
+            <div className="relative w-full aspect-[4/3] rounded-[12px] overflow-hidden bg-gray-200">
+              <Image
+                src={mainImage}
+                alt={unitData.name || "Property Image"}
+                fill
                 className="object-cover"
                 priority
               />
             </div>
+
+            {/* Thumbnails */}
             {thumbnails.length > 0 && (
-              <div className="grid grid-cols-4 gap-6">
-                {thumbnails.map((thumb, index) => (
-                  <div key={index} className="relative w-full aspect-[4/3] rounded-[1.5rem] overflow-hidden cursor-pointer hover:ring-2 hover:ring-brand-primary transition-all shadow-sm">
-                    <Image src={thumb} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+              <div className="grid grid-cols-4 gap-3">
+                {thumbnails.map((thumb, i) => (
+                  <div
+                    key={i}
+                    className="relative w-full aspect-[4/3] rounded-[10px] overflow-hidden cursor-pointer bg-gray-200"
+                  >
+                    <Image src={thumb} alt={`Thumbnail ${i + 1}`} fill className="object-cover hover:opacity-90 transition-opacity" />
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Overview Section */}
-          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-50">
-            <div className="flex justify-between items-center mb-10 border-b border-gray-100 pb-8">
-              <h2 className="text-2xl font-semibold text-brand-primary">Overview</h2>
-              <div className="text-gray-400 font-medium">
-                Property ID: <span className="text-brand-primary">#{unitData.id}</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-              <div className="flex flex-col items-center text-center group">
-                <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={icoHome} alt="Type" width={32} height={32} className="w-8 h-8" />
-                </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.propertyType || "Unit"}</span>
-                <span className="text-gray-400 text-sm">Property Type</span>
-              </div>
-              <div className="flex flex-col items-center text-center group">
-                <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={icoBed} alt="Bedrooms" width={32} height={32} className="w-8 h-8" />
-                </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.noBedRoom || 0}</span>
-                <span className="text-gray-400 text-sm">Bedrooms</span>
-              </div>
-              <div className="flex flex-col items-center text-center group">
-                <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={icoBath} alt="Bathrooms" width={32} height={32} className="w-8 h-8" />
-                </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.noBathRoom || 0}</span>
-                <span className="text-gray-400 text-sm">Bathrooms</span>
-              </div>
-              <div className="flex flex-col items-center text-center group">
-                <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={icoCar} alt="Kitchens" width={32} height={32} className="w-8 h-8" />
-                </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.noKitchen || 0}</span>
-                <span className="text-gray-400 text-sm">Kitchens</span>
-              </div>
-              <div className="flex flex-col items-center text-center group">
-                <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={icoSize} alt="Area Size" width={32} height={32} className="w-8 h-8" />
-                </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.area || 0}</span>
-                <span className="text-gray-400 text-sm">Area Size</span>
-              </div>
-              <div className="flex flex-col items-center text-center group">
-                <div className="p-1 rounded-xl group-hover:bg-gray-50 transition-colors mb-4">
-                  <Image src={icoCalendar} alt="Floor" width={32} height={32} className="w-8 h-8" />
-                </div>
-                <span className="font-semibold text-brand-primary text-xl mb-1">{unitData.floorNumber || 0}</span>
-                <span className="text-gray-400 text-sm">Floor</span>
-              </div>
-            </div>
-          </div>
+          {/* RIGHT: Get in Touch Form */}
+          <div className="w-full lg:w-[400px] xl:w-[450px] flex-shrink-0">
+            <div className="bg-white border border-[#ECECEC] rounded-[14px] p-8 lg:p-10 shadow-sm">
+              <h3 className="text-[18px] font-bold text-gray-900 text-center mb-5 font-poppins">
+                Get in Touch
+              </h3>
 
-          {/* Description Section */}
-          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-50">
-            <h2 className="text-2xl font-semibold text-brand-primary mb-8 border-b border-gray-100 pb-8">Description</h2>
-            <div className="text-gray-500 leading-relaxed text-lg space-y-6 whitespace-pre-wrap">
-              {unitData.description || "No description provided."}
-            </div>
-          </div>
-
-          {/* Features Section */}
-          {((unitData.facilities && unitData.facilities.length > 0) || (unitData.services && unitData.services.length > 0)) && (
-            <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-50">
-              <h2 className="text-2xl font-semibold text-brand-primary mb-8 border-b border-gray-100 pb-8">Features & Services</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-10">
-                {unitData.facilities?.map((feature, index) => (
-                  <div key={`f-${index}`} className="flex items-center text-gray-700 group">
-                    <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center mr-4 group-hover:bg-brand-primary transition-colors">
-                      <Image src={icoCheck} alt="Check" width={14} height={14} className="w-3.5 h-3.5 group-hover:invert" />
-                    </div>
-                    <span className="text-lg">{feature || "Facility"}</span>
-                  </div>
-                ))}
-                {unitData.services?.map((service, index) => (
-                  <div key={`s-${index}`} className="flex items-center text-gray-700 group">
-                    <div className="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center mr-4 group-hover:bg-brand-primary transition-colors">
-                      <Image src={icoCheck} alt="Check" width={14} height={14} className="w-3.5 h-3.5 group-hover:invert" />
-                    </div>
-                    <span className="text-lg">{service || "Service"}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right Column - Sidebar */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-[2.5rem] p-10 shadow-lg border border-gray-50 sticky top-32">
-            <h3 className="text-3xl font-semibold text-brand-primary text-center mb-10">Get in Touch</h3>
-            
-            <form className="space-y-8">
-              <div>
-                <label className="block text-md font-semibold text-brand-primary mb-3 ml-1">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input 
-                  type="text" 
-                  className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary transition-all placeholder-gray-300 text-md shadow-inner"
-                  placeholder="Full Name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-md font-semibold text-brand-primary mb-3 ml-1">
-                  Phone Number <span className="text-red-500">*</span>
-                </label>
-                <input 
-                  type="tel" 
-                  className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary transition-all placeholder-gray-300 text-md shadow-inner"
-                  placeholder="Phone Number"
-                />
-              </div>
-
-              <div>
-                <label className="block text-md font-semibold text-brand-primary mb-3 ml-1">
-                  Email
-                </label>
-                <input 
-                  type="email" 
-                  className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary transition-all placeholder-gray-300 text-md shadow-inner"
-                  placeholder="Email"
-                />
-              </div>
-
-              <div>
-                <label className="block text-md font-semibold text-brand-primary mb-3 ml-1">
-                  Message
-                </label>
-                <textarea 
-                  className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-6 py-4 h-40 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary transition-all resize-none placeholder-gray-300 text-md shadow-inner"
-                  placeholder="How can we help you?"
-                ></textarea>
-              </div>
-
-              <button 
-                type="button"
-                className="w-full bg-brand-primary text-white font-bold py-5 rounded-full flex items-center justify-center hover:bg-brand-secondary hover:scale-[1.02] transition-all shadow-xl active:scale-95 group"
-              >
-                <span className="text-lg">Book a Visit</span>
-                <div className="bg-white/20 p-1.5 rounded-full ml-3 group-hover:translate-x-1 transition-transform">
-                  <Image src={icoSend} alt="Send" width={16} height={16} className="w-4 h-4 invert" />
+              <form className="flex flex-col gap-4">
+                <div>
+                  <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
+                    Full Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Full Name"
+                    className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"
+                  />
                 </div>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
 
-      {/* Full Width Bottom Section */}
-      <div className="mt-16 space-y-16">
-        {/* Reviews Section */}
-        <div className="space-y-12">
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-stretch w-full">
-            {/* Rating Summary Card */}
-            <div className="xl:col-span-4 bg-white rounded-[2.5rem] p-8 lg:p-10 shadow-sm border border-gray-50 flex flex-col sm:flex-row items-center w-full">
-              <div className="flex-1 flex flex-col items-center justify-center sm:border-r border-gray-100 sm:pr-8 mb-8 sm:mb-0">
-                <div className="flex items-center gap-4 mb-6">
-                  <span className="text-7xl lg:text-8xl font-bold text-brand-primary tracking-tighter">4.5</span>
-                  <Image src={icoStar} alt="Star" width={48} height={48} className="w-12 h-12" />
+                <div>
+                  <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
+                    Phone Number <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="Phone Number"
+                    className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"
+                  />
                 </div>
-                <button className="bg-[#1B2134] text-white px-8 py-3 rounded-2xl text-sm font-bold shadow-xl hover:bg-brand-secondary transition-all">
-                  653 reviews
+
+                <div>
+                  <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
+                    Message
+                  </label>
+                  <textarea
+                    placeholder="Message"
+                    rows={4}
+                    className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors resize-none"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  className="w-full bg-[#1B2134] text-white rounded-full py-3 text-[14px] font-semibold font-poppins flex items-center justify-center gap-2 hover:bg-[#2d3555] transition-all mt-1"
+                >
+                  Book a Visit
+                  <Image src={icoSend} alt="Send" width={15} height={15} className="w-[15px] h-[15px] invert" />
                 </button>
-              </div>
-              <div className="flex-[1.2] w-full sm:pl-8 flex flex-col justify-center gap-4">
-                {[5, 4, 3, 2, 1].map((star) => {
-                  const distribution: Record<number, number> = { 5: 85, 4: 10, 3: 3, 2: 1, 1: 1 };
-                  return (
-                    <div key={star} className="flex items-center gap-3 text-sm font-bold text-gray-400">
-                      <span className="w-3 text-right">{star}</span>
-                      <Image src={icoStar} alt="Star" width={16} height={16} className="w-4 h-4 opacity-40" />
-                      <div className="flex-grow h-2 bg-gray-50 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-[#FFB800] rounded-full" 
-                          style={{ width: `${distribution[star]}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Review Carousel Area */}
-            <div className="xl:col-span-8 flex flex-col sm:flex-row items-center gap-6 w-full">
-              {/* Navigation Arrow 1 - Left */}
-              <button className="w-14 h-14 bg-brand-primary rounded-full flex items-center justify-center flex-shrink-0 hover:bg-brand-secondary transition-all shadow-xl hover:scale-110 active:scale-95 group">
-                <ArrowLeft className="w-6 h-6 text-white group-hover:-translate-x-1 transition-transform" />
-              </button>
-
-              {/* Featured Review Card */}
-              <div className="bg-[#FCFBF9] rounded-[2.5rem] p-8 lg:p-12 shadow-sm border border-[#F2EFE9] flex-1 w-full relative flex flex-col h-full justify-center">
-                <div className="absolute top-10 right-10 w-12 h-12 opacity-80">
-                  <Image src={icoGroupQuote} alt="Quote" width={48} height={48} className="w-full h-full object-contain" />
-                </div>
-                
-                <div className="flex items-center gap-6 mb-8 relative z-10">
-                  <div className="relative w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-md">
-                    <Image src="/assists/PropertyDetails/profile.png" alt="Featured Reviewer" fill className="object-cover" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-brand-primary text-2xl mb-1">Ahmed Hassan</h4>
-                    <p className="text-lg text-gray-400 mb-2">Recent Buyer</p>
-                    <div className="flex items-center gap-2">
-                      <Image src={icoStar} alt="Star" width={24} height={24} className="w-6 h-6" />
-                      <span className="text-2xl font-bold text-brand-primary">4.75</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex-grow relative z-10">
-                  <p className="text-gray-600 text-lg lg:text-xl leading-[1.7] font-medium max-w-3xl">
-                    &quot;This property exceeded all my expectations. The attention to detail and the quality of the finish are outstanding. I highly recommend it to anyone looking for a premium living experience.&quot;
-                  </p>
-                </div>
-              </div>
-
-              {/* Navigation Arrow 2 - Right */}
-              <button className="w-14 h-14 bg-brand-primary rounded-full flex items-center justify-center flex-shrink-0 hover:bg-brand-secondary transition-all shadow-xl hover:scale-110 active:scale-95 group">
-                <ArrowRight className="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
-              </button>
+              </form>
             </div>
           </div>
         </div>
 
-        {/* Add Review Form */}
-        <div className="bg-transparent max-w-full">
-          <h2 className="text-2xl font-bold text-brand-primary mb-2">Add Review</h2>
-          <p className="text-gray-600 mb-8 text-md">Your email address will not be published. Required fields are marked <span className="text-red-500">*</span></p>
-          
-          <div className="mb-6">
-            <p className="text-brand-primary font-bold text-lg mb-2">Review</p>
-            <div className="flex gap-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <div key={star} className="p-1 cursor-pointer">
-                  <Image src={icoStar} alt="Star" width={20} height={20} className="w-5 h-5 opacity-20 grayscale hover:grayscale-0 hover:opacity-100 transition-all" />
+        {/* ── Overview Card (full width) ── */}
+        <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
+          <div className="mb-4 pb-4 border-b border-[#F0F0F0]">
+            <h2 className="text-[17px] font-bold text-gray-900 font-poppins">Overview</h2>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-y-5 divide-x divide-[#F0F0F0]">
+            {overviewStats.map((stat, i) => (
+              <div key={i} className="flex flex-col items-center text-center px-3">
+                <div className="flex items-center gap-1.5 mb-1">
+                  {stat.icon}
+                  <span className="text-[15px] font-bold text-gray-900 font-poppins">{stat.value}</span>
+                </div>
+                <span className="text-[12px] text-gray-400 font-poppins">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Description ── */}
+        <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
+          <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
+            Description
+          </h2>
+          <p className="text-[14px] text-gray-600 leading-relaxed font-poppins whitespace-pre-wrap">
+            {unitData.description || "No description provided."}
+          </p>
+        </div>
+
+        {/* ── Features & Services ── */}
+        {((unitData.facilities?.length ?? 0) > 0 || (unitData.services?.length ?? 0) > 0) && (
+          <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
+            <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
+              Features &amp; Services
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-6">
+              {unitData.facilities?.map((f, i) => (
+                <div key={`f-${i}`} className="flex items-center gap-2.5 text-gray-700">
+                  <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="text-[13px] font-poppins">{f}</span>
+                </div>
+              ))}
+              {unitData.services?.map((s, i) => (
+                <div key={`s-${i}`} className="flex items-center gap-2.5 text-gray-700">
+                  <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="text-[13px] font-poppins">{s}</span>
                 </div>
               ))}
             </div>
           </div>
+        )}
 
-          <div className="mb-6">
-            <label className="block text-brand-primary font-bold text-lg mb-3">
-              Comment
-            </label>
-            <textarea 
-              className="w-full bg-white border border-gray-300 rounded-lg p-4 h-32 focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary transition-all resize-none placeholder-gray-400 text-md"
-              placeholder="Text..."
-            ></textarea>
-          </div>
-
-          <div className="flex justify-start">
-            <button className="px-10 py-3 border border-brand-primary text-brand-primary font-semibold rounded-full hover:bg-brand-primary hover:text-white transition-colors">
-              Submit Review
-            </button>
-          </div>
+        {/* ── Reviews Placeholder ── */}
+        <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm">
+          <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
+            Reviews
+          </h2>
+          <p className="text-[13px] text-gray-400 italic font-poppins text-center py-6">
+            Comment section will be added later
+          </p>
         </div>
+
       </div>
     </div>
   );

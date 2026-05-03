@@ -162,12 +162,14 @@ export default function ProjectsPage() {
                         <div
                           className="w-[100px] h-[60px] relative rounded-xl overflow-hidden bg-gray-100 border border-gray-100 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
                           onClick={() => handleView(project)}
+                          title={!firstImage ? "Default Image" : undefined}
                         >
-                          {firstImage ? (
-                            <Image src={firstImage} alt={project.name} fill className="object-cover" />
-                          ) : (
-                            <span className="text-[10px] text-gray-400">No Image</span>
-                          )}
+                          <Image 
+                            src={firstImage || '/admin/defalutImage.jpg'} 
+                            alt={project.name} 
+                            fill 
+                            className="object-cover" 
+                          />
                         </div>
                       </td>
 

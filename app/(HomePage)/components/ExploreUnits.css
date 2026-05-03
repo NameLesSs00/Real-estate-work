@@ -1,6 +1,6 @@
 .explore-units-section {
-  padding: 60px 0;
-  background: linear-gradient(190.31deg, #FFFFFF 62.18%, rgba(27, 33, 52, 0.3) 111.67%);
+  padding: 80px 0;
+  background: #1B2134;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,7 +15,7 @@
 
 .explore-units-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,15 +33,15 @@
 
 .explore-units-title {
   font-family: var(--font-radley);
-  color: #1b2134;
-  font-size: 44px;
+  color: #ffffff;
+  font-size: 48px;
   line-height: 1.2;
   margin-bottom: 20px;
 }
 
 .explore-units-subtitle {
   font-family: var(--font-poppins);
-  color: #555555;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 16px;
   max-width: 700px;
   line-height: 1.6;
@@ -58,41 +58,43 @@
 
 .explore-tabs {
   display: flex;
-  gap: 16px;
-  margin-bottom: 40px;
-  justify-content: flex-start;
+  gap: 20px;
+  margin-bottom: 50px;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
 .explore-tab {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 12px;
-  border: 1px solid #1b2134;
+  gap: 10px;
+  padding: 12px 28px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
   background: transparent;
   cursor: pointer;
   font-family: var(--font-poppins);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
-  color: #1b2134;
+  color: #ffffff;
   transition: all 0.3s ease;
 }
 
 .explore-tab:hover {
-  background-color: rgba(27, 33, 52, 0.05);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .explore-tab.active {
-  background-color: #1b2134;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #1b2134;
+  border-color: #ffffff;
 }
 
 .explore-tab-icon {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(67%) sepia(35%) rotate(0deg) hue-rotate(10deg) brightness(95%) contrast(90%); /* Approximate orange/gold */
 }
 
 .units-grid {
@@ -106,26 +108,28 @@
 .show-more-wrapper {
   display: flex;
   justify-content: center;
+  margin-top: 20px;
 }
 
 .show-more-button {
-  width: 100%;
-  padding: 18px;
+  padding: 16px 60px;
   border-radius: 50px;
-  border: 1.5px solid #1b2134;
-  background-color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background-color: transparent;
   font-family: var(--font-poppins);
   font-size: 18px;
   font-weight: 500;
-  color: #1b2134;
+  color: #ffffff;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .show-more-button:hover {
-  background-color: #1b2134;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #1b2134;
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 1200px) {

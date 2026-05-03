@@ -15,6 +15,7 @@ export interface PropertyCardProps {
   area: string;
   image: string;
   status?: string;
+  isDefaultImage?: boolean;
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
@@ -27,11 +28,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   baths,
   area,
   image,
-  status = 'For Sale'
+  status = 'For Sale',
+  isDefaultImage = false
 }) => {
   return (
     <div className="unit-card">
-      <div className="unit-image-wrapper">
+      <div 
+        className="unit-image-wrapper"
+        title={isDefaultImage ? "Default Image" : undefined}
+      >
         <Image
           src={image}
           alt={title}

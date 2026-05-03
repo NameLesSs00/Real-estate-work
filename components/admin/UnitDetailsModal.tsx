@@ -51,13 +51,22 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     if (!files.length || !unit) return;
+
+    if (files.length > 10) {
+      setError('You can only upload a maximum of 10 images at once.');
+      e.target.value = '';
+      return;
+    }
+
     setIsUploading(true);
+    setError('');
     try {
       await uploadUnitImages(unit.id, files);
       await fetchUnit(); onUpdate?.();
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('[UnitDetailsModal] Upload error:', err);
-      setError('Failed to upload images.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to upload images.';
+      setError(errorMessage);
     } finally {
       setIsUploading(false); e.target.value = '';
     }
