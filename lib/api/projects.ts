@@ -47,17 +47,23 @@ export interface ProjectsPage {
   hasNextPage: boolean;
 }
 
+export interface LocalizedString {
+  en: string;
+  de: string;
+  pl: string;
+}
+
 export interface CreateProjectPayload {
-  name: string;
-  description: string;
+  name: LocalizedString;
+  description: LocalizedString;
   developerId: number | null;
   locationId: number | null;
 }
 
 export interface UpdateProjectPayload {
   id: number;
-  name: string;
-  description: string;
+  name: LocalizedString;
+  description: LocalizedString;
   developerId: number | null;
 }
 
@@ -71,8 +77,8 @@ export interface PaymentPlan {
 }
 
 export interface UnitPayload {
-  name: string;
-  description: string;
+  name: LocalizedString;
+  description: LocalizedString;
   price: number;
   propertyType: number;
   noBathRoom: number;
@@ -95,8 +101,8 @@ export interface AddUnitPayload {
 
 export interface UpdateUnitPayload {
   id: number;
-  name: string;
-  description: string;
+  name: LocalizedString;
+  description: LocalizedString;
   price: number;
   propertyType: number;
   noBathRoom: number;

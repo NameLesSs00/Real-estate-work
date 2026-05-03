@@ -113,11 +113,19 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       let projectId: number;
       if (isEditMode && editData) {
         const res = await updateProject(editData.id, {
-          id: editData.id, name: form.name, description: form.description, developerId: form.developerId,
+          id: editData.id,
+          name: { en: form.name, de: form.name, pl: form.name },
+          description: { en: form.description, de: form.description, pl: form.description },
+          developerId: form.developerId,
         });
         projectId = typeof res === 'number' ? res : res.id;
       } else {
-        const res = await createProject({ name: form.name, description: form.description, developerId: form.developerId, locationId: form.locationId });
+        const res = await createProject({
+          name: { en: form.name, de: form.name, pl: form.name },
+          description: { en: form.description, de: form.description, pl: form.description },
+          developerId: form.developerId,
+          locationId: form.locationId
+        });
         projectId = typeof res === 'number' ? res : res.id;
       }
       if (imageFiles.length > 0) await uploadProjectImages(projectId, imageFiles);

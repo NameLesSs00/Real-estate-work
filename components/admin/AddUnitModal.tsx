@@ -165,8 +165,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
       if (isEditMode && editData) {
         await updateUnit({
           id: editData.id,
-          name: form.name,
-          description: form.description,
+          name: { en: form.name, de: form.name, pl: form.name },
+          description: { en: form.description, de: form.description, pl: form.description },
           price: Number(form.price),
           propertyType: Number(form.propertyType),
           noBathRoom: Number(form.noBathRoom),
@@ -181,8 +181,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         await addUnitToProject({
           projectId: selectedProjectId!,
           units: [{
-            name: form.name,
-            description: form.description,
+            name: { en: form.name, de: form.name, pl: form.name },
+            description: { en: form.description, de: form.description, pl: form.description },
             price: Number(form.price),
             propertyType: Number(form.propertyType),
             noBathRoom: Number(form.noBathRoom),
