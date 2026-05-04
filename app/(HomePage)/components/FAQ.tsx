@@ -3,27 +3,6 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import './FAQ.css';
-
-const faqData = [
-  {
-    question: "What types of properties are available?",
-    answer: "We offer apartments, villas, and investment properties across prime locations."
-  },
-  {
-    question: "Can I schedule a property visit online?",
-    answer: "Yes, you can easily schedule a visit through our online booking system or by contacting our agents directly."
-  },
-  {
-    question: "Do you offer payment plans?",
-    answer: "We provide flexible payment options and financing solutions tailored to your financial needs."
-  },
-  {
-    question: "Is it a good time to invest in real estate?",
-    answer: "With current market trends and property appreciation, it is an excellent time for long-term investments."
-  }
-];
-
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './FAQ.css';
 

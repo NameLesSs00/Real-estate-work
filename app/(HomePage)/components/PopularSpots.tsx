@@ -5,16 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { getLocations, Location } from '@/lib/api/locations';
-import './PopularSpots.css';
-
-const CURATED_SPOTS = [
-  { name: 'El Gouna', cityKeys: ['elgouna', 'gouna', 'elguona'], image: '/assists/PopularSpots/ElGuona.png', className: 'spot-card--el-guona' },
-  { name: 'Sahl Hasheesh', cityKeys: ['sahlhasheesh', 'shalhasheesh'], image: '/assists/PopularSpots/ShalHasheesh.png', className: 'spot-card--sahl-hasheesh' },
-  { name: 'Hurghada', cityKeys: ['hurghada'], image: '/assists/PopularSpots/Hurghada.png', className: 'spot-card--hurghada' },
-  { name: 'Soma Bay', cityKeys: ['somabay'], image: '/assists/PopularSpots/SomaBay.png', className: 'spot-card--soma-bay' },
-  { name: 'Makadi Heights', cityKeys: ['makadi', 'makadiheights'], image: '/assists/PopularSpots/Makadi.png', className: 'spot-card--makadi' },
-];
-
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './PopularSpots.css';
 

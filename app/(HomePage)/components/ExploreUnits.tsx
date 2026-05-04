@@ -6,8 +6,6 @@ import Link from 'next/link';
 import PropertyCard from '@/components/PropertyCard';
 import { getUnitsFiltered, UnitListItem } from '@/lib/api/units';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
-import './ExploreUnits.css';
-
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './ExploreUnits.css';
 
