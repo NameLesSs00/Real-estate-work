@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
+import { motion } from 'motion/react';
 import './PopularSpots.css';
 
 const spots = [
@@ -37,10 +40,16 @@ const spots = [
 
 const PopularSpots = () => {
   return (
-    <section className="popular-spots-section">
+    <section className="popular-spots-section overflow-hidden">
       <div className="popular-spots-container">
         {/* Header */}
-        <div className="popular-spots-header">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="popular-spots-header"
+        >
           <span className="popular-spots-tag">Popular Spots</span>
           <h2 className="popular-spots-title">
             Explore Prime <span>Locations</span>
@@ -50,12 +59,37 @@ const PopularSpots = () => {
             corner of the Red Sea.
           </p>
           <div className="popular-spots-accent-line" />
-        </div>
+        </motion.div>
 
         {/* Grid */}
-        <div className="popular-spots-grid">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.1
+              }
+            }
+          }}
+          className="popular-spots-grid"
+        >
           {spots.map((spot) => (
-            <div key={spot.name} className={`spot-card ${spot.className}`}>
+            <motion.div 
+              key={spot.name} 
+              variants={{
+                hidden: { opacity: 0, y: 40 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0,
+                  transition: { duration: 0.7, ease: "easeOut" }
+                }
+              }}
+              className={`spot-card ${spot.className}`}
+            >
               <div className="spot-card-image-wrapper">
                 <Image
                   src={spot.image}
@@ -70,9 +104,9 @@ const PopularSpots = () => {
                 <p className="spot-card-name">{spot.name}</p>
                 <p className="spot-card-count">{spot.count}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

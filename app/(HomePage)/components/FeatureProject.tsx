@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { MapPin } from 'lucide-react';
+import { motion } from 'motion/react';
 import './FeatureProject.css';
 
 const projectDetails = [
@@ -36,9 +37,15 @@ const FeatureProject = () => {
   const [activeDot, setActiveDot] = useState(0);
 
   return (
-    <section className="feature-project-section">
+    <section className="feature-project-section overflow-hidden">
       <div className="feature-project-container">
-        <div className="feature-project-header">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="feature-project-header"
+        >
           <span className="feature-project-tag">FEATURED PROJECTS</span>
           <h2 className="feature-project-title">Exceptional Properties, Carefully Selected for You</h2>
           <p className="feature-project-subtitle">
@@ -47,10 +54,16 @@ const FeatureProject = () => {
             and long-term growth.
           </p>
           <div className="feature-project-accent-line"></div>
-        </div>
+        </motion.div>
 
         <div className="feature-project-content">
-          <div className="project-visuals">
+          <motion.div 
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="project-visuals"
+          >
             <div className="project-logos-container">
               <div className="project-logo">
                 <Image 
@@ -68,9 +81,15 @@ const FeatureProject = () => {
               height={600} 
               className="project-main-img"
             />
-          </div>
+          </motion.div>
 
-          <div className="project-details-info">
+          <motion.div 
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="project-details-info"
+          >
             <div className="project-price-tag">
               Price Start From <span>10,000,000 EGP</span>
             </div>
@@ -87,7 +106,14 @@ const FeatureProject = () => {
             <h4 className="details-grid-title">Project Details</h4>
             <div className="details-cards-grid">
               {projectDetails.map((detail, index) => (
-                <div key={index} className="detail-info-card">
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.5 + (index * 0.1) }}
+                  className="detail-info-card"
+                >
                   <Image 
                     src={detail.icon} 
                     alt={detail.label} 
@@ -97,7 +123,7 @@ const FeatureProject = () => {
                   />
                   <span className="detail-info-label">{detail.label}</span>
                   <span className="detail-info-value">{detail.value}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
 
@@ -113,12 +139,18 @@ const FeatureProject = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        <div className="show-more-projects-wrapper">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="show-more-projects-wrapper"
+        >
           <button className="show-more-projects-btn">Show More Projects</button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
+import { motion } from 'motion/react';
 import './Categories.css';
 
 const categories = [
@@ -27,9 +30,15 @@ const categories = [
 
 const Categories = () => {
   return (
-    <section className="categories-section">
+    <section className="categories-section overflow-hidden">
       <div className="categories-container">
-        <div className="categories-header">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="categories-header"
+        >
           <span className="categories-tag">FEATURED LISTINGS</span>
           <h2 className="categories-title">
             Browse Properties by <span>Category</span>
@@ -39,11 +48,41 @@ const Categories = () => {
             types of properties that match their needs, interests, and buying goals.
           </p>
           <div className="categories-accent-line"></div>
-        </div>
+        </motion.div>
 
-        <div className="categories-grid">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.15
+              }
+            }
+          }}
+          className="categories-grid"
+        >
           {categories.map((category, index) => (
-            <div key={index} className="category-card">
+            <motion.div 
+              key={index} 
+              variants={{
+                hidden: { opacity: 0, y: 30, scale: 0.95 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0, 
+                  scale: 1,
+                  transition: { duration: 0.6, ease: "easeOut" }
+                }
+              }}
+              whileHover={{ 
+                y: -12,
+                transition: { duration: 0.2, ease: "easeOut" }
+              }}
+              className="category-card"
+            >
               <div className="category-image-wrapper">
                 <Image
                   src={category.image}
@@ -56,9 +95,9 @@ const Categories = () => {
                 <h3 className="category-name">{category.name}</h3>
                 <p className="category-count">{category.count}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

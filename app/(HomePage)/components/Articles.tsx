@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'motion/react';
 import './Articles.css';
 
 const articles = [
@@ -20,9 +23,15 @@ const articles = [
 
 const Articles = () => {
   return (
-    <section className="articles-section">
+    <section className="articles-section overflow-hidden">
       <div className="articles-container">
-        <div className="articles-header">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="articles-header"
+        >
           <span className="articles-tag">LATEST ARTICLES</span>
           <h2 className="articles-title">Insights & Inspiration</h2>
           <p className="articles-subtitle">
@@ -30,11 +39,36 @@ const Articles = () => {
             informed decisions and find the perfect property with confidence.
           </p>
           <div className="articles-accent-line"></div>
-        </div>
+        </motion.div>
 
-        <div className="articles-grid">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.2
+              }
+            }
+          }}
+          className="articles-grid"
+        >
           {articles.map((article, index) => (
-            <div key={index} className="article-card">
+            <motion.div 
+              key={index} 
+              variants={{
+                hidden: { opacity: 0, y: 40 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0,
+                  transition: { duration: 0.7, ease: "easeOut" }
+                }
+              }}
+              className="article-card"
+            >
               <div className="article-image-wrapper">
                 <Image 
                   src={article.image} 
@@ -57,15 +91,21 @@ const Articles = () => {
                   />
                 </Link>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="show-more-blogs-wrapper">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="show-more-blogs-wrapper"
+        >
           <Link href="/blogs" className="show-more-blogs-button inline-block text-center">
             Show More Blogs
           </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

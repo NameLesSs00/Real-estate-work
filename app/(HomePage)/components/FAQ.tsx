@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import './FAQ.css';
 
 const faqData = [
@@ -31,9 +32,15 @@ const FAQ = () => {
   };
 
   return (
-    <section className="faq-section">
+    <section className="faq-section overflow-hidden">
       <div className="faq-container">
-        <div className="faq-header">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="faq-header"
+        >
           <span className="faq-tag">LATEST ARTICLES</span>
           <h2 className="faq-title">Frequently Asked Questions</h2>
           <p className="faq-subtitle">
@@ -41,12 +48,34 @@ const FAQ = () => {
             owning property. Everything you need to make confident decisions.
           </p>
           <div className="faq-accent-line"></div>
-        </div>
+        </motion.div>
 
-        <div className="faq-list">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.15
+              }
+            }
+          }}
+          className="faq-list"
+        >
           {faqData.map((item, index) => (
-            <div
+            <motion.div
               key={index}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0,
+                  transition: { duration: 0.5, ease: "easeOut" }
+                }
+              }}
               className={`faq-item ${openIndex === index ? 'open' : ''}`}
             >
               <button
@@ -57,12 +86,25 @@ const FAQ = () => {
                 <span>{item.question}</span>
                 <ChevronDown className="faq-chevron" />
               </button>
-              <div className="faq-answer">
-                <p>{item.answer}</p>
-              </div>
-            </div>
+              
+              <AnimatePresence>
+                {openIndex === index && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="faq-answer-wrapper overflow-hidden"
+                  >
+                    <div className="faq-answer">
+                      <p>{item.answer}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

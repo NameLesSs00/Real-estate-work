@@ -1,10 +1,13 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
+import { motion } from 'motion/react';
 import './WhoWeAre.css';
 
 const WhoWeAre = () => {
   return (
-    <section id="about" className="who-we-are-section">
+    <section id="about" className="who-we-are-section overflow-hidden">
       <Image 
         src="/assists/whoWeAre/Ellipse 1.png" 
         alt="Background Curve" 
@@ -25,7 +28,13 @@ const WhoWeAre = () => {
       />
       
       <div className="who-we-are-container">
-        <div className="who-we-are-header">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="who-we-are-header"
+        >
           <span className="who-we-are-tag">WHO WE ARE</span>
           <h2 className="who-we-are-title">Your Trusted Real Estate Partner</h2>
           <p className="who-we-are-subtitle">
@@ -33,10 +42,16 @@ const WhoWeAre = () => {
             combining quality, transparency, and a seamless experience tailored to your needs.
           </p>
           <div className="who-we-are-accent-line"></div>
-        </div>
+        </motion.div>
 
         <div className="who-we-are-content">
-          <div className="who-we-are-images">
+          <motion.div 
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="who-we-are-images"
+          >
             <Image 
               src="/assists/whoWeAre/Group 4.png" 
               alt="Who We Are Images" 
@@ -45,9 +60,15 @@ const WhoWeAre = () => {
               className="who-we-are-main-img"
               priority
             />
-          </div>
+          </motion.div>
 
-          <div className="who-we-are-info-box">
+          <motion.div 
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="who-we-are-info-box"
+          >
             <div className="info-item">
               <h3 className="info-item-title">Our Vision</h3>
               <p className="info-item-text">
@@ -69,7 +90,7 @@ const WhoWeAre = () => {
             <div className="view-more-btn-wrapper">
               <button className="view-more-btn">View More</button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
