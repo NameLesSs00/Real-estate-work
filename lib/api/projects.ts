@@ -303,8 +303,9 @@ export async function uploadProjectImages(id: number, files: File[]): Promise<vo
 }
 
 /** DELETE /api/Projects/{id}/deleteproject/images */
-export async function deleteProjectImage(id: number): Promise<void> {
-  const res = await fetch(`${API_BASE_URL}/api/Projects/${id}/deleteproject/images`, {
+export async function deleteProjectImage(id: number, imageUrl?: string): Promise<void> {
+  const url = `${API_BASE_URL}/api/Projects/${id}/deleteproject/images${imageUrl ? `?url=${encodeURIComponent(imageUrl)}` : ''}`;
+  const res = await fetch(url, {
     method: 'DELETE',
     headers: { ...getAuthHeader() },
   });
@@ -405,8 +406,9 @@ export async function uploadUnitImages(id: number, files: File[]): Promise<void>
 }
 
 /** DELETE /api/Projects/{id}/deleteUnit/images */
-export async function deleteUnitImages(id: number): Promise<void> {
-  const res = await fetch(`${API_BASE_URL}/api/Projects/${id}/deleteUnit/images`, {
+export async function deleteUnitImages(id: number, imageUrl?: string): Promise<void> {
+  const url = `${API_BASE_URL}/api/Projects/${id}/deleteUnit/images${imageUrl ? `?url=${encodeURIComponent(imageUrl)}` : ''}`;
+  const res = await fetch(url, {
     method: 'DELETE',
     headers: { ...getAuthHeader() },
   });

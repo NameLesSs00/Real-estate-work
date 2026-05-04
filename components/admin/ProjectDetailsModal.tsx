@@ -62,11 +62,11 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
     }
   };
 
-  const handleDeleteImage = async () => {
+  const handleDeleteImage = async (imageUrl?: string) => {
     if (!project) return;
     setIsDeletingImg(true);
     try {
-      await deleteProjectImage(project.id);
+      await deleteProjectImage(project.id, imageUrl);
       await fetchProject(); onUpdate?.();
     } catch (err) {
       console.error('[ProjectDetailsModal] Delete image error:', err);
@@ -137,7 +137,7 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
                   </h4>
                   <div className="flex gap-3 items-center">
                     {project.imageUrls.length > 0 && (
-                      <button onClick={handleDeleteImage} disabled={isDeletingImg}
+                      <button onClick={() => handleDeleteImage()} disabled={isDeletingImg}
                         className="text-[13px] font-semibold border border-red-200 text-red-500 px-4 py-2 rounded-full cursor-pointer hover:bg-red-50 transition-colors disabled:opacity-50">
                         {isDeletingImg ? 'Removing...' : 'Remove All'}
                       </button>
@@ -159,8 +159,20 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
                     {project.imageUrls.map((url, i) => {
                       const resolved = resolveProjectImageUrl(url);
                       return resolved ? (
-                        <div key={i} className="relative aspect-video rounded-xl overflow-hidden border border-gray-100 bg-gray-100">
+                        <div key={i} className="group relative aspect-video rounded-xl overflow-hidden border border-gray-100 bg-gray-100">
                           <Image src={resolved} alt="Project" fill className="object-cover" />
+                          
+                          {/* Single Image Delete Button */}
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteImage(url);
+                            }}
+                            className="absolute top-2 right-2 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-500 text-gray-500 cursor-pointer"
+                            title="Remove this image"
+                          >
+                            <span className="text-base font-bold">×</span>
+                          </button>
                         </div>
                       ) : null;
                     })}
