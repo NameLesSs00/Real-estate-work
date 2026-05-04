@@ -4,7 +4,7 @@ import { getAccessToken } from '@/lib/auth/tokens';
 
 export interface Service {
   id: number;
-  name: string;
+  name: string | { en?: string; de?: string; pl?: string; [key: string]: any };
 }
 
 export interface CreateServicePayload {

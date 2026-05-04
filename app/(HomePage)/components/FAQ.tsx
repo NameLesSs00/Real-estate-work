@@ -10,7 +10,7 @@ const FAQ = () => {
   const { t } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   
-  const faqData = (t('faq.questions') as any[]) || [];
+  const faqData = (t('faq.questions') as { q: string; a: string }[]) || [];
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);

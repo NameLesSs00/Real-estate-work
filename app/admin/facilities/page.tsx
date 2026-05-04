@@ -98,7 +98,8 @@ export default function FacilitiesPage() {
 
   const getDisplayName = (f: Facility) => {
     if (typeof f.name === 'object' && f.name !== null) {
-      return (f.name as any).en || (f.name as any).de || (f.name as any).pl || 'Unknown';
+      const nameObj = f.name as Record<string, string>;
+      return nameObj.en || nameObj.de || nameObj.pl || 'Unknown';
     }
     return f.name;
   };
@@ -264,11 +265,12 @@ export default function FacilitiesPage() {
                           <button 
                             onClick={() => {
                               setEditingId(facility.id);
-                              const nameObj = typeof facility.name === 'object' ? facility.name : { en: facility.name, de: facility.name, pl: facility.name };
+                              const nameObjRaw = typeof facility.name === 'object' ? facility.name : { en: facility.name, de: facility.name, pl: facility.name };
+                              const nameObj = nameObjRaw as Record<string, string>;
                               setEditingName({
-                                en: (nameObj as any).en || '',
-                                de: (nameObj as any).de || '',
-                                pl: (nameObj as any).pl || ''
+                                en: nameObj.en || '',
+                                de: nameObj.de || '',
+                                pl: nameObj.pl || ''
                               });
                             }}
                             className="p-2.5 text-[#16273B]/70 hover:text-[#16273B] hover:bg-gray-100 rounded-xl transition-all"

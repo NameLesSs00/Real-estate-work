@@ -42,10 +42,10 @@ const Categories = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="categories-header"
         >
-          <span className="categories-tag">{t('categories.tag')}</span>
-          <h2 className="categories-title" dangerouslySetInnerHTML={{ __html: t('categories.title') }} />
+          <span className="categories-tag">{t('categories.tag') as string}</span>
+          <h2 className="categories-title" dangerouslySetInnerHTML={{ __html: t('categories.title') as string }} />
           <p className="categories-subtitle">
-            {t('categories.subtitle')}
+            {t('categories.subtitle') as string}
           </p>
           <div className="categories-accent-line"></div>
         </motion.div>
@@ -86,14 +86,14 @@ const Categories = () => {
               <div className="category-image-wrapper">
                 <Image
                   src={category.image}
-                  alt={t(`categories.types.${category.key}`)}
+                  alt={t(`categories.types.${category.key}`) as string}
                   fill
                   className="category-image"
                 />
               </div>
               <div className="category-content">
-                <h3 className="category-name">{t(`categories.types.${category.key}`)}</h3>
-                <p className="category-count">{category.count.replace('Listings', t('categories.listings'))}</p>
+                <h3 className="category-name">{t(`categories.types.${category.key}`) as string}</h3>
+                <p className="category-count">{category.count.replace('Listings', t('categories.listings') as string)}</p>
               </div>
             </motion.div>
           ))}

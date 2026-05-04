@@ -4,10 +4,12 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type Language = 'en' | 'de' | 'pl';
 
+type TranslationValue = string | number | boolean | null | { [key: string]: TranslationValue } | TranslationValue[];
+
 interface LanguageContextProps {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => any;
+  t: (key: string) => TranslationValue;
 }
 
 const LanguageContext = createContext<LanguageContextProps>({
@@ -20,7 +22,7 @@ export const useLanguage = () => useContext(LanguageContext);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('en');
-  const [translations, setTranslations] = useState<Record<string, any>>({});
+  const [translations, setTranslations] = useState<Record<string, TranslationValue>>({});
 
   useEffect(() => {
     const savedLang = localStorage.getItem('language') as Language;
@@ -35,9 +37,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         const res = await fetch(`/locales/${language}.json`);
         if (res.ok) {
           const json = await res.json();
-          setTranslations(json);
+          setTranslations(json as Record<string, TranslationValue>);
         }
-      } catch (err) {
+      } catch {
         console.error('Failed to load translations for', language);
       }
     };
@@ -49,12 +51,12 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('language', lang);
   };
 
-  const t = (key: string): any => {
+  const t = (key: string): TranslationValue => {
     const keys = key.split('.');
-    let result: any = translations;
+    let result: TranslationValue = translations;
     for (const k of keys) {
-      if (result && typeof result === 'object' && k in result) {
-        result = result[k];
+      if (result && typeof result === 'object' && !Array.isArray(result) && k in result) {
+        result = (result as Record<string, TranslationValue>)[k];
       } else {
         return key; // Fallback to key
       }

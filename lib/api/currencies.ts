@@ -15,7 +15,16 @@ function getAuthHeader(): Record<string, string> {
 // Assuming this returns the current exchange rates. The schema didn't specify the exact response structure,
 // but usually it's either an array of objects or an object like { egpVsUsd: 50, eurVsUsd: 0.9 }.
 // For now, returning any so we can inspect it or assuming a default structure if not provided.
-export async function getCurrencies(): Promise<any> {
+export interface CurrencyRatesResponse {
+  egpVsUsd?: number;
+  usdToEgp?: number;
+  egpRate?: number;
+  eurVsUsd?: number;
+  usdToEur?: number;
+  eurRate?: number;
+}
+
+export async function getCurrencies(): Promise<CurrencyRatesResponse> {
   const res = await fetch(`${API_BASE_URL}/api/Currencies`, {
     headers: { ...getAuthHeader() }
   });

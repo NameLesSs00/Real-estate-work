@@ -6,7 +6,7 @@ import PropertyCategories from './components/PropertyCategories';
 import PropertyCard from '@/components/PropertyCard';
 import { getUnitsFiltered, UnitListItem } from '@/lib/api/units';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './properties.css';
 
 export interface FilterState {

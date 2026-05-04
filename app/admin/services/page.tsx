@@ -98,7 +98,8 @@ export default function ServicesPage() {
 
   const getDisplayName = (s: Service) => {
     if (typeof s.name === 'object' && s.name !== null) {
-      return (s.name as any).en || (s.name as any).de || (s.name as any).pl || 'Unknown';
+      const nameObj = s.name as Record<string, string>;
+      return nameObj.en || nameObj.de || nameObj.pl || 'Unknown';
     }
     return s.name;
   };
@@ -264,11 +265,12 @@ export default function ServicesPage() {
                           <button 
                             onClick={() => {
                               setEditingId(service.id);
-                              const nameObj = typeof service.name === 'object' ? service.name : { en: service.name, de: service.name, pl: service.name };
+                              const nameObjRaw = typeof service.name === 'object' ? service.name : { en: service.name, de: service.name, pl: service.name };
+                              const nameObj = nameObjRaw as Record<string, string>;
                               setEditingName({
-                                en: (nameObj as any).en || '',
-                                de: (nameObj as any).de || '',
-                                pl: (nameObj as any).pl || ''
+                                en: nameObj.en || '',
+                                de: nameObj.de || '',
+                                pl: nameObj.pl || ''
                               });
                             }}
                             className="p-2.5 text-[#16273B]/70 hover:text-[#16273B] hover:bg-gray-100 rounded-xl transition-all"
