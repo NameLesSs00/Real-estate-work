@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import './Articles.css';
 
 const articles = [
@@ -45,7 +46,7 @@ const Articles = () => {
               </div>
               <div className="article-overlay">
                 <h3 className="article-card-title">{article.title}</h3>
-                <a href="#" className="read-more-btn">
+                <Link href="/blogs/how-to-choose-property" className="read-more-btn">
                   Read More
                   <Image 
                     src="/assists/articles/arrow-right.png" 
@@ -54,14 +55,16 @@ const Articles = () => {
                     height={18} 
                     className="read-more-arrow"
                   />
-                </a>
+                </Link>
               </div>
             </div>
           ))}
         </div>
 
         <div className="show-more-blogs-wrapper">
-          <button className="show-more-blogs-button">Show More Blogs</button>
+          <Link href="/blogs" className="show-more-blogs-button inline-block text-center">
+            Show More Blogs
+          </Link>
         </div>
       </div>
     </section>
