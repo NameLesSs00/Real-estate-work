@@ -1,0 +1,298 @@
+'use client';
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Plus, X, Edit2, Trash2, Loader2, 
+  Search, CheckCircle2 
+} from 'lucide-react';
+import { getFacilities, createFacility, updateFacility, deleteFacility, Facility } from '@/lib/api/facilities';
+
+export default function FacilitiesPage() {
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+  
+  // Search
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Add Facility state
+  const [showAdd, setShowAdd] = useState(false);
+  const [newName, setNewName] = useState({ en: '', de: '', pl: '' });
+
+  // Edit Facility state
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingName, setEditingName] = useState({ en: '', de: '', pl: '' });
+
+  const fetchFacilities = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getFacilities();
+      setFacilities(data);
+    } catch (err) {
+      setError('Failed to load facilities.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchFacilities();
+  }, [fetchFacilities]);
+
+  const notify = (type: 'success' | 'error', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newName.en) return;
+    setLoading(true);
+    try {
+      await createFacility(newName);
+      notify('success', 'Facility added successfully!');
+      setNewName({ en: '', de: '', pl: '' });
+      setShowAdd(false);
+      fetchFacilities();
+    } catch (err) {
+      notify('error', 'Failed to add facility.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdate = async (id: number) => {
+    setLoading(true);
+    try {
+      await updateFacility(id, editingName);
+      notify('success', 'Facility updated successfully!');
+      setEditingId(null);
+      fetchFacilities();
+    } catch (err) {
+      notify('error', 'Failed to update facility.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this facility?')) return;
+    setLoading(true);
+    try {
+      await deleteFacility(id);
+      notify('success', 'Facility deleted successfully!');
+      fetchFacilities();
+    } catch (err) {
+      notify('error', 'Failed to delete facility.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredFacilities = facilities.filter(f => {
+    const name = typeof f.name === 'object' ? Object.values(f.name).join(' ') : String(f.name);
+    return name.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+
+  const getDisplayName = (f: Facility) => {
+    if (typeof f.name === 'object' && f.name !== null) {
+      return (f.name as any).en || (f.name as any).de || (f.name as any).pl || 'Unknown';
+    }
+    return f.name;
+  };
+
+  return (
+    <div className="p-8 md:p-12 min-h-screen font-inter bg-[#F8F9FA]">
+      <div className="max-w-6xl mx-auto">
+        
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+          <div>
+            <h1 className="text-[36px] font-bold text-[#16273B] mb-2">Facilities</h1>
+            <p className="text-[#64748B] text-lg">Manage project and unit amenities.</p>
+          </div>
+          <button 
+            onClick={() => setShowAdd(!showAdd)}
+            className="bg-[#16273B] text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-lg active:scale-95"
+          >
+            {showAdd ? <X size={20} /> : <Plus size={20} />}
+            {showAdd ? 'Cancel' : 'Add New Facility'}
+          </button>
+        </div>
+
+        {/* Notification */}
+        <AnimatePresence>
+          {notification && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className={`mb-8 p-4 rounded-2xl flex items-center gap-3 shadow-sm border ${
+                notification.type === 'success' 
+                  ? 'bg-green-50 border-green-100 text-green-700' 
+                  : 'bg-red-50 border-red-100 text-red-700'
+              }`}
+            >
+              <CheckCircle2 size={20} />
+              <span className="font-semibold">{notification.message}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Add Form */}
+        <AnimatePresence>
+          {showAdd && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden mb-10"
+            >
+              <form onSubmit={handleAdd} className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[14px] font-bold text-[#16273B] ml-1">English Name</label>
+                    <input 
+                      type="text" 
+                      value={newName.en}
+                      onChange={(e) => setNewName({...newName, en: e.target.value})}
+                      placeholder="e.g. Swimming Pool"
+                      className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#16273B]/10 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[14px] font-bold text-[#16273B] ml-1">German Name</label>
+                    <input 
+                      type="text" 
+                      value={newName.de}
+                      onChange={(e) => setNewName({...newName, de: e.target.value})}
+                      placeholder="e.g. Schwimmbad"
+                      className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#16273B]/10 transition-all"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[14px] font-bold text-[#16273B] ml-1">Polish Name</label>
+                    <input 
+                      type="text" 
+                      value={newName.pl}
+                      onChange={(e) => setNewName({...newName, pl: e.target.value})}
+                      placeholder="e.g. Basen"
+                      className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#16273B]/10 transition-all"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end pt-2">
+                  <button 
+                    disabled={loading}
+                    className="bg-[#16273B] text-white px-10 py-4 rounded-xl font-bold shadow-md hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {loading && <Loader2 className="animate-spin" size={20} />}
+                    Create Facility
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Search */}
+        <div className="relative mb-8">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+          <input 
+            type="text" 
+            placeholder="Search facilities..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-[16px] outline-none focus:ring-4 focus:ring-[#16273B]/5 shadow-sm transition-all"
+          />
+        </div>
+
+        {/* List */}
+        <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
+          <table className="w-full text-left">
+            <thead className="bg-gray-50/50">
+              <tr className="text-[#16273B] text-[14px] font-bold uppercase tracking-wider">
+                <th className="px-8 py-6 w-24">ID</th>
+                <th className="px-8 py-6">Name</th>
+                <th className="px-8 py-6 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {filteredFacilities.map((facility) => (
+                <tr key={facility.id} className="hover:bg-gray-50/30 transition-colors group">
+                  <td className="px-8 py-6 font-mono text-sm text-gray-400">#{facility.id}</td>
+                  <td className="px-8 py-6">
+                    {editingId === facility.id ? (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <input 
+                          value={editingName.en}
+                          onChange={e => setEditingName({...editingName, en: e.target.value})}
+                          className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                          placeholder="EN"
+                        />
+                        <input 
+                          value={editingName.de}
+                          onChange={e => setEditingName({...editingName, de: e.target.value})}
+                          className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                          placeholder="DE"
+                        />
+                        <input 
+                          value={editingName.pl}
+                          onChange={e => setEditingName({...editingName, pl: e.target.value})}
+                          className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                          placeholder="PL"
+                        />
+                      </div>
+                    ) : (
+                      <span className="font-bold text-[#16273B] text-[16px]">{getDisplayName(facility)}</span>
+                    )}
+                  </td>
+                  <td className="px-8 py-6 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      {editingId === facility.id ? (
+                        <>
+                          <button onClick={() => handleUpdate(facility.id)} className="p-2 text-green-600 hover:bg-green-50 rounded-xl transition-all"><CheckCircle2 size={20} /></button>
+                          <button onClick={() => setEditingId(null)} className="p-2 text-gray-400 hover:bg-gray-50 rounded-xl transition-all"><X size={20} /></button>
+                        </>
+                      ) : (
+                        <>
+                          <button 
+                            onClick={() => {
+                              setEditingId(facility.id);
+                              const nameObj = typeof facility.name === 'object' ? facility.name : { en: facility.name, de: facility.name, pl: facility.name };
+                              setEditingName({
+                                en: (nameObj as any).en || '',
+                                de: (nameObj as any).de || '',
+                                pl: (nameObj as any).pl || ''
+                              });
+                            }}
+                            className="p-2.5 text-[#16273B]/70 hover:text-[#16273B] hover:bg-gray-100 rounded-xl transition-all"
+                          >
+                            <Edit2 size={18} />
+                          </button>
+                          <button onClick={() => handleDelete(facility.id)} className="p-2.5 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><Trash2 size={18} /></button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {filteredFacilities.length === 0 && (
+                <tr>
+                  <td colSpan={3} className="px-8 py-20 text-center text-gray-400">
+                    <p className="text-lg">No facilities found.</p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}

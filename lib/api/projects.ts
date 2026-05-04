@@ -32,6 +32,7 @@ export interface Project {
   locationName: string;
   imageUrls: string[];
   units?: ApiUnit[];
+  facilities?: string[];
   createdBy: string;
   createdAt: string;
   updatedBy: string;
@@ -59,6 +60,7 @@ export interface CreateProjectPayload {
   description: LocalizedString;
   developerId: number | null;
   locationId: number | null;
+  facilityIds?: number[];
 }
 
 export interface UpdateProjectPayload {
@@ -66,6 +68,7 @@ export interface UpdateProjectPayload {
   name: LocalizedString;
   description: LocalizedString;
   developerId: number | null;
+  facilityIds?: number[];
 }
 
 // ─── Unit Types ───────────────────────────────────────────────────────────────

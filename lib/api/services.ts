@@ -8,12 +8,12 @@ export interface Service {
 }
 
 export interface CreateServicePayload {
-  name: string;
+  name: { en: string; de: string; pl: string };
 }
 
 export interface UpdateServicePayload {
   id: number;
-  name: string;
+  name: { en: string; de: string; pl: string };
 }
 
 function getAuthHeader(): Record<string, string> {
@@ -50,13 +50,16 @@ export async function getServices(): Promise<Service[]> {
 
 /** POST /api/Services */
 export async function createService(payload: CreateServicePayload): Promise<number> {
+  const { name } = payload;
+  const mappedName = { En: name.en, De: name.de, Pl: name.pl };
+  
   const res = await fetch(`${API_BASE_URL}/api/Services`, {
     method: 'POST',
     headers: { 
       'Content-Type': 'application/json',
       ...getAuthHeader() 
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ name: mappedName }),
   });
   const text = await res.text();
   console.log('[Services] Create Response:', text);
@@ -75,13 +78,16 @@ export async function createService(payload: CreateServicePayload): Promise<numb
 
 /** PUT /api/Services */
 export async function updateService(payload: UpdateServicePayload): Promise<number> {
+  const { id, name } = payload;
+  const mappedName = { En: name.en, De: name.de, Pl: name.pl };
+
   const res = await fetch(`${API_BASE_URL}/api/Services`, {
     method: 'PUT',
     headers: { 
       'Content-Type': 'application/json',
       ...getAuthHeader() 
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ id, name: mappedName }),
   });
   const text = await res.text();
   console.log('[Services] Update Response:', text);

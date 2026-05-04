@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { createProject, updateProject, uploadProjectImages, Project } from '@/lib/api/projects';
 import { getDevelopers } from '@/lib/api/developers';
 import { getLocations } from '@/lib/api/locations';
+import { getFacilities, createFacility, Facility } from '@/lib/api/facilities';
 
 interface AddProjectModalProps {
   isOpen: boolean;
@@ -15,7 +16,13 @@ interface AddProjectModalProps {
 
 interface DropdownOption { id: number; label: string; }
 
-const EMPTY_FORM = { name: '', description: '', developerId: null as number | null, locationId: null as number | null };
+const EMPTY_FORM = { 
+  name: '', 
+  description: '', 
+  developerId: null as number | null, 
+  locationId: null as number | null,
+  facilityIds: [] as number[]
+};
 
 export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }: AddProjectModalProps) {
   const [form, setForm] = useState(EMPTY_FORM);
@@ -23,8 +30,14 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [developers, setDevelopers] = useState<DropdownOption[]>([]);
   const [locations, setLocations] = useState<DropdownOption[]>([]);
+  const [facilities, setFacilities] = useState<Facility[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Quick-add facility state
+  const [isAddingFacility, setIsAddingFacility] = useState(false);
+  const [newFacilityName, setNewFacilityName] = useState({ en: '', de: '', pl: '' });
+  const [isSubmittingQuick, setIsSubmittingQuick] = useState(false);
 
   const isEditMode = !!editData;
 
@@ -67,9 +80,28 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       }
     };
 
+    const fetchAllFacilities = async () => {
+      try {
+        const res = await getFacilities();
+        setFacilities(res);
+      } catch (err) {
+        console.error('[AddProjectModal] Failed to fetch facilities', err);
+      }
+    };
+
     fetchAllDevelopers();
     fetchAllLocations();
+    fetchAllFacilities();
   }, [isOpen]);
+
+  const refreshFacilities = async () => {
+    try {
+      const res = await getFacilities();
+      setFacilities(res);
+    } catch (err) {
+      console.error('[AddProjectModal] Failed to refresh facilities', err);
+    }
+  };
 
   // Populate form when editing
   useEffect(() => {
@@ -79,6 +111,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         description: editData.description,
         developerId: editData.developerId,
         locationId: editData.locationId,
+        facilityIds: (editData as any).facilityIds || []
       });
     } else {
       setForm(EMPTY_FORM);
@@ -117,6 +150,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           name: { en: form.name, de: form.name, pl: form.name },
           description: { en: form.description, de: form.description, pl: form.description },
           developerId: form.developerId,
+          facilityIds: form.facilityIds,
         });
         projectId = typeof res === 'number' ? res : res.id;
       } else {
@@ -124,7 +158,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           name: { en: form.name, de: form.name, pl: form.name },
           description: { en: form.description, de: form.description, pl: form.description },
           developerId: form.developerId,
-          locationId: form.locationId
+          locationId: form.locationId,
+          facilityIds: form.facilityIds,
         });
         projectId = typeof res === 'number' ? res : res.id;
       }
@@ -188,6 +223,94 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 </select>
               </div>
             )}
+          </div>
+
+          {/* Facilities Section */}
+          <div className="space-y-4 pt-4 border-t border-gray-100">
+            <div className="flex items-center justify-between">
+              <label className="text-[#16273B] font-semibold text-[15px]">Project Facilities</label>
+              <button 
+                type="button"
+                onClick={() => setIsAddingFacility(!isAddingFacility)}
+                className="text-[13px] font-bold text-[#16273B] hover:underline"
+              >
+                {isAddingFacility ? 'Cancel' : '+ Add New Facility'}
+              </button>
+            </div>
+
+            {isAddingFacility && (
+              <div className="bg-gray-50 p-4 rounded-2xl space-y-3 border border-gray-100 shadow-inner">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <input 
+                    placeholder="EN Name" 
+                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                    value={newFacilityName.en}
+                    onChange={e => setNewFacilityName({...newFacilityName, en: e.target.value})}
+                  />
+                  <input 
+                    placeholder="DE Name" 
+                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                    value={newFacilityName.de}
+                    onChange={e => setNewFacilityName({...newFacilityName, de: e.target.value})}
+                  />
+                  <input 
+                    placeholder="PL Name" 
+                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                    value={newFacilityName.pl}
+                    onChange={e => setNewFacilityName({...newFacilityName, pl: e.target.value})}
+                  />
+                </div>
+                <button 
+                  type="button"
+                  disabled={isSubmittingQuick || !newFacilityName.en}
+                  onClick={async () => {
+                    setIsSubmittingQuick(true);
+                    try {
+                      await createFacility(newFacilityName);
+                      setNewFacilityName({ en: '', de: '', pl: '' });
+                      setIsAddingFacility(false);
+                      await refreshFacilities();
+                    } catch (err) {
+                      alert('Failed to add facility');
+                    } finally {
+                      setIsSubmittingQuick(false);
+                    }
+                  }}
+                  className="bg-[#16273B] text-white px-6 py-2 rounded-xl text-sm font-bold disabled:opacity-50"
+                >
+                  {isSubmittingQuick ? 'Saving...' : 'Save & Refresh'}
+                </button>
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[200px] overflow-y-auto pr-2 scrollbar-thin">
+              {facilities.map((fac) => {
+                let facName = fac.name;
+                if (typeof fac.name === 'object' && fac.name !== null) {
+                  facName = (fac.name as any).en || (fac.name as any).de || (fac.name as any).pl || 'Unknown';
+                }
+                const isChecked = form.facilityIds.includes(fac.id);
+                return (
+                  <label key={fac.id} className={`flex items-center gap-3 cursor-pointer p-3 rounded-xl transition-all border ${isChecked ? 'bg-[#16273B]/5 border-[#16273B]/20' : 'bg-white border-gray-100 hover:border-gray-200'}`}>
+                    <input 
+                      type="checkbox" 
+                      checked={isChecked}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setForm(prev => ({
+                          ...prev,
+                          facilityIds: checked 
+                            ? [...prev.facilityIds, fac.id]
+                            : prev.facilityIds.filter(id => id !== fac.id)
+                        }));
+                      }}
+                      className="w-4 h-4 rounded accent-[#16273B] cursor-pointer" 
+                    />
+                    <span className="text-[#16273B] text-[13px] font-medium line-clamp-1">{facName}</span>
+                  </label>
+                );
+              })}
+            </div>
           </div>
 
           {/* Image Upload */}

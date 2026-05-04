@@ -4,8 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { addUnitToProject, updateUnit, getUnitById, ApiUnit } from '@/lib/api/projects';
 import { getProjects } from '@/lib/api/projects';
-import { getFacilities, Facility } from '@/lib/api/facilities';
-import { getServices, Service } from '@/lib/api/services';
+import { getFacilities, createFacility, Facility } from '@/lib/api/facilities';
+import { getServices, createService, Service } from '@/lib/api/services';
+import { Plus, X, Loader2 } from 'lucide-react';
 
 interface AddUnitModalProps {
   isOpen: boolean;
@@ -42,38 +43,45 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Quick-add state
+  const [isAddingFacility, setIsAddingFacility] = useState(false);
+  const [newFacilityName, setNewFacilityName] = useState({ en: '', de: '', pl: '' });
+  const [isAddingService, setIsAddingService] = useState(false);
+  const [newServiceName, setNewServiceName] = useState({ en: '', de: '', pl: '' });
+  const [isSubmittingQuick, setIsSubmittingQuick] = useState(false);
+
   const isEditMode = !!editData;
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [facRes, serRes] = await Promise.all([getFacilities(), getServices()]);
+      setFacilities(facRes);
+      setServices(serRes);
+    } catch (err) {
+      console.error('[AddUnitModal] Failed to fetch facilities or services', err);
+    }
+
+    if (!isEditMode) {
+      let page = 1;
+      let all: { id: number; name: string }[] = [];
+      try {
+        while (true) {
+          const res = await getProjects(page);
+          all = [...all, ...res.items.map((p) => ({ id: p.id, name: p.name }))];
+          if (!res.hasNextPage) break;
+          page++;
+        }
+        setProjects(all);
+      } catch (err) {
+        console.error('[AddUnitModal] Failed to fetch projects', err);
+      }
+    }
+  }, [isEditMode]);
 
   // Load projects, facilities, and services
   useEffect(() => {
-    if (!isOpen) return;
-    const fetchData = async () => {
-      try {
-        const [facRes, serRes] = await Promise.all([getFacilities(), getServices()]);
-        setFacilities(facRes);
-        setServices(serRes);
-      } catch (err) {
-        console.error('[AddUnitModal] Failed to fetch facilities or services', err);
-      }
-
-      if (!isEditMode) {
-        let page = 1;
-        let all: { id: number; name: string }[] = [];
-        try {
-          while (true) {
-            const res = await getProjects(page);
-            all = [...all, ...res.items.map((p) => ({ id: p.id, name: p.name }))];
-            if (!res.hasNextPage) break;
-            page++;
-          }
-          setProjects(all);
-        } catch (err) {
-          console.error('[AddUnitModal] Failed to fetch projects', err);
-        }
-      }
-    };
-    fetchData();
-  }, [isOpen, isEditMode]);
+    if (isOpen) fetchData();
+  }, [isOpen, fetchData]);
 
   // Map common property types if backend returns string
   const getPropertyTypeValue = (val: string | number): number => {
@@ -409,7 +417,62 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100">
             {/* Facilities */}
             <div className="space-y-3">
-              <label className="text-[#16273B] font-semibold text-[15px]">Facilities</label>
+              <div className="flex items-center justify-between">
+                <label className="text-[#16273B] font-semibold text-[15px]">Facilities</label>
+                <button 
+                  type="button"
+                  onClick={() => setIsAddingFacility(!isAddingFacility)}
+                  className="text-[12px] font-bold text-[#16273B] hover:underline flex items-center gap-1"
+                >
+                  {isAddingFacility ? 'Cancel' : '+ Add New'}
+                </button>
+              </div>
+
+              {isAddingFacility && (
+                <div className="bg-gray-50 p-3 rounded-xl space-y-3 border border-gray-100 shadow-inner mb-2">
+                  <div className="grid grid-cols-1 gap-2">
+                    <input 
+                      placeholder="EN Name" 
+                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#16273B]/20"
+                      value={newFacilityName.en}
+                      onChange={e => setNewFacilityName({...newFacilityName, en: e.target.value})}
+                    />
+                    <input 
+                      placeholder="DE Name" 
+                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#16273B]/20"
+                      value={newFacilityName.de}
+                      onChange={e => setNewFacilityName({...newFacilityName, de: e.target.value})}
+                    />
+                    <input 
+                      placeholder="PL Name" 
+                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#16273B]/20"
+                      value={newFacilityName.pl}
+                      onChange={e => setNewFacilityName({...newFacilityName, pl: e.target.value})}
+                    />
+                  </div>
+                  <button 
+                    type="button"
+                    disabled={isSubmittingQuick || !newFacilityName.en}
+                    onClick={async () => {
+                      setIsSubmittingQuick(true);
+                      try {
+                        await createFacility(newFacilityName);
+                        setNewFacilityName({ en: '', de: '', pl: '' });
+                        setIsAddingFacility(false);
+                        await fetchData();
+                      } catch (err) {
+                        alert('Failed to add facility');
+                      } finally {
+                        setIsSubmittingQuick(false);
+                      }
+                    }}
+                    className="w-full bg-[#16273B] text-white py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
+                  >
+                    {isSubmittingQuick ? 'Saving...' : 'Save Facility'}
+                  </button>
+                </div>
+              )}
+
               <div className="max-h-[200px] overflow-y-auto pr-2 space-y-2 scrollbar-thin">
                 {facilities.map((fac) => {
                   let facName = fac.name;
@@ -443,7 +506,62 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
             {/* Services */}
             <div className="space-y-3">
-              <label className="text-[#16273B] font-semibold text-[15px]">Services</label>
+              <div className="flex items-center justify-between">
+                <label className="text-[#16273B] font-semibold text-[15px]">Services</label>
+                <button 
+                  type="button"
+                  onClick={() => setIsAddingService(!isAddingService)}
+                  className="text-[12px] font-bold text-[#16273B] hover:underline flex items-center gap-1"
+                >
+                  {isAddingService ? 'Cancel' : '+ Add New'}
+                </button>
+              </div>
+
+              {isAddingService && (
+                <div className="bg-gray-50 p-3 rounded-xl space-y-3 border border-gray-100 shadow-inner mb-2">
+                  <div className="grid grid-cols-1 gap-2">
+                    <input 
+                      placeholder="EN Name" 
+                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#16273B]/20"
+                      value={newServiceName.en}
+                      onChange={e => setNewServiceName({...newServiceName, en: e.target.value})}
+                    />
+                    <input 
+                      placeholder="DE Name" 
+                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#16273B]/20"
+                      value={newServiceName.de}
+                      onChange={e => setNewServiceName({...newServiceName, de: e.target.value})}
+                    />
+                    <input 
+                      placeholder="PL Name" 
+                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#16273B]/20"
+                      value={newServiceName.pl}
+                      onChange={e => setNewServiceName({...newServiceName, pl: e.target.value})}
+                    />
+                  </div>
+                  <button 
+                    type="button"
+                    disabled={isSubmittingQuick || !newServiceName.en}
+                    onClick={async () => {
+                      setIsSubmittingQuick(true);
+                      try {
+                        await createService({ name: newServiceName });
+                        setNewServiceName({ en: '', de: '', pl: '' });
+                        setIsAddingService(false);
+                        await fetchData();
+                      } catch (err) {
+                        alert('Failed to add service');
+                      } finally {
+                        setIsSubmittingQuick(false);
+                      }
+                    }}
+                    className="w-full bg-[#16273B] text-white py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
+                  >
+                    {isSubmittingQuick ? 'Saving...' : 'Save Service'}
+                  </button>
+                </div>
+              )}
+
               <div className="max-h-[200px] overflow-y-auto pr-2 space-y-2 scrollbar-thin">
                 {services.map((ser) => {
                   let serName = ser.name;

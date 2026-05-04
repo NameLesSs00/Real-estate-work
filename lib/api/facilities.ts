@@ -34,10 +34,11 @@ export async function getFacilityById(id: number): Promise<Facility> {
 
 /** POST /api/Facilities */
 export async function createFacility(name: { en: string; de: string; pl: string }): Promise<number> {
+  const mappedName = { En: name.en, De: name.de, Pl: name.pl };
   const res = await fetch(`${API_BASE_URL}/api/Facilities`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...authHeader() },
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name: mappedName }),
   });
   if (!res.ok) throw new Error('Failed to create facility.');
   const json = await res.json();
@@ -46,10 +47,11 @@ export async function createFacility(name: { en: string; de: string; pl: string 
 
 /** PUT /api/Facilities */
 export async function updateFacility(id: number, name: { en: string; de: string; pl: string }): Promise<number> {
+  const mappedName = { En: name.en, De: name.de, Pl: name.pl };
   const res = await fetch(`${API_BASE_URL}/api/Facilities`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...authHeader() },
-    body: JSON.stringify({ id, name }),
+    body: JSON.stringify({ id, name: mappedName }),
   });
   if (!res.ok) throw new Error('Failed to update facility.');
   const json = await res.json();
