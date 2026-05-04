@@ -1,5 +1,5 @@
 import { API_BASE_URL } from './config';
-import { ApiResponse } from './auth';
+
 
 export interface Service {
   id: number;
@@ -40,9 +40,9 @@ export async function getServices(): Promise<Service[]> {
     else if (json.success === false) throw new Error(json.message || 'Failed to fetch services.');
 
     // Normalize keys in case the API returns PascalCase
-    return items.map((item: any) => ({
-      id: item.id !== undefined ? item.id : item.Id,
-      name: item.name !== undefined ? item.name : item.Name,
+    return items.map((item: { id?: number; Id?: number; name?: string; Name?: string }) => ({
+      id: item.id !== undefined ? item.id : (item.Id ?? 0),
+      name: item.name !== undefined ? item.name : (item.Name ?? ''),
     }));
   } catch {
     return [];

@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { User, Shield, Users, ChevronLeft, ChevronRight, Loader2, AlertCircle, CheckCircle2, LayoutGrid, Plus, Trash2, Edit2, X } from 'lucide-react';
 import { updatePassword, addAdmin, AddAdminPayload, UpdatePasswordPayload } from '@/lib/api/auth';
-import { getAdmins, updateAdmin, Admin, PaginatedAdmins, UpdateAdminPayload } from '@/lib/api/admins';
+import { getAdmins, updateAdmin, PaginatedAdmins } from '@/lib/api/admins';
 import { getServices, createService, updateService, deleteService, Service } from '@/lib/api/services';
 
 type Tab = 'profile' | 'security' | 'admins' | 'services';
@@ -48,18 +48,23 @@ export default function SettingsPage() {
     // Initial fetch to get the current user's details and the team list
     fetchAdmins(1);
     fetchServices();
-  }, []);
+  }, [fetchAdmins, fetchServices]);
 
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     try {
       const data = await getServices();
       setServices(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('[Settings] Failed to fetch services', err);
     }
-  };
+  }, []);
 
-  const fetchAdmins = async (page: number) => {
+  const showNotification = useCallback((type: 'success' | 'error', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  }, []);
+
+  const fetchAdmins = useCallback(async (page: number) => {
     setLoading(true);
     try {
       const data = await getAdmins(page);
@@ -89,17 +94,12 @@ export default function SettingsPage() {
           email: prev.email || first.email
         }));
       }
-    } catch (err: any) {
-      showNotification('error', err.message);
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
-  };
-
-  const showNotification = (type: 'success' | 'error', message: string) => {
-    setNotification({ type, message });
-    setTimeout(() => setNotification(null), 5000);
-  };
+  }, [showNotification]);
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,8 +110,8 @@ export default function SettingsPage() {
       // Update local storage to reflect changes
       localStorage.setItem('adminEmail', profileData.email);
       localStorage.setItem('adminName', profileData.userName);
-    } catch (err: any) {
-      showNotification('error', err.message);
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -128,8 +128,8 @@ export default function SettingsPage() {
       await updatePassword(passwordData);
       showNotification('success', 'Password updated successfully.');
       setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
-    } catch (err: any) {
-      showNotification('error', err.message);
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -144,8 +144,8 @@ export default function SettingsPage() {
       setNewAdmin({ firstName: '', lastName: '', email: '', password: '' });
       setShowAddAdmin(false);
       fetchAdmins(1);
-    } catch (err: any) {
-      showNotification('error', err.message);
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -161,8 +161,8 @@ export default function SettingsPage() {
       setNewServiceName('');
       setShowAddService(false);
       fetchServices();
-    } catch (err: any) {
-      showNotification('error', err.message);
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -177,8 +177,8 @@ export default function SettingsPage() {
       showNotification('success', 'Service updated successfully.');
       setEditingService(null);
       fetchServices();
-    } catch (err: any) {
-      showNotification('error', err.message);
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -191,8 +191,8 @@ export default function SettingsPage() {
       await deleteService(id);
       showNotification('success', 'Service deleted successfully.');
       fetchServices();
-    } catch (err: any) {
-      showNotification('error', err.message);
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
