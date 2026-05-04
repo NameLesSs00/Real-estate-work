@@ -1,11 +1,11 @@
 'use client';
 
 import { useRef, useEffect, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Filter, X, Search } from "lucide-react";
 import { getLocations } from "@/lib/api/locations";
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 const PROPERTY_TYPES = ['Apartment', 'Villa', 'Studio', 'Penthouse', 'Chalet', 'Town House', 'Twin House'];
 
