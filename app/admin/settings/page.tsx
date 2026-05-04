@@ -44,11 +44,10 @@ export default function SettingsPage() {
   const [newServiceName, setNewServiceName] = useState('');
   const [editingService, setEditingService] = useState<Service | null>(null);
 
-  useEffect(() => {
-    // Initial fetch to get the current user's details and the team list
-    fetchAdmins(1);
-    fetchServices();
-  }, [fetchAdmins, fetchServices]);
+  const showNotification = useCallback((type: 'success' | 'error', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 5000);
+  }, []);
 
   const fetchServices = useCallback(async () => {
     try {
@@ -57,11 +56,6 @@ export default function SettingsPage() {
     } catch (err: unknown) {
       console.error('[Settings] Failed to fetch services', err);
     }
-  }, []);
-
-  const showNotification = useCallback((type: 'success' | 'error', message: string) => {
-    setNotification({ type, message });
-    setTimeout(() => setNotification(null), 5000);
   }, []);
 
   const fetchAdmins = useCallback(async (page: number) => {
@@ -100,6 +94,12 @@ export default function SettingsPage() {
       setLoading(false);
     }
   }, [showNotification]);
+
+  useEffect(() => {
+    // Initial fetch to get the current user's details and the team list
+    fetchAdmins(1);
+    fetchServices();
+  }, [fetchAdmins, fetchServices]);
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
