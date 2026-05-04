@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './config';
+import { getAccessToken } from '@/lib/auth/tokens';
 
 
 export interface Service {
@@ -16,11 +17,9 @@ export interface UpdateServicePayload {
 }
 
 function getAuthHeader(): Record<string, string> {
-  const token = typeof document !== 'undefined' 
-    ? document.cookie.match(/(?:^|; )rg_at=([^;]*)/)?.[1] 
-    : null;
+  const token = getAccessToken();
   if (!token) console.warn('[Services] No auth token found in cookies (rg_at)');
-  return token ? { Authorization: `Bearer ${decodeURIComponent(token)}` } : {};
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 /** GET /api/Services */

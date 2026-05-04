@@ -1,5 +1,6 @@
 import { API_BASE_URL } from './config';
 import { ApiResponse } from './auth';
+import { getAccessToken } from '@/lib/auth/tokens';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -159,11 +160,8 @@ export interface UnitsListPage {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function getAuthHeader(): Record<string, string> {
-  const token =
-    typeof document !== 'undefined'
-      ? document.cookie.match(/(?:^|; )rg_at=([^;]*)/)?.[1]
-      : null;
-  return token ? { Authorization: `Bearer ${decodeURIComponent(token)}` } : {};
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 /** Prefix a relative image path from the API with the base URL */

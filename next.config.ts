@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/backend/:path*',
-        destination: 'http://api.thegate-estates.com/:path*',
+        destination: 'https://api.thegate-estates.com/:path*',
       },
     // return [
     //   {
