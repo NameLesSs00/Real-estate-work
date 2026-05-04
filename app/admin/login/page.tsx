@@ -23,6 +23,10 @@ export default function LoginPage() {
 
       // Persist tokens in cookies so the middleware can read them
       saveTokens(tokens.accessToken, tokens.refreshToken);
+      
+      // Persist user info for profile pre-filling
+      localStorage.setItem('adminEmail', tokens.email);
+      localStorage.setItem('adminName', tokens.fullName);
 
       // Navigate to dashboard on success
       router.push('/admin/dashboard');

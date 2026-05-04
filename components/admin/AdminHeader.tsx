@@ -7,6 +7,14 @@ import { Bell } from 'lucide-react';
 export default function AdminHeader() {
   const pathname = usePathname();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [adminName, setAdminName] = useState('Admin');
+
+  React.useEffect(() => {
+    const storedName = localStorage.getItem('adminName');
+    if (storedName) {
+      setAdminName(storedName);
+    }
+  }, []);
 
   // Extract and format the current page name from the URL
   const getPageName = () => {
@@ -30,7 +38,7 @@ export default function AdminHeader() {
           {getPageName()}
         </h1>
         <p className="text-[14px] text-gray-300 mt-0.5">
-          Good Morning, Admin
+          Welcome back, {adminName}
         </p>
       </div>
       

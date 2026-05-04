@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './config';
+import { getAccessToken } from '@/lib/auth/tokens';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -23,6 +24,19 @@ export interface ApiResponse<T> {
 
 export interface RefreshTokenPayload {
   refreshToken: string;
+}
+
+export interface AddAdminPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export interface UpdatePasswordPayload {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
 }
 
 // ─── Endpoints ───────────────────────────────────────────────────────────────
@@ -80,4 +94,64 @@ export async function refreshToken(payload: RefreshTokenPayload): Promise<AuthTo
   }
 
   return json.data;
+}
+
+
+/**
+ * POST /api/Auth/add-admin
+ * Adds a new administrator.
+ */
+export async function addAdmin(payload: AddAdminPayload): Promise<void> {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE_URL}/api/Auth/add-admin`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const json = await res.json().catch(() => ({}));
+    let errorMessage = json.message || 'Failed to add admin.';
+    
+    if (Array.isArray(json.errors)) {
+      errorMessage = json.errors.join(' ');
+    } else if (Array.isArray(json)) {
+      errorMessage = json.join(' ');
+    }
+    
+    throw new Error(errorMessage);
+  }
+}
+
+
+/**
+ * PUT /api/Auth/update-password
+ * Updates the current administrator's password.
+ */
+export async function updatePassword(payload: UpdatePasswordPayload): Promise<void> {
+  const token = getAccessToken();
+  const res = await fetch(`${API_BASE_URL}/api/Auth/update-password`, {
+    method: 'PUT',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const json = await res.json().catch(() => ({}));
+    let errorMessage = json.message || 'Failed to update password.';
+    
+    if (Array.isArray(json.errors)) {
+      errorMessage = json.errors.join(' ');
+    } else if (Array.isArray(json)) {
+      errorMessage = json.join(' ');
+    }
+    
+    throw new Error(errorMessage);
+  }
 }
