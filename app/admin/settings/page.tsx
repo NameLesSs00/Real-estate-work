@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { User, Shield, Users, ChevronLeft, ChevronRight, Loader2, AlertCircle, CheckCircle2, LayoutGrid, Plus, Trash2, Edit2, X } from 'lucide-react';
 import { updatePassword, addAdmin, AddAdminPayload, UpdatePasswordPayload } from '@/lib/api/auth';
-import { getAdmins, updateAdmin, PaginatedAdmins } from '@/lib/api/admins';
+import { getAdmins, updateAdmin, PaginatedAdmins, UpdateAdminPayload } from '@/lib/api/admins';
 import { getServices, createService, updateService, deleteService, Service } from '@/lib/api/services';
 
 type Tab = 'profile' | 'security' | 'admins' | 'services';
