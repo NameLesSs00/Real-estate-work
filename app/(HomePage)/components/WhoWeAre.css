@@ -151,8 +151,14 @@
 @media (max-width: 1024px) {
   .who-we-are-content {
     flex-direction: column;
+    gap: 40px;
   }
   
+  .who-we-are-images {
+    min-height: 400px;
+    width: 100%;
+  }
+
   .who-we-are-info-box {
     padding: 40px;
   }
@@ -163,6 +169,10 @@
     font-size: 32px;
   }
   
+  .who-we-are-images {
+    min-height: 300px;
+  }
+
   .info-item-title {
     font-size: 36px;
   }

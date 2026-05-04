@@ -1,13 +1,39 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { ChevronDown, ChevronUp, X, Filter } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+
+const locations = [
+  "El Gouna",
+  "El kawther",
+  "Arabia",
+  "Al Ahyaa",
+  "sheraton",
+  "Makadi Bay"
+];
 
 const Header = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const WhatsAppIcon = ({ size = 20 }: { size?: number }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
@@ -29,13 +55,59 @@ const Header = () => {
     </svg>
   );
 
+  const handleDropdownClick = (title: string) => {
+    if (activeDropdown === title) {
+      router.push('/properties');
+      setActiveDropdown(null);
+    } else {
+      setActiveDropdown(title);
+    }
+  };
+
+  const NavDropdown = ({ title, type }: { title: string, type: string }) => (
+    <div className="relative">
+      <button 
+        onClick={() => handleDropdownClick(title)}
+        className="flex items-center gap-2 text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors py-2 outline-none cursor-pointer"
+      >
+        {title}
+        <ChevronDown size={16} className={`transition-transform duration-300 ${activeDropdown === title ? 'rotate-180' : ''}`} />
+      </button>
+      
+      <AnimatePresence>
+        {activeDropdown === title && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-full left-[-150px] mt-2 bg-white shadow-[0_15px_50px_rgba(0,0,0,0.12)] rounded-2xl p-6 min-w-[450px] border border-gray-100 z-[100]"
+          >
+            <div className="grid grid-cols-2 gap-x-12 gap-y-1">
+              {locations.map((loc) => (
+                <Link 
+                  key={loc} 
+                  href={`/search?type=${type}&location=${loc}`}
+                  onClick={() => setActiveDropdown(null)}
+                  className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[16px] font-medium transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
+                >
+                  {loc}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+
   // Hide header on admin pages
   if (pathname?.startsWith('/admin')) return null;
 
   return (
     <>
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-48px)] max-w-[1440px]">
-        <header className="w-full bg-white rounded-[100px] shadow-md py-5 px-10 md:px-16 flex items-center justify-between">
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-48px)] max-w-[1440px]" ref={dropdownRef}>
+        <header className="w-full bg-white rounded-[100px] shadow-md py-5 px-6 md:px-16 flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/">
@@ -45,71 +117,46 @@ const Header = () => {
                 width={190} 
                 height={55} 
                 priority
-                className="h-auto w-auto"
+                className="h-[35px] md:h-auto w-auto"
               />
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-12">
-            <div className="flex items-center gap-12">
+          <nav className="hidden lg:flex items-center gap-10">
+            <div className="flex items-center gap-8">
               <Link
                 href="/"
-                className="text-[18px] font-medium text-brand-primary"
+                className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors"
               >
                 Home
               </Link>
-              <div className="flex items-center gap-6">
-                <Link href="/projects" className="flex items-center gap-2 text-[18px] font-medium text-brand-primary">
-                  Projects
-                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                </Link>
-                <Link href="/about" className="text-[18px] font-medium text-brand-primary">About Us</Link>
-                <Link href="/properties" className="flex items-center gap-2 text-[18px] font-medium text-brand-primary">
-                  Properties
-                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                </Link>
-                <Link href="/contact" className="text-[18px] font-medium text-brand-primary">Contact Us</Link>
-                <Link href="/blogs" className="text-[18px] font-medium text-brand-primary">Blogs</Link>
-              </div>
+              <Link href="/projects" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
+                Projects
+              </Link>
+              
+              <NavDropdown title="Buy" type="buy" />
+              <NavDropdown title="Rent" type="rent" />
+
+              <Link href="/about" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">About Us</Link>
+              <Link href="/contact" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">Contact Us</Link>
+              <Link href="/blogs" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">Blogs</Link>
             </div>
 
             {/* Social Links */}
             <div className="flex items-center gap-4 px-4 border-l border-gray-200">
-              <a 
-                href="https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-brand-primary hover:opacity-70 transition-opacity"
-              >
-                <FacebookIcon size={20} />
-              </a>
-              <a 
-                href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-brand-primary hover:opacity-70 transition-opacity"
-              >
-                <InstagramIcon size={20} />
-              </a>
-              <a 
-                href="https://wa.me/message/2CFJ7MIUOG3AM1" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-brand-primary hover:opacity-70 transition-opacity"
-              >
+              <a href="https://wa.me/message/2CFJ7MIUOG3AM1" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-[#25D366] transition-colors">
                 <WhatsAppIcon size={20} />
+              </a>
+              <a href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-[#E4405F] transition-colors">
+                <InstagramIcon size={20} />
               </a>
             </div>
 
             {/* List Your Property Button */}
             <Link 
               href="/list-property"
-              className="bg-[#16273B] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#1a304a] transition-all whitespace-nowrap"
+              className="bg-[#1B2134] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#c7b7a1] transition-all whitespace-nowrap shadow-sm"
             >
               List Your Property
             </Link>
@@ -118,7 +165,7 @@ const Header = () => {
           {/* Mobile Hamburger Menu */}
           <button 
             onClick={() => setIsMenuOpen(true)}
-            className="flex lg:hidden flex-col justify-center items-end gap-[6px] cursor-pointer outline-none bg-transparent border-none p-2 hover:opacity-80 transition-opacity"
+            className="flex lg:hidden flex-col justify-center items-end gap-[6px] cursor-pointer outline-none bg-transparent border-none p-2"
           >
             <span className="block w-8 h-[3px] bg-[#1b2134] rounded-full"></span>
             <span className="block w-8 h-[3px] bg-[#1b2134] rounded-full"></span>
@@ -128,129 +175,137 @@ const Header = () => {
       </div>
 
       {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-white z-[60] overflow-y-auto font-poppins flex flex-col">
-          {/* Header of Menu */}
-          <div className="flex items-center justify-between py-8 px-8">
-            <Image 
-              src="/assists/header/headerLogo.png" 
-              alt="THE GATE ESTATES" 
-              width={160} 
-              height={45} 
-              className="h-auto w-auto"
-            />
-            <button 
-              onClick={() => setIsMenuOpen(false)} 
-              className="text-[#1b2134] p-2 hover:opacity-70 transition-opacity"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Menu Items */}
-          <div className="flex-1 px-8 py-4 flex flex-col gap-8 pb-12">
-            
-            {/* Home */}
-            <div>
-              <Link 
-                href="/" 
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed inset-0 bg-white z-[60] overflow-y-auto font-poppins flex flex-col"
+          >
+            {/* Header of Menu */}
+            <div className="flex items-center justify-between py-8 px-8">
+              <Image 
+                src="/assists/header/headerLogo.png" 
+                alt="THE GATE ESTATES" 
+                width={160} 
+                height={45} 
+                className="h-auto w-auto"
+              />
+              <button 
                 onClick={() => setIsMenuOpen(false)} 
-                className="inline-block px-8 py-3 bg-[#F8F5F0] rounded-[30px] text-[18px] font-medium text-[#1b2134]"
+                className="text-[#1b2134] p-2"
               >
-                Home
-              </Link>
+                <X size={28} />
+              </button>
             </div>
 
-            {/* Projects */}
-            <div>
-              <Link
-                href="/projects"
-                onClick={() => setIsMenuOpen(false)}
-                className="flex items-center gap-3 text-[18px] font-medium text-[#1b2134] text-left"
-              >
-                Projects
-                <svg className="w-[14px] h-[8px]" viewBox="0 0 12 8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                  <path d="M1 1L6 6L11 1" />
-                </svg>
-              </Link>
-            </div>
+            {/* Menu Items */}
+            <div className="flex-1 px-8 py-4 flex flex-col gap-6 pb-12">
+              <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">Home</Link>
+              <Link href="/projects" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">Projects</Link>
+              
+              {/* Buy Mobile */}
+              <div>
+                <button 
+                  onClick={() => {
+                    if (mobileExpanded === 'buy') {
+                      router.push('/properties');
+                      setIsMenuOpen(false);
+                    } else {
+                      setMobileExpanded('buy');
+                    }
+                  }}
+                  className="w-full flex items-center justify-between text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2 cursor-pointer"
+                >
+                  Buy
+                  {mobileExpanded === 'buy' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                </button>
+                <AnimatePresence>
+                  {mobileExpanded === 'buy' && (
+                    <motion.div 
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden bg-[#F8F5F0] rounded-xl mt-2"
+                    >
+                      {locations.map(loc => (
+                        <Link 
+                          key={loc} 
+                          href={`/search?type=buy&location=${loc}`}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block px-6 py-3 text-[#1b2134] font-medium border-b border-white last:border-0"
+                        >
+                          {loc}
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
-            {/* About Us */}
-            <div>
-              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-[18px] font-medium text-[#1b2134]">
-                About Us
-              </Link>
-            </div>
+              {/* Rent Mobile */}
+              <div>
+                <button 
+                  onClick={() => {
+                    if (mobileExpanded === 'rent') {
+                      router.push('/properties');
+                      setIsMenuOpen(false);
+                    } else {
+                      setMobileExpanded('rent');
+                    }
+                  }}
+                  className="w-full flex items-center justify-between text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2 cursor-pointer"
+                >
+                  Rent
+                  {mobileExpanded === 'rent' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                </button>
+                <AnimatePresence>
+                  {mobileExpanded === 'rent' && (
+                    <motion.div 
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden bg-[#F8F5F0] rounded-xl mt-2"
+                    >
+                      {locations.map(loc => (
+                        <Link 
+                          key={loc} 
+                          href={`/search?type=rent&location=${loc}`}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block px-6 py-3 text-[#1b2134] font-medium border-b border-white last:border-0"
+                        >
+                          {loc}
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
-            {/* Properties */}
-            <div>
-              <Link 
-                href="/properties"
-                className="text-[18px] font-medium text-[#1b2134] text-left outline-none"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Properties
-              </Link>
-            </div>
+              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">About Us</Link>
+              <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">Contact Us</Link>
+              <Link href="/blogs" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">Blogs</Link>
 
-            {/* Contact Us */}
-            <div>
-              <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-[18px] font-medium text-[#1b2134]">
-                Contact Us
-              </Link>
-            </div>
+              <div className="mt-6">
+                <Link 
+                  href="/list-property" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block w-full bg-[#1B2134] text-white text-center py-4 rounded-full font-bold text-[18px] shadow-lg active:scale-95 transition-all"
+                >
+                  List Your Property
+                </Link>
+              </div>
 
-            {/* Blogs */}
-            <div>
-              <Link href="/blogs" onClick={() => setIsMenuOpen(false)} className="text-[18px] font-medium text-[#1b2134]">
-                Blogs
-              </Link>
+              <div className="flex items-center justify-center gap-8 mt-4">
+                <a href="https://wa.me/message/2CFJ7MIUOG3AM1" target="_blank" rel="noopener noreferrer" className="text-[#1B2134]"><WhatsAppIcon size={28} /></a>
+                <a href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" target="_blank" rel="noopener noreferrer" className="text-[#1B2134]"><InstagramIcon size={28} /></a>
+              </div>
             </div>
-
-            {/* List Your Property Button (Mobile) */}
-            <div className="mt-4">
-              <Link 
-                href="/list-property" 
-                onClick={() => setIsMenuOpen(false)}
-                className="block w-full bg-[#16273B] text-white text-center py-5 rounded-full font-bold text-[18px] shadow-lg active:scale-95 transition-all"
-              >
-                List Your Property
-              </Link>
-            </div>
-
-            {/* Social Links (Mobile) */}
-            <div className="flex items-center justify-center gap-8 mt-8 pb-8 border-t border-gray-100 pt-8">
-              <a 
-                href="https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-brand-primary hover:opacity-70 transition-opacity"
-              >
-                <FacebookIcon size={28} />
-              </a>
-              <a 
-                href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-brand-primary hover:opacity-70 transition-opacity"
-              >
-                <InstagramIcon size={28} />
-              </a>
-              <a 
-                href="https://wa.me/message/2CFJ7MIUOG3AM1" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-brand-primary hover:opacity-70 transition-opacity"
-              >
-                <WhatsAppIcon size={28} />
-              </a>
-            </div>
-
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
