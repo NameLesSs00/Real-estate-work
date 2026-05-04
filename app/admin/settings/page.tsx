@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { User, Shield, Users, ChevronLeft, ChevronRight, Loader2, AlertCircle, CheckCircle2, LayoutGrid, Plus, Trash2, Edit2, X } from 'lucide-react';
 import { updatePassword, addAdmin, AddAdminPayload, UpdatePasswordPayload } from '@/lib/api/auth';
 import { getAdmins, updateAdmin, PaginatedAdmins, UpdateAdminPayload } from '@/lib/api/admins';
 import { getServices, createService, updateService, deleteService, Service } from '@/lib/api/services';
+import { getFacilities, createFacility, updateFacility, deleteFacility, Facility } from '@/lib/api/facilities';
 
-type Tab = 'profile' | 'security' | 'admins' | 'services';
+type Tab = 'profile' | 'security' | 'admins' | 'services' | 'facilities';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<Tab>('profile');
@@ -45,6 +46,13 @@ export default function SettingsPage() {
   const [newServiceName, setNewServiceName] = useState('');
   const [editingService, setEditingService] = useState<Service | null>(null);
 
+  // Facilities State
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [showAddFacility, setShowAddFacility] = useState(false);
+  const [newFacilityName, setNewFacilityName] = useState({ en: '', de: '', pl: '' });
+  const [editingFacility, setEditingFacility] = useState<Facility | null>(null);
+  const [editingFacilityName, setEditingFacilityName] = useState({ en: '', de: '', pl: '' });
+
   const showNotification = useCallback((type: 'success' | 'error', message: string) => {
     setNotification({ type, message });
     setTimeout(() => setNotification(null), 5000);
@@ -56,6 +64,15 @@ export default function SettingsPage() {
       setServices(data);
     } catch (err: unknown) {
       console.error('[Settings] Failed to fetch services', err);
+    }
+  }, []);
+
+  const fetchFacilities = useCallback(async () => {
+    try {
+      const data = await getFacilities();
+      setFacilities(data);
+    } catch (err: unknown) {
+      console.error('[Settings] Failed to fetch facilities', err);
     }
   }, []);
 
@@ -102,7 +119,8 @@ export default function SettingsPage() {
     // Initial fetch to get the current user's details and the team list
     fetchAdmins(1);
     fetchServices();
-  }, [fetchAdmins, fetchServices]);
+    fetchFacilities();
+  }, [fetchAdmins, fetchServices, fetchFacilities]);
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,6 +212,56 @@ export default function SettingsPage() {
       await deleteService(id);
       showNotification('success', 'Service deleted successfully.');
       fetchServices();
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddFacility = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newFacilityName.en.trim() || !newFacilityName.de.trim() || !newFacilityName.pl.trim()) {
+      showNotification('error', 'Please fill all translations.');
+      return;
+    }
+    setLoading(true);
+    try {
+      await createFacility(newFacilityName);
+      showNotification('success', 'Facility added successfully.');
+      setNewFacilityName({ en: '', de: '', pl: '' });
+      setShowAddFacility(false);
+      fetchFacilities();
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateFacility = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingFacility || !editingFacilityName.en.trim() || !editingFacilityName.de.trim() || !editingFacilityName.pl.trim()) return;
+    setLoading(true);
+    try {
+      await updateFacility(editingFacility.id, editingFacilityName);
+      showNotification('success', 'Facility updated successfully.');
+      setEditingFacility(null);
+      fetchFacilities();
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteFacility = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this facility?')) return;
+    setLoading(true);
+    try {
+      await deleteFacility(id);
+      showNotification('success', 'Facility deleted successfully.');
+      fetchFacilities();
     } catch (err: unknown) {
       showNotification('error', err instanceof Error ? err.message : String(err));
     } finally {
@@ -612,6 +680,192 @@ export default function SettingsPage() {
                       <tr>
                         <td colSpan={3} className="px-6 py-12 text-center text-gray-400 font-medium">
                           No services defined yet.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+          {/* Facilities Tab */}
+          {activeTab === 'facilities' && (
+            <div className="space-y-8">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-[#1B2134] font-radley">Project & Unit Facilities</h2>
+                <button 
+                  onClick={() => setShowAddFacility(!showAddFacility)}
+                  className="bg-[#1B2134] text-white px-6 py-2.5 rounded-full font-semibold text-[14px] shadow-md hover:scale-105 transition-all flex items-center gap-2"
+                >
+                  {showAddFacility ? <X size={16} /> : <Plus size={16} />}
+                  {showAddFacility ? 'Cancel' : 'Add New Facility'}
+                </button>
+              </div>
+
+              {/* Add Facility Form */}
+              <AnimatePresence>
+                {showAddFacility && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <form onSubmit={handleAddFacility} className="bg-[#F8F5F0] p-6 rounded-[24px] mb-8 flex flex-col gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-[13px] font-bold text-[#1B2134] ml-1">Name (EN)</label>
+                          <input 
+                            type="text" 
+                            value={newFacilityName.en}
+                            onChange={(e) => setNewFacilityName({...newFacilityName, en: e.target.value})}
+                            placeholder="e.g. Swimming Pool"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#1B2134]/10"
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[13px] font-bold text-[#1B2134] ml-1">Name (DE)</label>
+                          <input 
+                            type="text" 
+                            value={newFacilityName.de}
+                            onChange={(e) => setNewFacilityName({...newFacilityName, de: e.target.value})}
+                            placeholder="e.g. Schwimmbad"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#1B2134]/10"
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[13px] font-bold text-[#1B2134] ml-1">Name (PL)</label>
+                          <input 
+                            type="text" 
+                            value={newFacilityName.pl}
+                            onChange={(e) => setNewFacilityName({...newFacilityName, pl: e.target.value})}
+                            placeholder="e.g. Basen"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#1B2134]/10"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end">
+                        <button 
+                          disabled={loading}
+                          className="bg-[#1B2134] text-white px-8 py-3.5 rounded-xl font-bold text-[14px] shadow-md hover:scale-105 transition-all disabled:opacity-50"
+                        >
+                          Add Facility
+                        </button>
+                      </div>
+                    </form>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Facilities Table */}
+              <div className="overflow-hidden rounded-2xl border border-[#F0EDE8]">
+                <table className="w-full text-left">
+                  <thead className="bg-[#F8F5F0]">
+                    <tr className="text-[#1B2134]/50 text-[13px] font-bold uppercase tracking-wider">
+                      <th className="px-6 py-4">Facility ID</th>
+                      <th className="px-6 py-4">Facility Name</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#F0EDE8]">
+                    {facilities.map((facility) => {
+                      let displayName = facility.name;
+                      if (typeof facility.name === 'object' && facility.name !== null) {
+                        displayName = (facility.name as any).en || (facility.name as any).de || (facility.name as any).pl || 'Unknown';
+                      }
+
+                      return (
+                        <tr key={facility.id} className="text-[#1B2134] hover:bg-[#FDFCFB] transition-colors group">
+                          <td className="px-6 py-4 font-mono text-sm text-gray-500">#{facility.id}</td>
+                          <td className="px-6 py-4">
+                            {editingFacility?.id === facility.id ? (
+                              <div className="flex gap-2">
+                                <input 
+                                  type="text"
+                                  value={editingFacilityName.en}
+                                  onChange={(e) => setEditingFacilityName({...editingFacilityName, en: e.target.value})}
+                                  placeholder="EN"
+                                  className="w-full max-w-[120px] bg-[#F8F5F0] border-none rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-[#1B2134]/10 font-medium"
+                                  autoFocus
+                                />
+                                <input 
+                                  type="text"
+                                  value={editingFacilityName.de}
+                                  onChange={(e) => setEditingFacilityName({...editingFacilityName, de: e.target.value})}
+                                  placeholder="DE"
+                                  className="w-full max-w-[120px] bg-[#F8F5F0] border-none rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-[#1B2134]/10 font-medium"
+                                />
+                                <input 
+                                  type="text"
+                                  value={editingFacilityName.pl}
+                                  onChange={(e) => setEditingFacilityName({...editingFacilityName, pl: e.target.value})}
+                                  placeholder="PL"
+                                  className="w-full max-w-[120px] bg-[#F8F5F0] border-none rounded-lg px-3 py-1.5 outline-none focus:ring-2 focus:ring-[#1B2134]/10 font-medium"
+                                />
+                              </div>
+                            ) : (
+                              <span className="font-semibold">{displayName}</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex justify-end gap-2">
+                              {editingFacility?.id === facility.id ? (
+                                <>
+                                  <button 
+                                    onClick={handleUpdateFacility}
+                                    className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                    title="Save"
+                                  >
+                                    <CheckCircle2 size={18} />
+                                  </button>
+                                  <button 
+                                    onClick={() => setEditingFacility(null)}
+                                    className="p-2 text-gray-400 hover:bg-gray-50 rounded-lg transition-colors"
+                                    title="Cancel"
+                                  >
+                                    <X size={18} />
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button 
+                                    onClick={() => {
+                                      setEditingFacility(facility);
+                                      const nameObj = typeof facility.name === 'object' && facility.name !== null 
+                                        ? facility.name 
+                                        : { en: facility.name, de: facility.name, pl: facility.name };
+                                      setEditingFacilityName({
+                                        en: (nameObj as any).en || '',
+                                        de: (nameObj as any).de || '',
+                                        pl: (nameObj as any).pl || ''
+                                      });
+                                    }}
+                                    className="p-2 text-[#1B2134] hover:bg-gray-50 rounded-lg transition-colors"
+                                    title="Edit"
+                                  >
+                                    <Edit2 size={18} />
+                                  </button>
+                                  <button 
+                                    onClick={() => handleDeleteFacility(facility.id)}
+                                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                    title="Delete"
+                                  >
+                                    <Trash2 size={18} />
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    {facilities.length === 0 && (
+                      <tr>
+                        <td colSpan={3} className="px-6 py-12 text-center text-gray-400 font-medium">
+                          No facilities defined yet.
                         </td>
                       </tr>
                     )}

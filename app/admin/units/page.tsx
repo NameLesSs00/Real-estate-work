@@ -6,11 +6,13 @@ import AddUnitModal from '@/components/admin/AddUnitModal';
 import DeleteUnitModal from '@/components/admin/DeleteUnitModal';
 import UnitDetailsModal from '@/components/admin/UnitDetailsModal';
 import { getUnits, ApiUnit } from '@/lib/api/projects';
+import { markUnitSold } from '@/lib/api/units';
 
 export default function UnitsPage() {
   const [units, setUnits] = useState<ApiUnit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Pagination
@@ -73,6 +75,19 @@ export default function UnitsPage() {
     setIsDetailsModalOpen(true);
   };
 
+  const handleMarkSold = async (unit: ApiUnit) => {
+    if (!confirm(`Are you sure you want to mark "${unit.name}" as sold?`)) return;
+    try {
+      await markUnitSold(unit.id);
+      setNotification({ type: 'success', message: 'Unit marked as sold successfully.' });
+      setTimeout(() => setNotification(null), 3000);
+      fetchUnits(currentPage);
+    } catch (err: unknown) {
+      setNotification({ type: 'error', message: err instanceof Error ? err.message : String(err) });
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
+
   const handleSuccess = () => fetchUnits(currentPage);
 
   const filteredUnits = units.filter((u) =>
@@ -84,7 +99,7 @@ export default function UnitsPage() {
     <div className="p-10 lg:p-14 font-inter bg-[#F8F9FA] min-h-full scrollbar-hide">
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
         <div>
           <h1 className="text-[36px] font-bold text-[#16273B] mb-1">Units</h1>
           <p className="text-[#64748B] text-[17px]">{totalCount} unit{totalCount !== 1 ? 's' : ''} total</p>
@@ -97,6 +112,16 @@ export default function UnitsPage() {
           <span className="text-[18px] font-semibold">Add Unit</span>
         </button>
       </div>
+
+      {notification && (
+        <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 shadow-sm border ${
+          notification.type === 'success' 
+            ? 'bg-green-50 border-green-100 text-green-700' 
+            : 'bg-red-50 border-red-100 text-red-700'
+        }`}>
+          <span className="font-medium text-[15px]">{notification.message}</span>
+        </div>
+      )}
 
       {/* Search */}
       <div className="relative max-w-full mb-8">
@@ -181,7 +206,16 @@ export default function UnitsPage() {
                         : <span className="text-gray-300 text-[13px]">—</span>}
                     </td>
                     <td className="py-6 px-10">
-                      <div className="flex items-center justify-end gap-5">
+                      <div className="flex items-center justify-end gap-3">
+                        {unit.isActive && (
+                          <button 
+                            onClick={() => handleMarkSold(unit)} 
+                            className="bg-[#FEF9C3] text-[#A16207] hover:bg-[#FDE047] px-3 py-1.5 rounded-lg text-[13px] font-bold transition-colors cursor-pointer mr-2 whitespace-nowrap"
+                            title="Mark as Sold"
+                          >
+                            Mark Sold
+                          </button>
+                        )}
                         <button onClick={() => handleView(unit)} className="hover:scale-125 transition-transform duration-200 cursor-pointer" title="View">
                           <Image src="/admin/units/view.png" alt="View" width={20} height={20} className="opacity-70 hover:opacity-100" />
                         </button>

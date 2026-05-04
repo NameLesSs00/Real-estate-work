@@ -4,8 +4,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { ChevronDown, ChevronUp, X, Globe } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 const locations = [
   "El Gouna",
@@ -19,16 +20,22 @@ const locations = [
 const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const { language, setLanguage, t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const langRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setActiveDropdown(null);
+      }
+      if (langRef.current && !langRef.current.contains(event.target as Node)) {
+        setShowLangMenu(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -64,7 +71,7 @@ const Header = () => {
     }
   };
 
-  const NavDropdown = ({ title, type }: { title: string, type: string }) => (
+  const NavDropdown = ({ title, type, items }: { title: string, type?: string, items?: { label: string, href: string }[] }) => (
     <div className="relative">
       <button 
         onClick={() => handleDropdownClick(title)}
@@ -81,19 +88,32 @@ const Header = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-[-150px] mt-2 bg-white shadow-[0_15px_50px_rgba(0,0,0,0.12)] rounded-2xl p-6 min-w-[450px] border border-gray-100 z-[100]"
+            className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white shadow-[0_15px_50px_rgba(0,0,0,0.12)] rounded-2xl p-6 ${items ? 'min-w-[200px]' : 'min-w-[450px]'} border border-gray-100 z-[100]`}
           >
-            <div className="grid grid-cols-2 gap-x-12 gap-y-1">
-              {locations.map((loc) => (
-                <Link 
-                  key={loc} 
-                  href={`/search?type=${type}&location=${loc}`}
-                  onClick={() => setActiveDropdown(null)}
-                  className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[16px] font-medium transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
-                >
-                  {loc}
-                </Link>
-              ))}
+            <div className={`grid ${items ? 'grid-cols-1' : 'grid-cols-2'} gap-x-12 gap-y-1`}>
+              {items ? (
+                items.map((item) => (
+                  <Link 
+                    key={item.label} 
+                    href={item.href}
+                    onClick={() => setActiveDropdown(null)}
+                    className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[16px] font-semibold transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
+                  >
+                    {item.label}
+                  </Link>
+                ))
+              ) : (
+                locations.map((loc) => (
+                  <Link 
+                    key={loc} 
+                    href={`/search?type=${type}&location=${loc}`}
+                    onClick={() => setActiveDropdown(null)}
+                    className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[16px] font-medium transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
+                  >
+                    {loc}
+                  </Link>
+                ))
+              )}
             </div>
           </motion.div>
         )}
@@ -106,7 +126,7 @@ const Header = () => {
 
   return (
     <>
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-48px)] max-w-[1440px]" ref={dropdownRef}>
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-48px)] max-w-[1440px]">
         <header className="w-full bg-white rounded-[100px] shadow-md py-5 px-6 md:px-16 flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -123,27 +143,33 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-10">
+          <nav className="hidden lg:flex items-center gap-10" ref={dropdownRef}>
             <div className="flex items-center gap-8">
               <Link
                 href="/"
                 className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors"
               >
-                Home
+                {t('header.home')}
               </Link>
               <Link href="/projects" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
-                Projects
+                {t('header.projects')}
               </Link>
               
-              <NavDropdown title="Buy" type="buy" />
-              <NavDropdown title="Rent" type="rent" />
+              <NavDropdown 
+                title={t('header.buy')} 
+                items={[
+                  { label: t('header.primary'), href: "/search?type=primary" },
+                  { label: t('header.resale'), href: "/search?type=resale" }
+                ]} 
+              />
+              <NavDropdown title={t('header.rent')} type="rent" />
 
-              <Link href="/about" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">About Us</Link>
-              <Link href="/contact" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">Contact Us</Link>
-              <Link href="/blogs" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">Blogs</Link>
+              <Link href="/about" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
+              <Link href="/contact" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
+              <Link href="/blogs" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.blogs')}</Link>
             </div>
 
-            {/* Social Links */}
+            {/* Social Links & Language */}
             <div className="flex items-center gap-4 px-4 border-l border-gray-200">
               <a href="https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-[#1877F2] transition-colors">
                 <FacebookIcon size={20} />
@@ -154,6 +180,31 @@ const Header = () => {
               <a href="https://wa.me/message/2CFJ7MIUOG3AM1" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-[#25D366] transition-colors">
                 <WhatsAppIcon size={20} />
               </a>
+              
+              {/* Language Switcher */}
+              <div className="relative" ref={langRef}>
+                <button 
+                  onClick={() => setShowLangMenu(!showLangMenu)}
+                  className="flex items-center gap-1 text-brand-primary hover:text-[#c7b7a1] transition-colors ml-2"
+                >
+                  <Globe size={20} />
+                  <span className="text-[14px] font-semibold uppercase">{language}</span>
+                </button>
+                <AnimatePresence>
+                  {showLangMenu && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute top-full right-0 mt-3 w-32 bg-white shadow-xl rounded-xl py-2 z-[110] border border-gray-100"
+                    >
+                      <button onClick={() => { setLanguage('en'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${language === 'en' ? 'font-bold text-[#c7b7a1]' : 'text-[#1B2134]'}`}>English</button>
+                      <button onClick={() => { setLanguage('de'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${language === 'de' ? 'font-bold text-[#c7b7a1]' : 'text-[#1B2134]'}`}>Deutsch</button>
+                      <button onClick={() => { setLanguage('pl'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${language === 'pl' ? 'font-bold text-[#c7b7a1]' : 'text-[#1B2134]'}`}>Polski</button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
 
             {/* List Your Property Button */}
@@ -161,7 +212,7 @@ const Header = () => {
               href="/list-property"
               className="bg-[#1B2134] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#c7b7a1] transition-all whitespace-nowrap shadow-sm"
             >
-              List Your Property
+              {t('header.listProperty')}
             </Link>
           </nav>
 
@@ -206,8 +257,8 @@ const Header = () => {
 
             {/* Menu Items */}
             <div className="flex-1 px-8 py-4 flex flex-col gap-6 pb-12">
-              <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">Home</Link>
-              <Link href="/projects" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">Projects</Link>
+              <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.home')}</Link>
+              <Link href="/projects" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.projects')}</Link>
               
               {/* Buy Mobile */}
               <div>
@@ -222,7 +273,7 @@ const Header = () => {
                   }}
                   className="w-full flex items-center justify-between text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2 cursor-pointer"
                 >
-                  Buy
+                  {t('header.buy')}
                   {mobileExpanded === 'buy' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </button>
                 <AnimatePresence>
@@ -233,14 +284,17 @@ const Header = () => {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden bg-[#F8F5F0] rounded-xl mt-2"
                     >
-                      {locations.map(loc => (
+                      {[
+                        { label: t('header.primary'), href: "/search?type=primary" },
+                        { label: t('header.resale'), href: "/search?type=resale" }
+                      ].map(item => (
                         <Link 
-                          key={loc} 
-                          href={`/search?type=buy&location=${loc}`}
+                          key={item.label} 
+                          href={item.href}
                           onClick={() => setIsMenuOpen(false)}
                           className="block px-6 py-3 text-[#1b2134] font-medium border-b border-white last:border-0"
                         >
-                          {loc}
+                          {item.label}
                         </Link>
                       ))}
                     </motion.div>
@@ -261,7 +315,7 @@ const Header = () => {
                   }}
                   className="w-full flex items-center justify-between text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2 cursor-pointer"
                 >
-                  Rent
+                  {t('header.rent')}
                   {mobileExpanded === 'rent' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </button>
                 <AnimatePresence>
@@ -287,9 +341,9 @@ const Header = () => {
                 </AnimatePresence>
               </div>
 
-              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">About Us</Link>
-              <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">Contact Us</Link>
-              <Link href="/blogs" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">Blogs</Link>
+              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.about')}</Link>
+              <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.contact')}</Link>
+              <Link href="/blogs" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.blogs')}</Link>
 
               <div className="mt-6">
                 <Link 
@@ -297,7 +351,7 @@ const Header = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className="block w-full bg-[#1B2134] text-white text-center py-4 rounded-full font-bold text-[18px] shadow-lg active:scale-95 transition-all"
                 >
-                  List Your Property
+                  {t('header.listProperty')}
                 </Link>
               </div>
 

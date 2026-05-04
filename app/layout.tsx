@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { LanguageProvider } from "@/lib/contexts/LanguageContext";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -36,8 +37,38 @@ const allura = Allura({
 });
 
 export const metadata: Metadata = {
-  title: "Modern Real Estate",
-  description: "Find your dream home with our premium real estate services.",
+  title: {
+    default: "The Gate Estates | Premium Real Estate in Egypt",
+    template: "%s | The Gate Estates",
+  },
+  description: "Find your dream home with our premium real estate services. We offer a curated selection of properties in the most exclusive locations, redefining luxury living.",
+  keywords: ["Real Estate", "Egypt", "Property", "Luxury Homes", "Villas", "Apartments", "The Gate Estates"],
+  openGraph: {
+    title: "The Gate Estates",
+    description: "Find your dream home with our premium real estate services. Redefining luxury living.",
+    url: "https://thegateestates.com",
+    siteName: "The Gate Estates",
+    images: [
+      {
+        url: "/assists/header/headerLogo.png",
+        width: 800,
+        height: 600,
+        alt: "The Gate Estates Logo",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Gate Estates | Premium Real Estate",
+    description: "Discover exclusive properties in top locations.",
+    images: ["/assists/header/headerLogo.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -51,12 +82,14 @@ export default function RootLayout({
       className={`${poppins.variable} ${workSans.variable} ${inter.variable} ${radley.variable} ${allura.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-poppins">
-        <Header />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
-        <WhatsAppButton />
+        <LanguageProvider>
+          <Header />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+          <WhatsAppButton />
+        </LanguageProvider>
       </body>
     </html>
   );

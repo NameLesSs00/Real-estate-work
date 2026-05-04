@@ -1,69 +1,144 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { getUnitsFiltered } from '@/lib/api/units';
+import { getProjects } from '@/lib/api/projects';
+import { getDevelopers } from '@/lib/api/developers';
+import { getRequests } from '@/lib/api/requests';
+import { getLatestDeals } from '@/lib/api/deals';
 
-const stats = [
-  { 
-    title: "Total Units", 
-    value: "248", 
-    icon: "/admin/dashbaord/units.png", 
-    bg: "bg-white border border-gray-100", 
-    textCol: "text-[#16273B]", 
-    subText: "text-gray-500", 
-    iconBg: "bg-[#EEF0F5]" 
-  },
-  { 
-    title: "Active Projects", 
-    value: "32", 
-    icon: "/admin/dashbaord/activeProject.png", 
-    bg: "bg-[#1B2134]", 
-    textCol: "text-white", 
-    subText: "text-gray-400", 
-    iconBg: "bg-[#F3E8FF]" 
-  },
-  { 
-    title: "Developers", 
-    value: "18", 
-    icon: "/admin/dashbaord/developers.png", 
-    bg: "bg-white border border-gray-100", 
-    textCol: "text-[#16273B]", 
-    subText: "text-gray-500", 
-    iconBg: "bg-[#EEF0F5]" 
-  },
-  { 
-    title: "Revenue", 
-    value: "$2.4M", 
-    icon: "/admin/dashbaord/revenue.png", 
-    bg: "bg-[#1B2134]", 
-    textCol: "text-white", 
-    subText: "text-gray-400", 
-    iconBg: "bg-[#F3E8FF]" 
-  },
-];
-
-const recentUnits = Array(5).fill({
-  title: "Luxury Apartment 1",
-  location: "Downtown District",
-  price: "$450,000",
-  status: "Available"
-});
-
-const pendingRequests = Array(5).fill({
-  title: "Unit Request #1",
-  owner: "Owner: John Doe"
-});
+interface StatCard {
+  title: string;
+  value: string;
+  loading: boolean;
+  icon: string;
+  bg: string;
+  textCol: string;
+  subText: string;
+  iconBg: string;
+}
 
 export default function DashboardPage() {
+  const [totalUnits, setTotalUnits] = useState<number | null>(null);
+  const [totalProjects, setTotalProjects] = useState<number | null>(null);
+  const [totalDevelopers, setTotalDevelopers] = useState<number | null>(null);
+  const [pendingCount, setPendingCount] = useState<number | null>(null);
+  const [recentUnits, setRecentUnits] = useState<{ id: number; name: string; locationName: string; price: number; isActive: boolean; imageUrls: string[] }[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<{ id: number; unitName: string; applicantName: string; status: string }[]>([]);
+  const [recentDeals, setRecentDeals] = useState<{ id: number; unit: { unitName: string; price: number; projectName: string }; dealType: string; createdAt: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      try {
+        const [unitsData, projectsData, devsData, requestsData, dealsData] = await Promise.allSettled([
+          getUnitsFiltered({ PageSize: 5 }),
+          getProjects(1),
+          getDevelopers(1),
+          getRequests(1, 5, 0), // status 0 = pending
+          getLatestDeals(1, 5),
+        ]);
+
+        if (unitsData.status === 'fulfilled') {
+          setTotalUnits(unitsData.value.totalCount);
+          setRecentUnits(
+            unitsData.value.items.map(u => ({
+              id: u.id,
+              name: u.name,
+              locationName: u.locationName,
+              price: u.price,
+              isActive: u.isActive,
+              imageUrls: u.imageUrls,
+            }))
+          );
+        }
+        if (projectsData.status === 'fulfilled') setTotalProjects(projectsData.value.totalCount);
+        if (devsData.status === 'fulfilled') setTotalDevelopers(devsData.value.totalCount);
+        if (requestsData.status === 'fulfilled') {
+          setPendingCount(requestsData.value.totalCount);
+          setPendingRequests(
+            requestsData.value.items.map(r => ({
+              id: r.id,
+              unitName: r.unitName,
+              applicantName: r.applicantName,
+              status: r.status,
+            }))
+          );
+        }
+        if (dealsData.status === 'fulfilled') {
+          setRecentDeals(dealsData.value.items.map(d => ({
+            id: d.id,
+            unit: d.unit,
+            dealType: d.dealType,
+            createdAt: d.createdAt,
+          })));
+        }
+      } catch (err) {
+        console.error('[Dashboard] load error:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  const stats: StatCard[] = [
+    {
+      title: 'Total Units',
+      value: loading ? '...' : String(totalUnits ?? '—'),
+      loading,
+      icon: '/admin/dashbaord/units.png',
+      bg: 'bg-white border border-gray-100',
+      textCol: 'text-[#16273B]',
+      subText: 'text-gray-500',
+      iconBg: 'bg-[#EEF0F5]',
+    },
+    {
+      title: 'Active Projects',
+      value: loading ? '...' : String(totalProjects ?? '—'),
+      loading,
+      icon: '/admin/dashbaord/activeProject.png',
+      bg: 'bg-[#1B2134]',
+      textCol: 'text-white',
+      subText: 'text-gray-400',
+      iconBg: 'bg-[#F3E8FF]',
+    },
+    {
+      title: 'Developers',
+      value: loading ? '...' : String(totalDevelopers ?? '—'),
+      loading,
+      icon: '/admin/dashbaord/developers.png',
+      bg: 'bg-white border border-gray-100',
+      textCol: 'text-[#16273B]',
+      subText: 'text-gray-500',
+      iconBg: 'bg-[#EEF0F5]',
+    },
+    {
+      title: 'Pending Requests',
+      value: loading ? '...' : String(pendingCount ?? '—'),
+      loading,
+      icon: '/admin/dashbaord/revenue.png',
+      bg: 'bg-[#1B2134]',
+      textCol: 'text-white',
+      subText: 'text-gray-400',
+      iconBg: 'bg-[#F3E8FF]',
+    },
+  ];
+
   return (
-    <div className="p-10 min-h-screen font-inter" style={{ backgroundColor: '#F9F9F980' }}>
+    <div className="p-8 md:p-10 min-h-screen font-inter" style={{ backgroundColor: '#F9F9F980' }}>
       <div className="max-w-[1400px] mx-auto">
-        
-        {/* Dashboard Title & Subtitle */}
+
+        {/* Header */}
         <div className="mb-10">
-          <h2 className="text-[32px] font-bold text-[#16273B] mb-2">Dashboard Overview</h2>
+          <h1 className="text-[32px] font-bold text-[#16273B] mb-2">Dashboard Overview</h1>
           <p className="text-[#64748B] text-lg">Welcome back! Here&apos;s what&apos;s happening today.</p>
         </div>
 
-        {/* 4 Stat Cards */}
+        {/* Stat Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {stats.map((stat, idx) => (
             <div key={idx} className={`${stat.bg} p-6 rounded-[24px] shadow-sm flex flex-col justify-between h-[160px]`}>
@@ -77,63 +152,115 @@ export default function DashboardPage() {
             </div>
           ))}
         </div>
-        
-        {/* Main Content Area */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* Left Column: Recent Units */}
+
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+
+          {/* Recent Units */}
           <div>
-            <h3 className="text-[22px] font-bold text-[#16273B] mb-5">Recent Units</h3>
-            <div className="p-6 rounded-[32px] space-y-5" style={{ backgroundColor: '#F8F5F080' }}>
-              {recentUnits.map((unit, idx) => (
-                <div key={idx} className="bg-white rounded-[24px] p-5 flex items-center justify-between shadow-sm">
-                  <div className="flex items-center gap-6">
-                    <Image 
-                      src="/admin/dashbaord/placeHolder.png" 
-                      alt={unit.title} 
-                      width={120} 
-                      height={90} 
-                      className="rounded-2xl object-cover"
-                    />
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-[22px] font-bold text-[#16273B]">Recent Units</h3>
+              <Link href="/admin/units" className="text-[14px] text-[#64748B] hover:text-[#16273B] font-medium transition-colors">View all →</Link>
+            </div>
+            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#F8F5F080' }}>
+              {loading ? (
+                Array(3).fill(0).map((_, i) => (
+                  <div key={i} className="bg-white rounded-[20px] p-5 animate-pulse h-[88px]" />
+                ))
+              ) : recentUnits.length === 0 ? (
+                <p className="text-center text-gray-400 py-12 text-sm">No units found.</p>
+              ) : recentUnits.map((unit) => (
+                <div key={unit.id} className="bg-white rounded-[20px] p-4 flex items-center justify-between shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <div className="relative w-[90px] h-[65px] rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                      <Image
+                        src={unit.imageUrls?.[0] ? (unit.imageUrls[0].startsWith('http') ? unit.imageUrls[0] : `https://api.thegate-estates.com/${unit.imageUrls[0]}`) : '/assists/defalutImage.jpg'}
+                        alt={unit.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                     <div>
-                      <h4 className="text-[19px] font-bold text-[#16273B]">{unit.title}</h4>
-                      <p className="text-[15px] text-gray-500 mt-1">{unit.location}</p>
+                      <h4 className="text-[15px] font-bold text-[#16273B] line-clamp-1">{unit.name}</h4>
+                      <p className="text-[13px] text-gray-500 mt-0.5">{unit.locationName || '—'}</p>
                     </div>
                   </div>
-                  <div className="text-right pr-2">
-                    <p className="text-[20px] font-bold text-[#16273B]">{unit.price}</p>
-                    <p className="text-[14px] font-medium text-[#22C55E] mt-1">{unit.status}</p>
+                  <div className="text-right pr-1">
+                    <p className="text-[16px] font-bold text-[#16273B]">EGP {unit.price?.toLocaleString()}</p>
+                    <span className={`text-[12px] font-semibold ${unit.isActive ? 'text-green-500' : 'text-red-400'}`}>
+                      {unit.isActive ? 'Active' : 'Sold'}
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Column: Pending Requests */}
+          {/* Pending Requests */}
           <div>
-            <h3 className="text-[22px] font-bold text-[#16273B] mb-5">Pending Requests</h3>
-            <div className="p-6 rounded-[32px] space-y-5" style={{ backgroundColor: '#F8F5F080' }}>
-              {pendingRequests.map((req, idx) => (
-                <div key={idx} className="bg-white rounded-[24px] p-6 flex items-center justify-between shadow-sm">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-[22px] font-bold text-[#16273B]">Pending Requests</h3>
+              <Link href="/admin/requests" className="text-[14px] text-[#64748B] hover:text-[#16273B] font-medium transition-colors">View all →</Link>
+            </div>
+            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#F8F5F080' }}>
+              {loading ? (
+                Array(3).fill(0).map((_, i) => (
+                  <div key={i} className="bg-white rounded-[20px] p-5 animate-pulse h-[78px]" />
+                ))
+              ) : pendingRequests.length === 0 ? (
+                <p className="text-center text-gray-400 py-12 text-sm">No pending requests.</p>
+              ) : pendingRequests.map((req) => (
+                <div key={req.id} className="bg-white rounded-[20px] p-4 flex items-center justify-between shadow-sm">
                   <div>
-                    <h4 className="text-[18px] font-bold text-[#16273B]">{req.title}</h4>
-                    <p className="text-[15px] text-gray-500 mt-1">{req.owner}</p>
+                    <h4 className="text-[15px] font-bold text-[#16273B]">{req.unitName}</h4>
+                    <p className="text-[13px] text-gray-500 mt-0.5">{req.applicantName}</p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <button className="px-6 py-2.5 bg-[#Ecfdf3] text-[#027A48] rounded-xl text-[14px] font-semibold hover:bg-green-100 transition-colors">
-                      Accept
-                    </button>
-                    <button className="px-6 py-2.5 bg-[#FEF3F2] text-[#B42318] rounded-xl text-[14px] font-semibold hover:bg-red-100 transition-colors">
-                      Reject
-                    </button>
-                  </div>
+                  <Link
+                    href="/admin/requests"
+                    className="text-[13px] font-semibold text-[#16273B] border border-[#16273B] px-4 py-1.5 rounded-full hover:bg-[#16273B] hover:text-white transition-all"
+                  >
+                    Review
+                  </Link>
                 </div>
               ))}
             </div>
           </div>
-
         </div>
 
+        {/* Recent Deals */}
+        {recentDeals.length > 0 && (
+          <div>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-[22px] font-bold text-[#16273B]">Recent Deals</h3>
+            </div>
+            <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 overflow-hidden">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-gray-50 text-[14px] font-bold text-[#64748B]">
+                    <th className="py-4 px-6">Unit</th>
+                    <th className="py-4 px-6">Project</th>
+                    <th className="py-4 px-6">Type</th>
+                    <th className="py-4 px-6">Price</th>
+                    <th className="py-4 px-6">Date</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {recentDeals.map((deal) => (
+                    <tr key={deal.id} className="text-[14px] text-[#16273B] hover:bg-gray-50/50 transition-colors">
+                      <td className="py-4 px-6 font-semibold">{deal.unit?.unitName}</td>
+                      <td className="py-4 px-6 text-gray-500">{deal.unit?.projectName}</td>
+                      <td className="py-4 px-6">
+                        <span className="px-3 py-1 bg-[#EEF0F5] rounded-full text-xs font-semibold">{deal.dealType}</span>
+                      </td>
+                      <td className="py-4 px-6 font-bold">EGP {deal.unit?.price?.toLocaleString()}</td>
+                      <td className="py-4 px-6 text-gray-400">{new Date(deal.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "home": "Home",
+    "projects": "Projects",
+    "buy": "Buy",
+    "primary": "Primary",
+    "resale": "Resale",
+    "rent": "Rent",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "blogs": "Blogs",
+    "listProperty": "List Your Property"
+  },
+  "footer": {
+    "about": "The Gate Estates was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
+    "usefulLinks": "Useful Links",
+    "stayConnected": "Stay Connected",
+    "newsletter": "Join our newsletter to stay up to date on features and releases.",
+    "subscribe": "Subscribe",
+    "placeholder": "Enter your email",
+    "copyright": "© 2024 The Gate Estates. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  }
+}

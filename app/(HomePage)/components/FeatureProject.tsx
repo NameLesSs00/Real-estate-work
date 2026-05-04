@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { MapPin } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import './FeatureProject.css';
 
 const projectDetails = [

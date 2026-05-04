@@ -113,6 +113,8 @@ export interface UpdateUnitPayload {
   view: number;
   isFeatured: boolean;
   paymentPlans?: PaymentPlan[];
+  facilityIds?: number[];
+  servicesIds?: number[];
 }
 
 // Rich unit from GET /api/Units/{id}

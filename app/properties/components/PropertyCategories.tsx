@@ -4,23 +4,23 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import './PropertyCategories.css';
 
+interface Props {
+  onCategorySelect?: (type: string) => void;
+}
+
 const propertyTypes = [
-  {
-    name: 'Studios',
-    image: '/assists/Properties/Studios.png',
-  },
-  {
-    name: 'Villas',
-    image: '/assists/Properties/Villas.png',
-  },
-  {
-    name: 'Standalone',
-    image: '/assists/Properties/Standalone.png',
-  },
+  { name: 'Studio', image: '/assists/Properties/Studios.png' },
+  { name: 'Villa', image: '/assists/Properties/Villas.png' },
+  { name: 'Apartment', image: '/assists/Properties/Standalone.png' }, // mapped Standalone to Apartment for demo
 ];
 
-const PropertyCategories = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+const PropertyCategories = ({ onCategorySelect }: Props) => {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const handleSelect = (index: number, name: string) => {
+    setActiveIndex(index);
+    if (onCategorySelect) onCategorySelect(name);
+  };
 
   return (
     <section className="property-categories-section">
@@ -43,8 +43,8 @@ const PropertyCategories = () => {
           {propertyTypes.map((category, index) => (
             <div 
               key={index} 
-              className={`property-type-card ${activeIndex === index ? 'active' : ''}`}
-              onClick={() => setActiveIndex(index)}
+              className={`property-type-card cursor-pointer ${activeIndex === index ? 'active' : ''}`}
+              onClick={() => handleSelect(index, category.name)}
             >
               <div className="property-type-label">{category.name}</div>
               <div className="property-type-image-wrapper">

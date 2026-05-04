@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { addUnitToProject, updateUnit, getUnitById, ApiUnit } from '@/lib/api/projects';
 import { getProjects } from '@/lib/api/projects';
+import { getFacilities, Facility } from '@/lib/api/facilities';
+import { getServices, Service } from '@/lib/api/services';
 
 interface AddUnitModalProps {
   isOpen: boolean;
@@ -27,36 +29,50 @@ const EMPTY_FORM = {
   view: 0 as number | '',
   isFeatured: false,
   paymentPlans: [] as { installmentMonthes: number | ''; installmentDownPayment: number | ''; paymentType: string }[],
+  facilityIds: [] as number[],
+  servicesIds: [] as number[],
 };
 
 export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, editData }: AddUnitModalProps) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(projectId ?? null);
   const [projects, setProjects] = useState<{ id: number; name: string }[]>([]);
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const isEditMode = !!editData;
 
-  // Load projects for the dropdown (only in Add mode)
+  // Load projects, facilities, and services
   useEffect(() => {
-    if (!isOpen || isEditMode) return;
-    const fetchAll = async () => {
-      let page = 1;
-      let all: { id: number; name: string }[] = [];
+    if (!isOpen) return;
+    const fetchData = async () => {
       try {
-        while (true) {
-          const res = await getProjects(page);
-          all = [...all, ...res.items.map((p) => ({ id: p.id, name: p.name }))];
-          if (!res.hasNextPage) break;
-          page++;
-        }
-        setProjects(all);
+        const [facRes, serRes] = await Promise.all([getFacilities(), getServices()]);
+        setFacilities(facRes);
+        setServices(serRes);
       } catch (err) {
-        console.error('[AddUnitModal] Failed to fetch projects', err);
+        console.error('[AddUnitModal] Failed to fetch facilities or services', err);
+      }
+
+      if (!isEditMode) {
+        let page = 1;
+        let all: { id: number; name: string }[] = [];
+        try {
+          while (true) {
+            const res = await getProjects(page);
+            all = [...all, ...res.items.map((p) => ({ id: p.id, name: p.name }))];
+            if (!res.hasNextPage) break;
+            page++;
+          }
+          setProjects(all);
+        } catch (err) {
+          console.error('[AddUnitModal] Failed to fetch projects', err);
+        }
       }
     };
-    fetchAll();
+    fetchData();
   }, [isOpen, isEditMode]);
 
   // Map common property types if backend returns string
@@ -76,7 +92,6 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   useEffect(() => {
     if (!isOpen) {
       setForm(EMPTY_FORM);
-
       setError('');
       return;
     }
@@ -98,14 +113,18 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           view: editData.view ?? 0,
           isFeatured: editData.isFeatured ?? false,
           paymentPlans: [], // Will be filled by fetch
+          facilityIds: [],
+          servicesIds: [],
         });
 
-        // Then fetch full details for payment plans
+        // Then fetch full details for payment plans, facilities, and services
         try {
           const detail = await getUnitById(editData.id);
 
           setForm(prev => ({
             ...prev,
+            facilityIds: (detail.facilities || []).map((f: any) => f.id),
+            servicesIds: (detail.services || []).map((s: any) => s.id),
             paymentPlans: (detail.paymentPlans || []).map(p => {
               const plan = p as { installmentMothes?: number; installmentMonthes?: number; installmentDownPayment?: number; paymentType?: string };
               return {
@@ -123,7 +142,6 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     } else {
       setForm(EMPTY_FORM);
       setSelectedProjectId(projectId ?? null);
-
     }
     setError('');
   }, [isOpen, editData, projectId, isEditMode]);
@@ -176,6 +194,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           view: Number(form.view),
           isFeatured: form.isFeatured,
           paymentPlans: validatedPlans,
+          facilityIds: form.facilityIds,
+          servicesIds: form.servicesIds,
         });
       } else {
         await addUnitToProject({
@@ -194,8 +214,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             view: Number(form.view),
             paymentPlans: validatedPlans,
             isFeatured: form.isFeatured,
-            facilityIds: [],
-            servicesIds: [],
+            facilityIds: form.facilityIds,
+            servicesIds: form.servicesIds,
           }],
         });
       }
@@ -383,6 +403,77 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 </button>
               </div>
             ))}
+          </div>
+
+          {/* Facilities and Services */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100">
+            {/* Facilities */}
+            <div className="space-y-3">
+              <label className="text-[#16273B] font-semibold text-[15px]">Facilities</label>
+              <div className="max-h-[200px] overflow-y-auto pr-2 space-y-2 scrollbar-thin">
+                {facilities.map((fac) => {
+                  let facName = fac.name;
+                  if (typeof fac.name === 'object' && fac.name !== null) {
+                    facName = (fac.name as any).en || (fac.name as any).de || (fac.name as any).pl || 'Unknown';
+                  }
+                  const isChecked = form.facilityIds.includes(fac.id);
+                  return (
+                    <label key={fac.id} className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100">
+                      <input 
+                        type="checkbox" 
+                        checked={isChecked}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setForm(prev => ({
+                            ...prev,
+                            facilityIds: checked 
+                              ? [...prev.facilityIds, fac.id]
+                              : prev.facilityIds.filter(id => id !== fac.id)
+                          }));
+                        }}
+                        className="w-4 h-4 rounded accent-[#16273B] cursor-pointer" 
+                      />
+                      <span className="text-[#16273B] text-[14px]">{facName}</span>
+                    </label>
+                  );
+                })}
+                {facilities.length === 0 && <p className="text-sm text-gray-500 italic">No facilities available.</p>}
+              </div>
+            </div>
+
+            {/* Services */}
+            <div className="space-y-3">
+              <label className="text-[#16273B] font-semibold text-[15px]">Services</label>
+              <div className="max-h-[200px] overflow-y-auto pr-2 space-y-2 scrollbar-thin">
+                {services.map((ser) => {
+                  let serName = ser.name;
+                  if (typeof ser.name === 'object' && ser.name !== null) {
+                    serName = (ser.name as any).en || (ser.name as any).de || (ser.name as any).pl || 'Unknown';
+                  }
+                  const isChecked = form.servicesIds.includes(ser.id);
+                  return (
+                    <label key={ser.id} className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100">
+                      <input 
+                        type="checkbox" 
+                        checked={isChecked}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setForm(prev => ({
+                            ...prev,
+                            servicesIds: checked 
+                              ? [...prev.servicesIds, ser.id]
+                              : prev.servicesIds.filter(id => id !== ser.id)
+                          }));
+                        }}
+                        className="w-4 h-4 rounded accent-[#16273B] cursor-pointer" 
+                      />
+                      <span className="text-[#16273B] text-[14px]">{serName}</span>
+                    </label>
+                  );
+                })}
+                {services.length === 0 && <p className="text-sm text-gray-500 italic">No services available.</p>}
+              </div>
+            </div>
           </div>
 
           {/* Featured toggle */}

@@ -1,5 +1,6 @@
 import { API_BASE_URL } from './config';
 import { ApiResponse } from './auth';
+import { getAccessToken } from '@/lib/auth/tokens';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -44,11 +45,8 @@ export interface UpdateDeveloperPayload {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function getAuthHeader(): Record<string, string> {
-  const token =
-    typeof document !== 'undefined'
-      ? document.cookie.match(/(?:^|; )rg_at=([^;]*)/)?.[1]
-      : null;
-  return token ? { Authorization: `Bearer ${decodeURIComponent(token)}` } : {};
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 /** Prefix a relative image path from the API with the base URL */
@@ -67,13 +65,10 @@ export async function getDevelopers(pageNumber = 1): Promise<DevelopersPage> {
     { headers: { ...getAuthHeader() } }
   );
   if (!res.ok) {
-    const text = await res.text();
-    console.error('[Developers] Fetch failed:', res.status, text);
     throw new Error('Failed to fetch developers.');
   }
   const json: ApiResponse<DevelopersPage> = await res.json();
   if (!json.success || !json.data) {
-    console.error('[Developers] Fetch error:', json.message, json.errors);
     throw new Error(json.message || 'Failed to fetch developers.');
   }
   return json.data;
@@ -85,13 +80,10 @@ export async function getDeveloperById(id: number): Promise<Developer> {
     headers: { ...getAuthHeader() },
   });
   if (!res.ok) {
-    const text = await res.text();
-    console.error('[Developers] Fetch by ID failed:', res.status, text);
     throw new Error('Failed to fetch developer.');
   }
   const json: ApiResponse<Developer> = await res.json();
   if (!json.success || !json.data) {
-    console.error('[Developers] Fetch by ID error:', json.message, json.errors);
     throw new Error(json.message || 'Failed to fetch developer.');
   }
   return json.data;

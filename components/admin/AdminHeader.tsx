@@ -1,19 +1,75 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Bell } from 'lucide-react';
+import { Bell, User, FileText } from 'lucide-react';
+import { getLeads, Lead } from '@/lib/api/leads';
+import { getRequests, RequestItem } from '@/lib/api/requests';
+
+interface NotificationItem {
+  id: string;
+  type: 'lead' | 'request';
+  title: string;
+  subtitle: string;
+  date: Date;
+  isNew: boolean;
+}
 
 export default function AdminHeader() {
   const pathname = usePathname();
   const [showNotifications, setShowNotifications] = useState(false);
   const [adminName, setAdminName] = useState('Admin');
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const storedName = localStorage.getItem('adminName');
     if (storedName) {
       setAdminName(storedName);
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const [leadsRes, reqsRes] = await Promise.all([
+          getLeads(1, 10).catch(() => ({ items: [] })),
+          getRequests(1, 10).catch(() => ({ items: [] }))
+        ]);
+
+        const recentLeads = (leadsRes.items || []).map((l: Lead) => ({
+          id: `lead-${l.id}`,
+          type: 'lead' as const,
+          title: `New Lead: ${l.fullName}`,
+          subtitle: l.email,
+          date: new Date(l.createdAt),
+          isNew: l.statusLead === '0' || l.statusLead === 'Pending' || l.statusLead === 'New', // Assuming 0 is new
+        }));
+
+        const recentReqs = (reqsRes.items || []).map((r: RequestItem) => ({
+          id: `req-${r.id}`,
+          type: 'request' as const,
+          title: `Unit Request: ${r.unitName}`,
+          subtitle: `By ${r.applicantName}`,
+          date: new Date(r.createdAt),
+          isNew: r.status === '0' || r.status === 'Pending', // Assuming 0 is pending
+        }));
+
+        const all = [...recentLeads, ...recentReqs]
+          .sort((a, b) => b.date.getTime() - a.date.getTime())
+          .slice(0, 5);
+
+        setNotifications(all);
+        setUnreadCount(all.filter(n => n.isNew).length);
+      } catch (err) {
+        console.error('[AdminHeader] Error fetching notifications', err);
+      }
+    };
+    fetchNotifications();
+    
+    // Optional: Set up an interval to poll for new notifications
+    const interval = setInterval(fetchNotifications, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   // Extract and format the current page name from the URL
@@ -67,7 +123,9 @@ export default function AdminHeader() {
         >
           <Bell size={26} />
           {/* Notification Dot */}
-          <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-[#EF4444] rounded-full border-2 border-[#16273B]"></span>
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 w-3 h-3 bg-[#EF4444] rounded-full border-2 border-[#16273B] animate-pulse"></span>
+          )}
         </button>
 
         {/* Notification Popup Dropdown */}
@@ -77,22 +135,46 @@ export default function AdminHeader() {
               className="fixed inset-0 z-40 cursor-default" 
               onClick={() => setShowNotifications(false)}
             />
-            <div className="absolute right-0 mt-4 w-80 bg-white rounded-[24px] shadow-2xl border border-gray-100 z-50 p-6 animate-in fade-in slide-in-from-top-4 duration-200">
-               <div className="text-center">
-                  <div className="w-14 h-14 bg-[#F8F9FA] rounded-full flex items-center justify-center mx-auto mb-4 text-[#16273B]/50">
-                    <Bell size={24} />
-                  </div>
-                  <h3 className="text-xl font-semibold text-[#16273B] mb-2">Notifications</h3>
-                  <p className="text-[#64748B] leading-relaxed">
-                    This feature will be implemented soon. Stay tuned!
-                  </p>
-                  <button 
-                    onClick={() => setShowNotifications(false)}
-                    className="mt-6 w-full py-3 bg-[#F8F9FA] hover:bg-gray-100 text-[#16273B] font-medium rounded-xl transition-colors cursor-pointer"
-                  >
-                    Got it
-                  </button>
+            <div className="absolute right-0 mt-4 w-96 bg-white rounded-[24px] shadow-2xl border border-gray-100 z-50 p-6 animate-in fade-in slide-in-from-top-4 duration-200">
+               <div className="flex items-center justify-between mb-4">
+                 <h3 className="text-xl font-bold text-[#16273B]">Notifications</h3>
+                 {unreadCount > 0 && (
+                   <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full">
+                     {unreadCount} New
+                   </span>
+                 )}
                </div>
+               
+               <div className="space-y-3 max-h-[300px] overflow-y-auto scrollbar-thin pr-2">
+                 {notifications.length === 0 ? (
+                   <p className="text-center text-gray-500 py-6">No recent notifications.</p>
+                 ) : (
+                   notifications.map(n => (
+                     <div key={n.id} className="flex gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer border border-transparent hover:border-gray-100">
+                       <div className={`mt-1 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${n.type === 'lead' ? 'bg-indigo-50 text-indigo-500' : 'bg-amber-50 text-amber-500'}`}>
+                         {n.type === 'lead' ? <User size={20} /> : <FileText size={20} />}
+                       </div>
+                       <div className="flex-1 min-w-0">
+                         <p className="text-[14px] font-bold text-[#16273B] truncate flex items-center gap-2">
+                           {n.title}
+                           {n.isNew && <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />}
+                         </p>
+                         <p className="text-[13px] text-gray-500 truncate mt-0.5">{n.subtitle}</p>
+                         <p className="text-[11px] text-gray-400 mt-1.5 font-medium">
+                           {n.date.toLocaleDateString()} {n.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                         </p>
+                       </div>
+                     </div>
+                   ))
+                 )}
+               </div>
+
+               <button 
+                 onClick={() => setShowNotifications(false)}
+                 className="mt-4 w-full py-3 bg-[#F8F9FA] hover:bg-gray-100 text-[#16273B] font-semibold rounded-xl transition-colors cursor-pointer"
+               >
+                 Close
+               </button>
             </div>
           </>
         )}

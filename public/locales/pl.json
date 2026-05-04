@@ -1,0 +1,25 @@
+{
+  "header": {
+    "home": "Strona główna",
+    "projects": "Projekty",
+    "buy": "Kup",
+    "primary": "Pierwotny",
+    "resale": "Wtórny",
+    "rent": "Wynajem",
+    "about": "O nas",
+    "contact": "Kontakt",
+    "blogs": "Blogi",
+    "listProperty": "Zgłoś nieruchomość"
+  },
+  "footer": {
+    "about": "The Gate Estates powstało z pasji do łączenia ludzi z wymarzonymi domami i idealnymi inwestycjami. Rozumiemy, że nieruchomości to nie tylko transakcje; to decyzje zmieniające życie.",
+    "usefulLinks": "Przydatne linki",
+    "stayConnected": "Bądź w kontakcie",
+    "newsletter": "Zapisz się do naszego newslettera, aby być na bieżąco z nowościami.",
+    "subscribe": "Subskrybuj",
+    "placeholder": "Wpisz swój e-mail",
+    "copyright": "© 2024 The Gate Estates. Wszelkie prawa zastrzeżone.",
+    "privacy": "Polityka prywatności",
+    "terms": "Warunki świadczenia usług"
+  }
+}
