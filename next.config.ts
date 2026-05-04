@@ -22,13 +22,13 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/backend/:path*',
-        destination: 'https://api.thegate-estates.com/:path*',
+        destination: 'http://api.thegate-estates.com/:path*',
       },
-      // return [
-      // {
-      //   source: '/backend/:path*',
-      //   destination: 'https://websiterealstate.runasp.net/:path*',
-      // },
+    // return [
+    //   {
+    //     source: '/backend/:path*',
+    //     destination: 'https://websiterealstate.runasp.net/:path*',
+    //   },
     ];
   },
 };
