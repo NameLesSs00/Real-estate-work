@@ -1,6 +1,8 @@
 import { API_BASE_URL } from './config';
 import { ApiResponse } from './auth';
 import { getAccessToken } from '@/lib/auth/tokens';
+import { Facility } from './facilities';
+import { Service } from './services';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -21,6 +23,7 @@ export interface ApiUnit {
   currencyCode: string;
   imageUrls: string[];
   paymentPlans?: PaymentPlan[];
+  isActive?: boolean;
 }
 
 export interface Project {
@@ -140,6 +143,7 @@ export interface UnitDetail {
   area: number;
   noKitchen: number;
   view: number;
+  currencyCode?: string;
   paymentPlans: {
     planStatus: string;
     installmentMothes: number;
@@ -147,8 +151,8 @@ export interface UnitDetail {
     paymentType: string;
   }[];
   imageUrls: string[];
-  facilities: string[];
-  services: string[];
+  facilities: Facility[];
+  services: Service[];
   createdBy: string;
   createdAt: string;
   updatedBy: string;

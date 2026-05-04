@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { getApplicants, createApplicant, updateApplicant, deleteApplicant, Applicant } from '@/lib/api/applicants';
-import { Search, Plus, Loader2, Edit2, Trash2, X, CheckCircle2 } from 'lucide-react';
+import { Search, Plus, Loader2, Edit2, Trash2, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function ApplicantsPage() {
@@ -51,7 +51,7 @@ export default function ApplicantsPage() {
       setFormData({ fullName: '', email: '', phone: '', notes: '' });
       setShowAddForm(false);
       fetchApplicants(currentPage);
-    } catch (err) {
+    } catch {
       alert('Failed to add applicant');
     }
   };
@@ -64,7 +64,7 @@ export default function ApplicantsPage() {
       setEditingId(null);
       setFormData({ fullName: '', email: '', phone: '', notes: '' });
       fetchApplicants(currentPage);
-    } catch (err) {
+    } catch {
       alert('Failed to update applicant');
     }
   };
@@ -74,7 +74,7 @@ export default function ApplicantsPage() {
     try {
       await deleteApplicant(id);
       fetchApplicants(currentPage);
-    } catch (err) {
+    } catch {
       alert('Failed to delete applicant');
     }
   };

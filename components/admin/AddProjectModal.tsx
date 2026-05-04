@@ -111,7 +111,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         description: typeof editData.description === 'string' ? { en: editData.description, de: editData.description, pl: editData.description } : editData.description,
         developerId: editData.developerId,
         locationId: editData.locationId,
-        facilityIds: (editData as any).facilityIds || []
+        facilityIds: (editData as Project & { facilityIds?: number[] }).facilityIds || []
       });
     } else {
       setForm(EMPTY_FORM);
@@ -131,7 +131,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       } else if (lang) {
         setForm((prev) => ({
           ...prev,
-          [field]: { ...((prev[field] as any) || {}), [lang]: val }
+          [field]: { ...((prev[field] as Record<string, string>) || {}), [lang]: val }
         }));
       } else {
         setForm((prev) => ({ ...prev, [field]: val }));
@@ -338,7 +338,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                       setNewFacilityName({ en: '', de: '', pl: '' });
                       setIsAddingFacility(false);
                       await refreshFacilities();
-                    } catch (err) {
+                    } catch {
                       alert('Failed to add facility');
                     } finally {
                       setIsSubmittingQuick(false);
@@ -355,7 +355,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
               {facilities.map((fac) => {
                 let facName = fac.name;
                 if (typeof fac.name === 'object' && fac.name !== null) {
-                  facName = (fac.name as any).en || (fac.name as any).de || (fac.name as any).pl || 'Unknown';
+                  const nameObj = fac.name as { en?: string; de?: string; pl?: string };
+                  facName = nameObj.en || nameObj.de || nameObj.pl || 'Unknown';
                 }
                 const isChecked = form.facilityIds.includes(fac.id);
                 return (
@@ -374,7 +375,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                       }}
                       className="w-4 h-4 rounded accent-[#16273B] cursor-pointer" 
                     />
-                    <span className="text-[#16273B] text-[13px] font-medium line-clamp-1">{facName}</span>
+                    <span className="text-[#16273B] text-[13px] font-medium line-clamp-1">{facName as string}</span>
                   </label>
                 );
               })}

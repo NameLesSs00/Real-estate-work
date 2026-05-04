@@ -241,9 +241,12 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
                   <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
                     <p className="text-[13px] text-gray-500 font-medium mb-3">Services</p>
                     <div className="flex flex-wrap gap-2">
-                      {unit.services.map((s, i) => (
-                        <span key={i} className="px-3 py-1 bg-white rounded-full text-[13px] text-[#16273B] font-medium border border-gray-200">{s}</span>
-                      ))}
+                      {unit.services.map((s, i) => {
+                        const name = typeof s.name === 'string' ? s.name : (s.name?.en || s.name?.de || s.name?.pl || 'Unknown');
+                        return (
+                          <span key={i} className="px-3 py-1 bg-white rounded-full text-[13px] text-[#16273B] font-medium border border-gray-200">{name}</span>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

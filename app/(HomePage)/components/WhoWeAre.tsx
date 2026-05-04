@@ -38,10 +38,10 @@ const WhoWeAre = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="who-we-are-header"
         >
-          <span className="who-we-are-tag">{t('whoWeAre.tag')}</span>
-          <h2 className="who-we-are-title">{t('whoWeAre.title')}</h2>
+          <span className="who-we-are-tag">{t('whoWeAre.tag') as string}</span>
+          <h2 className="who-we-are-title">{t('whoWeAre.title') as string}</h2>
           <p className="who-we-are-subtitle">
-            {t('whoWeAre.subtitle')}
+            {t('whoWeAre.subtitle') as string}
           </p>
           <div className="who-we-are-accent-line"></div>
         </motion.div>
@@ -72,21 +72,21 @@ const WhoWeAre = () => {
             className="who-we-are-info-box"
           >
             <div className="info-item">
-              <h3 className="info-item-title">{t('whoWeAre.visionTitle')}</h3>
+              <h3 className="info-item-title">{t('whoWeAre.visionTitle') as string}</h3>
               <p className="info-item-text">
-                {t('whoWeAre.visionText')}
+                {t('whoWeAre.visionText') as string}
               </p>
             </div>
 
             <div className="info-item">
-              <h3 className="info-item-title">{t('whoWeAre.missionTitle')}</h3>
+              <h3 className="info-item-title">{t('whoWeAre.missionTitle') as string}</h3>
               <p className="info-item-text">
-                {t('whoWeAre.missionText')}
+                {t('whoWeAre.missionText') as string}
               </p>
             </div>
 
             <div className="view-more-btn-wrapper">
-              <button className="view-more-btn">{t('whoWeAre.viewMore')}</button>
+              <button className="view-more-btn">{t('whoWeAre.viewMore') as string}</button>
             </div>
           </motion.div>
         </div>

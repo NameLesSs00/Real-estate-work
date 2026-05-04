@@ -11,7 +11,6 @@ import { getServices, createService, updateService, deleteService, Service } fro
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   
   // Search
@@ -30,8 +29,8 @@ export default function ServicesPage() {
     try {
       const data = await getServices();
       setServices(data);
-    } catch (err) {
-      setError('Failed to load services.');
+    } catch {
+      notify('error', 'Failed to load services.');
     } finally {
       setLoading(false);
     }
@@ -56,7 +55,7 @@ export default function ServicesPage() {
       setNewName({ en: '', de: '', pl: '' });
       setShowAdd(false);
       fetchServices();
-    } catch (err) {
+    } catch {
       notify('error', 'Failed to add service.');
     } finally {
       setLoading(false);
@@ -66,11 +65,11 @@ export default function ServicesPage() {
   const handleUpdate = async (id: number) => {
     setLoading(true);
     try {
-      await updateService(id, editingName);
+      await updateService({ id, name: editingName });
       notify('success', 'Service updated successfully!');
       setEditingId(null);
       fetchServices();
-    } catch (err) {
+    } catch {
       notify('error', 'Failed to update service.');
     } finally {
       setLoading(false);
@@ -84,7 +83,7 @@ export default function ServicesPage() {
       await deleteService(id);
       notify('success', 'Service deleted successfully!');
       fetchServices();
-    } catch (err) {
+    } catch {
       notify('error', 'Failed to delete service.');
     } finally {
       setLoading(false);

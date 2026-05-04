@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './Articles.css';
 
 const articles = [
@@ -34,10 +35,10 @@ const Articles = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="articles-header"
         >
-          <span className="articles-tag">{t('articles.tag')}</span>
-          <h2 className="articles-title">{t('articles.title')}</h2>
+          <span className="articles-tag">{t('articles.tag') as string}</span>
+          <h2 className="articles-title">{t('articles.title') as string}</h2>
           <p className="articles-subtitle">
-            {t('articles.subtitle')}
+            {t('articles.subtitle') as string}
           </p>
           <div className="articles-accent-line"></div>
         </motion.div>
@@ -82,7 +83,7 @@ const Articles = () => {
               <div className="article-overlay">
                 <h3 className="article-card-title">{article.title}</h3>
                 <Link href="/blogs/how-to-choose-property" className="read-more-btn">
-                  {t('articles.readMore')}
+                  {t('articles.readMore') as string}
                   <Image 
                     src="/assists/articles/arrow-right.png" 
                     alt="Arrow" 
@@ -104,7 +105,7 @@ const Articles = () => {
           className="show-more-blogs-wrapper"
         >
           <Link href="/blogs" className="show-more-blogs-button inline-block text-center">
-            {t('articles.showMore')}
+            {t('articles.showMore') as string}
           </Link>
         </motion.div>
       </div>

@@ -26,10 +26,10 @@ const FAQ = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="faq-header"
         >
-          <span className="faq-tag">{t('faq.tag')}</span>
-          <h2 className="faq-title">{t('faq.title')}</h2>
+          <span className="faq-tag">{t('faq.tag') as string}</span>
+          <h2 className="faq-title">{t('faq.title') as string}</h2>
           <p className="faq-subtitle">
-            {t('faq.subtitle')}
+            {t('faq.subtitle') as string}
           </p>
           <div className="faq-accent-line"></div>
         </motion.div>

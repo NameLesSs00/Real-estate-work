@@ -70,7 +70,7 @@ const PopularSpots = () => {
       <div className="popular-spots-container">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.8, ease: "easeOut" }} className="popular-spots-header">
           <span className="popular-spots-tag">{t('popularSpots.tag')}</span>
-          <h2 className="popular-spots-title" dangerouslySetInnerHTML={{ __html: t('popularSpots.title') }} />
+          <h2 className="popular-spots-title" dangerouslySetInnerHTML={{ __html: t('popularSpots.title') as string }} />
           <p className="popular-spots-subtitle">{t('popularSpots.subtitle')}</p>
           <div className="popular-spots-accent-line" />
         </motion.div>

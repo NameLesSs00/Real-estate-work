@@ -49,7 +49,7 @@ export default function DevelopersPage() {
       fetchDevelopers(1, searchQuery);
     }, 500);
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [searchQuery, fetchDevelopers]);
 
   const handleAddNew = () => {
     setEditingDeveloper(null);

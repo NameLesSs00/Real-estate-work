@@ -11,7 +11,6 @@ import { getFacilities, createFacility, updateFacility, deleteFacility, Facility
 export default function FacilitiesPage() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
   
   // Search
@@ -30,8 +29,8 @@ export default function FacilitiesPage() {
     try {
       const data = await getFacilities();
       setFacilities(data);
-    } catch (err) {
-      setError('Failed to load facilities.');
+    } catch {
+      notify('error', 'Failed to load facilities.');
     } finally {
       setLoading(false);
     }
@@ -56,7 +55,7 @@ export default function FacilitiesPage() {
       setNewName({ en: '', de: '', pl: '' });
       setShowAdd(false);
       fetchFacilities();
-    } catch (err) {
+    } catch {
       notify('error', 'Failed to add facility.');
     } finally {
       setLoading(false);
@@ -70,7 +69,7 @@ export default function FacilitiesPage() {
       notify('success', 'Facility updated successfully!');
       setEditingId(null);
       fetchFacilities();
-    } catch (err) {
+    } catch {
       notify('error', 'Failed to update facility.');
     } finally {
       setLoading(false);
@@ -84,7 +83,7 @@ export default function FacilitiesPage() {
       await deleteFacility(id);
       notify('success', 'Facility deleted successfully!');
       fetchFacilities();
-    } catch (err) {
+    } catch {
       notify('error', 'Failed to delete facility.');
     } finally {
       setLoading(false);

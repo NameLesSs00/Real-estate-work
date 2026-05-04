@@ -9,7 +9,8 @@ type TranslationValue = string | number | boolean | null | { [key: string]: Tran
 interface LanguageContextProps {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => TranslationValue;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t: (key: string) => any;
 }
 
 const LanguageContext = createContext<LanguageContextProps>({
@@ -51,7 +52,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('language', lang);
   };
 
-  const t = (key: string): TranslationValue => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const t = (key: string): any => {
     const keys = key.split('.');
     let result: TranslationValue = translations;
     for (const k of keys) {

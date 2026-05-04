@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Shield, Users, ChevronLeft, ChevronRight, Loader2, AlertCircle, CheckCircle2, LayoutGrid, Plus, Trash2, Edit2, X, DollarSign } from 'lucide-react';
+import { User, Shield, Users, ChevronLeft, ChevronRight, Loader2, AlertCircle, CheckCircle2, DollarSign } from 'lucide-react';
 import { updatePassword, addAdmin, AddAdminPayload, UpdatePasswordPayload } from '@/lib/api/auth';
 import { getAdmins, updateAdmin, PaginatedAdmins, UpdateAdminPayload } from '@/lib/api/admins';
 import { getCurrencies, updateEgpExchangeRate, updateEurExchangeRate } from '@/lib/api/currencies';
@@ -191,105 +191,6 @@ export default function SettingsPage() {
     }
   };
 
-  const handleAddService = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newServiceName.en.trim() || !newServiceName.de.trim() || !newServiceName.pl.trim()) {
-      showNotification('error', 'Please fill all translations.');
-      return;
-    }
-    setLoading(true);
-    try {
-      await createService({ name: newServiceName });
-      showNotification('success', 'Service added successfully.');
-      setNewServiceName({ en: '', de: '', pl: '' });
-      setShowAddService(false);
-      fetchServices();
-    } catch (err: unknown) {
-      showNotification('error', err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUpdateService = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingService || !editingServiceName.en.trim() || !editingServiceName.de.trim() || !editingServiceName.pl.trim()) return;
-    setLoading(true);
-    try {
-      await updateService({ id: editingService.id, name: editingServiceName });
-      showNotification('success', 'Service updated successfully.');
-      setEditingService(null);
-      fetchServices();
-    } catch (err: unknown) {
-      showNotification('error', err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDeleteService = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this service?')) return;
-    setLoading(true);
-    try {
-      await deleteService(id);
-      showNotification('success', 'Service deleted successfully.');
-      fetchServices();
-    } catch (err: unknown) {
-      showNotification('error', err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAddFacility = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newFacilityName.en.trim() || !newFacilityName.de.trim() || !newFacilityName.pl.trim()) {
-      showNotification('error', 'Please fill all translations.');
-      return;
-    }
-    setLoading(true);
-    try {
-      await createFacility(newFacilityName);
-      showNotification('success', 'Facility added successfully.');
-      setNewFacilityName({ en: '', de: '', pl: '' });
-      setShowAddFacility(false);
-      fetchFacilities();
-    } catch (err: unknown) {
-      showNotification('error', err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUpdateFacility = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingFacility || !editingFacilityName.en.trim() || !editingFacilityName.de.trim() || !editingFacilityName.pl.trim()) return;
-    setLoading(true);
-    try {
-      await updateFacility(editingFacility.id, editingFacilityName);
-      showNotification('success', 'Facility updated successfully.');
-      setEditingFacility(null);
-      fetchFacilities();
-    } catch (err: unknown) {
-      showNotification('error', err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDeleteFacility = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this facility?')) return;
-    setLoading(true);
-    try {
-      await deleteFacility(id);
-      showNotification('success', 'Facility deleted successfully.');
-      fetchFacilities();
-    } catch (err: unknown) {
-      showNotification('error', err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] p-4 md:p-8 pt-10">

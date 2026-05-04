@@ -45,17 +45,17 @@ const ExploreUnits = () => {
     <section className="explore-units-section">
       <div className="explore-units-container">
         <div className="explore-units-header">
-          <span className="explore-units-tag">{t('exploreUnits.tag')}</span>
-          <h2 className="explore-units-title">{t('exploreUnits.title')}</h2>
-          <p className="explore-units-subtitle">{t('exploreUnits.subtitle')}</p>
+          <span className="explore-units-tag">{t('exploreUnits.tag') as string}</span>
+          <h2 className="explore-units-title">{t('exploreUnits.title') as string}</h2>
+          <p className="explore-units-subtitle">{t('exploreUnits.subtitle') as string}</p>
           <div className="explore-units-accent-line"></div>
         </div>
 
         <div className="explore-tabs">
           {tabs.map((tab, index) => (
             <button key={index} className={`explore-tab ${activeTab === index ? 'active' : ''}`} onClick={() => setActiveTab(index)}>
-              <Image src={tab.icon} alt={t(`exploreUnits.tabs.${tab.key}`)} width={20} height={20} className="explore-tab-icon" />
-              {t(`exploreUnits.tabs.${tab.key}`)}
+              <Image src={tab.icon} alt={t(`exploreUnits.tabs.${tab.key}`) as string} width={20} height={20} className="explore-tab-icon" />
+              {t(`exploreUnits.tabs.${tab.key}`) as string}
             </button>
           ))}
         </div>
@@ -67,7 +67,7 @@ const ExploreUnits = () => {
             ))}
           </div>
         ) : units.length === 0 ? (
-          <div className="text-center py-20 text-gray-500 font-medium">{t('exploreUnits.noUnits')}</div>
+          <div className="text-center py-20 text-gray-500 font-medium">{t('exploreUnits.noUnits') as string}</div>
         ) : (
           <div className="units-grid">
             {units.map((unit) => (
@@ -90,7 +90,7 @@ const ExploreUnits = () => {
         )}
 
         <div className="show-more-wrapper">
-          <Link href="/properties" className="show-more-button">{t('exploreUnits.showMore')}</Link>
+          <Link href="/properties" className="show-more-button">{t('exploreUnits.showMore') as string}</Link>
         </div>
       </div>
     </section>

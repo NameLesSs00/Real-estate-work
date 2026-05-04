@@ -198,18 +198,24 @@ export default async function PropertyDetailsPage({ params }: Props) {
               Features &amp; Services
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-6">
-              {unitData.facilities?.map((f, i) => (
-                <div key={`f-${i}`} className="flex items-center gap-2.5 text-gray-700">
-                  <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span className="text-[13px] font-poppins">{f}</span>
-                </div>
-              ))}
-              {unitData.services?.map((s, i) => (
-                <div key={`s-${i}`} className="flex items-center gap-2.5 text-gray-700">
-                  <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span className="text-[13px] font-poppins">{s}</span>
-                </div>
-              ))}
+              {unitData.facilities?.map((f, i) => {
+                const name = typeof f.name === 'string' ? f.name : (f.name?.en || f.name?.de || f.name?.pl || 'Unknown');
+                return (
+                  <div key={`f-${i}`} className="flex items-center gap-2.5 text-gray-700">
+                    <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span className="text-[13px] font-poppins">{name}</span>
+                  </div>
+                );
+              })}
+              {unitData.services?.map((s, i) => {
+                const name = typeof s.name === 'string' ? s.name : (s.name?.en || s.name?.de || s.name?.pl || 'Unknown');
+                return (
+                  <div key={`s-${i}`} className="flex items-center gap-2.5 text-gray-700">
+                    <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span className="text-[13px] font-poppins">{name}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

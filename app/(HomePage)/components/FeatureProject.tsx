@@ -48,10 +48,10 @@ const FeatureProject = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="feature-project-header"
         >
-          <span className="feature-project-tag">{t('featureProject.tag')}</span>
-          <h2 className="feature-project-title">{t('featureProject.title')}</h2>
+          <span className="feature-project-tag">{t('featureProject.tag') as string}</span>
+          <h2 className="feature-project-title">{t('featureProject.title') as string}</h2>
           <p className="feature-project-subtitle">
-            {t('featureProject.subtitle')}
+            {t('featureProject.subtitle') as string}
           </p>
           <div className="feature-project-accent-line"></div>
         </motion.div>
@@ -91,7 +91,7 @@ const FeatureProject = () => {
             className="project-details-info"
           >
             <div className="project-price-tag">
-              {t('featureProject.priceStart')} <span>10,000,000 EGP</span>
+              {t('featureProject.priceStart') as string} <span>10,000,000 EGP</span>
             </div>
             <h3 className="project-name">Makadi Heights Residences</h3>
             <div className="project-location">
@@ -103,7 +103,7 @@ const FeatureProject = () => {
               Resort-Style Living In One Of The Most Desirable Destinations On The Red Sea.
             </p>
 
-            <h4 className="details-grid-title">{t('featureProject.projectDetails')}</h4>
+            <h4 className="details-grid-title">{t('featureProject.projectDetails') as string}</h4>
             <div className="details-cards-grid">
               {projectDetails.map((detail, index) => (
                 <motion.div 
@@ -116,19 +116,19 @@ const FeatureProject = () => {
                 >
                   <Image 
                     src={detail.icon} 
-                    alt={t(`featureProject.labels.${detail.key}`)} 
+                    alt={t(`featureProject.labels.${detail.key}`) as string} 
                     width={32} 
                     height={32} 
                     className="detail-info-icon"
                   />
-                  <span className="detail-info-label">{t(`featureProject.labels.${detail.key}`)}</span>
+                  <span className="detail-info-label">{t(`featureProject.labels.${detail.key}`) as string}</span>
                   <span className="detail-info-value">{detail.value}</span>
                 </motion.div>
               ))}
             </div>
 
             <div className="project-actions">
-              <button className="get-in-touch-btn">{t('featureProject.getInTouch')}</button>
+              <button className="get-in-touch-btn">{t('featureProject.getInTouch') as string}</button>
               <div className="pagination-dots">
                 {[0, 1, 2, 3].map((index) => (
                   <span 
@@ -149,7 +149,7 @@ const FeatureProject = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="show-more-projects-wrapper"
         >
-          <button className="show-more-projects-btn">{t('featureProject.showMore')}</button>
+          <button className="show-more-projects-btn">{t('featureProject.showMore') as string}</button>
         </motion.div>
       </div>
     </section>

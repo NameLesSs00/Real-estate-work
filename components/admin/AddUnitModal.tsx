@@ -104,11 +104,11 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           description: typeof editData.description === 'string' ? { en: editData.description, de: editData.description, pl: editData.description } : editData.description,
           price: editData.price,
           propertyType: getPropertyTypeValue(editData.propertyType),
-          noBathRoom: editData.noBathRoom,
-          noBedRoom: editData.noBedRoom,
-          noKithchen: editData.noKithchen,
-          floorNumber: editData.floorNumber,
-          area: editData.area,
+          noBathRoom: editData.noBathRoom?.toString() || '',
+          noBedRoom: editData.noBedRoom?.toString() || '',
+          noKithchen: editData.noKithchen?.toString() || '',
+          floorNumber: editData.floorNumber?.toString() || '',
+          area: editData.area?.toString() || '',
           floorName: editData.floorName,
           view: editData.view,
           isFeatured: editData.isFeatured,
@@ -563,7 +563,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                         }}
                         className="w-4 h-4 rounded accent-[#16273B] cursor-pointer" 
                       />
-                      <span className="text-[#16273B] text-[14px]">{serName}</span>
+                      <span className="text-[#16273B] text-[14px]">{serName as string}</span>
                     </label>
                   );
                 })}
