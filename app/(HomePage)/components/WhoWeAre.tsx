@@ -3,9 +3,12 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './WhoWeAre.css';
 
 const WhoWeAre = () => {
+  const { t } = useLanguage();
+
   return (
     <section id="about" className="who-we-are-section overflow-hidden">
       <Image 
@@ -35,11 +38,10 @@ const WhoWeAre = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="who-we-are-header"
         >
-          <span className="who-we-are-tag">WHO WE ARE</span>
-          <h2 className="who-we-are-title">Your Trusted Real Estate Partner</h2>
+          <span className="who-we-are-tag">{t('whoWeAre.tag')}</span>
+          <h2 className="who-we-are-title">{t('whoWeAre.title')}</h2>
           <p className="who-we-are-subtitle">
-            We are committed to helping you discover exceptional properties in prime locations,
-            combining quality, transparency, and a seamless experience tailored to your needs.
+            {t('whoWeAre.subtitle')}
           </p>
           <div className="who-we-are-accent-line"></div>
         </motion.div>
@@ -70,25 +72,21 @@ const WhoWeAre = () => {
             className="who-we-are-info-box"
           >
             <div className="info-item">
-              <h3 className="info-item-title">Our Vision</h3>
+              <h3 className="info-item-title">{t('whoWeAre.visionTitle')}</h3>
               <p className="info-item-text">
-                To redefine the real estate experience by making it more transparent, accessible,
-                and tailored to modern lifestyles. We aim to connect people with spaces that
-                truly inspire how they live, work, and grow.
+                {t('whoWeAre.visionText')}
               </p>
             </div>
 
             <div className="info-item">
-              <h3 className="info-item-title">Our Mission</h3>
+              <h3 className="info-item-title">{t('whoWeAre.missionTitle')}</h3>
               <p className="info-item-text">
-                To guide our clients through every step of their property journey with honesty,
-                expertise, and care. We are committed to delivering exceptional service, curated
-                property selections, and a seamless experience that builds long-term trust.
+                {t('whoWeAre.missionText')}
               </p>
             </div>
 
             <div className="view-more-btn-wrapper">
-              <button className="view-more-btn">View More</button>
+              <button className="view-more-btn">{t('whoWeAre.viewMore')}</button>
             </div>
           </motion.div>
         </div>

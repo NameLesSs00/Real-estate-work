@@ -9,17 +9,161 @@
     "about": "O nas",
     "contact": "Kontakt",
     "blogs": "Blogi",
-    "listProperty": "Zgłoś nieruchomość"
+    "listProperty": "Zgłoś nieruchomość",
+    "locations": [
+      "El Gouna",
+      "El kawther",
+      "Arabia",
+      "Al Ahyaa",
+      "Sheraton",
+      "Makadi Bay"
+    ]
   },
   "footer": {
     "about": "The Gate Estates powstało z pasji do łączenia ludzi z wymarzonymi domami i idealnymi inwestycjami. Rozumiemy, że nieruchomości to nie tylko transakcje; to decyzje zmieniające życie.",
-    "usefulLinks": "Przydatne linki",
-    "stayConnected": "Bądź w kontakcie",
-    "newsletter": "Zapisz się do naszego newslettera, aby być na bieżąco z nowościami.",
+    "usefulLinks": "Szybka akcja",
+    "stayConnected": "Obserwuj nas",
+    "newsletter": "Zapisz się do naszego newslettera, aby być na bieżąco.",
     "subscribe": "Subskrybuj",
     "placeholder": "Wpisz swój e-mail",
-    "copyright": "© 2024 The Gate Estates. Wszelkie prawa zastrzeżone.",
+    "copyright": "Wszelkie prawa zastrzeżone.",
     "privacy": "Polityka prywatności",
-    "terms": "Warunki świadczenia usług"
+    "terms": "Warunki świadczenia usług",
+    "contactTitle": "Kontakt z nami"
+  },
+  "hero": {
+    "title": "Odkryj swoją kolejną <br /> nieruchomość inwestycyjną",
+    "searchLabel": "Szukaj według obszaru, kompleksu lub dewelopera",
+    "searchPlaceholder": "Szukaj według obszaru, kompleksu lub dewelopera",
+    "filters": "Filtry",
+    "hide": "Ukryj",
+    "search": "Szukaj",
+    "propertyType": "Typ nieruchomości",
+    "allTypes": "Wszystkie typy",
+    "location": "Lokalizacja",
+    "allLocations": "Wszystkie lokalizacje",
+    "minPrice": "Cena min (EGP)",
+    "maxPrice": "Cena max (EGP)",
+    "noMin": "Brak minimum",
+    "noMax": "Brak maksimum"
+  },
+  "whoWeAre": {
+    "tag": "KIM JESTEŚMY",
+    "title": "Twój zaufany partner na rynku nieruchomości",
+    "subtitle": "Z pasją pomagamy Ci odkrywać wyjątkowe nieruchomości w najlepszych lokalizacjach, łącząc jakość, przejrzystość i bezproblemowe doświadczenie dopasowane do Twoich potrzeb.",
+    "visionTitle": "Nasza wizja",
+    "visionText": "Zdefiniowanie na nowo doświadczenia na rynku nieruchomości poprzez uczynienie go bardziej przejrzystym, dostępnym i dopasowanym do nowoczesnego stylu życia. Dążymy do łączenia ludzi z przestrzeniami, które naprawdę inspirują ich do życia, pracy i rozwoju.",
+    "missionTitle": "Nasza misja",
+    "missionText": "Prowadzenie naszych klientów przez każdy etap ich drogi do własnej nieruchomości z uczciwością, wiedzą i troską. Jesteśmy zaangażowani w dostarczanie wyjątkowej obsługi, starannie dobranych ofert i bezproblemowego doświadczenia, które buduje długoterminowe zaufanie.",
+    "viewMore": "Zobacz więcej"
+  },
+  "howItWorks": {
+    "tag": "JAK TO DZIAŁA",
+    "title": "Prosty sposób na znalezienie idealnej nieruchomości",
+    "step1": "Przeglądaj wyselekcjonowane oferty dopasowane do Twoich potrzeb i budżetu.",
+    "step2": "Skontaktuj się z naszymi ekspertami w celu uzyskania spersonalizowanych porad.",
+    "step3": "Zarezerwuj wizytę i z łatwością znajdź swoją idealną nieruchomość."
+  },
+  "categories": {
+    "tag": "WYRÓŻNIONE OFERTY",
+    "title": "Przeglądaj nieruchomości według <span>kategorii</span>",
+    "subtitle": "Prezentujemy domy w jasnych i uporządkowanych kategoriach, aby odwiedzający mogli szybko przeglądać typy nieruchomości odpowiadające ich potrzebom, zainteresowaniom i celom zakupowym.",
+    "types": {
+      "Apartments": "Apartamenty",
+      "Houses": "Domy",
+      "Vails": "Wille",
+      "Studio": "Studia"
+    },
+    "listings": "Oferty"
+  },
+  "exploreUnits": {
+    "tag": "POPULARNE JEDNOSTKI",
+    "title": "Wyróżnione jednostki",
+    "subtitle": "Starannie wybrane jednostki premium w najbardziej poszukiwanych lokalizacjach.",
+    "tabs": {
+      "hotDeal": "Gorąca oferta",
+      "recommended": "Polecane",
+      "bestPrice": "Najlepsza cena"
+    },
+    "noUnits": "Brak dostępnych jednostek.",
+    "showMore": "Pokaż więcej nieruchomości"
+  },
+  "popularSpots": {
+    "tag": "Popularne miejsca",
+    "title": "Odkryj najlepsze <span>lokalizacje</span>",
+    "subtitle": "Od lagun El Gouna po plaże Sahl Hasheesh – znajdź swój idealny zakątek nad Morzem Czerwonym.",
+    "exploreArea": "Eksploruj obszar",
+    "property": "Nieruchomość",
+    "properties": "Nieruchomości"
+  },
+  "featureProject": {
+    "tag": "WYRÓŻNIONE PROJEKTY",
+    "title": "Wyjątkowe nieruchomości, starannie wybrane dla Ciebie",
+    "subtitle": "Odkryj wyselekcjonowaną ofertę projektów nieruchomości gotowych na przyszłość w najlepszych lokalizacjach, zaprojektowanych z myślą o jakości, innowacji i silnej wartości inwestycyjnej.",
+    "priceStart": "Cena od",
+    "projectDetails": "Szczegóły projektu",
+    "getInTouch": "Skontaktuj się z nami",
+    "showMore": "Pokaż więcej projektów",
+    "labels": {
+      "totalUnits": "Wszystkie jednostki",
+      "buildingFloors": "Liczba pięter",
+      "deliveryDate": "Data oddania",
+      "status": "Status",
+      "spaces": "Powierzchnie"
+    }
+  },
+  "articles": {
+    "tag": "NAJNOWSZE ARTYKUŁY",
+    "title": "Wiedza i inspiracja",
+    "subtitle": "Poznaj spostrzeżenia ekspertów, trendy na rynku nieruchomości i praktyczne wskazówki, które pomogą Ci podejmować świadome decyzje.",
+    "readMore": "Czytaj więcej",
+    "showMore": "Pokaż więcej blogów"
+  },
+  "faq": {
+    "tag": "CZĘSTO ZADAWANE PYTANIA",
+    "title": "Często zadawane pytania",
+    "subtitle": "Znajdź szybkie odpowiedzi na najczęstsze pytania dotyczące zakupu, inwestowania i posiadania nieruchomości.",
+    "questions": [
+      {
+        "q": "Jakie typy nieruchomości są dostępne?",
+        "a": "Oferujemy apartamenty, wille i nieruchomości inwestycyjne w najlepszych lokalizacjach."
+      },
+      {
+        "q": "Czy mogę zarezerwować wizytę online?",
+        "a": "Tak, możesz łatwo umówić się na wizytę poprzez nasz system rezerwacji online lub kontaktując się bezpośrednio z naszymi agentami."
+      },
+      {
+        "q": "Czy oferujecie plany płatności?",
+        "a": "Zapewniamy elastyczne opcje płatności i rozwiązania finansowe dopasowane do Twoich potrzeb finansowych."
+      },
+      {
+        "q": "Czy to dobry czas na inwestowanie w nieruchomości?",
+        "a": "Biorąc pod uwagę obecne trendy rynkowe i wzrost wartości nieruchomości, jest to doskonały czas na inwestycje długoterminowe."
+      }
+    ]
+  },
+  "aboutPage": {
+    "vision": "Nasza wizja",
+    "mission": "Nasza misja",
+    "journeyTitle": "Twoja podróż zaczyna się u nas",
+    "journeyText": "Jesteśmy firmą zajmującą się nieruchomościami, która pomaga Ci znaleźć idealną nieruchomość w całym Egipcie. Od nowoczesnych apartamentów po luksusowe wille i inteligentne możliwości inwestycyjne.",
+    "offerTitle": "Co oferujemy?",
+    "offers": {
+      "sales": {
+        "title": "Sprzedaż nieruchomości",
+        "text": "Odkryj szeroką gamę starannie wybranych nieruchomości na sprzedaż, od domów gotowych do zamieszkania po projekty inwestycyjne o wysokim potencjale."
+      },
+      "rentals": {
+        "title": "Wynajem nieruchomości",
+        "text": "Znajdź elastyczne opcje wynajmu dopasowane do Twoich potrzeb, niezależnie od tego, czy szukasz pobytu krótkoterminowego, czy stałego miejsca zamieszkania."
+      },
+      "investment": {
+        "title": "Możliwości inwestycyjne",
+        "text": "Uzyskaj dostęp do ofert nieruchomości premium z wysokimi zwrotami w najbardziej obiecujących lokalizacjach w całym Egipcie."
+      }
+    },
+    "ctaTitle": "Zacznij swoją przygodę z nieruchomościami już dziś",
+    "ctaSubtitle": "Odkryj wyjątkowe nieruchomości i zainwestuj w styl życia zdefiniowany przez elegancję i wartość",
+    "contactBtn": "Kontakt"
   }
 }

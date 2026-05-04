@@ -22,6 +22,8 @@ const articles = [
 ];
 
 const Articles = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="articles-section overflow-hidden">
       <div className="articles-container">
@@ -32,11 +34,10 @@ const Articles = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="articles-header"
         >
-          <span className="articles-tag">LATEST ARTICLES</span>
-          <h2 className="articles-title">Insights & Inspiration</h2>
+          <span className="articles-tag">{t('articles.tag')}</span>
+          <h2 className="articles-title">{t('articles.title')}</h2>
           <p className="articles-subtitle">
-            Explore expert insights, real estate trends, and practical tips to help you make
-            informed decisions and find the perfect property with confidence.
+            {t('articles.subtitle')}
           </p>
           <div className="articles-accent-line"></div>
         </motion.div>
@@ -81,7 +82,7 @@ const Articles = () => {
               <div className="article-overlay">
                 <h3 className="article-card-title">{article.title}</h3>
                 <Link href="/blogs/how-to-choose-property" className="read-more-btn">
-                  Read More
+                  {t('articles.readMore')}
                   <Image 
                     src="/assists/articles/arrow-right.png" 
                     alt="Arrow" 
@@ -103,7 +104,7 @@ const Articles = () => {
           className="show-more-blogs-wrapper"
         >
           <Link href="/blogs" className="show-more-blogs-button inline-block text-center">
-            Show More Blogs
+            {t('articles.showMore')}
           </Link>
         </motion.div>
       </div>

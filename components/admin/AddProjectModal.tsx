@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { createProject, updateProject, uploadProjectImages, Project } from '@/lib/api/projects';
+import { createProject, updateProject, uploadProjectImages, Project, LocalizedString } from '@/lib/api/projects';
 import { getDevelopers } from '@/lib/api/developers';
 import { getLocations } from '@/lib/api/locations';
 import { getFacilities, createFacility, Facility } from '@/lib/api/facilities';
@@ -17,8 +17,8 @@ interface AddProjectModalProps {
 interface DropdownOption { id: number; label: string; }
 
 const EMPTY_FORM = { 
-  name: '', 
-  description: '', 
+  name: { en: '', de: '', pl: '' }, 
+  description: { en: '', de: '', pl: '' }, 
   developerId: null as number | null, 
   locationId: null as number | null,
   facilityIds: [] as number[]
@@ -107,8 +107,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
   useEffect(() => {
     if (editData) {
       setForm({
-        name: editData.name,
-        description: editData.description,
+        name: typeof editData.name === 'string' ? { en: editData.name, de: editData.name, pl: editData.name } : editData.name,
+        description: typeof editData.description === 'string' ? { en: editData.description, de: editData.description, pl: editData.description } : editData.description,
         developerId: editData.developerId,
         locationId: editData.locationId,
         facilityIds: (editData as any).facilityIds || []
@@ -123,11 +123,16 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
 
   if (!isOpen) return null;
 
-  const handleChange = (field: keyof typeof EMPTY_FORM) =>
+  const handleChange = (field: keyof typeof EMPTY_FORM, lang?: keyof LocalizedString) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const val = e.target.value;
       if (field === 'developerId' || field === 'locationId') {
         setForm((prev) => ({ ...prev, [field]: val === '' ? null : Number(val) }));
+      } else if (lang) {
+        setForm((prev) => ({
+          ...prev,
+          [field]: { ...((prev[field] as any) || {}), [lang]: val }
+        }));
       } else {
         setForm((prev) => ({ ...prev, [field]: val }));
       }
@@ -140,23 +145,24 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
   };
 
   const handleSubmit = async () => {
-    if (!form.name.trim()) { setError('Project name is required.'); return; }
+    if (!form.name.en.trim()) { setError('Project name (English) is required.'); return; }
     setIsLoading(true); setError('');
     try {
       let projectId: number;
       if (isEditMode && editData) {
         const res = await updateProject(editData.id, {
           id: editData.id,
-          name: { en: form.name, de: form.name, pl: form.name },
-          description: { en: form.description, de: form.description, pl: form.description },
+          name: form.name,
+          description: form.description,
           developerId: form.developerId,
+          locationId: form.locationId,
           facilityIds: form.facilityIds,
         });
         projectId = typeof res === 'number' ? res : res.id;
       } else {
         const res = await createProject({
-          name: { en: form.name, de: form.name, pl: form.name },
-          description: { en: form.description, de: form.description, pl: form.description },
+          name: form.name,
+          description: form.description,
           developerId: form.developerId,
           locationId: form.locationId,
           facilityIds: form.facilityIds,
@@ -174,8 +180,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter" onClick={onClose}>
-      <div className="bg-white rounded-[24px] w-full max-w-[680px] max-h-[90vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
+      <div className="bg-white rounded-[32px] w-full max-w-[900px] max-h-[92vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
 
         {/* Header */}
         <div className="bg-[#16273B] rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
@@ -186,43 +192,105 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         </div>
 
         {/* Body */}
-        <div className="p-8 overflow-y-auto space-y-6 scrollbar-hide">
-
-          {/* Name */}
-          <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Project Name *</label>
-            <input type="text" value={form.name} onChange={handleChange('name')} placeholder="Enter project name"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400" />
-          </div>
-
-          {/* Description */}
-          <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Description</label>
-            <textarea value={form.description} onChange={handleChange('description')} placeholder="Enter project description" rows={3}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400 resize-none" />
-          </div>
-
-          {/* Developer + Location dropdowns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Developer</label>
+        <div className="p-10 overflow-y-auto space-y-10 scrollbar-hide">
+          
+          {/* Main Info Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50/50 p-6 rounded-[28px] border border-gray-100">
+            <div className="space-y-3">
+              <label className="text-[#16273B] font-bold text-[16px] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#16273B]"></span>
+                Developer
+              </label>
               <select value={form.developerId ?? ''} onChange={handleChange('developerId')}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] bg-white cursor-pointer">
+                className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] bg-white cursor-pointer shadow-sm transition-all hover:border-[#16273B]/30">
                 <option value="">— None —</option>
                 {developers.map((d) => <option key={d.id} value={d.id}>{d.label}</option>)}
               </select>
             </div>
             {!isEditMode && (
-              <div className="space-y-2">
-                <label className="text-[#16273B] font-semibold text-[15px]">Location</label>
+              <div className="space-y-3">
+                <label className="text-[#16273B] font-bold text-[16px] flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#16273B]"></span>
+                  Location
+                </label>
                 <select value={form.locationId ?? ''} onChange={handleChange('locationId')}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] bg-white cursor-pointer"
-                  disabled={isEditMode}>
+                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] bg-white cursor-pointer shadow-sm transition-all hover:border-[#16273B]/30">
                   <option value="">— None —</option>
                   {locations.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
                 </select>
               </div>
             )}
+          </div>
+
+          {/* Language Specific Content */}
+          <div className="space-y-8">
+            <div className="flex items-center gap-4">
+              <div className="h-px flex-1 bg-gray-100"></div>
+              <span className="text-gray-400 font-bold text-xs tracking-widest uppercase">Content Localization</span>
+              <div className="h-px flex-1 bg-gray-100"></div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8">
+              {/* English Section */}
+              <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm space-y-6 transition-all hover:shadow-md">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-black uppercase tracking-wider">English</span>
+                  <div className="h-px flex-1 bg-blue-50"></div>
+                </div>
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Project Name *</label>
+                    <input type="text" value={form.name.en || ''} onChange={handleChange('name', 'en')} placeholder="e.g. Skyline Residence"
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Detailed Description</label>
+                    <textarea value={form.description.en || ''} onChange={handleChange('description', 'en')} placeholder="Describe the project in English..." rows={5}
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                </div>
+              </div>
+
+              {/* German Section */}
+              <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm space-y-6 transition-all hover:shadow-md">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-[10px] font-black uppercase tracking-wider">German</span>
+                  <div className="h-px flex-1 bg-amber-50"></div>
+                </div>
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Projektname</label>
+                    <input type="text" value={form.name.de || ''} onChange={handleChange('name', 'de')} placeholder="Name auf Deutsch"
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Ausführliche Beschreibung</label>
+                    <textarea value={form.description.de || ''} onChange={handleChange('description', 'de')} placeholder="Beschreibung auf Deutsch..." rows={5}
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Polish Section */}
+              <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm space-y-6 transition-all hover:shadow-md">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-[10px] font-black uppercase tracking-wider">Polish</span>
+                  <div className="h-px flex-1 bg-red-50"></div>
+                </div>
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Nazwa Projektu</label>
+                    <input type="text" value={form.name.pl || ''} onChange={handleChange('name', 'pl')} placeholder="Nazwa po polsku"
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Szczegółowy Opis</label>
+                    <textarea value={form.description.pl || ''} onChange={handleChange('description', 'pl')} placeholder="Opis po polsku..." rows={5}
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Facilities Section */}
@@ -342,11 +410,14 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         </div>
 
         {/* Footer */}
-        <div className="p-8 pt-0 border-t border-gray-100 flex gap-4 shrink-0">
-          <button onClick={onClose} className="flex-1 py-4 rounded-xl border border-gray-200 text-[#16273B] font-bold hover:bg-gray-50 transition-colors cursor-pointer">Cancel</button>
+        <div className="p-10 pt-0 border-t border-gray-100 flex gap-6 shrink-0 bg-gray-50/30 rounded-b-[32px]">
+          <button onClick={onClose} 
+            className="flex-1 py-5 rounded-2xl border border-gray-200 text-[#16273B] font-bold hover:bg-white hover:border-[#16273B]/20 transition-all cursor-pointer shadow-sm active:scale-[0.98]">
+            Cancel
+          </button>
           <button onClick={handleSubmit} disabled={isLoading}
-            className="flex-1 py-4 rounded-xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
-            {isLoading ? 'Saving...' : isEditMode ? 'Save Changes' : 'Add Project'}
+            className="flex-[2] py-5 rounded-2xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-all cursor-pointer shadow-lg shadow-[#16273B]/20 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]">
+            {isLoading ? 'Processing...' : isEditMode ? 'Save Project Changes' : 'Create New Project'}
           </button>
         </div>
       </div>

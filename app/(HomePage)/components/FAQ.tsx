@@ -24,8 +24,14 @@ const faqData = [
   }
 ];
 
+import { useLanguage } from '@/lib/contexts/LanguageContext';
+import './FAQ.css';
+
 const FAQ = () => {
+  const { t } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  
+  const faqData = (t('faq.questions') as any[]) || [];
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -41,11 +47,10 @@ const FAQ = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="faq-header"
         >
-          <span className="faq-tag">LATEST ARTICLES</span>
-          <h2 className="faq-title">Frequently Asked Questions</h2>
+          <span className="faq-tag">{t('faq.tag')}</span>
+          <h2 className="faq-title">{t('faq.title')}</h2>
           <p className="faq-subtitle">
-            Find quick answers to the most common questions about buying, investing, and
-            owning property. Everything you need to make confident decisions.
+            {t('faq.subtitle')}
           </p>
           <div className="faq-accent-line"></div>
         </motion.div>
@@ -65,7 +70,7 @@ const FAQ = () => {
           }}
           className="faq-list"
         >
-          {faqData.map((item, index) => (
+          {Array.isArray(faqData) && faqData.map((item, index) => (
             <motion.div
               key={index}
               variants={{
@@ -83,7 +88,7 @@ const FAQ = () => {
                 onClick={() => toggleFAQ(index)}
                 aria-expanded={openIndex === index}
               >
-                <span>{item.question}</span>
+                <span>{item.q}</span>
                 <ChevronDown className="faq-chevron" />
               </button>
               
@@ -97,7 +102,7 @@ const FAQ = () => {
                     className="faq-answer-wrapper overflow-hidden"
                   >
                     <div className="faq-answer">
-                      <p>{item.answer}</p>
+                      <p>{item.a}</p>
                     </div>
                   </motion.div>
                 )}

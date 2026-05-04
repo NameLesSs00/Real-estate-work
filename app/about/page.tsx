@@ -4,8 +4,11 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 export default function AboutPage() {
+  const { t } = useLanguage();
+
   return (
     <div className="flex flex-col min-h-screen bg-white pt-32 overflow-hidden">
       {/* Vision & Mission Section */}
@@ -18,29 +21,23 @@ export default function AboutPage() {
           className="flex flex-col gap-12"
         >
           <div className="flex flex-col gap-4">
-            <h2 className="text-[28px] md:text-[34px] font-radley text-[#1B2134]">Our Vision</h2>
+            <h2 className="text-[28px] md:text-[34px] font-radley text-[#1B2134]">{t('whoWeAre.visionTitle')}</h2>
             <p className="text-[15px] md:text-[17px] text-[#555555] leading-relaxed font-poppins">
-              To redefine the real estate experience by making it more transparent, 
-              accessible, and tailored to modern lifestyles. We aim to connect people with 
-              spaces that truly inspire how they live, work, and grow.
+              {t('whoWeAre.visionText')}
             </p>
           </div>
 
           <div className="flex flex-col gap-4">
-            <h2 className="text-[28px] md:text-[34px] font-radley text-[#1B2134]">Our Mission</h2>
+            <h2 className="text-[28px] md:text-[34px] font-radley text-[#1B2134]">{t('whoWeAre.missionTitle')}</h2>
             <p className="text-[15px] md:text-[17px] text-[#555555] leading-relaxed font-poppins">
-              To guide our clients through every step of their property journey with honesty, 
-              expertise, and care. We are committed to delivering exceptional service, 
-              curated property selections, and a seamless experience that builds long-term trust.
+              {t('whoWeAre.missionText')}
             </p>
           </div>
 
           <div className="flex flex-col gap-4">
-            <h2 className="text-[32px] md:text-[42px] font-radley text-[#1B2134] leading-tight">Your Property Journey Starts With Us</h2>
+            <h2 className="text-[32px] md:text-[42px] font-radley text-[#1B2134] leading-tight">{t('aboutPage.journeyTitle')}</h2>
             <p className="text-[15px] md:text-[17px] text-[#555555] leading-relaxed font-poppins">
-              We are a real estate company dedicated to helping you find the perfect property across Egypt. 
-              From modern apartments and luxury villas to smart investment opportunities, 
-              we make your journey to buying or renting seamless, reliable, and rewarding.
+              {t('aboutPage.journeyText')}
             </p>
           </div>
         </motion.div>
@@ -73,7 +70,7 @@ export default function AboutPage() {
           transition={{ duration: 0.8 }}
           className="text-[38px] md:text-[52px] font-radley text-[#1B2134] text-center mb-16"
         >
-          What We Offer?
+          {t('aboutPage.offerTitle')}
         </motion.h2>
         
         <motion.div 
@@ -103,9 +100,9 @@ export default function AboutPage() {
             <div className="w-28 h-28 bg-[#F8F5F080] rounded-full flex items-center justify-center">
               <Image src="/assists/aboutUs/money.png" alt="Property Sales" width={64} height={64} />
             </div>
-            <h3 className="text-[22px] md:text-[26px] font-semibold text-[#1B2134] font-poppins">Property Sales</h3>
+            <h3 className="text-[22px] md:text-[26px] font-semibold text-[#1B2134] font-poppins">{t('aboutPage.offers.sales.title')}</h3>
             <p className="text-[15px] md:text-[17px] text-[#666] leading-relaxed font-poppins max-w-[450px]">
-              Discover a wide range of carefully selected properties for sale, from ready-to-move homes to high-potential investment projects.
+              {t('aboutPage.offers.sales.text')}
             </p>
           </motion.div>
 
@@ -121,9 +118,9 @@ export default function AboutPage() {
             <div className="w-28 h-28 bg-[#F8F5F080] rounded-full flex items-center justify-center">
               <Image src="/assists/aboutUs/home.png" alt="Property Rentals" width={64} height={64} />
             </div>
-            <h3 className="text-[22px] md:text-[26px] font-semibold text-[#1B2134] font-poppins">Property Rentals</h3>
+            <h3 className="text-[22px] md:text-[26px] font-semibold text-[#1B2134] font-poppins">{t('aboutPage.offers.rentals.title')}</h3>
             <p className="text-[15px] md:text-[17px] text-[#666] leading-relaxed font-poppins max-w-[450px]">
-              Find flexible rental options that match your needs, whether you&apos;re looking for short-term stays or long-term living.
+              {t('aboutPage.offers.rentals.text')}
             </p>
           </motion.div>
 
@@ -139,9 +136,9 @@ export default function AboutPage() {
             <div className="w-28 h-28 bg-[#F8F5F080] rounded-full flex items-center justify-center">
               <Image src="/assists/aboutUs/sun.png" alt="Investment Opportunities" width={64} height={64} />
             </div>
-            <h3 className="text-[22px] md:text-[26px] font-semibold text-[#1B2134] font-poppins">Investment Opportunities</h3>
+            <h3 className="text-[22px] md:text-[26px] font-semibold text-[#1B2134] font-poppins">{t('aboutPage.offers.investment.title')}</h3>
             <p className="text-[15px] md:text-[17px] text-[#666] leading-relaxed font-poppins max-w-[450px]">
-              Get access to premium real estate opportunities with strong returns in the most promising locations across Egypt.
+              {t('aboutPage.offers.investment.text')}
             </p>
           </motion.div>
         </motion.div>
@@ -169,16 +166,16 @@ export default function AboutPage() {
           className="relative z-10 max-w-[1000px] mx-auto px-6 text-center text-white flex flex-col items-center gap-6"
         >
           <h2 className="text-[36px] md:text-[60px] font-bold font-poppins leading-tight">
-            Begin your real estate journey with us today
+            {t('aboutPage.ctaTitle')}
           </h2>
           <p className="text-[16px] md:text-[22px] font-poppins opacity-90 max-w-[750px]">
-            Discover exceptional properties and invest in a lifestyle defined by elegance and value
+            {t('aboutPage.ctaSubtitle')}
           </p>
           <Link 
             href="/#contact" 
             className="mt-4 bg-white text-[#1B2134] px-14 py-4 rounded-full font-bold text-[18px] hover:bg-[#F8F5F0] transition-all transform hover:scale-105"
           >
-            Let&apos;s Contact
+            {t('aboutPage.contactBtn')}
           </Link>
         </motion.div>
       </section>

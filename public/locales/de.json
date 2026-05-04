@@ -9,17 +9,161 @@
     "about": "Über Uns",
     "contact": "Kontakt",
     "blogs": "Blogs",
-    "listProperty": "Immobilie eintragen"
+    "listProperty": "Immobilie eintragen",
+    "locations": [
+      "El Gouna",
+      "El kawther",
+      "Arabia",
+      "Al Ahyaa",
+      "Sheraton",
+      "Makadi Bay"
+    ]
   },
   "footer": {
-    "about": "The Gate Estates wurde aus Leidenschaft gegründet, um Menschen mit ihren Traumhäusern und idealen Investitionen zu verbinden. Wir verstehen, dass Immobilien nicht nur Transaktionen sind; sie sind lebensverändernde Entscheidungen.",
-    "usefulLinks": "Nützliche Links",
-    "stayConnected": "Bleib verbunden",
-    "newsletter": "Abonnieren Sie unseren Newsletter, um über Neuigkeiten auf dem Laufenden zu bleiben.",
+    "about": "The Gate Estates wurde aus der Leidenschaft heraus gegründet, Menschen mit ihrem Traumhaus und idealen Investitionen zu verbinden. Wir verstehen, dass es bei Immobilien nicht nur um Transaktionen geht; es geht um lebensverändernde Entscheidungen.",
+    "usefulLinks": "Schnellzugriff",
+    "stayConnected": "Folgen Sie uns",
+    "newsletter": "Abonnieren Sie unseren Newsletter, um über Funktionen und Veröffentlichungen auf dem Laufenden zu bleiben.",
     "subscribe": "Abonnieren",
-    "placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
-    "copyright": "© 2024 The Gate Estates. Alle Rechte vorbehalten.",
-    "privacy": "Datenschutz",
-    "terms": "Nutzungsbedingungen"
+    "placeholder": "Geben Sie Ihre E-Mail ein",
+    "copyright": "Alle Rechte vorbehalten.",
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "contactTitle": "Kontaktieren Sie uns"
+  },
+  "hero": {
+    "title": "Entdecken Sie Ihre nächste <br /> Anlageimmobilie",
+    "searchLabel": "Suche nach Gebiet, Wohnanlage oder Bauträger",
+    "searchPlaceholder": "Suche nach Gebiet, Wohnanlage oder Bauträger",
+    "filters": "Filter",
+    "hide": "Ausblenden",
+    "search": "Suche",
+    "propertyType": "Immobilientyp",
+    "allTypes": "Alle Typen",
+    "location": "Standort",
+    "allLocations": "Alle Standorte",
+    "minPrice": "Mindestpreis (EGP)",
+    "maxPrice": "Höchstpreis (EGP)",
+    "noMin": "Kein Minimum",
+    "noMax": "Kein Maximum"
+  },
+  "whoWeAre": {
+    "tag": "WER WIR SIND",
+    "title": "Ihr vertrauenswürdiger Immobilienpartner",
+    "subtitle": "Wir setzen uns dafür ein, dass Sie außergewöhnliche Immobilien in erstklassigen Lagen entdecken, wobei wir Qualität, Transparenz und ein nahtloses, auf Ihre Bedürfnisse zugeschnittenes Erlebnis kombinieren.",
+    "visionTitle": "Unsere Vision",
+    "visionText": "Das Immobilienerlebnis neu zu definieren, indem wir es transparenter, zugänglicher und auf moderne Lebensstile zugeschnitten gestalten. Unser Ziel ist es, Menschen mit Räumen zu verbinden, die ihre Art zu leben, zu arbeiten und zu wachsen wahrhaftig inspirieren.",
+    "missionTitle": "Unsere Mission",
+    "missionText": "Unsere Kunden bei jedem Schritt ihrer Immobilienreise mit Ehrlichkeit, Fachkompetenz und Sorgfalt zu begleiten. Wir verpflichten uns, einen außergewöhnlichen Service, kuratierte Immobilienauswahlen und ein nahtloses Erlebnis zu bieten, das langfristiges Vertrauen schafft.",
+    "viewMore": "Mehr sehen"
+  },
+  "howItWorks": {
+    "tag": "WIE ES FUNKTIONIERT",
+    "title": "Ein einfacher Weg, Ihre perfekte Immobilie zu finden",
+    "step1": "Entdecken Sie kuratierte Immobilien, die Ihren Bedürfnissen und Ihrem Budget entsprechen.",
+    "step2": "Vernetzen Sie sich mit unseren Experten für eine persönliche Beratung.",
+    "step3": "Buchen Sie eine Besichtigung und finden Sie mit Leichtigkeit Ihre ideale Immobilie."
+  },
+  "categories": {
+    "tag": "AUSGEWÄHLTE ANGEBOTE",
+    "title": "Immobilien nach <span>Kategorie</span> durchsuchen",
+    "subtitle": "Präsentieren Sie Häuser in klaren, organisierten Kategorien, damit Besucher schnell die Arten von Immobilien erkunden können, die ihren Bedürfnissen, Interessen und Kaufzielen entsprechen.",
+    "types": {
+      "Apartments": "Wohnungen",
+      "Houses": "Häuser",
+      "Vails": "Villen",
+      "Studio": "Studios"
+    },
+    "listings": "Angebote"
+  },
+  "exploreUnits": {
+    "tag": "BELIEBTE EINHEITEN",
+    "title": "Ausgewählte Einheiten",
+    "subtitle": "Sorgfältig ausgewählte Premium-Einheiten in den begehrtesten Lagen.",
+    "tabs": {
+      "hotDeal": "Top-Angebot",
+      "recommended": "Empfohlen",
+      "bestPrice": "Bester Preis"
+    },
+    "noUnits": "Keine Einheiten verfügbar.",
+    "showMore": "Mehr Immobilien anzeigen"
+  },
+  "popularSpots": {
+    "tag": "Beliebte Orte",
+    "title": "Erstklassige Standorte erkunden",
+    "subtitle": "Von den Lagunen von El Gouna bis zu den Stränden von Sahl Hasheesh – finden Sie Ihr perfektes Eck am Roten Meer.",
+    "exploreArea": "Gebiet erkunden",
+    "property": "Immobilie",
+    "properties": "Immobilien"
+  },
+  "featureProject": {
+    "tag": "AUSGEWÄHLTE PROJEKTE",
+    "title": "Außergewöhnliche Immobilien, sorgfältig für Sie ausgewählt",
+    "subtitle": "Entdecken Sie eine kuratierte Auswahl an zukunftsweisenden Immobilienprojekten in erstklassigen Lagen, die auf Qualität, Innovation und einen starken Investitionswert ausgelegt sind und einen modernen Lebensstil sowie langfristiges Wachstum bieten.",
+    "priceStart": "Preis ab",
+    "projectDetails": "Projektdetails",
+    "getInTouch": "Kontakt aufnehmen",
+    "showMore": "Mehr Projekte anzeigen",
+    "labels": {
+      "totalUnits": "Gesamteinheiten",
+      "buildingFloors": "Stockwerke",
+      "deliveryDate": "Lieferdatum",
+      "status": "Status",
+      "spaces": "Flächen"
+    }
+  },
+  "articles": {
+    "tag": "NEUESTE ARTIKEL",
+    "title": "Einblicke & Inspiration",
+    "subtitle": "Entdecken Sie Expertenwissen, Immobilientrends und praktische Tipps, die Ihnen helfen, fundierte Entscheidungen zu treffen und die perfekte Immobilie mit Vertrauen zu finden.",
+    "readMore": "Weiterlesen",
+    "showMore": "Mehr Blogs anzeigen"
+  },
+  "faq": {
+    "tag": "NEUESTE ARTIKEL",
+    "title": "Häufig gestellte Fragen",
+    "subtitle": "Finden Sie schnelle Antworten auf die häufigsten Fragen zum Kauf, zur Investition und zum Besitz von Immobilien. Alles, was Sie brauchen, um sichere Entscheidungen zu treffen.",
+    "questions": [
+      {
+        "q": "Welche Arten von Immobilien sind verfügbar?",
+        "a": "Wir bieten Wohnungen, Villen und Anlageimmobilien an erstklassigen Standorten an."
+      },
+      {
+        "q": "Kann ich eine Immobilienbesichtigung online vereinbaren?",
+        "a": "Ja, Sie können ganz einfach eine Besichtigung über unser Online-Buchungssystem oder durch direkte Kontaktaufnahme mit unseren Maklern vereinbaren."
+      },
+      {
+        "q": "Bieten Sie Zahlungspläne an?",
+        "a": "Wir bieten flexible Zahlungsoptionen und Finanzierungslösungen an, die auf Ihre finanziellen Bedürfnisse zugeschnitten sind."
+      },
+      {
+        "q": "Ist es ein guter Zeitpunkt, in Immobilien zu investieren?",
+        "a": "Angesichts der aktuellen Markttrends und der Wertsteigerung von Immobilien ist es ein hervorragender Zeitpunkt für langfristige Investitionen."
+      }
+    ]
+  },
+  "aboutPage": {
+    "vision": "Unsere Vision",
+    "mission": "Unsere Mission",
+    "journeyTitle": "Ihre Immobilienreise beginnt bei uns",
+    "journeyText": "Wir sind ein Immobilienunternehmen, das sich darauf spezialisiert hat, Ihnen zu helfen, die perfekte Immobilie in ganz Ägypten zu finden. Von modernen Wohnungen und Luxusvillen bis hin zu intelligenten Investitionsmöglichkeiten gestalten wir Ihren Weg zum Kauf oder zur Miete nahtlos, zuverlässig und lohnend.",
+    "offerTitle": "Was wir bieten?",
+    "offers": {
+      "sales": {
+        "title": "Immobilienverkauf",
+        "text": "Entdecken Sie eine breite Auswahl an sorgfältig ausgewählten Immobilien zum Verkauf, von bezugsfertigen Häusern bis hin zu hochpotenziellen Investitionsprojekten."
+      },
+      "rentals": {
+        "title": "Immobilienvermietung",
+        "text": "Finden Sie flexible Mietoptionen, die Ihren Bedürfnissen entsprechen, egal ob Sie nach Kurzzeitaufenthalten oder langfristigem Wohnen suchen."
+      },
+      "investment": {
+        "title": "Investitionsmöglichkeiten",
+        "text": "Erhalten Sie Zugang zu erstklassigen Immobilienangeboten mit starken Renditen an den vielversprechendsten Standorten in ganz Ägypten."
+      }
+    },
+    "ctaTitle": "Beginnen Sie noch heute Ihre Immobilienreise mit uns",
+    "ctaSubtitle": "Entdecken Sie außergewöhnliche Immobilien und investieren Sie in einen Lebensstil, der durch Eleganz und Wert definiert ist",
+    "contactBtn": "Lassen Sie uns Kontakt aufnehmen"
   }
 }

@@ -8,13 +8,17 @@ import { getUnitsFiltered, UnitListItem } from '@/lib/api/units';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
 import './ExploreUnits.css';
 
+import { useLanguage } from '@/lib/contexts/LanguageContext';
+import './ExploreUnits.css';
+
 const tabs = [
-  { name: 'Hot Deal', icon: '/assists/exploreUnitsHome/mdi_hot.png', sortBy: 'featured' },
-  { name: 'Recommended', icon: '/assists/exploreUnitsHome/carbon_recommend.png', sortBy: 'recommended' },
-  { name: 'Best Price', icon: '/assists/exploreUnitsHome/solar_tag-price-outline.png', sortBy: 'price' },
+  { key: 'hotDeal', icon: '/assists/exploreUnitsHome/mdi_hot.png', sortBy: 'featured' },
+  { key: 'recommended', icon: '/assists/exploreUnitsHome/carbon_recommend.png', sortBy: 'recommended' },
+  { key: 'bestPrice', icon: '/assists/exploreUnitsHome/solar_tag-price-outline.png', sortBy: 'price' },
 ];
 
 const ExploreUnits = () => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState(0);
   const [units, setUnits] = useState<UnitListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,17 +47,17 @@ const ExploreUnits = () => {
     <section className="explore-units-section">
       <div className="explore-units-container">
         <div className="explore-units-header">
-          <span className="explore-units-tag">POPULAR UNITS</span>
-          <h2 className="explore-units-title">Feature Units</h2>
-          <p className="explore-units-subtitle">Carefully selected premium units in the most sought-after locations.</p>
+          <span className="explore-units-tag">{t('exploreUnits.tag')}</span>
+          <h2 className="explore-units-title">{t('exploreUnits.title')}</h2>
+          <p className="explore-units-subtitle">{t('exploreUnits.subtitle')}</p>
           <div className="explore-units-accent-line"></div>
         </div>
 
         <div className="explore-tabs">
           {tabs.map((tab, index) => (
             <button key={index} className={`explore-tab ${activeTab === index ? 'active' : ''}`} onClick={() => setActiveTab(index)}>
-              <Image src={tab.icon} alt={tab.name} width={20} height={20} className="explore-tab-icon" />
-              {tab.name}
+              <Image src={tab.icon} alt={t(`exploreUnits.tabs.${tab.key}`)} width={20} height={20} className="explore-tab-icon" />
+              {t(`exploreUnits.tabs.${tab.key}`)}
             </button>
           ))}
         </div>
@@ -65,7 +69,7 @@ const ExploreUnits = () => {
             ))}
           </div>
         ) : units.length === 0 ? (
-          <div className="text-center py-20 text-gray-500 font-medium">No units available.</div>
+          <div className="text-center py-20 text-gray-500 font-medium">{t('exploreUnits.noUnits')}</div>
         ) : (
           <div className="units-grid">
             {units.map((unit) => (
@@ -88,7 +92,7 @@ const ExploreUnits = () => {
         )}
 
         <div className="show-more-wrapper">
-          <Link href="/properties" className="show-more-button">Show More Properties</Link>
+          <Link href="/properties" className="show-more-button">{t('exploreUnits.showMore')}</Link>
         </div>
       </div>
     </section>

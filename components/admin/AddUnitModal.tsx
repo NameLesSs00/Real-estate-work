@@ -1,10 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { addUnitToProject, updateUnit, getUnitById, ApiUnit } from '@/lib/api/projects';
-import { getProjects } from '@/lib/api/projects';
-import { getFacilities, createFacility, Facility } from '@/lib/api/facilities';
+import { addUnitToProject, updateUnit, getUnitById, ApiUnit, getProjects, LocalizedString } from '@/lib/api/projects';
 import { getServices, createService, Service } from '@/lib/api/services';
 import { Plus, X, Loader2 } from 'lucide-react';
 
@@ -16,36 +14,32 @@ interface AddUnitModalProps {
   editData?: ApiUnit | null;
 }
 
-const EMPTY_FORM = {
-  name: '',
-  description: '',
-  price: 0 as number | '',
-  propertyType: 0 as number | '',
-  noBathRoom: 0 as number | '',
-  noBedRoom: 0 as number | '',
-  floorNumber: 0 as number | '',
-  area: 0 as number | '',
-  noKithchen: 0 as number | '',
+const EMPTY_FORM = { 
+  name: { en: '', de: '', pl: '' }, 
+  description: { en: '', de: '', pl: '' }, 
+  price: '' as number | '',
+  propertyType: 0,
+  noBathRoom: '',
+  noBedRoom: '',
+  noKithchen: '',
+  floorNumber: '',
+  area: '',
   floorName: '',
-  view: 0 as number | '',
+  view: 0,
   isFeatured: false,
+  currencyCode: 'EGP',
   paymentPlans: [] as { installmentMonthes: number | ''; installmentDownPayment: number | ''; paymentType: string }[],
-  facilityIds: [] as number[],
   servicesIds: [] as number[],
 };
 
 export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, editData }: AddUnitModalProps) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(projectId ?? null);
-  const [projects, setProjects] = useState<{ id: number; name: string }[]>([]);
-  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [projects, setProjects] = useState<{ id: number; name: string; locationName?: string }[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Quick-add state
-  const [isAddingFacility, setIsAddingFacility] = useState(false);
-  const [newFacilityName, setNewFacilityName] = useState({ en: '', de: '', pl: '' });
   const [isAddingService, setIsAddingService] = useState(false);
   const [newServiceName, setNewServiceName] = useState({ en: '', de: '', pl: '' });
   const [isSubmittingQuick, setIsSubmittingQuick] = useState(false);
@@ -54,20 +48,19 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
   const fetchData = useCallback(async () => {
     try {
-      const [facRes, serRes] = await Promise.all([getFacilities(), getServices()]);
-      setFacilities(facRes);
+      const serRes = await getServices();
       setServices(serRes);
     } catch (err) {
-      console.error('[AddUnitModal] Failed to fetch facilities or services', err);
+      console.error('[AddUnitModal] Failed to fetch services', err);
     }
 
     if (!isEditMode) {
       let page = 1;
-      let all: { id: number; name: string }[] = [];
+      let all: { id: number; name: string; locationName?: string }[] = [];
       try {
         while (true) {
           const res = await getProjects(page);
-          all = [...all, ...res.items.map((p) => ({ id: p.id, name: p.name }))];
+          all = [...all, ...res.items.map((p) => ({ id: p.id, name: p.name, locationName: p.locationName }))];
           if (!res.hasNextPage) break;
           page++;
         }
@@ -106,32 +99,28 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
     if (isEditMode && editData) {
       const loadEditData = async () => {
-        // First populate with list data
         setForm({
-          name: editData.name ?? '',
-          description: editData.description ?? '',
-          price: editData.price ?? 0,
+          ...EMPTY_FORM,
+          name: typeof editData.name === 'string' ? { en: editData.name, de: editData.name, pl: editData.name } : editData.name,
+          description: typeof editData.description === 'string' ? { en: editData.description, de: editData.description, pl: editData.description } : editData.description,
+          price: editData.price,
           propertyType: getPropertyTypeValue(editData.propertyType),
-          noBathRoom: editData.noBathRoom ?? 0,
-          noBedRoom: editData.noBedRoom ?? 0,
-          floorNumber: editData.floorNumber ?? 0,
-          area: editData.area ?? 0,
-          noKithchen: editData.noKitchen ?? 0,
-          floorName: editData.floorName ?? '',
-          view: editData.view ?? 0,
-          isFeatured: editData.isFeatured ?? false,
-          paymentPlans: [], // Will be filled by fetch
-          facilityIds: [],
-          servicesIds: [],
+          noBathRoom: editData.noBathRoom,
+          noBedRoom: editData.noBedRoom,
+          noKithchen: editData.noKithchen,
+          floorNumber: editData.floorNumber,
+          area: editData.area,
+          floorName: editData.floorName,
+          view: editData.view,
+          isFeatured: editData.isFeatured,
+          currencyCode: editData.currencyCode || 'EGP',
         });
 
-        // Then fetch full details for payment plans, facilities, and services
         try {
           const detail = await getUnitById(editData.id);
 
           setForm(prev => ({
             ...prev,
-            facilityIds: (detail.facilities || []).map((f: any) => f.id),
             servicesIds: (detail.services || []).map((s: any) => s.id),
             paymentPlans: (detail.paymentPlans || []).map(p => {
               const plan = p as { installmentMothes?: number; installmentMonthes?: number; installmentDownPayment?: number; paymentType?: string };
@@ -156,22 +145,29 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
   if (!isOpen) return null;
 
-  const set = (field: keyof typeof EMPTY_FORM) =>
+  const set = (field: keyof typeof EMPTY_FORM, lang?: keyof LocalizedString) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const val = e.target.type === 'checkbox'
         ? (e.target as HTMLInputElement).checked
         : e.target.type === 'number'
           ? e.target.value === '' ? '' : Number(e.target.value)
           : e.target.value;
-      setForm((prev) => ({ ...prev, [field]: val }));
+      
+      if (lang) {
+        setForm((prev) => ({
+          ...prev,
+          [field]: { ...((prev[field] as any) || {}), [lang]: val }
+        }));
+      } else {
+        setForm((prev) => ({ ...prev, [field]: val }));
+      }
     };
 
   const handleSubmit = async () => {
-    if (!form.name.trim()) { setError('Unit name is required.'); return; }
+    if (!form.name.en.trim()) { setError('Unit name (English) is required.'); return; }
     if (!isEditMode && !selectedProjectId) { setError('Please select a project.'); return; }
     if (!form.area || Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
     
-    // Validate and clean up payment plans
     const validatedPlans = form.paymentPlans.map(p => {
       const isCash = p.paymentType === 'Cash';
       return {
@@ -188,43 +184,30 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     
     setIsLoading(true); setError('');
     try {
+      const unitPayload = {
+        name: form.name,
+        description: form.description,
+        price: Number(form.price),
+        currencyCode: form.currencyCode,
+        propertyType: Number(form.propertyType),
+        noBathRoom: Number(form.noBathRoom),
+        noBedRoom: Number(form.noBedRoom),
+        noKithchen: Number(form.noKithchen),
+        floorNumber: Number(form.floorNumber),
+        area: Number(form.area),
+        floorName: form.floorName,
+        view: Number(form.view),
+        isFeatured: form.isFeatured,
+        paymentPlans: validatedPlans,
+        servicesIds: form.servicesIds,
+      };
+
       if (isEditMode && editData) {
-        await updateUnit({
-          id: editData.id,
-          name: { en: form.name, de: form.name, pl: form.name },
-          description: { en: form.description, de: form.description, pl: form.description },
-          price: Number(form.price),
-          propertyType: Number(form.propertyType),
-          noBathRoom: Number(form.noBathRoom),
-          noBedRoom: Number(form.noBedRoom),
-          noKitchen: Number(form.noKithchen),
-          floorName: form.floorName,
-          view: Number(form.view),
-          isFeatured: form.isFeatured,
-          paymentPlans: validatedPlans,
-          facilityIds: form.facilityIds,
-          servicesIds: form.servicesIds,
-        });
+        await updateUnit({ id: editData.id, ...unitPayload });
       } else {
         await addUnitToProject({
           projectId: selectedProjectId!,
-          units: [{
-            name: { en: form.name, de: form.name, pl: form.name },
-            description: { en: form.description, de: form.description, pl: form.description },
-            price: Number(form.price),
-            propertyType: Number(form.propertyType),
-            noBathRoom: Number(form.noBathRoom),
-            noBedRoom: Number(form.noBedRoom),
-            floorNumber: Number(form.floorNumber),
-            area: Number(form.area),
-            noKithchen: Number(form.noKithchen),
-            floorName: form.floorName,
-            view: Number(form.view),
-            paymentPlans: validatedPlans,
-            isFeatured: form.isFeatured,
-            facilityIds: form.facilityIds,
-            servicesIds: form.servicesIds,
-          }],
+          units: [unitPayload],
         });
       }
       onSuccess(); onClose();
@@ -239,53 +222,140 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const inputCls = 'w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400 bg-white';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter" onClick={onClose}>
-      <div className="bg-white rounded-[24px] w-full max-w-[720px] max-h-[92vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
+      <div className="bg-white rounded-[32px] w-full max-w-[900px] max-h-[94vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
 
-        {/* Header */}
-        <div className="bg-[#16273B] rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
-          <h2 className="text-white text-[22px] font-bold">{isEditMode ? 'Edit Unit' : 'Add New Unit'}</h2>
-          <button onClick={onClose} className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none">
-            <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={24} height={24} />
+        <div className="bg-[#16273B] rounded-t-[32px] px-8 py-6 flex items-center justify-between shrink-0">
+          <h2 className="text-white text-[24px] font-bold tracking-tight">{isEditMode ? 'Edit Unit Details' : 'Register New Unit'}</h2>
+          <button onClick={onClose} className="hover:rotate-90 transition-transform duration-300 cursor-pointer border-none bg-transparent outline-none">
+            <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={28} height={28} />
           </button>
         </div>
 
-        {/* Body */}
-        <div className="p-8 overflow-y-auto space-y-5 scrollbar-hide">
+        <div className="p-10 overflow-y-auto space-y-10 scrollbar-hide">
 
-          {/* Project selector (Add mode only) */}
           {!isEditMode && (
-            <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Project *</label>
-              <select
-                value={selectedProjectId ?? ''}
-                onChange={(e) => setSelectedProjectId(e.target.value === '' ? null : Number(e.target.value))}
-                className={inputCls}
-              >
-                <option value="">— Select a project —</option>
-                {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-              </select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50/50 p-6 rounded-[28px] border border-gray-100">
+              <div className="space-y-3">
+                <label className="text-[#16273B] font-bold text-[16px] flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#16273B]"></span>
+                  Target Project *
+                </label>
+                <select
+                  value={selectedProjectId ?? ''}
+                  onChange={(e) => setSelectedProjectId(e.target.value === '' ? null : Number(e.target.value))}
+                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] bg-white cursor-pointer shadow-sm transition-all hover:border-[#16273B]/30"
+                >
+                  <option value="">— Select a project —</option>
+                  {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                </select>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[#16273B] font-bold text-[16px] flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-gray-300"></span>
+                  Location
+                </label>
+                <input 
+                  type="text" 
+                  readOnly 
+                  value={projects.find(p => p.id === selectedProjectId)?.locationName || ''} 
+                  placeholder="Derived from project..." 
+                  className="w-full border border-gray-200 bg-gray-100/50 rounded-2xl px-5 py-4 text-gray-500 cursor-not-allowed shadow-inner" 
+                />
+              </div>
             </div>
           )}
 
-          {/* Name */}
-          <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Unit Name *</label>
-            <input type="text" value={form.name} onChange={set('name')} placeholder="Enter unit name" className={inputCls} />
+          {/* Language Sections */}
+          <div className="space-y-8">
+            <div className="flex items-center gap-4">
+              <div className="h-px flex-1 bg-gray-100"></div>
+              <span className="text-gray-400 font-bold text-xs tracking-widest uppercase">Unit Localization</span>
+              <div className="h-px flex-1 bg-gray-100"></div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8">
+              {/* English */}
+              <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm space-y-6 transition-all hover:shadow-md">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-black uppercase tracking-wider">English</span>
+                  <div className="h-px flex-1 bg-blue-50"></div>
+                </div>
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Unit Name (EN) *</label>
+                    <input type="text" value={form.name.en || ''} onChange={set('name', 'en')} placeholder="e.g. Luxury 3BR Apartment" 
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Description (EN)</label>
+                    <textarea value={form.description.en || ''} onChange={set('description', 'en')} placeholder="Describe the unit in English..." rows={4} 
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                </div>
+              </div>
+
+              {/* German */}
+              <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm space-y-6 transition-all hover:shadow-md">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="px-3 py-1 bg-amber-50 text-amber-600 rounded-lg text-[10px] font-black uppercase tracking-wider">German</span>
+                  <div className="h-px flex-1 bg-amber-50"></div>
+                </div>
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Einheitsname (DE)</label>
+                    <input type="text" value={form.name.de || ''} onChange={set('name', 'de')} placeholder="Name auf Deutsch" 
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Beschreibung (DE)</label>
+                    <textarea value={form.description.de || ''} onChange={set('description', 'de')} placeholder="Beschreibung auf Deutsch..." rows={4} 
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Polish */}
+              <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm space-y-6 transition-all hover:shadow-md">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-[10px] font-black uppercase tracking-wider">Polish</span>
+                  <div className="h-px flex-1 bg-red-50"></div>
+                </div>
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Nazwa Jednostki (PL)</label>
+                    <input type="text" value={form.name.pl || ''} onChange={set('name', 'pl')} placeholder="Nazwa po polsku" 
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[#16273B] font-bold text-[15px]">Opis (PL)</label>
+                    <textarea value={form.description.pl || ''} onChange={set('description', 'pl')} placeholder="Opis po polsku..." rows={4} 
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Description */}
-          <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Description</label>
-            <textarea value={form.description} onChange={set('description')} placeholder="Enter description" rows={3}
-              className={`${inputCls} resize-none`} />
-          </div>
-
-          {/* 2-col grid */}
           <div className="grid grid-cols-2 gap-5">
             <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Price</label>
-              <input type="number" value={form.price} onChange={set('price')} min={0} className={inputCls} />
+              <label className="text-[14px] font-bold text-[#16273B] ml-1">Price</label>
+              <div className="flex gap-2">
+                <input type="number" value={form.price}
+                  onChange={(e) => setForm((prev) => ({ ...prev, price: e.target.value ? Number(e.target.value) : '' }))}
+                  placeholder="e.g. 5000000"
+                  className="flex-1 bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#16273B]/10 transition-all font-medium text-[#16273B]" 
+                  required />
+                <select 
+                  value={form.currencyCode}
+                  onChange={(e) => setForm((prev) => ({ ...prev, currencyCode: e.target.value }))}
+                  className="w-[100px] bg-[#F8F5F0] border-none rounded-2xl px-3 py-4 outline-none focus:ring-2 focus:ring-[#16273B]/10 transition-all font-bold text-[#16273B] appearance-none text-center"
+                >
+                  <option value="EGP">EGP</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                </select>
+              </div>
             </div>
             <div className="space-y-2">
               <label className="text-[#16273B] font-semibold text-[15px]">Property Type</label>
@@ -323,7 +393,6 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             </div>
           </div>
 
-          {/* Payment Plans */}
           <div className="space-y-4 pt-4 border-t border-gray-100">
             <div className="flex items-center justify-between">
               <label className="text-[#16273B] font-semibold text-[15px]">Payment Plans</label>
@@ -413,109 +482,18 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             ))}
           </div>
 
-          {/* Facilities and Services */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-100">
-            {/* Facilities */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-[#16273B] font-semibold text-[15px]">Facilities</label>
-                <button 
-                  type="button"
-                  onClick={() => setIsAddingFacility(!isAddingFacility)}
-                  className="text-[12px] font-bold text-[#16273B] hover:underline flex items-center gap-1"
-                >
-                  {isAddingFacility ? 'Cancel' : '+ Add New'}
-                </button>
-              </div>
-
-              {isAddingFacility && (
-                <div className="bg-gray-50 p-3 rounded-xl space-y-3 border border-gray-100 shadow-inner mb-2">
-                  <div className="grid grid-cols-1 gap-2">
-                    <input 
-                      placeholder="EN Name" 
-                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#16273B]/20"
-                      value={newFacilityName.en}
-                      onChange={e => setNewFacilityName({...newFacilityName, en: e.target.value})}
-                    />
-                    <input 
-                      placeholder="DE Name" 
-                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#16273B]/20"
-                      value={newFacilityName.de}
-                      onChange={e => setNewFacilityName({...newFacilityName, de: e.target.value})}
-                    />
-                    <input 
-                      placeholder="PL Name" 
-                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#16273B]/20"
-                      value={newFacilityName.pl}
-                      onChange={e => setNewFacilityName({...newFacilityName, pl: e.target.value})}
-                    />
-                  </div>
-                  <button 
-                    type="button"
-                    disabled={isSubmittingQuick || !newFacilityName.en}
-                    onClick={async () => {
-                      setIsSubmittingQuick(true);
-                      try {
-                        await createFacility(newFacilityName);
-                        setNewFacilityName({ en: '', de: '', pl: '' });
-                        setIsAddingFacility(false);
-                        await fetchData();
-                      } catch (err) {
-                        alert('Failed to add facility');
-                      } finally {
-                        setIsSubmittingQuick(false);
-                      }
-                    }}
-                    className="w-full bg-[#16273B] text-white py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
-                  >
-                    {isSubmittingQuick ? 'Saving...' : 'Save Facility'}
-                  </button>
-                </div>
-              )}
-
-              <div className="max-h-[200px] overflow-y-auto pr-2 space-y-2 scrollbar-thin">
-                {facilities.map((fac) => {
-                  let facName = fac.name;
-                  if (typeof fac.name === 'object' && fac.name !== null) {
-                    facName = (fac.name as any).en || (fac.name as any).de || (fac.name as any).pl || 'Unknown';
-                  }
-                  const isChecked = form.facilityIds.includes(fac.id);
-                  return (
-                    <label key={fac.id} className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100">
-                      <input 
-                        type="checkbox" 
-                        checked={isChecked}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setForm(prev => ({
-                            ...prev,
-                            facilityIds: checked 
-                              ? [...prev.facilityIds, fac.id]
-                              : prev.facilityIds.filter(id => id !== fac.id)
-                          }));
-                        }}
-                        className="w-4 h-4 rounded accent-[#16273B] cursor-pointer" 
-                      />
-                      <span className="text-[#16273B] text-[14px]">{facName}</span>
-                    </label>
-                  );
-                })}
-                {facilities.length === 0 && <p className="text-sm text-gray-500 italic">No facilities available.</p>}
-              </div>
+          {/* Services */}
+          <div className="space-y-3 pt-4 border-t border-gray-100">
+            <div className="flex items-center justify-between">
+              <label className="text-[#16273B] font-semibold text-[15px]">Services</label>
+              <button 
+                type="button"
+                onClick={() => setIsAddingService(!isAddingService)}
+                className="text-[12px] font-bold text-[#16273B] hover:underline flex items-center gap-1"
+              >
+                {isAddingService ? 'Cancel' : '+ Add New'}
+              </button>
             </div>
-
-            {/* Services */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-[#16273B] font-semibold text-[15px]">Services</label>
-                <button 
-                  type="button"
-                  onClick={() => setIsAddingService(!isAddingService)}
-                  className="text-[12px] font-bold text-[#16273B] hover:underline flex items-center gap-1"
-                >
-                  {isAddingService ? 'Cancel' : '+ Add New'}
-                </button>
-              </div>
 
               {isAddingService && (
                 <div className="bg-gray-50 p-3 rounded-xl space-y-3 border border-gray-100 shadow-inner mb-2">
@@ -592,8 +570,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 {services.length === 0 && <p className="text-sm text-gray-500 italic">No services available.</p>}
               </div>
             </div>
-          </div>
-
+          
           {/* Featured toggle */}
           <label className="flex items-center gap-3 cursor-pointer pt-4 border-t border-gray-100">
             <input type="checkbox" checked={form.isFeatured}
@@ -606,11 +583,14 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         </div>
 
         {/* Footer */}
-        <div className="p-8 pt-0 border-t border-gray-100 flex gap-4 shrink-0">
-          <button onClick={onClose} className="flex-1 py-4 rounded-xl border border-gray-200 text-[#16273B] font-bold hover:bg-gray-50 transition-colors cursor-pointer">Cancel</button>
+        <div className="p-10 pt-0 border-t border-gray-100 flex gap-6 shrink-0 bg-gray-50/30 rounded-b-[32px]">
+          <button onClick={onClose} 
+            className="flex-1 py-5 rounded-2xl border border-gray-200 text-[#16273B] font-bold hover:bg-white hover:border-[#16273B]/20 transition-all cursor-pointer shadow-sm active:scale-[0.98]">
+            Cancel
+          </button>
           <button onClick={handleSubmit} disabled={isLoading}
-            className="flex-1 py-4 rounded-xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed">
-            {isLoading ? 'Saving...' : isEditMode ? 'Save Changes' : 'Add Unit'}
+            className="flex-[2] py-5 rounded-2xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-all cursor-pointer shadow-lg shadow-[#16273B]/20 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]">
+            {isLoading ? 'Processing...' : isEditMode ? 'Update Unit Details' : 'Register Unit'}
           </button>
         </div>
       </div>

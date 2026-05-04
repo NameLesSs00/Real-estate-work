@@ -12,12 +12,13 @@ export interface ApiUnit {
   propertyType: number;
   noBathRoom: number;
   noBedRoom: number;
-  noKitchen: number;
+  noKithchen: number;
   floorNumber: number;
   floorName: string;
   area: number;
   view: number;
   isFeatured: boolean;
+  currencyCode: string;
   imageUrls: string[];
   paymentPlans?: PaymentPlan[];
 }
@@ -68,6 +69,7 @@ export interface UpdateProjectPayload {
   name: LocalizedString;
   description: LocalizedString;
   developerId: number | null;
+  locationId: number | null;
   facilityIds?: number[];
 }
 
@@ -94,7 +96,7 @@ export interface UnitPayload {
   view: number;
   paymentPlans: PaymentPlan[];
   isFeatured: boolean;
-  facilityIds: number[];
+  currencyCode: string;
   servicesIds: number[];
 }
 
@@ -111,12 +113,12 @@ export interface UpdateUnitPayload {
   propertyType: number;
   noBathRoom: number;
   noBedRoom: number;
-  noKitchen: number;
+  noKithchen: number;
   floorName: string;
   view: number;
   isFeatured: boolean;
+  currencyCode?: string;
   paymentPlans?: PaymentPlan[];
-  facilityIds?: number[];
   servicesIds?: number[];
 }
 

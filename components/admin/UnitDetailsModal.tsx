@@ -102,7 +102,7 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
       <div className="bg-white rounded-[32px] w-full max-w-[860px] max-h-[92vh] flex flex-col shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
 
         {/* Header */}
@@ -192,7 +192,7 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
 
               {/* Info Cards */}
               <div className="grid grid-cols-2 gap-4">
-                <InfoCard label="Price" value={`EGP ${unit.price.toLocaleString()}`} />
+                <InfoCard label="Price" value={`${unit.currencyCode || 'EGP'} ${unit.price.toLocaleString()}`} />
                 <InfoCard label="Property Type" value={unit.propertyType || '—'} />
                 <InfoCard label="Project" value={unit.projectName || '—'} />
                 <InfoCard label="Location" value={unit.locationName || '—'} />
@@ -223,7 +223,7 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
                         </div>
                         <div>
                           <p className="text-[12px] text-gray-400">Down Payment</p>
-                          <p className="text-[#16273B] font-bold">EGP {plan.installmentDownPayment.toLocaleString()}</p>
+                          <p className="text-[#16273B] font-bold">{unit.currencyCode || 'EGP'} {plan.installmentDownPayment.toLocaleString()}</p>
                         </div>
                         <div>
                           <p className="text-[12px] text-gray-400">Status</p>
@@ -235,18 +235,8 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
                 </div>
               )}
 
-              {/* Facilities & Services */}
-              <div className="grid grid-cols-2 gap-4">
-                {unit.facilities && unit.facilities.length > 0 && (
-                  <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
-                    <p className="text-[13px] text-gray-500 font-medium mb-3">Facilities</p>
-                    <div className="flex flex-wrap gap-2">
-                      {unit.facilities.map((f, i) => (
-                        <span key={i} className="px-3 py-1 bg-white rounded-full text-[13px] text-[#16273B] font-medium border border-gray-200">{f}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+              {/* Services */}
+              <div className="grid grid-cols-1 gap-4">
                 {unit.services && unit.services.length > 0 && (
                   <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
                     <p className="text-[13px] text-gray-500 font-medium mb-3">Services</p>

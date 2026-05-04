@@ -33,7 +33,7 @@ export default function DeleteUnitModal({ isOpen, onClose, onSuccess, unitId, un
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
       <div className="bg-white rounded-[24px] w-full max-w-[500px] flex flex-col shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
 
         <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between shrink-0">

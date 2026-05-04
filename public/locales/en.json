@@ -9,17 +9,161 @@
     "about": "About Us",
     "contact": "Contact Us",
     "blogs": "Blogs",
-    "listProperty": "List Your Property"
+    "listProperty": "List Your Property",
+    "locations": [
+      "El Gouna",
+      "El kawther",
+      "Arabia",
+      "Al Ahyaa",
+      "Sheraton",
+      "Makadi Bay"
+    ]
   },
   "footer": {
     "about": "The Gate Estates was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
-    "usefulLinks": "Useful Links",
-    "stayConnected": "Stay Connected",
+    "usefulLinks": "Quick action",
+    "stayConnected": "Follow Us",
     "newsletter": "Join our newsletter to stay up to date on features and releases.",
     "subscribe": "Subscribe",
     "placeholder": "Enter your email",
-    "copyright": "© 2024 The Gate Estates. All rights reserved.",
+    "copyright": "All rights reserved.",
     "privacy": "Privacy Policy",
-    "terms": "Terms of Service"
+    "terms": "Terms of Service",
+    "contactTitle": "contact Us"
+  },
+  "hero": {
+    "title": "Discover Your Next <br /> Investment Property",
+    "searchLabel": "Search by area, compound, or developer",
+    "searchPlaceholder": "Search by area, compound, or developer",
+    "filters": "Filters",
+    "hide": "Hide",
+    "search": "Search",
+    "propertyType": "Property Type",
+    "allTypes": "All Types",
+    "location": "Location",
+    "allLocations": "All Locations",
+    "minPrice": "Min Price (EGP)",
+    "maxPrice": "Max Price (EGP)",
+    "noMin": "No minimum",
+    "noMax": "No maximum"
+  },
+  "whoWeAre": {
+    "tag": "WHO WE ARE",
+    "title": "Your Trusted Real Estate Partner",
+    "subtitle": "We are committed to helping you discover exceptional properties in prime locations, combining quality, transparency, and a seamless experience tailored to your needs.",
+    "visionTitle": "Our Vision",
+    "visionText": "To redefine the real estate experience by making it more transparent, accessible, and tailored to modern lifestyles. We aim to connect people with spaces that truly inspire how they live, work, and grow.",
+    "missionTitle": "Our Mission",
+    "missionText": "To guide our clients through every step of their property journey with honesty, expertise, and care. We are committed to delivering exceptional service, curated property selections, and a seamless experience that builds long-term trust.",
+    "viewMore": "View More"
+  },
+  "howItWorks": {
+    "tag": "HOW IT WORKS",
+    "title": "A Simple Way to Find Your Perfect Property",
+    "step1": "Explore curated properties that match your needs and budget.",
+    "step2": "Connect with our experts for personalized guidance.",
+    "step3": "Book a visit and find your ideal property with ease."
+  },
+  "categories": {
+    "tag": "FEATURED LISTINGS",
+    "title": "Browse Properties by <span>Category</span>",
+    "subtitle": "Present homes in clear, organized categories so visitors can quickly explore the types of properties that match their needs, interests, and buying goals.",
+    "types": {
+      "Apartments": "Apartments",
+      "Houses": "Houses",
+      "Vails": "Vails",
+      "Studio": "Studio"
+    },
+    "listings": "Listings"
+  },
+  "exploreUnits": {
+    "tag": "POPULAR UNITS",
+    "title": "Feature Units",
+    "subtitle": "Carefully selected premium units in the most sought-after locations.",
+    "tabs": {
+      "hotDeal": "Hot Deal",
+      "recommended": "Recommended",
+      "bestPrice": "Best Price"
+    },
+    "noUnits": "No units available.",
+    "showMore": "Show More Properties"
+  },
+  "popularSpots": {
+    "tag": "Popular Spots",
+    "title": "Explore Prime Locations",
+    "subtitle": "From the lagoons of El Gouna to the beaches of Sahl Hasheesh — find your perfect corner of the Red Sea.",
+    "exploreArea": "Explore Area",
+    "property": "Property",
+    "properties": "Properties"
+  },
+  "featureProject": {
+    "tag": "FEATURED PROJECTS",
+    "title": "Exceptional Properties, Carefully Selected for You",
+    "subtitle": "Discover a curated selection of future-ready real estate projects in prime locations, designed for quality, innovation, and strong investment value offering a modern lifestyle and long-term growth.",
+    "priceStart": "Price Start From",
+    "projectDetails": "Project Details",
+    "getInTouch": "Get In Touch",
+    "showMore": "Show More Projects",
+    "labels": {
+      "totalUnits": "Total Units",
+      "buildingFloors": "Building Floors",
+      "deliveryDate": "Delivery Date",
+      "status": "Status",
+      "spaces": "Spaces"
+    }
+  },
+  "articles": {
+    "tag": "LATEST ARTICLES",
+    "title": "Insights & Inspiration",
+    "subtitle": "Explore expert insights, real estate trends, and practical tips to help you make informed decisions and find the perfect property with confidence.",
+    "readMore": "Read More",
+    "showMore": "Show More Blogs"
+  },
+  "faq": {
+    "tag": "LATEST ARTICLES",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find quick answers to the most common questions about buying, investing, and owning property. Everything you need to make confident decisions.",
+    "questions": [
+      {
+        "q": "What types of properties are available?",
+        "a": "We offer apartments, villas, and investment properties across prime locations."
+      },
+      {
+        "q": "Can I schedule a property visit online?",
+        "a": "Yes, you can easily schedule a visit through our online booking system or by contacting our agents directly."
+      },
+      {
+        "q": "Do you offer payment plans?",
+        "a": "We provide flexible payment options and financing solutions tailored to your financial needs."
+      },
+      {
+        "q": "Is it a good time to invest in real estate?",
+        "a": "With current market trends and property appreciation, it is an excellent time for long-term investments."
+      }
+    ]
+  },
+  "aboutPage": {
+    "vision": "Our Vision",
+    "mission": "Our Mission",
+    "journeyTitle": "Your Property Journey Starts With Us",
+    "journeyText": "We are a real estate company dedicated to helping you find the perfect property across Egypt. From modern apartments and luxury villas to smart investment opportunities, we make your journey to buying or renting seamless, reliable, and rewarding.",
+    "offerTitle": "What We Offer?",
+    "offers": {
+      "sales": {
+        "title": "Property Sales",
+        "text": "Discover a wide range of carefully selected properties for sale, from ready-to-move homes to high-potential investment projects."
+      },
+      "rentals": {
+        "title": "Property Rentals",
+        "text": "Find flexible rental options that match your needs, whether you're looking for short-term stays or long-term living."
+      },
+      "investment": {
+        "title": "Investment Opportunities",
+        "text": "Get access to premium real estate opportunities with strong returns in the most promising locations across Egypt."
+      }
+    },
+    "ctaTitle": "Begin your real estate journey with us today",
+    "ctaSubtitle": "Discover exceptional properties and invest in a lifestyle defined by elegance and value",
+    "contactBtn": "Let's Contact"
   }
 }

@@ -5,7 +5,10 @@ import Image from "next/image";
 import { Phone, Earth, MapPin } from "lucide-react";
 import { usePathname } from "next/navigation";
 
+import { useLanguage } from '@/lib/contexts/LanguageContext';
+
 const Footer = () => {
+  const { t } = useLanguage();
   const pathname = usePathname();
 
   if (pathname?.startsWith('/admin')) return null;
@@ -27,40 +30,40 @@ const Footer = () => {
             <div className="h-[1px] w-full bg-white/20 mb-6"></div>
           </div>
           <p className="text-[16px] leading-[1.6] text-[#D9D9D9] max-w-[300px]">
-            Every journey is a chance to find your perfect home, enjoy comfort, and create lasting memories guided by care, quality, and local expertise.
+            {t('footer.about')}
           </p>
         </div>
 
         {/* Column 2: Quick Action */}
         <div className="flex flex-col gap-6">
-          <h3 className="text-[20px] font-semibold">Quick action</h3>
+          <h3 className="text-[20px] font-semibold">{t('footer.usefulLinks')}</h3>
           <ul className="flex flex-col gap-4 text-[#D9D9D9]">
-            <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
+            <li><Link href="/" className="hover:text-white transition-colors">{t('header.home')}</Link></li>
             <li className="flex items-center gap-2 hover:text-white transition-colors">
               <Link href="/projects" className="flex items-center gap-2 hover:text-white transition-colors">
-                Projects 
+                {t('header.projects')} 
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </Link>
             </li>
-            <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+            <li><Link href="/about" className="hover:text-white transition-colors">{t('header.about')}</Link></li>
             <li>
               <Link href="/properties" className="flex items-center gap-2 hover:text-white transition-colors">
-                Properties 
+                {t('header.buy')} 
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </Link>
             </li>
-            <li><Link href="/blogs" className="hover:text-white transition-colors">Blogs</Link></li>
-            <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
+            <li><Link href="/blogs" className="hover:text-white transition-colors">{t('header.blogs')}</Link></li>
+            <li><Link href="/contact" className="hover:text-white transition-colors">{t('header.contact')}</Link></li>
           </ul>
         </div>
 
         {/* Column 3: Contact Us */}
         <div className="flex flex-col gap-6">
-          <h3 className="text-[20px] font-semibold">contact Us</h3>
+          <h3 className="text-[20px] font-semibold">{t('footer.contactTitle')}</h3>
           <ul className="flex flex-col gap-6 text-[#D9D9D9]">
             <li className="flex items-center gap-4">
               <Phone size={20} />
@@ -79,7 +82,7 @@ const Footer = () => {
 
         {/* Column 4: Follow Us */}
         <div className="flex flex-col gap-6">
-          <h3 className="text-[20px] font-semibold">Follow Us</h3>
+          <h3 className="text-[20px] font-semibold">{t('footer.stayConnected')}</h3>
           <div className="flex gap-6">
             <a 
               href="https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" 
@@ -120,14 +123,14 @@ const Footer = () => {
       {/* Copyright */}
       <div className="mt-20 pt-8 border-t border-white/10 text-center text-[14px] text-[#D9D9D9]">
         <p>
-          Powered By{" "}
+          {t('footer.copyright')} Powered By{" "}
           <a 
             href="https://tech-gear.net/" 
             className="inline-block hover:text-white hover:-translate-y-0.5 transition-all duration-300 font-semibold"
           >
             Tech Gear Solutions
           </a>{" "}
-          © 2026 All Rights Reserved
+          © 2026
         </p>
       </div>
     </footer>

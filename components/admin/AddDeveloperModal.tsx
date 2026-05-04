@@ -101,7 +101,6 @@ export default function AddDeveloperModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter"
-      onClick={onClose}
     >
       <div
         className="bg-white rounded-[24px] w-full max-w-[620px] max-h-[90vh] flex flex-col shadow-2xl"

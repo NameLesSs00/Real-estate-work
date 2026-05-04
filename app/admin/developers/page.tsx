@@ -27,11 +27,11 @@ export default function DevelopersPage() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [viewingId, setViewingId] = useState<number | null>(null);
 
-  const fetchDevelopers = useCallback(async (page = 1) => {
+  const fetchDevelopers = useCallback(async (page = 1, query = searchQuery) => {
     setIsLoading(true);
     setError('');
     try {
-      const data = await getDevelopers(page);
+      const data = await getDevelopers(page, query);
       setDevelopers(data.items);
       setTotalPages(data.totalPages);
       setTotalCount(data.totalCount);
@@ -42,11 +42,14 @@ export default function DevelopersPage() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [searchQuery]);
 
   useEffect(() => {
-    fetchDevelopers(1);
-  }, [fetchDevelopers]);
+    const timer = setTimeout(() => {
+      fetchDevelopers(1, searchQuery);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const handleAddNew = () => {
     setEditingDeveloper(null);
@@ -70,12 +73,6 @@ export default function DevelopersPage() {
   };
 
   const handleSuccess = () => fetchDevelopers(currentPage);
-
-  // Client-side search filter
-  const filteredDevelopers = developers.filter((d) =>
-    d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    d.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className="p-10 lg:p-14 font-inter bg-[#F8F9FA] min-h-full scrollbar-hide">
@@ -139,7 +136,7 @@ export default function DevelopersPage() {
               Retry
             </button>
           </div>
-        ) : filteredDevelopers.length === 0 ? (
+        ) : developers.length === 0 ? (
           <div className="flex items-center justify-center py-20">
             <p className="text-[#64748B] text-[18px]">
               {searchQuery ? 'No developers match your search.' : 'No developers yet. Add one!'}
@@ -159,7 +156,7 @@ export default function DevelopersPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {filteredDevelopers.map((dev) => {
+                {developers.map((dev) => {
                   const logoUrl = resolveImageUrl(dev.logoImage);
                   return (
                     <tr
@@ -215,31 +212,44 @@ export default function DevelopersPage() {
 
                       {/* Actions */}
                       <td className="py-6 px-10">
-                        <div className="flex items-center justify-end gap-5">
-                          <button
-                            onClick={() => handleEdit(dev)}
-                            className="hover:scale-125 transition-transform duration-200 cursor-pointer"
-                            title="Edit"
+                        <div className="flex items-center justify-end gap-2">
+                          <button 
+                            onClick={() => handleView(dev)} 
+                            className="p-2.5 bg-gray-50 hover:bg-[#16273B] text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="View Details"
                           >
-                            <Image
-                              src="/admin/projects/edit.png"
-                              alt="Edit"
-                              width={18}
-                              height={18}
-                              className="opacity-70 hover:opacity-100"
+                            <div 
+                              className="w-[20px] h-[20px] bg-current"
+                              style={{
+                                WebkitMask: "url('/admin/units/view.png') center/contain no-repeat",
+                                mask: "url('/admin/units/view.png') center/contain no-repeat"
+                              }}
                             />
                           </button>
-                          <button
-                            onClick={() => handleDelete(dev)}
-                            className="hover:scale-125 transition-transform duration-200 cursor-pointer"
-                            title="Delete"
+                          <button 
+                            onClick={() => handleEdit(dev)} 
+                            className="p-2.5 bg-gray-50 hover:bg-blue-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="Edit Developer"
                           >
-                            <Image
-                              src="/admin/projects/delete.png"
-                              alt="Delete"
-                              width={18}
-                              height={18}
-                              className="opacity-70 hover:opacity-100"
+                            <div 
+                              className="w-[20px] h-[20px] bg-current"
+                              style={{
+                                WebkitMask: "url('/admin/projects/edit.png') center/contain no-repeat",
+                                mask: "url('/admin/projects/edit.png') center/contain no-repeat"
+                              }}
+                            />
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(dev)} 
+                            className="p-2.5 bg-gray-50 hover:bg-red-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="Delete Developer"
+                          >
+                            <div 
+                              className="w-[20px] h-[20px] bg-current"
+                              style={{
+                                WebkitMask: "url('/admin/projects/delete.png') center/contain no-repeat",
+                                mask: "url('/admin/projects/delete.png') center/contain no-repeat"
+                              }}
                             />
                           </button>
                         </div>

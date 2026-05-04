@@ -128,7 +128,6 @@ export default function DeveloperDetailsModal({
   return (
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter"
-      onClick={onClose}
     >
       <div
         className="bg-white rounded-[32px] w-full max-w-[820px] max-h-[90vh] flex flex-col shadow-2xl overflow-hidden"

@@ -184,7 +184,7 @@ export default function UnitsPage() {
                       )}
                     </td>
                     <td className="py-6 px-4">
-                      <span className="text-[15px] font-bold text-[#16273B]">EGP {unit.price.toLocaleString()}</span>
+                      <span className="text-[15px] font-bold text-[#16273B]">{unit.currencyCode || 'EGP'} {unit.price.toLocaleString()}</span>
                     </td>
                     <td className="py-6 px-4 text-center">
                       <span className="inline-flex px-4 py-1.5 rounded-full bg-[#EBF3FF] text-[#1447E6] text-[13px] font-bold">{unit.noBedRoom}</span>
@@ -206,25 +206,57 @@ export default function UnitsPage() {
                         : <span className="text-gray-300 text-[13px]">—</span>}
                     </td>
                     <td className="py-6 px-10">
-                      <div className="flex items-center justify-end gap-3">
+                      <div className="flex items-center justify-end gap-2">
                         {unit.isActive && (
                           <button 
                             onClick={() => handleMarkSold(unit)} 
-                            className="bg-[#FEF9C3] text-[#A16207] hover:bg-[#FDE047] px-3 py-1.5 rounded-lg text-[13px] font-bold transition-colors cursor-pointer mr-2 whitespace-nowrap"
+                            className="bg-[#FEF9C3] text-[#A16207] hover:bg-[#FDE047] px-4 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer mr-1 whitespace-nowrap shadow-sm hover:shadow-md"
                             title="Mark as Sold"
                           >
                             Mark Sold
                           </button>
                         )}
-                        <button onClick={() => handleView(unit)} className="hover:scale-125 transition-transform duration-200 cursor-pointer" title="View">
-                          <Image src="/admin/units/view.png" alt="View" width={20} height={20} className="opacity-70 hover:opacity-100" />
-                        </button>
-                        <button onClick={() => handleEdit(unit)} className="hover:scale-125 transition-transform duration-200 cursor-pointer" title="Edit">
-                          <Image src="/admin/projects/edit.png" alt="Edit" width={18} height={18} className="opacity-70 hover:opacity-100" />
-                        </button>
-                        <button onClick={() => handleDelete(unit)} className="hover:scale-125 transition-transform duration-200 cursor-pointer" title="Delete">
-                          <Image src="/admin/projects/delete.png" alt="Delete" width={18} height={18} className="opacity-70 hover:opacity-100" />
-                        </button>
+                        <div className="flex items-center gap-1.5">
+                          <button 
+                            onClick={() => handleView(unit)} 
+                            className="p-2.5 bg-gray-50 hover:bg-[#16273B] text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="View Details"
+                          >
+                            <div 
+                              className="w-[20px] h-[20px] bg-current"
+                              style={{
+                                WebkitMask: "url('/admin/units/view.png') center/contain no-repeat",
+                                mask: "url('/admin/units/view.png') center/contain no-repeat"
+                              }}
+                            />
+                          </button>
+                          <button 
+                            onClick={() => handleEdit(unit)} 
+                            className="p-2.5 bg-gray-50 hover:bg-blue-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="Edit Unit"
+                          >
+                            <div 
+                              className="w-[20px] h-[20px] bg-current"
+                              style={{
+                                WebkitMask: "url('/admin/projects/edit.png') center/contain no-repeat",
+                                mask: "url('/admin/projects/edit.png') center/contain no-repeat"
+                              }}
+                            />
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(unit)} 
+                            className="p-2.5 bg-gray-50 hover:bg-red-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="Delete Unit"
+                          >
+                            <div 
+                              className="w-[20px] h-[20px] bg-current"
+                              style={{
+                                WebkitMask: "url('/admin/projects/delete.png') center/contain no-repeat",
+                                mask: "url('/admin/projects/delete.png') center/contain no-repeat"
+                              }}
+                            />
+                          </button>
+                        </div>
                       </div>
                     </td>
                   </tr>

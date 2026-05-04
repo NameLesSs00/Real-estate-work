@@ -8,15 +8,6 @@ import { ChevronDown, ChevronUp, X, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
-const locations = [
-  "El Gouna",
-  "El kawther",
-  "Arabia",
-  "Al Ahyaa",
-  "sheraton",
-  "Makadi Bay"
-];
-
 const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
@@ -27,6 +18,8 @@ const Header = () => {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
+
+  const locations = (t('header.locations') as string[]) || [];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -103,7 +96,7 @@ const Header = () => {
                   </Link>
                 ))
               ) : (
-                locations.map((loc) => (
+                Array.isArray(locations) && locations.map((loc) => (
                   <Link 
                     key={loc} 
                     href={`/search?type=${type}&location=${loc}`}
@@ -326,7 +319,7 @@ const Header = () => {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden bg-[#F8F5F0] rounded-xl mt-2"
                     >
-                      {locations.map(loc => (
+                      {Array.isArray(locations) && locations.map(loc => (
                         <Link 
                           key={loc} 
                           href={`/search?type=rent&location=${loc}`}

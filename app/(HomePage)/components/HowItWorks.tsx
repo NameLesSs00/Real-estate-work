@@ -3,27 +3,30 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './HowItWorks.css';
 
 const steps = [
   {
     icon: '/assists/HowItWorks/fluent_search-sparkle-16-filled.png',
-    text: 'Explore curated properties that match your needs and budget.',
+    key: 'step1',
     direction: 'left',
   },
   {
     icon: '/assists/HowItWorks/ri_chat-ai-line.png',
-    text: 'Connect with our experts for personalized guidance.',
+    key: 'step2',
     direction: 'bottom',
   },
   {
     icon: '/assists/HowItWorks/uil_calender.png',
-    text: 'Book a visit and find your ideal property with ease.',
+    key: 'step3',
     direction: 'right',
   },
 ];
 
 const HowItWorks = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="how-it-works-section overflow-hidden">
       <div className="how-it-works-overlay"></div>
@@ -36,8 +39,8 @@ const HowItWorks = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="how-it-works-header"
         >
-          <span className="how-it-works-tag">HOW IT WORKS</span>
-          <h2 className="how-it-works-title">A Simple Way to Find Your Perfect Property</h2>
+          <span className="how-it-works-tag">{t('howItWorks.tag')}</span>
+          <h2 className="how-it-works-title">{t('howItWorks.title')}</h2>
           <div className="how-it-works-accent-line"></div>
         </motion.div>
 
@@ -70,7 +73,7 @@ const HowItWorks = () => {
                     className="how-it-works-icon"
                   />
                 </div>
-                <p className="how-it-works-text">{step.text}</p>
+                <p className="how-it-works-text">{t(`howItWorks.${step.key}`)}</p>
               </motion.div>
             );
           })}

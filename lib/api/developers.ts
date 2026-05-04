@@ -15,7 +15,7 @@ export interface Developer {
   description: string;
   logoImage: string | null;
   gallery: GalleryImage[];
-  projects: unknown[];
+  projects: { id: number; name: string }[];
   createdBy: string;
   createdAt: string;
   updatedBy: string;
@@ -58,12 +58,16 @@ export function resolveImageUrl(path: string | null): string | null {
 
 // ─── Endpoints ───────────────────────────────────────────────────────────────
 
-/** GET /api/Developers?pageNumber=N */
-export async function getDevelopers(pageNumber = 1): Promise<DevelopersPage> {
-  const res = await fetch(
-    `${API_BASE_URL}/api/Developers?pageNumber=${pageNumber}`,
-    { headers: { ...getAuthHeader() } }
-  );
+/** GET /api/Developers */
+export async function getDevelopers(pageNumber = 1, searchKeyword = ''): Promise<DevelopersPage> {
+  const base = typeof window !== 'undefined' ? window.location.origin : undefined;
+  const url = new URL(`${API_BASE_URL}/api/Developers`, base);
+  url.searchParams.append('pageNumber', pageNumber.toString());
+  if (searchKeyword) url.searchParams.append('SearchKeyword', searchKeyword);
+
+  const res = await fetch(url.toString(), { 
+    headers: { ...getAuthHeader() } 
+  });
   if (!res.ok) {
     throw new Error('Failed to fetch developers.');
   }

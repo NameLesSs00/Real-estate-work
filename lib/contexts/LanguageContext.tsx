@@ -7,7 +7,7 @@ type Language = 'en' | 'de' | 'pl';
 interface LanguageContextProps {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string) => any;
 }
 
 const LanguageContext = createContext<LanguageContextProps>({
@@ -49,7 +49,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('language', lang);
   };
 
-  const t = (key: string): string => {
+  const t = (key: string): any => {
     const keys = key.split('.');
     let result: any = translations;
     for (const k of keys) {
@@ -59,7 +59,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         return key; // Fallback to key
       }
     }
-    return typeof result === 'string' ? result : key;
+    return result;
   };
 
   return (

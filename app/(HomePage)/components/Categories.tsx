@@ -3,32 +3,35 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './Categories.css';
 
 const categories = [
   {
-    name: 'Apartments',
+    key: 'Apartments',
     count: '10 Listings',
     image: '/assists/categoriesHome/appartment.png',
   },
   {
-    name: 'Houses',
+    key: 'Houses',
     count: '12 Listings',
     image: '/assists/categoriesHome/home.png',
   },
   {
-    name: 'Vails',
+    key: 'Vails',
     count: '9 Listings',
     image: '/assists/categoriesHome/vails.png',
   },
   {
-    name: 'Studio',
+    key: 'Studio',
     count: '7 Listings',
     image: '/assists/categoriesHome/studio.png',
   },
 ];
 
 const Categories = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="categories-section overflow-hidden">
       <div className="categories-container">
@@ -39,13 +42,10 @@ const Categories = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="categories-header"
         >
-          <span className="categories-tag">FEATURED LISTINGS</span>
-          <h2 className="categories-title">
-            Browse Properties by <span>Category</span>
-          </h2>
+          <span className="categories-tag">{t('categories.tag')}</span>
+          <h2 className="categories-title" dangerouslySetInnerHTML={{ __html: t('categories.title') }} />
           <p className="categories-subtitle">
-            Present homes in clear, organized categories so visitors can quickly explore the
-            types of properties that match their needs, interests, and buying goals.
+            {t('categories.subtitle')}
           </p>
           <div className="categories-accent-line"></div>
         </motion.div>
@@ -86,14 +86,14 @@ const Categories = () => {
               <div className="category-image-wrapper">
                 <Image
                   src={category.image}
-                  alt={category.name}
+                  alt={t(`categories.types.${category.key}`)}
                   fill
                   className="category-image"
                 />
               </div>
               <div className="category-content">
-                <h3 className="category-name">{category.name}</h3>
-                <p className="category-count">{category.count}</p>
+                <h3 className="category-name">{t(`categories.types.${category.key}`)}</h3>
+                <p className="category-count">{category.count.replace('Listings', t('categories.listings'))}</p>
               </div>
             </motion.div>
           ))}

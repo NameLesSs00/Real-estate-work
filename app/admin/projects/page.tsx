@@ -77,6 +77,8 @@ export default function ProjectsPage() {
     p.locationName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+
+
   return (
     <div className="p-10 lg:p-14 font-inter bg-[#F8F9FA] min-h-full scrollbar-hide">
 
@@ -206,20 +208,45 @@ export default function ProjectsPage() {
 
                       {/* Actions */}
                       <td className="py-6 px-10">
-                        <div className="flex items-center justify-end gap-5">
-                          <button
-                            onClick={() => handleEdit(project)}
-                            className="hover:scale-125 transition-transform duration-200 cursor-pointer"
-                            title="Edit"
+                        <div className="flex items-center justify-end gap-2">
+                          <button 
+                            onClick={() => handleView(project)} 
+                            className="p-2.5 bg-gray-50 hover:bg-[#16273B] text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="View Details"
                           >
-                            <Image src="/admin/projects/edit.png" alt="Edit" width={18} height={18} className="opacity-70 hover:opacity-100" />
+                            <div 
+                              className="w-[20px] h-[20px] bg-current"
+                              style={{
+                                WebkitMask: "url('/admin/units/view.png') center/contain no-repeat",
+                                mask: "url('/admin/units/view.png') center/contain no-repeat"
+                              }}
+                            />
                           </button>
-                          <button
-                            onClick={() => handleDelete(project)}
-                            className="hover:scale-125 transition-transform duration-200 cursor-pointer"
-                            title="Delete"
+                          <button 
+                            onClick={() => handleEdit(project)} 
+                            className="p-2.5 bg-gray-50 hover:bg-blue-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="Edit Project"
                           >
-                            <Image src="/admin/projects/delete.png" alt="Delete" width={18} height={18} className="opacity-70 hover:opacity-100" />
+                            <div 
+                              className="w-[20px] h-[20px] bg-current"
+                              style={{
+                                WebkitMask: "url('/admin/projects/edit.png') center/contain no-repeat",
+                                mask: "url('/admin/projects/edit.png') center/contain no-repeat"
+                              }}
+                            />
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(project)} 
+                            className="p-2.5 bg-gray-50 hover:bg-red-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="Delete Project"
+                          >
+                            <div 
+                              className="w-[20px] h-[20px] bg-current"
+                              style={{
+                                WebkitMask: "url('/admin/projects/delete.png') center/contain no-repeat",
+                                mask: "url('/admin/projects/delete.png') center/contain no-repeat"
+                              }}
+                            />
                           </button>
                         </div>
                       </td>
