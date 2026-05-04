@@ -8,7 +8,7 @@ function authHeader(): Record<string, string> {
 
 export interface Facility {
   id: number;
-  name: string | { en?: string; de?: string; pl?: string; [key: string]: any };
+  name: string | { en?: string; de?: string; pl?: string; [key: string]: unknown };
 }
 
 /** GET /api/Facilities */

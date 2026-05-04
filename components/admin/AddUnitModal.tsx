@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { addUnitToProject, updateUnit, getUnitById, ApiUnit, getProjects, LocalizedString } from '@/lib/api/projects';
 import { getServices, createService, Service } from '@/lib/api/services';
-import { Plus, X, Loader2 } from 'lucide-react';
 
 interface AddUnitModalProps {
   isOpen: boolean;
@@ -121,7 +120,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
           setForm(prev => ({
             ...prev,
-            servicesIds: (detail.services || []).map((s: any) => s.id),
+            servicesIds: (detail.services || []).map((s: Service) => s.id),
             paymentPlans: (detail.paymentPlans || []).map(p => {
               const plan = p as { installmentMothes?: number; installmentMonthes?: number; installmentDownPayment?: number; paymentType?: string };
               return {
@@ -156,7 +155,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
       if (lang) {
         setForm((prev) => ({
           ...prev,
-          [field]: { ...((prev[field] as any) || {}), [lang]: val }
+          [field]: { ...((prev[field] as Record<string, string>) || {}), [lang]: val }
         }));
       } else {
         setForm((prev) => ({ ...prev, [field]: val }));
@@ -527,7 +526,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                         setNewServiceName({ en: '', de: '', pl: '' });
                         setIsAddingService(false);
                         await fetchData();
-                      } catch (err) {
+                      } catch {
                         alert('Failed to add service');
                       } finally {
                         setIsSubmittingQuick(false);
@@ -544,7 +543,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 {services.map((ser) => {
                   let serName = ser.name;
                   if (typeof ser.name === 'object' && ser.name !== null) {
-                    serName = (ser.name as any).en || (ser.name as any).de || (ser.name as any).pl || 'Unknown';
+                    const nameObj = ser.name as { en?: string; de?: string; pl?: string };
+                    serName = nameObj.en || nameObj.de || nameObj.pl || 'Unknown';
                   }
                   const isChecked = form.servicesIds.includes(ser.id);
                   return (
