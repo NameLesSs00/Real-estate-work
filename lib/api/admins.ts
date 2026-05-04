@@ -5,6 +5,7 @@ export interface Admin {
   id: string;
   username: string;
   email: string;
+  phoneNumber?: string;
   createdAt: string;
 }
 

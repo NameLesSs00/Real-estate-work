@@ -15,9 +15,10 @@ export default function SettingsPage() {
   const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   // Profile State
-  const [profileData, setProfileData] = useState<{ userName: string, email: string }>({
+  const [profileData, setProfileData] = useState<UpdateAdminPayload>({
     userName: '',
     email: '',
+    phoneNumber: '',
   });
 
   // Password State
@@ -73,6 +74,7 @@ export default function SettingsPage() {
           setProfileData({
             userName: currentUser.username,
             email: currentUser.email,
+            phoneNumber: currentUser.phoneNumber || '',
           });
         } else {
           // If no match by email, still fill with something if possible or keep existing
@@ -85,7 +87,8 @@ export default function SettingsPage() {
         setProfileData(prev => ({
           ...prev,
           userName: prev.userName || first.username,
-          email: prev.email || first.email
+          email: prev.email || first.email,
+          phoneNumber: prev.phoneNumber || first.phoneNumber || ''
         }));
       }
     } catch (err: unknown) {
@@ -282,6 +285,17 @@ export default function SettingsPage() {
                       value={profileData.email}
                       onChange={(e) => setProfileData({...profileData, email: e.target.value})}
                       placeholder="email@example.com"
+                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 transition-all font-medium text-[#1B2134]"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[14px] font-bold text-[#1B2134] ml-1">Phone Number</label>
+                    <input 
+                      type="tel" 
+                      value={profileData.phoneNumber}
+                      onChange={(e) => setProfileData({...profileData, phoneNumber: e.target.value})}
+                      placeholder="+20 123 456 7890"
                       className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 transition-all font-medium text-[#1B2134]"
                       required
                     />
