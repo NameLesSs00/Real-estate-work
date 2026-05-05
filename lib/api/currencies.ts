@@ -1,15 +1,13 @@
 import { API_BASE_URL } from './config';
 import { getAccessToken } from '@/lib/auth/tokens';
+import { getHeaders } from './common';
 
 export interface CurrencyConfig {
   usdToEgp: number;
   usdToEur: number;
 }
 
-function getAuthHeader(): Record<string, string> {
-  const token = getAccessToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
+
 
 /** GET /api/Currencies */
 // Assuming this returns the current exchange rates. The schema didn't specify the exact response structure,
@@ -26,7 +24,7 @@ export interface CurrencyRatesResponse {
 
 export async function getCurrencies(): Promise<CurrencyRatesResponse> {
   const res = await fetch(`${API_BASE_URL}/api/Currencies`, {
-    headers: { ...getAuthHeader() }
+    headers: { ...getHeaders() }
   });
   if (!res.ok) {
     throw new Error('Failed to fetch currencies.');
@@ -41,7 +39,7 @@ export async function getCurrencies(): Promise<CurrencyRatesResponse> {
 export async function updateEgpExchangeRate(exchangeRate: number): Promise<boolean> {
   const res = await fetch(`${API_BASE_URL}/api/Currencies/egp-vs-usd`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify({ exchangeRate }),
   });
   if (!res.ok) {
@@ -54,7 +52,7 @@ export async function updateEgpExchangeRate(exchangeRate: number): Promise<boole
 export async function updateEurExchangeRate(exchangeRate: number): Promise<boolean> {
   const res = await fetch(`${API_BASE_URL}/api/Currencies/eur-vs-usd`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify({ exchangeRate }),
   });
   if (!res.ok) {

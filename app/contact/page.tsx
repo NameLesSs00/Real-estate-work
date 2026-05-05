@@ -5,15 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { createLead } from "@/lib/api/leads";
+import { useLanguage } from "@/lib/contexts/LanguageContext";
 
 const BASE = "/assists/contactUs";
 const STARS_BASE = "/assists/Properties";
 
 const infoCards = [
-  { icon: `${BASE}/message.png`, title: "Email", content: "info@thegateestates.com", href: "mailto:info@thegateestates.com" },
-  { icon: `${BASE}/phone.png`, title: "Phone", content: "+20 102 111 1666", href: "tel:+201021111666" },
-  { icon: `${BASE}/locatoin.png`, title: "Main Headquarters", content: "Al-Kawsar, Hurghada — above El Khedawy Restaurant", href: "https://maps.google.com" },
-  { icon: `${BASE}/fire.png`, title: "Follow Us", socials: [
+  { icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: "info@thegateestates.com", href: "mailto:info@thegateestates.com" },
+  { icon: `${BASE}/phone.png`, titleKey: 'contactPage.info.phone', content: "+20 102 111 1666", href: "tel:+201021111666" },
+  { icon: `${BASE}/locatoin.png`, titleKey: 'contactPage.info.address', content: "Al-Kawsar, Hurghada — above El Khedawy Restaurant", href: "https://maps.google.com" },
+  { icon: `${BASE}/fire.png`, titleKey: 'contactPage.info.follow', socials: [
     { label: "Instagram", href: "https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" },
     { label: "Facebook", href: "https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" },
     { label: "WhatsApp", href: "https://wa.me/message/2CFJ7MIUOG3AM1" },
@@ -21,6 +22,7 @@ const infoCards = [
 ];
 
 export default function ContactPage() {
+  const { t } = useLanguage();
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', inquiryType: '', source: '', message: '', agreed: false });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -33,8 +35,8 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.agreed) { setError('Please agree to the Terms of Use and Privacy Policy.'); return; }
-    if (!form.firstName || !form.email || !form.phone) { setError('Please fill in all required fields.'); return; }
+    if (!form.agreed) { setError(t('contactPage.form.errorAgreed') as string); return; }
+    if (!form.firstName || !form.email || !form.phone) { setError(t('contactPage.form.errorRequired') as string); return; }
     setLoading(true);
     setError('');
     try {
@@ -55,27 +57,30 @@ export default function ContactPage() {
       <section className="bg-white pt-36 pb-20 px-6">
         <div className="max-w-[1200px] mx-auto">
           <motion.h1 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-[36px] md:text-[48px] font-bold text-[#1B2134] mb-4 leading-tight">
-            Get in Touch with The Gate Estates
+            {t('contactPage.title') as string}
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="text-[16px] text-gray-500 max-w-2xl leading-relaxed mb-14">
-            Welcome to The Gate Estates&apos; Contact page. We&apos;re here to assist you with any inquiries, requests, or feedback you may have.
+            {t('contactPage.subtitle') as string}
           </motion.p>
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.15 } } }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {infoCards.map((card) => (
-              <motion.div key={card.title} variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }} whileHover={{ y: -8, transition: { duration: 0.2 } }} className="relative bg-[#F8F5F0] border border-[#ECECEC] rounded-[14px] p-10 flex flex-col items-center justify-center gap-6 shadow-sm hover:shadow-xl transition-all duration-300 group min-h-[220px]">
-                <div className="absolute top-6 right-6 opacity-60 group-hover:opacity-100 transition-opacity"><Image src={`${BASE}/link.png`} alt="link" width={22} height={22} /></div>
-                <div className="flex items-center justify-center"><Image src={card.icon} alt={card.title} width={80} height={80} className="object-contain" /></div>
-                <div className="text-center">
-                  {card.socials ? (
+            {infoCards.map((card) => {
+              const translatedTitle = t(card.titleKey) as string;
+              return (
+                <motion.div key={card.titleKey} variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } }} whileHover={{ y: -8, transition: { duration: 0.2 } }} className="relative bg-[#F8F5F0] border border-[#ECECEC] rounded-[14px] p-10 flex flex-col items-center justify-center gap-6 shadow-sm hover:shadow-xl transition-all duration-300 group min-h-[220px]">
+                  <div className="absolute top-6 right-6 opacity-60 group-hover:opacity-100 transition-opacity"><Image src={`${BASE}/link.png`} alt="link" width={22} height={22} /></div>
+                  <div className="flex items-center justify-center"><Image src={card.icon} alt={translatedTitle} width={80} height={80} className="object-contain" /></div>
+                  <div className="text-center">
+                    {card.socials ? (
                     <div className="flex flex-wrap justify-center gap-3">
                       {card.socials.map((s) => <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="text-[15px] font-semibold text-[#1B2134] underline hover:text-[#D59E52] transition-colors">{s.label}</a>)}
                     </div>
                   ) : (
                     <a href={card.href} target={card.href?.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="text-[16px] font-bold text-[#1B2134] hover:text-[#D59E52] transition-colors leading-snug">{card.content}</a>
                   )}
-                </div>
-              </motion.div>
-            ))}
+                  </div>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </section>
@@ -88,14 +93,9 @@ export default function ContactPage() {
             <Image src={`${STARS_BASE}/star2.png`} alt="star" width={18} height={18} className="mb-0.5" />
             <Image src={`${STARS_BASE}/star3.png`} alt="star" width={12} height={12} className="mb-1" />
           </motion.div>
-          <motion.h2 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-[36px] md:text-[44px] font-bold text-[#1B2134] mb-4">Let&apos;s Connect</motion.h2>
-          <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="text-[15px] text-gray-500 max-w-2xl leading-relaxed mb-10">
-            Use the form below to get in touch with The Gate Estates.
-          </motion.p>
-
           {success && (
             <div className="mb-6 p-5 bg-green-50 border border-green-100 rounded-2xl text-green-700 font-semibold text-[15px]">
-              ✅ Your inquiry has been sent successfully! We&apos;ll get back to you soon.
+              ✅ {t('contactPage.form.success') as string}
             </div>
           )}
           {error && (
@@ -103,59 +103,61 @@ export default function ContactPage() {
           )}
 
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1 }} className="bg-[#F0EBE3] rounded-[20px] p-8 md:p-12 shadow-sm">
+            <h2 className="text-[32px] md:text-[40px] font-bold text-[#1B2134] mb-2">{t('contactPage.form.title') as string}</h2>
+            <p className="text-[15px] text-gray-500 mb-8">{t('contactPage.form.subtitle') as string}</p>
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1B2134]">First Name <span className="text-red-400">*</span></label>
-                  <input name="firstName" value={form.firstName} onChange={handleChange} type="text" placeholder="Enter First Name" required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
+                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.firstName') as string} <span className="text-red-400">*</span></label>
+                  <input name="firstName" value={form.firstName} onChange={handleChange} type="text" placeholder={t('contactPage.form.placeholderFirstName') as string} required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1B2134]">Last Name</label>
-                  <input name="lastName" value={form.lastName} onChange={handleChange} type="text" placeholder="Enter Last Name" className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
+                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.lastName') as string}</label>
+                  <input name="lastName" value={form.lastName} onChange={handleChange} type="text" placeholder={t('contactPage.form.placeholderLastName') as string} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1B2134]">Email <span className="text-red-400">*</span></label>
-                  <input name="email" value={form.email} onChange={handleChange} type="email" placeholder="Enter your Email" required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
+                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.email') as string} <span className="text-red-400">*</span></label>
+                  <input name="email" value={form.email} onChange={handleChange} type="email" placeholder={t('contactPage.form.placeholderEmail') as string} required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1B2134]">Phone <span className="text-red-400">*</span></label>
-                  <input name="phone" value={form.phone} onChange={handleChange} type="tel" placeholder="Enter Phone Number" required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
+                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.phone') as string} <span className="text-red-400">*</span></label>
+                  <input name="phone" value={form.phone} onChange={handleChange} type="tel" placeholder={t('contactPage.form.placeholderPhone') as string} required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1B2134]">Inquiry Type</label>
+                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.inquiryType') as string}</label>
                   <select name="inquiryType" value={form.inquiryType} onChange={handleChange} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors text-[#1B2134] appearance-none cursor-pointer">
-                    <option value="">Select Inquiry Type</option>
-                    <option value="Buy a Property">Buy a Property</option>
-                    <option value="Sell a Property">Sell a Property</option>
-                    <option value="Investment Inquiry">Investment Inquiry</option>
-                    <option value="Other">Other</option>
+                    <option value="">{t('contactPage.form.inquiryType') as string}</option>
+                    <option value="Buy a Property">{t('contactPage.form.inquiryOptions.buy') as string}</option>
+                    <option value="Sell a Property">{t('contactPage.form.inquiryOptions.sell') as string}</option>
+                    <option value="Investment Inquiry">{t('contactPage.form.inquiryOptions.investment') as string}</option>
+                    <option value="Other">{t('contactPage.form.inquiryOptions.other') as string}</option>
                   </select>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1B2134]">How Did You Hear About Us?</label>
+                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.source') as string}</label>
                   <select name="source" value={form.source} onChange={handleChange} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors text-[#1B2134] appearance-none cursor-pointer">
-                    <option value="">Select</option>
-                    <option value="Social Media">Social Media</option>
-                    <option value="Friend / Referral">Friend / Referral</option>
-                    <option value="Search Engine">Search Engine</option>
-                    <option value="Advertisement">Advertisement</option>
-                    <option value="Other">Other</option>
+                    <option value="">{t('contactPage.form.source') as string}</option>
+                    <option value="Social Media">{t('contactPage.form.sourceOptions.social') as string}</option>
+                    <option value="Friend / Referral">{t('contactPage.form.sourceOptions.referral') as string}</option>
+                    <option value="Search Engine">{t('contactPage.form.sourceOptions.search') as string}</option>
+                    <option value="Advertisement">{t('contactPage.form.sourceOptions.ads') as string}</option>
+                    <option value="Other">{t('contactPage.form.sourceOptions.other') as string}</option>
                   </select>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#1B2134]">Message</label>
-                <textarea name="message" value={form.message} onChange={handleChange} placeholder="Enter your Message here.." rows={6} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors resize-none placeholder:text-gray-300" />
+                <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.message') as string}</label>
+                <textarea name="message" value={form.message} onChange={handleChange} placeholder={t('contactPage.form.placeholderMessage') as string} rows={6} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors resize-none placeholder:text-gray-300" />
               </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input name="agreed" type="checkbox" checked={form.agreed} onChange={handleChange} className="w-4 h-4 rounded border-gray-300 accent-[#1B2134] cursor-pointer" />
-                  <span className="text-[13px] text-gray-500">I agree with <a href="#" className="text-[#1B2134] underline hover:text-[#D59E52] transition-colors">Terms of Use</a> and <a href="#" className="text-[#1B2134] underline hover:text-[#D59E52] transition-colors">Privacy Policy</a></span>
+                  <span className="text-[13px] text-gray-500">{t('contactPage.form.agreed') as string}</span>
                 </label>
                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" disabled={loading} className="flex items-center gap-3 bg-[#1B2134] text-white px-8 py-3.5 rounded-full font-semibold text-[15px] hover:bg-[#2d3555] shadow-lg transition-all duration-300 whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
-                  {loading ? 'Sending...' : 'Send Inquiry'}
+                  {loading ? t('contactPage.form.sending') as string : t('contactPage.form.submit') as string}
                   {!loading && <Image src={`${BASE}/send.png`} alt="Send" width={16} height={16} className="brightness-0 invert" />}
                 </motion.button>
               </div>
@@ -170,9 +172,15 @@ export default function ContactPage() {
           <Image src={`${BASE}/bgImage.png`} alt="background pattern" fill className="object-cover" />
         </motion.div>
         <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} className="relative z-10 max-w-[1200px] mx-auto pt-16 px-4">
-          <h2 className="text-[36px] md:text-[52px] font-bold text-[#1B2134] leading-tight mb-6">Start Your Real Estate Journey Today</h2>
-          <p className="text-[16px] text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">Your dream property is just a click away.</p>
-          <Link href="/properties" className="inline-block bg-[#1B2134] text-white font-bold px-10 py-4 rounded-full text-[16px] hover:bg-[#D59E52] transition-all duration-300 shadow-xl hover:scale-110 active:scale-95">Explore Properties</Link>
+          <h2 className="text-[36px] md:text-[52px] font-bold text-[#1B2134] leading-tight mb-6">
+            {t('contactPage.cta.title') as string}
+          </h2>
+          <p className="text-[16px] text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">
+            {t('contactPage.cta.subtitle') as string}
+          </p>
+          <Link href="/properties" className="inline-block bg-[#1B2134] text-white font-bold px-10 py-4 rounded-full text-[16px] hover:bg-[#D59E52] transition-all duration-300 shadow-xl hover:scale-110 active:scale-95">
+            {t('contactPage.cta.btn') as string}
+          </Link>
         </motion.div>
       </section>
     </main>

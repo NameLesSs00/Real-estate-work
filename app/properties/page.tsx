@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 import PropertyCategories from './components/PropertyCategories';
 import PropertyCard from '@/components/PropertyCard';
@@ -30,6 +31,7 @@ export default function PropertiesPage() {
 }
 
 function PropertiesPageContent() {
+  const { t, getLocalized } = useLanguage();
   const searchParams = useSearchParams();
   const [units, setUnits] = useState<UnitListItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -128,9 +130,9 @@ function PropertiesPageContent() {
       <section className="properties-hero">
         <div className="properties-container">
           <div className="properties-hero-content">
-            <h1 className="properties-hero-title">Find Your Dream Property</h1>
+            <h1 className="properties-hero-title">{t('propertiesPage.hero.title') as string}</h1>
             <p className="properties-hero-subtitle">
-              Explore our curated selection of properties, each offering a unique story and a chance to redefine your life.
+              {t('propertiesPage.hero.subtitle') as string}
             </p>
           </div>
         </div>
@@ -146,17 +148,17 @@ function PropertiesPageContent() {
       <section className="properties-grid-section">
         <div className="properties-container">
           <div className="properties-grid-header">
-            <h2 className="properties-grid-title">All Properties</h2>
+            <h2 className="properties-grid-title">{t('propertiesPage.grid.title') as string}</h2>
             <div className="flex items-center gap-4">
               <button 
                 onClick={openSidebar}
                 className="flex items-center gap-2 bg-[#1B2134] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-opacity-90 transition-all cursor-pointer shadow-md"
               >
                 <Filter size={16} />
-                Show Filters
+                {t('propertiesPage.grid.filter') as string}
               </button>
               <p className="properties-grid-subtitle">
-                {loading ? 'Loading...' : `Showing ${totalCount} result${totalCount !== 1 ? 's' : ''}`}
+                {loading ? t('propertiesPage.grid.loading') as string : `${t('propertiesPage.grid.showing') as string} ${totalCount} ${t('propertiesPage.grid.results') as string}`}
               </p>
             </div>
           </div>
@@ -174,8 +176,8 @@ function PropertiesPageContent() {
             </div>
           ) : !error && units.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-[18px] font-bold text-[#1B2134] mb-2">No properties found</p>
-              <p className="text-gray-500">Try adjusting your search filters.</p>
+              <p className="text-[18px] font-bold text-[#1B2134] mb-2">{t('propertiesPage.grid.noResults') as string}</p>
+              <p className="text-gray-500">{t('propertiesPage.grid.adjustFilters') as string}</p>
             </div>
           ) : !error && (
             <div className="properties-list-grid">
@@ -183,7 +185,7 @@ function PropertiesPageContent() {
                 <PropertyCard
                   key={unit.id}
                   id={unit.id}
-                  title={unit.name}
+                  title={getLocalized(unit.name)}
                   type={unit.propertyType || unit.unitType || 'Unit'}
                   location={unit.locationName || '—'}
                   price={`EGP ${unit.price?.toLocaleString()}`}
@@ -202,11 +204,11 @@ function PropertiesPageContent() {
           {!loading && !error && totalPages > 1 && (
             <div className="flex items-center justify-center gap-4 mt-12 pb-4">
               <button onClick={() => handlePage(currentPage - 1)} disabled={currentPage === 1} className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 text-[14px] font-medium text-[#1B2134] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors">
-                <ChevronLeft size={16} /> Prev
+                <ChevronLeft size={16} /> {t('propertiesPage.pagination.prev') as string}
               </button>
-              <span className="text-[14px] text-[#666]">Page {currentPage} of {totalPages}</span>
+              <span className="text-[14px] text-[#666]">{t('propertiesPage.pagination.page') as string} {currentPage} {t('propertiesPage.pagination.of') as string} {totalPages}</span>
               <button onClick={() => handlePage(currentPage + 1)} disabled={currentPage === totalPages} className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 text-[14px] font-medium text-[#1B2134] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors">
-                Next <ChevronRight size={16} />
+                {t('propertiesPage.pagination.next') as string} <ChevronRight size={16} />
               </button>
             </div>
           )}
@@ -219,7 +221,7 @@ function PropertiesPageContent() {
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={() => setIsSidebarOpen(false)} />
           <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col transform transition-transform duration-300 animate-in slide-in-from-left">
             <div className="flex items-center justify-between p-6 border-b border-gray-100 shrink-0">
-              <h2 className="text-[22px] font-bold text-[#1B2134]">Filters</h2>
+              <h2 className="text-[22px] font-bold text-[#1B2134]">{t('propertiesPage.sidebar.title') as string}</h2>
               <button onClick={() => setIsSidebarOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer text-gray-500 hover:text-[#1B2134]">
                 <X size={24} />
               </button>
@@ -227,10 +229,10 @@ function PropertiesPageContent() {
             <div className="flex-1 overflow-y-auto p-6 space-y-8">
               {/* Search Term */}
               <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">Search Keywords</label>
+                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.searchKeywords') as string}</label>
                 <input 
                   type="text" 
-                  placeholder="e.g. Skyline..." 
+                  placeholder={t('propertiesPage.sidebar.placeholderSearch') as string} 
                   value={draftFilters.searchTerm}
                   onChange={(e) => setDraftFilters({ ...draftFilters, searchTerm: e.target.value })}
                   onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
@@ -240,15 +242,15 @@ function PropertiesPageContent() {
 
               {/* Property Type */}
               <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">Property Type</label>
+                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.propertyType') as string}</label>
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { value: '', label: 'Any' },
-                    { value: '0', label: 'Apartment' },
-                    { value: '1', label: 'Villa' },
-                    { value: '2', label: 'TownHouse' },
-                    { value: '3', label: 'Studio' },
-                    { value: '4', label: 'Penthouse' },
+                    { value: '', label: t('propertiesPage.sidebar.any') as string },
+                    { value: '0', label: t('propertiesPage.sidebar.apartment') as string },
+                    { value: '1', label: t('propertiesPage.sidebar.villa') as string },
+                    { value: '2', label: t('propertiesPage.sidebar.townhouse') as string },
+                    { value: '3', label: t('propertiesPage.sidebar.studio') as string },
+                    { value: '4', label: t('propertiesPage.sidebar.penthouse') as string },
                   ].map(type => (
                     <button 
                       key={type.value}
@@ -263,12 +265,12 @@ function PropertiesPageContent() {
 
               {/* Category */}
               <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">Category</label>
+                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.category') as string}</label>
                 <div className="flex items-center gap-3">
                   {[
-                    { value: '', label: 'Any' },
-                    { value: 'Buy', label: 'Buy' },
-                    { value: 'Rent', label: 'Rent' },
+                    { value: '', label: t('propertiesPage.sidebar.any') as string },
+                    { value: 'Buy', label: t('propertiesPage.sidebar.buy') as string },
+                    { value: 'Rent', label: t('propertiesPage.sidebar.rent') as string },
                   ].map(cat => (
                     <button 
                       key={cat.value}
@@ -283,33 +285,35 @@ function PropertiesPageContent() {
 
               {/* Price Range */}
               <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">Price Range (EGP)</label>
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
+                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.priceRange') as string}</label>
+                <div className="flex items-center gap-3">
+                  <div className="relative flex-1">
                     <input 
                       type="number" 
-                      placeholder="Min" 
+                      placeholder={t('propertiesPage.sidebar.min') as string} 
                       value={draftFilters.minPrice}
                       onChange={(e) => setDraftFilters({ ...draftFilters, minPrice: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px]"
+                      className="w-full border border-gray-200 rounded-xl pl-4 pr-12 py-3.5 text-[14px]"
                     />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-[12px] font-bold">{draftFilters.currency}</span>
                   </div>
-                  <span className="text-gray-400 font-medium">-</span>
-                  <div className="flex-1">
+                  <div className="w-4 h-px bg-gray-300" />
+                  <div className="relative flex-1">
                     <input 
                       type="number" 
-                      placeholder="Max" 
+                      placeholder={t('propertiesPage.sidebar.max') as string} 
                       value={draftFilters.maxPrice}
                       onChange={(e) => setDraftFilters({ ...draftFilters, maxPrice: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px]"
+                      className="w-full border border-gray-200 rounded-xl pl-4 pr-12 py-3.5 text-[14px]"
                     />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-[12px] font-bold">{draftFilters.currency}</span>
                   </div>
                 </div>
               </div>
 
               {/* Currency */}
               <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">Currency</label>
+                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.currency') as string}</label>
                 <div className="flex items-center gap-3">
                   {['EGP', 'USD', 'EUR'].map(curr => (
                     <button 
@@ -323,12 +327,22 @@ function PropertiesPageContent() {
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex gap-4 shrink-0">
-              <button onClick={clearFilters} className="flex-1 py-4 border border-gray-200 bg-white rounded-2xl font-bold text-[#1B2134] hover:border-gray-300 transition-colors cursor-pointer shadow-sm">
-                Clear All
+            <div className="p-6 border-t border-gray-100 bg-gray-50 flex items-center gap-4 shrink-0">
+              <button 
+                onClick={() => {
+                  setDraftFilters({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '' });
+                  setIsSidebarOpen(false);
+                  handleSearch({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '' });
+                }}
+                className="flex-1 py-4 text-[14px] font-bold text-gray-500 hover:text-[#1B2134] transition-colors cursor-pointer"
+              >
+                {t('propertiesPage.sidebar.resetAll') as string}
               </button>
-              <button onClick={applyFilters} className="flex-[2] py-4 bg-[#1B2134] text-white rounded-2xl font-bold hover:bg-[#252d47] transition-colors cursor-pointer shadow-lg shadow-[#1B2134]/20">
-                Apply Filters
+              <button 
+                onClick={applyFilters}
+                className="flex-[2] bg-[#1B2134] text-white py-4 rounded-xl text-[14px] font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer"
+              >
+                {t('propertiesPage.sidebar.apply') as string}
               </button>
             </div>
           </div>

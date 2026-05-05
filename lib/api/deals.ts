@@ -112,3 +112,14 @@ export async function createDeal(payload: CreateDealPayload): Promise<number> {
   const json = await res.json();
   return json.data ?? json;
 }
+
+/** GET /api/Deals/unit/{unitId}/compatibility */
+export async function getDealsByUnitCompatibility(unitId: number, page = 1, size = 10): Promise<PaginatedDeals> {
+  const res = await fetch(
+    `${API_BASE_URL}/api/Deals/unit/${unitId}/compatibility?pageNumber=${page}&pageSize=${size}`,
+    { headers: { ...authHeader() } }
+  );
+  if (!res.ok) throw new Error('Failed to fetch compatibility deals.');
+  const json = await res.json();
+  return json.data ?? json;
+}

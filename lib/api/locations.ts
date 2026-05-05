@@ -1,3 +1,4 @@
+import { getAccessToken } from '@/lib/auth/tokens';
 import { API_BASE_URL } from './config';
 import { ApiResponse } from './auth';
 
@@ -47,12 +48,21 @@ export interface UpdateLocationPayload {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function getAuthHeader(): Record<string, string> {
-  const token =
-    typeof document !== 'undefined'
-      ? document.cookie.match(/(?:^|; )rg_at=([^;]*)/)?.[1]
-      : null;
-  return token ? { Authorization: `Bearer ${decodeURIComponent(token)}` } : {};
+function getHeaders(): Record<string, string> {
+  const token = getAccessToken();
+  const headers: Record<string, string> = {};
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  // Read current language from NEXT_LOCALE cookie
+  const lang = (typeof document !== 'undefined' ? 
+    document.cookie.match(/(?:^|; )NEXT_LOCALE=([^;]*)/)?.[1] : 'en') || 'en';
+  
+  headers['Language'] = lang.toUpperCase(); // EN, DE, PL
+
+  return headers;
 }
 
 // ─── Endpoints ───────────────────────────────────────────────────────────────
@@ -61,7 +71,7 @@ function getAuthHeader(): Record<string, string> {
 export async function getLocations(pageNumber = 1): Promise<LocationsPage> {
   const res = await fetch(
     `${API_BASE_URL}/api/Locations?pageNumber=${pageNumber}`,
-    { headers: { ...getAuthHeader() } }
+    { headers: { ...getHeaders() } }
   );
   if (!res.ok) {
     const text = await res.text();
@@ -82,7 +92,7 @@ export async function createLocation(
 ): Promise<Location> {
   const res = await fetch(`${API_BASE_URL}/api/Locations`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -104,7 +114,7 @@ export async function updateLocation(
 ): Promise<Location> {
   const res = await fetch(`${API_BASE_URL}/api/Locations`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -124,7 +134,7 @@ export async function updateLocation(
 export async function deleteLocation(id: number): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/Locations/${id}`, {
     method: 'DELETE',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     const text = await res.text();

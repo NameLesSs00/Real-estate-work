@@ -42,8 +42,8 @@
     "allTypes": "All Types",
     "location": "Location",
     "allLocations": "All Locations",
-    "minPrice": "Min Price (EGP)",
-    "maxPrice": "Max Price (EGP)",
+    "minPrice": "Starting Price",
+    "maxPrice": "Max Price",
     "noMin": "No minimum",
     "noMax": "No maximum"
   },
@@ -143,8 +143,10 @@
     ]
   },
   "aboutPage": {
-    "vision": "Our Vision",
-    "mission": "Our Mission",
+    "visionTitle": "Our Vision",
+    "visionText": "To redefine the real estate experience by making it more transparent, accessible, and tailored to modern lifestyles. We aim to connect people with spaces that truly inspire how they live, work, and grow.",
+    "missionTitle": "Our Mission",
+    "missionText": "To guide our clients through every step of their property journey with honesty, expertise, and care. We are committed to delivering exceptional service, curated property selections, and a seamless experience that builds long-term trust.",
     "journeyTitle": "Your Property Journey Starts With Us",
     "journeyText": "We are a real estate company dedicated to helping you find the perfect property across Egypt. From modern apartments and luxury villas to smart investment opportunities, we make your journey to buying or renting seamless, reliable, and rewarding.",
     "offerTitle": "What We Offer?",
@@ -165,5 +167,153 @@
     "ctaTitle": "Begin your real estate journey with us today",
     "ctaSubtitle": "Discover exceptional properties and invest in a lifestyle defined by elegance and value",
     "contactBtn": "Let's Contact"
+  },
+  "projects": {
+    "title": "Explore Projects",
+    "loading": "Loading projects...",
+    "error": "Failed to load projects.",
+    "tryAgain": "Try Again",
+    "noResults": "No projects found.",
+    "noLocation": "Location not listed",
+    "viewDetails": "View Details",
+    "showMore": "Show More",
+    "loadingMore": "Loading...",
+    "allLoaded": "All projects loaded."
+  },
+  "projectDetails": {
+    "backToProjects": "Back to Projects",
+    "loading": "Loading project...",
+    "notFound": "Project not found.",
+    "getInTouch": "Get in Touch",
+    "fullName": "Full Name",
+    "whatsappNumber": "WhatsApp Number",
+    "email": "Email",
+    "message": "Message",
+    "agreeTerms": "I agree with Terms of Use and Privacy Policy",
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "bookVisit": "Book a Visit",
+    "requestSent": "Request Sent!",
+    "requestSentSubtitle": "Our team will get in touch with you shortly.",
+    "sendAnother": "Send another request",
+    "description": "Description",
+    "noDescription": "No description available.",
+    "overview": "Overview",
+    "featuresServices": "Features & Services",
+    "reviews": "Reviews",
+    "commentsLater": "Comment section will be added later",
+    "propertyType": "Property Type",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "kitchens": "Kitchens",
+    "areaSize": "Area Size",
+    "floor": "Floor"
+  },
+  "contactPage": {
+    "title": "Get in Touch with The Gate Estates",
+    "subtitle": "Welcome to The Gate Estates' Contact page. We're here to assist you with any inquiries, requests, or feedback you may have.",
+    "info": {
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Main Headquarters",
+      "follow": "Follow Us"
+    },
+    "form": {
+      "title": "Let's Connect",
+      "subtitle": "Use the form below to get in touch with The Gate Estates.",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "inquiryType": "Inquiry Type",
+      "source": "How Did You Hear About Us?",
+      "message": "Message",
+      "agreed": "I agree with Terms of Use and Privacy Policy",
+      "submit": "Send Inquiry",
+      "sending": "Sending...",
+      "success": "Your inquiry has been sent successfully! We'll get back to you soon.",
+      "errorAgreed": "Please agree to the Terms of Use and Privacy Policy.",
+      "errorRequired": "Please fill in all required fields.",
+      "placeholderFirstName": "Enter First Name",
+      "placeholderLastName": "Enter Last Name",
+      "placeholderEmail": "Enter your Email",
+      "placeholderPhone": "Enter Phone Number",
+      "placeholderMessage": "Enter your Message here..",
+      "inquiryOptions": {
+        "buy": "Buy a Property",
+        "sell": "Sell a Property",
+        "investment": "Investment Inquiry",
+        "other": "Other"
+      },
+      "sourceOptions": {
+        "social": "Social Media",
+        "referral": "Friend / Referral",
+        "search": "Search Engine",
+        "ads": "Advertisement",
+        "other": "Other"
+      }
+    },
+    "cta": {
+      "title": "Start Your Real Estate Journey Today",
+      "subtitle": "Your dream property is just a click away.",
+      "btn": "Explore Properties"
+    }
+  },
+  "propertiesPage": {
+    "hero": {
+      "title": "Find Your Dream Property",
+      "subtitle": "Explore our curated selection of properties, each offering a unique story and a chance to redefine your life."
+    },
+    "grid": {
+      "title": "All Properties",
+      "filter": "Show Filters",
+      "loading": "Loading...",
+      "showing": "Showing",
+      "results": "results",
+      "noResults": "No properties found",
+      "adjustFilters": "Try adjusting your search filters."
+    },
+    "categories": {
+      "title": "Discover a World of Possibilities",
+      "subtitle": "Our portfolio of properties is as diverse as your dreams. Explore the following categories to find the perfect property that resonates with your vision of home"
+    },
+    "pagination": {
+      "prev": "Prev",
+      "next": "Next",
+      "page": "Page",
+      "of": "of"
+    },
+    "sidebar": {
+      "title": "Filters",
+      "searchKeywords": "Search Keywords",
+      "placeholderSearch": "e.g. Skyline...",
+      "propertyType": "Property Type",
+      "any": "Any",
+      "apartment": "Apartment",
+      "villa": "Villa",
+      "townhouse": "Townhouse",
+      "studio": "Studio",
+      "penthouse": "Penthouse",
+      "category": "Category",
+      "buy": "Buy",
+      "rent": "Rent",
+      "priceRange": "Price Range",
+      "min": "Min",
+      "max": "Max",
+      "resetAll": "Reset All",
+      "apply": "Apply Filters",
+      "currency": "Currency"
+    }
+  },
+  "propertyCard": {
+    "status": {
+      "sale": "For Sale",
+      "sold": "Sold"
+    },
+    "details": {
+      "bedroom": "Bedroom",
+      "bathroom": "Bathroom",
+      "viewDetails": "View Details"
+    }
   }
 }

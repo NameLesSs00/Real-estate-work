@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin } from 'lucide-react';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './PropertyCard.css';
 
 export interface PropertyCardProps {
@@ -31,26 +32,30 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   status = 'For Sale',
   isDefaultImage = false
 }) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="unit-card">
-      <div 
-        className="unit-image-wrapper"
+      <Link 
+        href={`/properties/${id}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+        className="unit-image-wrapper block"
         title={isDefaultImage ? "Default Image" : undefined}
       >
         <Image
           src={image}
           alt={title}
           fill
+          draggable={false}
           className="unit-image"
         />
         <div className="unit-price-tag">{price}</div>
-        <div className="unit-status-tag">{status}</div>
-      </div>
+        <div className="unit-status-tag">{status === 'For Sale' ? t('propertyCard.status.sale') : t('propertyCard.status.sold')}</div>
+      </Link>
       <div className="unit-content">
         <h3 className="unit-title">{title}</h3>
         <div className="unit-details-grid">
           <div className="unit-detail">
-            <Image src="/assists/card/buildings-2.png" alt="Type" width={24} height={24} className="unit-detail-icon" />
+            <Image src="/assists/card/buildings-2.png" alt="Type" width={24} height={24} draggable={false} className="unit-detail-icon" />
             <span>{type}</span>
           </div>
           <div className="unit-detail">
@@ -58,15 +63,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             <span>{location}</span>
           </div>
           <div className="unit-detail">
-            <Image src="/assists/card/lucide_bed.png" alt="Beds" width={24} height={24} className="unit-detail-icon" />
-            <span>{beds} Bedroom</span>
+            <Image src="/assists/card/lucide_bed.png" alt="Beds" width={24} height={24} draggable={false} className="unit-detail-icon" />
+            <span>{beds} {t('propertyCard.details.bedroom')}</span>
           </div>
           <div className="unit-detail">
-            <Image src="/assists/card/cil_bath.png" alt="Baths" width={24} height={24} className="unit-detail-icon" />
-            <span>{baths} Bathroom</span>
+            <Image src="/assists/card/cil_bath.png" alt="Baths" width={24} height={24} draggable={false} className="unit-detail-icon" />
+            <span>{baths} {t('propertyCard.details.bathroom')}</span>
           </div>
           <div className="unit-detail">
-            <Image src="/assists/card/fluent_slide-size-24-regular.png" alt="Area" width={24} height={24} className="unit-detail-icon" />
+            <Image src="/assists/card/fluent_slide-size-24-regular.png" alt="Area" width={24} height={24} draggable={false} className="unit-detail-icon" />
             <span>{area}</span>
           </div>
         </div>
@@ -74,7 +79,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           href={`/properties/${id}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
           className="unit-button text-center inline-block"
         >
-          View Details
+          {t('propertyCard.details.viewDetails')}
         </Link>
       </div>
     </div>

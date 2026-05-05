@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { addUnitToProject, updateUnit, getUnitById, ApiUnit, getProjects, LocalizedString } from '@/lib/api/projects';
 import { getServices, createService, Service } from '@/lib/api/services';
+import { getPaymentPlansByUnit, createPaymentPlan, updatePaymentPlan, deletePaymentPlan } from '@/lib/api/paymentPlans';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 interface AddUnitModalProps {
@@ -30,7 +31,7 @@ const EMPTY_FORM = {
   currencyCode: 'EGP',
   type: 'Buy' as 'Buy' | 'Rent',
   status: 'primary' as 'primary' | 'resale' | '',
-  paymentPlans: [] as { installmentMonthes: number | ''; installmentDownPayment: number | ''; paymentType: string }[],
+  paymentPlans: [] as { id?: number; installmentMonthes: number | ''; installmentDownPayment: number | ''; paymentType: string }[],
   servicesIds: [] as number[],
 };
 
@@ -122,17 +123,26 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         });
 
         try {
-          const detail = await getUnitById(editData.id);
+          const [detail, extraPlans] = await Promise.all([
+            getUnitById(editData.id),
+            getPaymentPlansByUnit(editData.id).catch(() => [])
+          ]);
 
           setForm(prev => ({
             ...prev,
             servicesIds: (detail.services || []).map((s: Service) => s.id),
-            paymentPlans: (detail.paymentPlans || []).map(p => {
-              const plan = p as { installmentMothes?: number; installmentMonthes?: number; installmentDownPayment?: number; paymentType?: string };
+            // Handle kitchen typo variations
+            noKithchen: ((detail as any).noKitchen ?? (detail as any).noKithchen ?? (detail as any).NoKitchen ?? prev.noKithchen)?.toString(),
+            paymentPlans: [
+              ...(detail.paymentPlans || (detail as any).PaymentPlans || []),
+              ...extraPlans
+            ].map(p => {
+              const plan = p as any;
               return {
-                installmentMonthes: plan.installmentMothes ?? plan.installmentMonthes ?? 0,
-                installmentDownPayment: plan.installmentDownPayment ?? 0,
-                paymentType: plan.paymentType ?? 'Installment'
+                id: plan.id ?? plan.paymentPlanId, // Track ID for edit mode
+                installmentMonthes: plan.installmentMonths ?? plan.installmentMonthes ?? plan.installmentMothes ?? plan.InstallmentMonthes ?? plan.InstallmentMothes ?? 0,
+                installmentDownPayment: plan.installmentDownPayment ?? plan.InstallmentDownPayment ?? 0,
+                paymentType: plan.paymentType ?? plan.PaymentType ?? 'Installment'
               };
             })
           }));
@@ -176,6 +186,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     const validatedPlans = form.paymentPlans.map(p => {
       const isCash = p.paymentType === 'Cash';
       return {
+        id: p.id,
         installmentMonthes: isCash ? 0 : Number(p.installmentMonthes),
         installmentDownPayment: isCash ? 0 : Number(p.installmentDownPayment),
         paymentType: p.paymentType
@@ -197,13 +208,20 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         propertyType: Number(form.propertyType),
         noBathRoom: Number(form.noBathRoom),
         noBedRoom: Number(form.noBedRoom),
-        noKithchen: Number(form.noKithchen),
+        noKitchen: Number(form.noKithchen), // Mapping the typo'd state to the likely correct field
+        noKithchen: Number(form.noKithchen), // Keeping the typo for safety if backend uses it
         floorNumber: Number(form.floorNumber),
         area: Number(form.area),
         floorName: form.floorName,
         view: Number(form.view),
         isFeatured: form.isFeatured,
-        paymentPlans: validatedPlans,
+        paymentPlans: validatedPlans.map(p => ({
+          ...p,
+          installmentMothes: p.installmentMonthes, 
+          installmentMonthes: p.installmentMonthes,
+          installmentMonths: p.installmentMonthes,
+          installmentYears: Math.ceil(p.installmentMonthes / 12)
+        })),
         servicesIds: form.servicesIds,
         type: form.type,
         status: form.type === 'Buy' ? form.status : '',
@@ -211,6 +229,49 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
       if (isEditMode && editData) {
         await updateUnit({ id: editData.id, ...unitPayload });
+        
+        // Handle payment plans individually because UpdateUnit doesn't save them
+        try {
+          const currentPlans = await getPaymentPlansByUnit(editData.id).catch(() => []);
+          const currentPlanIds = currentPlans.map(p => p.id).filter(Boolean);
+          
+          const newPlans = validatedPlans.filter(p => !p.id);
+          const updatedPlans = validatedPlans.filter(p => p.id);
+          const updatedPlanIds = updatedPlans.map(p => p.id);
+          const deletedPlanIds = currentPlanIds.filter(id => !updatedPlanIds.includes(id));
+          
+          // Delete removed plans
+          for (const id of deletedPlanIds) {
+            await deletePaymentPlan(id).catch(e => console.error('Failed to delete plan', e));
+          }
+          
+          // Add new plans
+          for (const p of newPlans) {
+            await createPaymentPlan({
+              unitId: editData.id,
+              paymentType: p.paymentType,
+              installmentDownPayment: p.installmentDownPayment,
+              installmentYears: Math.ceil(p.installmentMonthes / 12),
+              installmentMonths: p.installmentMonthes
+            }).catch(e => console.error('Failed to create plan', e));
+          }
+          
+          // Update existing plans
+          for (const p of updatedPlans) {
+            await updatePaymentPlan({
+              paymentPlanId: p.id!,
+              paymentType: p.paymentType,
+              status: 1, // Assume Active
+              installmentDownPayment: p.installmentDownPayment,
+              installmentYears: Math.ceil(p.installmentMonthes / 12),
+              // @ts-ignore
+              installmentMonths: p.installmentMonthes
+            }).catch(e => console.error('Failed to update plan', e));
+          }
+        } catch (planErr) {
+          console.error('[AddUnitModal] Plan sync error:', planErr);
+        }
+
       } else {
         await addUnitToProject({
           projectId: selectedProjectId!,

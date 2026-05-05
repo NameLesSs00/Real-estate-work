@@ -3,8 +3,19 @@ import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRigh
 import { getUnitById, resolveProjectImageUrl } from "@/lib/api/projects";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import CopyLinkButton from "@/components/CopyLinkButton";
 import LeadForm from "./components/LeadForm";
+
+async function getTranslations(locale: string) {
+  try {
+    const data = await import(`@/public/locales/${locale}.json`);
+    return data.default;
+  } catch {
+    const data = await import(`@/public/locales/en.json`);
+    return data.default;
+  }
+}
 
 const BASE = "/assists/PropertyDetails";
 const icoCheck = `${BASE}/weui_done2-outlined.png`;
@@ -15,13 +26,16 @@ type Props = {
 
 export default async function PropertyDetailsPage({ params }: Props) {
   const { slug } = await params;
+  const cookieStore = await cookies();
+  const locale = cookieStore.get('NEXT_LOCALE')?.value || 'en';
+  const t = await getTranslations(locale);
 
   const unitId = parseInt(slug.split("-")[0], 10);
   if (isNaN(unitId)) notFound();
 
   let unitData;
   try {
-    unitData = await getUnitById(unitId);
+    unitData = await getUnitById(unitId, locale);
   } catch {
     notFound();
   }
@@ -34,12 +48,12 @@ export default async function PropertyDetailsPage({ params }: Props) {
     .filter((u): u is string => u !== null);
 
   const overviewStats = [
-    { label: "Property Type", value: unitData.propertyType || "Unit",         icon: <Home        size={16} className="text-gray-500" /> },
-    { label: "Bedrooms",      value: unitData.noBedRoom  || 0,                icon: <BedDouble   size={16} className="text-gray-500" /> },
-    { label: "Bathrooms",     value: unitData.noBathRoom || 0,                icon: <Bath        size={16} className="text-gray-500" /> },
-    { label: "Kitchens",      value: unitData.noKitchen  || 0,                icon: <Utensils    size={16} className="text-gray-500" /> },
-    { label: "Area Size",     value: `${unitData.area || 0} M²`,           icon: <Maximize2   size={16} className="text-gray-500" /> },
-    { label: "Floor",         value: unitData.floorNumber || 0,               icon: <Layers      size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.propertyType || "Property Type", value: unitData.propertyType || "Unit",         icon: <Home        size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.bedrooms || "Bedrooms",      value: unitData.noBedRoom  || 0,                icon: <BedDouble   size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.bathrooms || "Bathrooms",     value: unitData.noBathRoom || 0,                icon: <Bath        size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.kitchens || "Kitchens",      value: unitData.noKitchen  || 0,                icon: <Utensils    size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.areaSize || "Area Size",     value: `${unitData.area || 0} M²`,           icon: <Maximize2   size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.floor || "Floor",         value: unitData.floorNumber || 0,               icon: <Layers      size={16} className="text-gray-500" /> },
   ];
 
   return (
@@ -49,11 +63,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-1 text-[13px] text-gray-400 mb-5 font-poppins">
           <Home size={14} className="text-gray-400" />
-          <Link href="/" className="hover:text-gray-700 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-gray-700 transition-colors">{t.header.home || "Home"}</Link>
           <ChevronRight size={13} />
           <span>{unitData.propertyType || "Property"}</span>
           <ChevronRight size={13} />
-          <span className="text-gray-700 font-semibold">Property Details</span>
+          <span className="text-gray-700 font-semibold">{t.projectDetails.title || "Property Details"}</span>
         </nav>
 
         {/* Title + Location */}
@@ -63,7 +77,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
         <div className="flex items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-1.5 text-[13px] text-gray-500 font-poppins">
             <MapPin size={14} className="text-gray-400 flex-shrink-0" />
-            <span>{unitData.floorName || "Location not available"}</span>
+            <span>{unitData.floorName || t.projectDetails.noLocation || "Location not available"}</span>
           </div>
           <CopyLinkButton />
         </div>
@@ -108,7 +122,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
         {/* ── Overview Card (full width) ── */}
         <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
           <div className="mb-4 pb-4 border-b border-[#F0F0F0]">
-            <h2 className="text-[17px] font-bold text-gray-900 font-poppins">Overview</h2>
+            <h2 className="text-[17px] font-bold text-gray-900 font-poppins">{t.projectDetails.overview || "Overview"}</h2>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-y-5 divide-x divide-[#F0F0F0]">
             {overviewStats.map((stat, i) => (
@@ -126,10 +140,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
         {/* ── Description ── */}
         <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
           <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
-            Description
+            {t.projectDetails.description || "Description"}
           </h2>
           <p className="text-[14px] text-gray-600 leading-relaxed font-poppins whitespace-pre-wrap">
-            {unitData.description || "No description provided."}
+            {unitData.description || t.projectDetails.noDescription || "No description provided."}
           </p>
         </div>
 
@@ -137,11 +151,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
         {((unitData.facilities?.length ?? 0) > 0 || (unitData.services?.length ?? 0) > 0) && (
           <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
             <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
-              Features &amp; Services
+              {t.projectDetails.featuresServices || "Features & Services"}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-6">
-              {unitData.facilities?.map((f, i) => {
-                const name = typeof f.name === 'string' ? f.name : (f.name?.en || f.name?.de || f.name?.pl || 'Unknown');
+              {unitData.facilities?.map((f: any, i: number) => {
+                const name = typeof f.name === 'string' ? f.name : (f.name?.[locale] || f.name?.en || 'Unknown');
                 return (
                   <div key={`f-${i}`} className="flex items-center gap-2.5 text-gray-700">
                     <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
@@ -149,8 +163,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   </div>
                 );
               })}
-              {unitData.services?.map((s, i) => {
-                const name = typeof s.name === 'string' ? s.name : (s.name?.en || s.name?.de || s.name?.pl || 'Unknown');
+              {unitData.services?.map((s: any, i: number) => {
+                const name = typeof s.name === 'string' ? s.name : (s.name?.[locale] || s.name?.en || 'Unknown');
                 return (
                   <div key={`s-${i}`} className="flex items-center gap-2.5 text-gray-700">
                     <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
@@ -165,10 +179,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
         {/* ── Reviews Placeholder ── */}
         <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm">
           <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
-            Reviews
+            {t.projectDetails.reviews || "Reviews"}
           </h2>
           <p className="text-[13px] text-gray-400 italic font-poppins text-center py-6">
-            Comment section will be added later
+            {t.projectDetails.commentsLater || "Comment section will be added later"}
           </p>
         </div>
 

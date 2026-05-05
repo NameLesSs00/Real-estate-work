@@ -1,10 +1,5 @@
 import { API_BASE_URL } from './config';
-import { getAccessToken } from '@/lib/auth/tokens';
-
-function authHeader(): Record<string, string> {
-  const token = getAccessToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
+import { getHeaders } from './common';
 
 export interface LeadRequest {
   fullName: string;
@@ -44,7 +39,7 @@ export async function getLeads(page = 1, size = 10, unitId?: number): Promise<Pa
   if (unitId) params.set('UnitId', String(unitId));
 
   const res = await fetch(`${API_BASE_URL}/api/Leads?${params}`, {
-    headers: { ...authHeader() },
+    headers: { ...getHeaders() },
   });
 
   if (!res.ok) throw new Error('Failed to fetch leads.');
@@ -57,6 +52,7 @@ export async function createLead(lead: LeadRequest): Promise<void> {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...getHeaders()
     },
     body: JSON.stringify(lead),
   });

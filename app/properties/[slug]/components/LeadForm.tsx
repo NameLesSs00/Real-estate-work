@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { createLead } from '@/lib/api/leads';
 import { Loader2, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 interface LeadFormProps {
   unitId: number;
@@ -12,6 +13,7 @@ interface LeadFormProps {
 const icoSend = "/assists/PropertyDetails/send.png";
 
 export default function LeadForm({ unitId }: LeadFormProps) {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -48,15 +50,15 @@ export default function LeadForm({ unitId }: LeadFormProps) {
         <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center">
           <CheckCircle2 className="text-green-500" size={32} />
         </div>
-        <h3 className="text-[20px] font-bold text-gray-900 font-poppins">Request Sent!</h3>
+        <h3 className="text-[20px] font-bold text-gray-900 font-poppins">{t('projectDetails.requestSent') as string}</h3>
         <p className="text-[14px] text-gray-500 font-poppins">
-          Our team will get in touch with you shortly.
+          {t('projectDetails.requestSentSubtitle') as string}
         </p>
         <button 
           onClick={() => setSuccess(false)}
           className="text-[#1B2134] font-semibold text-[14px] underline cursor-pointer"
         >
-          Send another request
+          {t('projectDetails.sendAnother') as string}
         </button>
       </div>
     );
@@ -65,18 +67,18 @@ export default function LeadForm({ unitId }: LeadFormProps) {
   return (
     <div className="bg-white border border-[#ECECEC] rounded-[14px] p-8 lg:p-10 shadow-sm">
       <h3 className="text-[18px] font-bold text-gray-900 text-center mb-5 font-poppins">
-        Get in Touch
+        {t('projectDetails.getInTouch') as string}
       </h3>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
-            Full Name <span className="text-red-500">*</span>
+            {t('projectDetails.fullName') as string} <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             required
-            placeholder="Full Name"
+            placeholder={t('projectDetails.fullName') as string}
             value={formData.fullName}
             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
             className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"
@@ -85,12 +87,12 @@ export default function LeadForm({ unitId }: LeadFormProps) {
 
         <div>
           <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
-            Phone Number <span className="text-red-500">*</span>
+            {t('projectDetails.whatsappNumber') as string} <span className="text-red-500">*</span>
           </label>
           <input
             type="tel"
             required
-            placeholder="Phone Number"
+            placeholder={t('projectDetails.whatsappNumber') as string}
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"
@@ -99,11 +101,11 @@ export default function LeadForm({ unitId }: LeadFormProps) {
 
         <div>
           <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
-            Email
+            {t('projectDetails.email') as string}
           </label>
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t('projectDetails.email') as string}
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"
@@ -112,10 +114,10 @@ export default function LeadForm({ unitId }: LeadFormProps) {
 
         <div>
           <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
-            Message
+            {t('projectDetails.message') as string}
           </label>
           <textarea
-            placeholder="Message"
+            placeholder={t('projectDetails.message') as string}
             rows={4}
             value={formData.notes}
             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -133,11 +135,11 @@ export default function LeadForm({ unitId }: LeadFormProps) {
           {loading ? (
             <>
               <Loader2 className="animate-spin" size={16} />
-              Sending...
+              {t('contactPage.form.sending') as string}
             </>
           ) : (
             <>
-              Book a Visit
+              {t('projectDetails.bookVisit') as string}
               <Image src={icoSend} alt="Send" width={15} height={15} className="w-[15px] h-[15px] invert" />
             </>
           )}

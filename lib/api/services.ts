@@ -1,5 +1,6 @@
 import { API_BASE_URL } from './config';
 import { getAccessToken } from '@/lib/auth/tokens';
+import { getHeaders } from './common';
 
 
 export interface Service {
@@ -16,16 +17,12 @@ export interface UpdateServicePayload {
   name: { en: string; de: string; pl: string };
 }
 
-function getAuthHeader(): Record<string, string> {
-  const token = getAccessToken();
-  if (!token) console.warn('[Services] No auth token found in cookies (rg_at)');
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
+
 
 /** GET /api/Services */
 export async function getServices(): Promise<Service[]> {
   const res = await fetch(`${API_BASE_URL}/api/Services`, {
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     throw new Error('Failed to fetch services.');
@@ -57,7 +54,7 @@ export async function createService(payload: CreateServicePayload): Promise<numb
     method: 'POST',
     headers: { 
       'Content-Type': 'application/json',
-      ...getAuthHeader() 
+      ...getHeaders() 
     },
     body: JSON.stringify({ name: mappedName }),
   });
@@ -85,7 +82,7 @@ export async function updateService(payload: UpdateServicePayload): Promise<numb
     method: 'PUT',
     headers: { 
       'Content-Type': 'application/json',
-      ...getAuthHeader() 
+      ...getHeaders() 
     },
     body: JSON.stringify({ id, name: mappedName }),
   });
@@ -108,7 +105,7 @@ export async function updateService(payload: UpdateServicePayload): Promise<numb
 export async function deleteService(id: number): Promise<boolean> {
   const res = await fetch(`${API_BASE_URL}/api/Services/${id}`, {
     method: 'DELETE',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   const text = await res.text();
   console.log('[Services] Delete Response:', text);

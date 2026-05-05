@@ -1,40 +1,51 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { getRefreshToken, saveTokens } from '@/lib/auth/tokens';
 import { refreshToken } from '@/lib/api/auth';
 import { handleLogout } from '@/lib/auth/logout';
 
-// Refresh every 45 minutes (to be safe before the 1-hour expiration)
-const REFRESH_INTERVAL_MS = 45 * 60 * 1000; 
+/**
+ * Proactively refreshes the access token before it expires.
+ * Runs in the background at regular intervals.
+ */
+const REFRESH_INTERVAL_MS = 45 * 60 * 1000; // 45 minutes
 
 export default function TokenRefresher() {
+  const pathname = usePathname();
+
   useEffect(() => {
-    const intervalId = setInterval(async () => {
+    // DO NOT run refresh logic on the login page
+    if (pathname?.includes('/login')) {
+      return;
+    }
+
+    const refreshTokenFn = async () => {
       const currentRefreshToken = getRefreshToken();
       
-      // If we don't have a refresh token, we can't refresh
-      if (!currentRefreshToken) {
-        return;
-      }
+      // If no refresh token, user is likely logged out or on a public page
+      if (!currentRefreshToken) return;
 
       try {
         const newTokens = await refreshToken({ refreshToken: currentRefreshToken });
         
-        // Save the new tokens to cookies
+        // Success: Update cookies with fresh tokens
         saveTokens(newTokens.accessToken, newTokens.refreshToken);
-        console.log('[TokenRefresher] Successfully refreshed session tokens.');
+        console.log('[TokenRefresher] Session tokens refreshed successfully.');
       } catch (error) {
-        console.error('[TokenRefresher] Failed to refresh token, logging out:', error);
-        // If refresh fails (e.g. refresh token is also expired), force logout
+        // If refresh fails on an active session (e.g. token revoked), force logout
+        console.error('[TokenRefresher] Session refresh failed, logging out:', error);
         handleLogout();
       }
-    }, REFRESH_INTERVAL_MS);
+    };
 
-    // Cleanup interval on unmount
+    // Set up the proactive refresh interval
+    // Note: We don't call it immediately on mount to avoid race conditions with login
+    const intervalId = setInterval(refreshTokenFn, REFRESH_INTERVAL_MS);
+
     return () => clearInterval(intervalId);
-  }, []);
+  }, [pathname]);
 
-  // This is a headless component, it renders nothing
   return null;
 }

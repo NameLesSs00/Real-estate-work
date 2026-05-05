@@ -42,8 +42,8 @@
     "allTypes": "Alle Typen",
     "location": "Standort",
     "allLocations": "Alle Standorte",
-    "minPrice": "Mindestpreis (EGP)",
-    "maxPrice": "Höchstpreis (EGP)",
+    "minPrice": "Startpreis",
+    "maxPrice": "Höchstpreis",
     "noMin": "Kein Minimum",
     "noMax": "Kein Maximum"
   },
@@ -143,8 +143,10 @@
     ]
   },
   "aboutPage": {
-    "vision": "Unsere Vision",
-    "mission": "Unsere Mission",
+    "visionTitle": "Unsere Vision",
+    "visionText": "Das Immobilienerlebnis neu zu definieren, indem wir es transparenter, zugänglicher und auf moderne Lebensstile zugeschnitten gestalten. Unser Ziel ist es, Menschen mit Räumen zu verbinden, die ihre Art zu leben, zu arbeiten und zu wachsen wahrhaftig inspirieren.",
+    "missionTitle": "Unsere Mission",
+    "missionText": "Unsere Kunden bei jedem Schritt ihrer Immobilienreise mit Ehrlichkeit, Fachkompetenz und Sorgfalt zu begleiten. Wir verpflichten uns, einen außergewöhnlichen Service, kuratierte Immobilienauswahlen und ein nahtloses Erlebnis zu bieten, das langfristiges Vertrauen schafft.",
     "journeyTitle": "Ihre Immobilienreise beginnt bei uns",
     "journeyText": "Wir sind ein Immobilienunternehmen, das sich darauf spezialisiert hat, Ihnen zu helfen, die perfekte Immobilie in ganz Ägypten zu finden. Von modernen Wohnungen und Luxusvillen bis hin zu intelligenten Investitionsmöglichkeiten gestalten wir Ihren Weg zum Kauf oder zur Miete nahtlos, zuverlässig und lohnend.",
     "offerTitle": "Was wir bieten?",
@@ -165,5 +167,153 @@
     "ctaTitle": "Beginnen Sie noch heute Ihre Immobilienreise mit uns",
     "ctaSubtitle": "Entdecken Sie außergewöhnliche Immobilien und investieren Sie in einen Lebensstil, der durch Eleganz und Wert definiert ist",
     "contactBtn": "Lassen Sie uns Kontakt aufnehmen"
+  },
+  "projects": {
+    "title": "Projekte erkunden",
+    "loading": "Projekte werden geladen...",
+    "error": "Fehler beim Laden der Projekte.",
+    "tryAgain": "Erneut versuchen",
+    "noResults": "Keine Projekte gefunden.",
+    "noLocation": "Standort nicht aufgeführt",
+    "viewDetails": "Details anzeigen",
+    "showMore": "Mehr anzeigen",
+    "loadingMore": "Wird geladen...",
+    "allLoaded": "Alle Projekte geladen."
+  },
+  "projectDetails": {
+    "backToProjects": "Zurück zu Projekten",
+    "loading": "Projekt wird geladen...",
+    "notFound": "Projekt nicht gefunden.",
+    "getInTouch": "Kontaktieren Sie uns",
+    "fullName": "Vollständiger Name",
+    "whatsappNumber": "WhatsApp-Nummer",
+    "email": "E-Mail",
+    "message": "Nachricht",
+    "agreeTerms": "Ich stimme den Nutzungsbedingungen und der Datenschutzrichtlinie zu",
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzrichtlinie",
+    "bookVisit": "Besuch buchen",
+    "requestSent": "Anfrage gesendet!",
+    "requestSentSubtitle": "Unser Team wird sich in Kürze mit Ihnen in Verbindung setzen.",
+    "sendAnother": "Weitere Anfrage senden",
+    "description": "Beschreibung",
+    "noDescription": "Keine Beschreibung verfügbar.",
+    "overview": "Überblick",
+    "featuresServices": "Ausstattung & Dienstleistungen",
+    "reviews": "Bewertungen",
+    "commentsLater": "Der Kommentarbereich wird später hinzugefügt",
+    "propertyType": "Immobilientyp",
+    "bedrooms": "Schlafzimmer",
+    "bathrooms": "Badezimmer",
+    "kitchens": "Küchen",
+    "areaSize": "Fläche",
+    "floor": "Etage"
+  },
+  "contactPage": {
+    "title": "Kontaktieren Sie The Gate Estates",
+    "subtitle": "Willkommen auf der Kontaktseite von The Gate Estates. Wir sind hier, um Ihnen bei Anfragen, Wünschen oder Feedback behilflich zu sein.",
+    "info": {
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "address": "Hauptsitz",
+      "follow": "Folgen Sie uns"
+    },
+    "form": {
+      "title": "Lassen Sie uns vernetzen",
+      "subtitle": "Nutzen Sie das untenstehende Formular, um mit The Gate Estates in Kontakt zu treten.",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "inquiryType": "Art der Anfrage",
+      "source": "Wie haben Sie von uns erfahren?",
+      "message": "Nachricht",
+      "agreed": "Ich stimme den Nutzungsbedingungen und der Datenschutzrichtlinie zu",
+      "submit": "Anfrage senden",
+      "sending": "Wird gesendet...",
+      "success": "Ihre Anfrage wurde erfolgreich gesendet! Wir werden uns in Kürze bei Ihnen melden.",
+      "errorAgreed": "Bitte stimmen Sie den Nutzungsbedingungen und der Datenschutzrichtlinie zu.",
+      "errorRequired": "Bitte füllen Sie alle erforderlichen Felder aus.",
+      "placeholderFirstName": "Vorname eingeben",
+      "placeholderLastName": "Nachname eingeben",
+      "placeholderEmail": "E-Mail eingeben",
+      "placeholderPhone": "Telefonnummer eingeben",
+      "placeholderMessage": "Geben Sie hier Ihre Nachricht ein...",
+      "inquiryOptions": {
+        "buy": "Eine Immobilie kaufen",
+        "sell": "Eine Immobilie verkaufen",
+        "investment": "Investment-Anfrage",
+        "other": "Sonstiges"
+      },
+      "sourceOptions": {
+        "social": "Soziale Medien",
+        "referral": "Freund / Empfehlung",
+        "search": "Suchmaschine",
+        "ads": "Werbung",
+        "other": "Sonstiges"
+      }
+    },
+    "cta": {
+      "title": "Beginnen Sie heute Ihre Immobilienreise",
+      "subtitle": "Ihre Traumimmobilie ist nur einen Klick entfernt.",
+      "btn": "Immobilien erkunden"
+    }
+  },
+  "propertiesPage": {
+    "hero": {
+      "title": "Finden Sie Ihre Traumimmobilie",
+      "subtitle": "Entdecken Sie unsere kuratierte Auswahl an Immobilien, von denen jede eine einzigartige Geschichte bietet."
+    },
+    "grid": {
+      "title": "Alle Immobilien",
+      "filter": "Filter anzeigen",
+      "loading": "Wird geladen...",
+      "showing": "Anzeigen von",
+      "results": "Ergebnissen",
+      "noResults": "Keine Immobilien gefunden",
+      "adjustFilters": "Versuchen Sie, Ihre Suchfilter anzupassen."
+    },
+    "categories": {
+      "title": "Entdecken Sie eine Welt voller Möglichkeiten",
+      "subtitle": "Unser Portfolio an Immobilien ist so vielfältig wie Ihre Träume. Entdecken Sie die folgenden Kategorien."
+    },
+    "pagination": {
+      "prev": "Zurück",
+      "next": "Weiter",
+      "page": "Seite",
+      "of": "von"
+    },
+    "sidebar": {
+      "title": "Filter",
+      "searchKeywords": "Suchbegriffe",
+      "placeholderSearch": "z.B. Skyline...",
+      "propertyType": "Immobilientyp",
+      "any": "Alle",
+      "apartment": "Wohnung",
+      "villa": "Villa",
+      "townhouse": "Reihenhaus",
+      "studio": "Studio",
+      "penthouse": "Penthouse",
+      "category": "Kategorie",
+      "buy": "Kaufen",
+      "rent": "Mieten",
+      "priceRange": "Preisspanne",
+      "min": "Min",
+      "max": "Max",
+      "resetAll": "Alles zurücksetzen",
+      "apply": "Filter anwenden",
+      "currency": "Währung"
+    }
+  },
+  "propertyCard": {
+    "status": {
+      "sale": "Zu verkaufen",
+      "sold": "Verkauft"
+    },
+    "details": {
+      "bedroom": "Schlafzimmer",
+      "bathroom": "Badezimmer",
+      "viewDetails": "Details anzeigen"
+    }
   }
 }

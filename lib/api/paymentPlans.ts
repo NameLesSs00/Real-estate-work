@@ -1,10 +1,5 @@
 import { API_BASE_URL } from './config';
-import { getAccessToken } from '@/lib/auth/tokens';
-
-function authHeader(): Record<string, string> {
-  const token = getAccessToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
+import { getHeaders } from './common';
 
 export interface PaymentPlan {
   id: number;
@@ -25,6 +20,7 @@ export interface CreatePaymentPlanPayload {
   unitId: number;
   installmentDownPayment: number;
   installmentYears: number;
+  installmentMonths?: number; // Added for safety/consistency
 }
 
 export interface UpdatePaymentPlanPayload {
@@ -37,7 +33,9 @@ export interface UpdatePaymentPlanPayload {
 
 /** GET /api/payment-plans/unit/{unitId} */
 export async function getPaymentPlansByUnit(unitId: number): Promise<PaymentPlan[]> {
-  const res = await fetch(`${API_BASE_URL}/api/payment-plans/unit/${unitId}`, { headers: { ...authHeader() } });
+  const res = await fetch(`${API_BASE_URL}/api/payment-plans/unit/${unitId}`, { 
+    headers: { ...getHeaders() } 
+  });
   if (!res.ok) throw new Error('Failed to fetch payment plans.');
   const json = await res.json();
   return json.data ?? json;
@@ -47,7 +45,7 @@ export async function getPaymentPlansByUnit(unitId: number): Promise<PaymentPlan
 export async function createPaymentPlan(payload: CreatePaymentPlanPayload): Promise<number> {
   const res = await fetch(`${API_BASE_URL}/api/payment-plans`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...authHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error('Failed to create payment plan.');
@@ -59,7 +57,7 @@ export async function createPaymentPlan(payload: CreatePaymentPlanPayload): Prom
 export async function updatePaymentPlan(payload: UpdatePaymentPlanPayload): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/payment-plans`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...authHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify(payload),
   });
   if (!res.ok) throw new Error('Failed to update payment plan.');
@@ -69,7 +67,7 @@ export async function updatePaymentPlan(payload: UpdatePaymentPlanPayload): Prom
 export async function deletePaymentPlan(id: number): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/payment-plans/${id}`, {
     method: 'DELETE',
-    headers: { ...authHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) throw new Error('Failed to delete payment plan.');
 }

@@ -11,12 +11,14 @@ interface LanguageContextProps {
   setLanguage: (lang: Language) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t: (key: string) => any;
+  getLocalized: (data: any) => string;
 }
 
 const LanguageContext = createContext<LanguageContextProps>({
   language: 'en',
   setLanguage: () => {},
   t: (key) => key,
+  getLocalized: (data) => (typeof data === 'string' ? data : ''),
 });
 
 export const useLanguage = () => useContext(LanguageContext);
@@ -66,8 +68,33 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return result;
   };
 
+  /**
+   * getLocalized(project.name)
+   * Handles objects like { en: "Name", de: "Name DE" }
+   * Fallbacks: current language -> en -> any available string -> empty string
+   */
+  const getLocalized = (data: any): string => {
+    if (!data) return '';
+    if (typeof data === 'string') return data;
+    if (typeof data === 'object') {
+      const val = data[language];
+      if (val && typeof val === 'string' && val.trim() !== '') {
+        return val;
+      }
+      // Fallback to English
+      const enVal = data['en'];
+      if (enVal && typeof enVal === 'string' && enVal.trim() !== '') {
+        return enVal;
+      }
+      // Fallback to any available string in the object
+      const firstAvailable = Object.values(data).find(v => typeof v === 'string' && v.trim() !== '');
+      return (firstAvailable as string) || '';
+    }
+    return String(data);
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, getLocalized }}>
       {children}
     </LanguageContext.Provider>
   );

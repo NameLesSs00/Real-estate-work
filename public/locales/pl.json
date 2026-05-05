@@ -42,8 +42,8 @@
     "allTypes": "Wszystkie typy",
     "location": "Lokalizacja",
     "allLocations": "Wszystkie lokalizacje",
-    "minPrice": "Cena min (EGP)",
-    "maxPrice": "Cena max (EGP)",
+    "minPrice": "Cena początkowa",
+    "maxPrice": "Cena do",
     "noMin": "Brak minimum",
     "noMax": "Brak maksimum"
   },
@@ -143,10 +143,12 @@
     ]
   },
   "aboutPage": {
-    "vision": "Nasza wizja",
-    "mission": "Nasza misja",
+    "visionTitle": "Nasza wizja",
+    "visionText": "Zdefiniowanie na nowo doświadczenia na rynku nieruchomości poprzez uczynienie go bardziej przejrzystym, dostępnym i dopasowanym do nowoczesnego stylu życia. Dążymy do łączenia ludzi z przestrzeniami, które naprawdę inspirują ich do życia, pracy i rozwoju.",
+    "missionTitle": "Nasza misja",
+    "missionText": "Prowadzenie naszych klientów przez każdy etap ich drogi do własnej nieruchomości z uczciwością, wiedzą i troską. Jesteśmy zaangażowani w dostarczanie wyjątkowej obsługi, starannie dobranych ofert i bezproblemowego doświadczenia, które buduje długoterminowe zaufanie.",
     "journeyTitle": "Twoja podróż zaczyna się u nas",
-    "journeyText": "Jesteśmy firmą zajmującą się nieruchomościami, która pomaga Ci znaleźć idealną nieruchomość w całym Egipcie. Od nowoczesnych apartamentów po luksusowe wille i inteligentne możliwości inwestycyjne.",
+    "journeyText": "Jesteśmy firmą zajmującą się nieruchomościami, która pomaga Ci znaleźć idealną nieruchomość w całym Egipcie. Od nowoczesnych apartamentów po luksusowe wille i inteligentne możliwości inwestycyjne — sprawiamy, że Twoja droga do zakupu lub wynajmu jest bezproblemowa, niezawodna i satysfakcjonująca.",
     "offerTitle": "Co oferujemy?",
     "offers": {
       "sales": {
@@ -164,6 +166,154 @@
     },
     "ctaTitle": "Zacznij swoją przygodę z nieruchomościami już dziś",
     "ctaSubtitle": "Odkryj wyjątkowe nieruchomości i zainwestuj w styl życia zdefiniowany przez elegancję i wartość",
-    "contactBtn": "Kontakt"
+    "contactBtn": "Skontaktuj się z nami"
+  },
+  "projects": {
+    "title": "Eksploruj projekty",
+    "loading": "Ładowanie projektów...",
+    "error": "Nie udało się załadować projektów.",
+    "tryAgain": "Spróbuj ponownie",
+    "noResults": "Nie znaleziono żadnych projektów.",
+    "noLocation": "Lokalizacja nie została podana",
+    "viewDetails": "Pokaż szczegóły",
+    "showMore": "Pokaż więcej",
+    "loadingMore": "Ładowanie...",
+    "allLoaded": "Wszystkie projekty zostały załadowane."
+  },
+  "projectDetails": {
+    "backToProjects": "Powrót do projektów",
+    "loading": "Ładowanie projektu...",
+    "notFound": "Nie znaleziono projektu.",
+    "getInTouch": "Skontaktuj się z nami",
+    "fullName": "Imię i nazwisko",
+    "whatsappNumber": "Numer WhatsApp",
+    "email": "E-mail",
+    "message": "Wiadomość",
+    "agreeTerms": "Zgadzam się z Warunkami użytkowania i Polityką prywatności",
+    "terms": "Warunkami użytkowania",
+    "privacy": "Polityką prywatności",
+    "bookVisit": "Zarezerwuj wizytę",
+    "requestSent": "Zapytanie wysłane!",
+    "requestSentSubtitle": "Nasz zespół skontaktuje się z Tobą wkrótce.",
+    "sendAnother": "Wyślij kolejne zapytanie",
+    "description": "Opis",
+    "noDescription": "Brak opisu.",
+    "overview": "Przegląd",
+    "featuresServices": "Funkcje i usługi",
+    "reviews": "Recenzje",
+    "commentsLater": "Sekcja komentarzy zostanie dodana później",
+    "propertyType": "Typ nieruchomości",
+    "bedrooms": "Sypialnie",
+    "bathrooms": "Łazienki",
+    "kitchens": "Kuchnie",
+    "areaSize": "Powierzchnia",
+    "floor": "Piętro"
+  },
+  "contactPage": {
+    "title": "Skontaktuj się z The Gate Estates",
+    "subtitle": "Witamy na stronie kontaktowej The Gate Estates. Jesteśmy tutaj, aby pomóc Ci w przypadku jakichkolwiek pytań, próśb lub opinii.",
+    "info": {
+      "email": "E-mail",
+      "phone": "Telefon",
+      "address": "Główna siedziba",
+      "follow": "Obserwuj nas"
+    },
+    "form": {
+      "title": "Połączmy się",
+      "subtitle": "Użyj poniższego formularza, aby skontaktować się z The Gate Estates.",
+      "firstName": "Imię",
+      "lastName": "Nazwisko",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "inquiryType": "Typ zapytania",
+      "source": "Jak o nas usłyszałeś?",
+      "message": "Wiadomość",
+      "agreed": "Zgadzam się z Warunkami użytkowania i Polityką prywatności",
+      "submit": "Wyślij zapytanie",
+      "sending": "Wysyłanie...",
+      "success": "Twoje zapytanie zostało pomyślnie wysłane! Wkrótce się z Tobą skontaktujemy.",
+      "errorAgreed": "Proszę zaakceptować Warunki użytkowania i Politykę prywatności.",
+      "errorRequired": "Proszę wypełnić wszystkie wymagane pola.",
+      "placeholderFirstName": "Wpisz imię",
+      "placeholderLastName": "Wpisz nazwisko",
+      "placeholderEmail": "Wpisz swój e-mail",
+      "placeholderPhone": "Wpisz numer telefonu",
+      "placeholderMessage": "Wpisz swoją wiadomość tutaj...",
+      "inquiryOptions": {
+        "buy": "Kupno nieruchomości",
+        "sell": "Sprzedaż nieruchomości",
+        "investment": "Zapytanie inwestycyjne",
+        "other": "Inne"
+      },
+      "sourceOptions": {
+        "social": "Media społecznościowe",
+        "referral": "Znajomy / Polecenie",
+        "search": "Wyszukiwarka",
+        "ads": "Reklama",
+        "other": "Inne"
+      }
+    },
+    "cta": {
+      "title": "Zacznij swoją podróż już dziś",
+      "subtitle": "Twoja wymarzona nieruchomość jest w zasięgu ręki.",
+      "btn": "Eksploruj nieruchomości"
+    }
+  },
+  "propertiesPage": {
+    "hero": {
+      "title": "Znajdź swoją wymarzoną nieruchomość",
+      "subtitle": "Przeglądaj naszą wyselekcjonowaną ofertę nieruchomości, z których każda oferuje wyjątkową historię."
+    },
+    "grid": {
+      "title": "Wszystkie nieruchomości",
+      "filter": "Pokaż filtry",
+      "loading": "Ładowanie...",
+      "showing": "Pokazuje",
+      "results": "wyników",
+      "noResults": "Nie znaleziono nieruchomości",
+      "adjustFilters": "Spróbuj dostosować filtry wyszukiwania."
+    },
+    "categories": {
+      "title": "Odkryj świat możliwości",
+      "subtitle": "Nasze portfolio nieruchomości jest tak różnorodne jak Twoje marzenia. Przeglądaj poniższe kategorie."
+    },
+    "pagination": {
+      "prev": "Poprzednia",
+      "next": "Następna",
+      "page": "Strona",
+      "of": "z"
+    },
+    "sidebar": {
+      "title": "Filtry",
+      "searchKeywords": "Słowa kluczowe",
+      "placeholderSearch": "np. Skyline...",
+      "propertyType": "Typ nieruchomości",
+      "any": "Dowolny",
+      "apartment": "Apartament",
+      "villa": "Willa",
+      "townhouse": "Kamienica",
+      "studio": "Studio",
+      "penthouse": "Penthouse",
+      "category": "Kategoria",
+      "buy": "Kupno",
+      "rent": "Wynajem",
+      "priceRange": "Zakres cen",
+      "min": "Min",
+      "max": "Maks",
+      "resetAll": "Resetuj wszystko",
+      "apply": "Zastosuj filtry",
+      "currency": "Waluta"
+    }
+  },
+  "propertyCard": {
+    "status": {
+      "sale": "Na sprzedaż",
+      "sold": "Sprzedane"
+    },
+    "details": {
+      "bedroom": "Sypialnia",
+      "bathroom": "Łazienka",
+      "viewDetails": "Pokaż szczegóły"
+    }
   }
 }

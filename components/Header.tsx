@@ -74,7 +74,7 @@ const Header = () => {
     <div className="relative">
       <button 
         onClick={() => handleDropdownClick(title)}
-        className="flex items-center gap-2 text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors py-2 outline-none cursor-pointer"
+        className="flex items-center gap-2 text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors py-2 outline-none cursor-pointer"
       >
         {title}
         <ChevronDown size={16} className={`transition-transform duration-300 ${activeDropdown === title ? 'rotate-180' : ''}`} />
@@ -126,7 +126,7 @@ const Header = () => {
   return (
     <>
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-48px)] max-w-[1440px]">
-        <header className="w-full bg-white rounded-[100px] shadow-md py-5 px-6 md:px-16 flex items-center justify-between">
+        <header className="w-full bg-white rounded-[100px] shadow-md py-6 px-6 md:px-12 flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/">
@@ -142,15 +142,15 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-10" ref={dropdownRef}>
-            <div className="flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-6" ref={dropdownRef}>
+            <div className="flex items-center gap-6">
               <Link
                 href="/"
-                className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors"
+                className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors"
               >
                 {t('header.home')}
               </Link>
-              <Link href="/projects" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
+              <Link href="/projects" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
                 {t('header.projects')}
               </Link>
               
@@ -161,13 +161,13 @@ const Header = () => {
                   { label: t('header.resale'), href: "/properties?unitType=Buy&status=resale" }
                 ]} 
               />
-              <Link href="/properties?unitType=Rent" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
+              <Link href="/properties?unitType=Rent" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
                 {t('header.rent')}
               </Link>
 
-              <Link href="/about" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
-              <Link href="/contact" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
-              <Link href="/blogs" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.blogs')}</Link>
+              <Link href="/about" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
+              <Link href="/contact" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
+              <Link href="/blogs" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.blogs')}</Link>
             </div>
 
             {/* Social Links & Language */}
@@ -211,7 +211,7 @@ const Header = () => {
             {/* List Your Property Button */}
             <Link 
               href="/list-property"
-              className="bg-[#1B2134] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#c7b7a1] transition-all whitespace-nowrap shadow-sm"
+              className="bg-[#1B2134] text-white px-6 py-3 rounded-full font-semibold text-[15px] hover:bg-[#c7b7a1] transition-all whitespace-nowrap shadow-sm"
             >
               {t('header.listProperty')}
             </Link>

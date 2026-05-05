@@ -1,6 +1,6 @@
 import { API_BASE_URL } from './config';
 import { ApiResponse } from './auth';
-import { getAccessToken } from '@/lib/auth/tokens';
+import { getHeaders } from './common';
 import { Facility } from './facilities';
 import { Service } from './services';
 
@@ -73,15 +73,16 @@ export interface UpdateProjectPayload {
   id: number;
   name: LocalizedString;
   description: LocalizedString;
-  developerId: number | null;
-  locationId: number | null;
-  facilityIds?: number[];
+  developerId: number;
+  locationId: number;
 }
 
 // ─── Unit Types ───────────────────────────────────────────────────────────────
 
 export interface PaymentPlan {
   installmentMonthes: number;
+  installmentMonths?: number;
+  installmentMothes?: number;
   installmentDownPayment: number;
   paymentType: string;
   planStatus?: string;
@@ -149,6 +150,8 @@ export interface UnitDetail {
   paymentPlans: {
     planStatus: string;
     installmentMothes: number;
+    installmentMonthes?: number;
+    installmentMonths?: number;
     installmentDownPayment: number;
     paymentType: string;
   }[];
@@ -172,10 +175,6 @@ export interface UnitsListPage {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function getAuthHeader(): Record<string, string> {
-  const token = getAccessToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
 
 /** Prefix a relative image path from the API with the base URL */
 export function resolveProjectImageUrl(path: string | null): string | null {
@@ -187,10 +186,10 @@ export function resolveProjectImageUrl(path: string | null): string | null {
 // ─── Project Endpoints ────────────────────────────────────────────────────────
 
 /** GET /api/Projects?pageNumber=N */
-export async function getProjects(pageNumber = 1): Promise<ProjectsPage> {
+export async function getProjects(pageNumber = 1, lang?: string): Promise<ProjectsPage> {
   const res = await fetch(
     `${API_BASE_URL}/api/Projects?pageNumber=${pageNumber}`,
-    { headers: { ...getAuthHeader() } }
+    { headers: { ...getHeaders(lang) } }
   );
   if (!res.ok) {
     const text = await res.text();
@@ -206,9 +205,9 @@ export async function getProjects(pageNumber = 1): Promise<ProjectsPage> {
 }
 
 /** GET /api/Projects/{id} */
-export async function getProjectById(id: number): Promise<Project> {
+export async function getProjectById(id: number, lang?: string): Promise<Project> {
   const res = await fetch(`${API_BASE_URL}/api/Projects/${id}`, {
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders(lang) },
   });
   if (!res.ok) {
     const text = await res.text();
@@ -227,7 +226,7 @@ export async function getProjectById(id: number): Promise<Project> {
 export async function createProject(payload: CreateProjectPayload): Promise<number | Project> {
   const res = await fetch(`${API_BASE_URL}/api/Projects`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders(undefined, true) },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -245,19 +244,33 @@ export async function createProject(payload: CreateProjectPayload): Promise<numb
 
 /** PUT /api/Projects/{id} */
 export async function updateProject(id: number, payload: UpdateProjectPayload): Promise<number | Project> {
+  const headers = { 'Content-Type': 'application/json', ...getHeaders(undefined, true) };
+  
   const res = await fetch(`${API_BASE_URL}/api/Projects/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers,
     body: JSON.stringify(payload),
   });
+
   if (!res.ok) {
     const text = await res.text();
     console.error('[Projects] Update failed:', res.status, text);
-    throw new Error('Failed to update project.');
+    console.error('[Projects] Payload sent:', payload);
+    
+    let message = 'Failed to update project.';
+    try {
+      const json = JSON.parse(text);
+      if (json.message) message = json.message;
+      else if (json.errors) message = JSON.stringify(json.errors);
+    } catch {
+      // use default
+    }
+    throw new Error(message);
   }
+  
   const json: ApiResponse<number | Project> = await res.json();
   if (!json.success || !json.data) {
-    console.error('[Projects] Update error:', json.message, json.errors);
+    console.error('[Projects] Update logical error:', json.message, json.errors);
     throw new Error(json.message || 'Failed to update project.');
   }
   return json.data;
@@ -267,7 +280,7 @@ export async function updateProject(id: number, payload: UpdateProjectPayload): 
 export async function deleteProject(id: number): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/Projects/${id}`, {
     method: 'DELETE',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     const text = await res.text();
@@ -291,7 +304,7 @@ export async function uploadProjectImages(id: number, files: File[]): Promise<vo
   files.forEach((file) => formData.append('files', file));
   const res = await fetch(`${API_BASE_URL}/api/Projects/${id}/images`, {
     method: 'POST',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
     body: formData,
   });
   if (!res.ok) {
@@ -318,7 +331,7 @@ export async function deleteProjectImage(id: number, imageUrl?: string): Promise
   const url = `${API_BASE_URL}/api/Projects/${id}/deleteproject/images${imageUrl ? `?url=${encodeURIComponent(imageUrl)}` : ''}`;
   const res = await fetch(url, {
     method: 'DELETE',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     const text = await res.text();
@@ -333,7 +346,7 @@ export async function deleteProjectImage(id: number, imageUrl?: string): Promise
 export async function addUnitToProject(payload: AddUnitPayload): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/Projects/AddUnitProject`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -356,7 +369,7 @@ export async function addUnitToProject(payload: AddUnitPayload): Promise<void> {
 export async function updateUnit(payload: UpdateUnitPayload): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/Projects/UpdateUnit`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -379,7 +392,7 @@ export async function updateUnit(payload: UpdateUnitPayload): Promise<void> {
 export async function deleteUnit(id: number): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/Projects/DeleteUnit/${id}`, {
     method: 'DELETE',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     const text = await res.text();
@@ -394,7 +407,7 @@ export async function uploadUnitImages(id: number, files: File[]): Promise<void>
   files.forEach((file) => formData.append('files', file));
   const res = await fetch(`${API_BASE_URL}/api/Projects/${id}/uploadUnit/images`, {
     method: 'POST',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
     body: formData,
   });
   if (!res.ok) {
@@ -421,7 +434,7 @@ export async function deleteUnitImages(id: number, imageUrl?: string): Promise<v
   const url = `${API_BASE_URL}/api/Projects/${id}/deleteUnit/images${imageUrl ? `?url=${encodeURIComponent(imageUrl)}` : ''}`;
   const res = await fetch(url, {
     method: 'DELETE',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     const text = await res.text();
@@ -436,7 +449,7 @@ export async function deleteUnitImages(id: number, imageUrl?: string): Promise<v
 export async function getUnits(pageNumber = 1): Promise<UnitsListPage> {
   const res = await fetch(
     `${API_BASE_URL}/api/Units?pageNumber=${pageNumber}`,
-    { headers: { ...getAuthHeader() } }
+    { headers: { ...getHeaders() } }
   );
   if (!res.ok) {
     const text = await res.text();
@@ -452,9 +465,9 @@ export async function getUnits(pageNumber = 1): Promise<UnitsListPage> {
 }
 
 /** GET /api/Units/{id} — returns rich UnitDetail */
-export async function getUnitById(id: number): Promise<UnitDetail> {
+export async function getUnitById(id: number, lang?: string): Promise<UnitDetail> {
   const res = await fetch(`${API_BASE_URL}/api/Units/${id}`, {
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders(lang) },
   });
   if (!res.ok) {
     const text = await res.text();
@@ -470,11 +483,11 @@ export async function getUnitById(id: number): Promise<UnitDetail> {
 }
 
 /** PUT /api/Units/marksold — mark a unit as sold */
-export async function markUnitSold(unitId: number): Promise<void> {
-  const res = await fetch(`${API_BASE_URL}/api/Units/marksold`, {
+export async function markUnitSold(unitId: number, notes = ''): Promise<void> {
+  const params = new URLSearchParams({ id: String(unitId), Notes: notes });
+  const res = await fetch(`${API_BASE_URL}/api/Units/marksold?${params}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
-    body: JSON.stringify({ unitId }),
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     const text = await res.text();

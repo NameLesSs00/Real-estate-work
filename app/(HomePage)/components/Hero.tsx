@@ -39,7 +39,7 @@ const Hero = () => {
     const video = videoRef.current;
     if (!video) return;
     video.play().catch(() => {});
-    const handleTimeUpdate = () => { if (video.currentTime >= 4) { video.currentTime = 0; video.play(); } };
+    const handleTimeUpdate = () => { if (video.currentTime >= 4) { video.currentTime = 0; video.play().catch(() => {}); } };
     video.addEventListener('timeupdate', handleTimeUpdate);
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -122,7 +122,8 @@ const Hero = () => {
           <AnimatePresence initial={false}>
             {(showFilters || !isMobile) && (
               <motion.div initial={isMobile ? { height: 0, opacity: 0, marginTop: 0 } : false} animate={{ height: "auto", opacity: 1, marginTop: 24 }} exit={{ height: 0, opacity: 0, marginTop: 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* 1. Property Type */}
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#1B2134]">{t('hero.propertyType') as string}</label>
                     <select value={propertyType} onChange={e => setPropertyType(e.target.value)} className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/40 text-[#1B2134] font-medium text-[15px] outline-none appearance-none cursor-pointer shadow-sm">
@@ -130,12 +131,8 @@ const Hero = () => {
                       {PROPERTY_TYPES.map(t => <option key={t.value} value={t.value}>{t.name}</option>)}
                     </select>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[14px] font-semibold text-[#1B2134]">Currency</label>
-                    <select value={currency} onChange={e => setCurrency(e.target.value)} className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/40 text-[#1B2134] font-medium text-[15px] outline-none appearance-none cursor-pointer shadow-sm">
-                      {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                  </div>
+
+                  {/* 2. Location */}
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#1B2134]">{t('hero.location') as string}</label>
                     <select value={location} onChange={e => setLocation(e.target.value)} className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/40 text-[#1B2134] font-medium text-[15px] outline-none appearance-none cursor-pointer shadow-sm">
@@ -143,13 +140,26 @@ const Hero = () => {
                       {locations.map(l => <option key={l} value={l}>{l}</option>)}
                     </select>
                   </div>
+
+                  {/* 3. Starting Price + Currency */}
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#1B2134]">{t('hero.minPrice') as string}</label>
-                    <input type="number" value={minPrice} onChange={e => setMinPrice(e.target.value)} placeholder={t('hero.noMin') as string} className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/40 text-[#1B2134] placeholder:text-[#1B2134]/50 font-medium text-[15px] outline-none shadow-sm" />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[14px] font-semibold text-[#1B2134]">{t('hero.maxPrice') as string}</label>
-                    <input type="number" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} placeholder={t('hero.noMax') as string} className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/40 text-[#1B2134] placeholder:text-[#1B2134]/50 font-medium text-[15px] outline-none shadow-sm" />
+                    <div className="flex gap-2">
+                      <input 
+                        type="number" 
+                        value={minPrice} 
+                        onChange={e => setMinPrice(e.target.value)} 
+                        placeholder={t('hero.noMin') as string} 
+                        className="flex-1 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-3 border border-white/40 text-[#1B2134] placeholder:text-[#1B2134]/50 font-medium text-[15px] outline-none shadow-sm min-w-0" 
+                      />
+                      <select 
+                        value={currency} 
+                        onChange={e => setCurrency(e.target.value)} 
+                        className="w-[85px] bg-white/90 backdrop-blur-sm rounded-lg px-2 py-3 border border-white/40 text-[#1B2134] font-bold text-[14px] outline-none appearance-none cursor-pointer shadow-sm text-center"
+                      >
+                        {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
                   </div>
                 </div>
               </motion.div>

@@ -1,11 +1,6 @@
 import { API_BASE_URL } from './config';
-import { getAccessToken } from '@/lib/auth/tokens';
 import { ApiResponse } from './auth';
-
-function authHeader(): Record<string, string> {
-  const token = getAccessToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
+import { getHeaders } from './common';
 
 export interface UnitFilters {
   SearchTerm?: string;
@@ -78,7 +73,7 @@ export async function getUnitsFiltered(filters: UnitFilters = {}): Promise<Pagin
   params.set('PageSize', String(filters.PageSize ?? 12));
 
   const res = await fetch(`${API_BASE_URL}/api/Units?${params}`, {
-    headers: { ...authHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) throw new Error('Failed to fetch units.');
   const json: ApiResponse<PaginatedUnits> | UnitListItem[] = await res.json();
@@ -101,7 +96,7 @@ export async function getUnitsFiltered(filters: UnitFilters = {}): Promise<Pagin
 /** GET /api/Units/{id} */
 export async function getUnitDetail(id: number): Promise<UnitListItem> {
   const res = await fetch(`${API_BASE_URL}/api/Units/${id}`, {
-    headers: { ...authHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) throw new Error('Failed to fetch unit details.');
   const json = await res.json();
@@ -109,12 +104,89 @@ export async function getUnitDetail(id: number): Promise<UnitListItem> {
 }
 
 /** PUT /api/Units/marksold */
-export async function markUnitSold(id: number, notes?: string): Promise<void> {
-  const params = new URLSearchParams({ id: String(id) });
-  if (notes) params.set('Notes', notes);
+export async function markUnitSold(id: number, notes = ''): Promise<void> {
+  const params = new URLSearchParams({ id: String(id), Notes: notes });
   const res = await fetch(`${API_BASE_URL}/api/Units/marksold?${params}`, {
     method: 'PUT',
-    headers: { ...authHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) throw new Error('Failed to mark unit as sold.');
+}
+
+// ── Sold-Units (UnitSoldout) domain ──────────────────────────────────────────
+
+export interface SoldUnit {
+  id: number;
+  unitId: number;
+  unitName: string;
+  projectName: string;
+  city: string;
+  country: string;
+  unitImages: string[];
+  soldoutDate: string;
+  soldType: string;
+  notes: string;
+  createdBy: string;
+  createdAt: string;
+}
+
+export interface PaginatedSoldUnits {
+  items: SoldUnit[];
+  pageNumber: number;
+  totalPages: number;
+  totalCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export interface ReactivateUnitPayload {
+  projectId: number;
+  unitId: number;
+  isFeatured: boolean;
+  paymentPlans: {
+    installmentMonthes: number;
+    installmentDownPayment: number;
+    paymentType: string;
+  }[];
+}
+
+/** GET /api/unit-soldout — paginated list of sold units */
+export async function getSoldUnits(filters: {
+  unitName?: string;
+  soldType?: string;
+  page?: number;
+  size?: number;
+} = {}): Promise<PaginatedSoldUnits> {
+  const params = new URLSearchParams({
+    PageNumber: String(filters.page ?? 1),
+    PageSize: String(filters.size ?? 10),
+  });
+  if (filters.unitName) params.set('UnitName', filters.unitName);
+  if (filters.soldType) params.set('SoldType', filters.soldType);
+  const res = await fetch(`${API_BASE_URL}/api/unit-soldout?${params}`, {
+    headers: { ...getHeaders() },
+  });
+  if (!res.ok) throw new Error('Failed to fetch sold units.');
+  const json = await res.json();
+  return json.data ?? json;
+}
+
+/** GET /api/unit-soldout/{id} — single sold unit detail */
+export async function getSoldUnitById(id: number): Promise<SoldUnit> {
+  const res = await fetch(`${API_BASE_URL}/api/unit-soldout/${id}`, {
+    headers: { ...getHeaders() },
+  });
+  if (!res.ok) throw new Error('Failed to fetch sold unit detail.');
+  const json = await res.json();
+  return json.data ?? json;
+}
+
+/** PUT /api/Units/reactivte-unit — reactivate a previously sold unit */
+export async function reactivateUnit(payload: ReactivateUnitPayload): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/api/Units/reactivte-unit`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error('Failed to reactivate unit.');
 }

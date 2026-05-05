@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import { LanguageProvider } from "@/lib/contexts/LanguageContext";
+import TokenRefresher from "@/lib/auth/TokenRefresher";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -84,6 +85,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-poppins">
         <LanguageProvider>
+          <TokenRefresher />
           <Header />
           <main className="flex-grow">
             {children}

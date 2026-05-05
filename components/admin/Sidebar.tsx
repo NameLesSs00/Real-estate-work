@@ -6,16 +6,18 @@ import { usePathname } from 'next/navigation';
 import { handleLogout } from '@/lib/auth/logout';
 
 const menuItems = [
-  { name: 'Dashboard', path: '/admin/dashboard', icon: '/admin/sidebar/home-2.png' },
-  { name: 'Units', path: '/admin/units', icon: '/admin/sidebar/buildings-2.png' },
-  { name: 'Projects', path: '/admin/projects', icon: '/admin/sidebar/folder-open.png' },
-  { name: 'Developers', path: '/admin/developers', icon: '/admin/sidebar/profile-2user.png' },
-  { name: 'Units Requests', path: '/admin/requests', icon: '/admin/sidebar/receipt-search.png' },
-  { name: 'Facilities', path: '/admin/facilities', icon: '/admin/sidebar/location.png' },
-  { name: 'Services', path: '/admin/services', icon: '/admin/sidebar/setting-2.png' },
-  { name: 'Spots', path: '/admin/spots', icon: '/admin/sidebar/location.png' },
-  { name: 'Blogs', path: '/admin/blogs', icon: '/admin/sidebar/blogger.png' },
-  { name: 'Setting', path: '/admin/settings', icon: '/admin/sidebar/setting-2.png' },
+  { name: 'Dashboard',     path: '/admin/dashboard',   icon: '/admin/sidebar/home-2.png' },
+  { name: 'Units',         path: '/admin/units',        icon: '/admin/sidebar/buildings-2.png' },
+  { name: 'Sold Units',    path: '/admin/sold-units',   icon: '/admin/sidebar/receipt-search.png' },
+  { name: 'Deals',         path: '/admin/deals',        icon: '/admin/dashbaord/revenue.png' },
+  { name: 'Projects',      path: '/admin/projects',     icon: '/admin/sidebar/folder-open.png' },
+  { name: 'Developers',    path: '/admin/developers',   icon: '/admin/sidebar/profile-2user.png' },
+  { name: 'Units Requests',path: '/admin/requests',     icon: '/admin/sidebar/receipt-search.png' },
+  { name: 'Facilities',    path: '/admin/facilities',   icon: '/admin/sidebar/location.png' },
+  { name: 'Services',      path: '/admin/services',     icon: '/admin/sidebar/setting-2.png' },
+  { name: 'Spots',         path: '/admin/spots',        icon: '/admin/sidebar/location.png' },
+  { name: 'Blogs',         path: '/admin/blogs',        icon: '/admin/sidebar/blogger.png' },
+  { name: 'Setting',       path: '/admin/settings',     icon: '/admin/sidebar/setting-2.png' },
 ];
 
 export default function Sidebar() {

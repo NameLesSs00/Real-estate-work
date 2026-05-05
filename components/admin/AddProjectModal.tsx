@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import Image from 'next/image';
-import { createProject, updateProject, uploadProjectImages, Project, LocalizedString } from '@/lib/api/projects';
+import { createProject, updateProject, getProjectById, uploadProjectImages, Project, LocalizedString } from '@/lib/api/projects';
 import { getDevelopers } from '@/lib/api/developers';
 import { getLocations } from '@/lib/api/locations';
 import { getFacilities, createFacility, Facility } from '@/lib/api/facilities';
@@ -105,18 +105,52 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
     }
   };
 
-  // Populate form when editing
+  // Populate form when editing (Triple GET flow)
   useEffect(() => {
-    if (editData) {
-      setForm({
-        name: typeof editData.name === 'string' ? { en: editData.name, de: editData.name, pl: editData.name } : editData.name,
-        description: typeof editData.description === 'string' ? { en: editData.description, de: editData.description, pl: editData.description } : editData.description,
-        developerId: editData.developerId,
-        locationId: editData.locationId,
-        facilityIds: (editData as Project & { facilityIds?: number[] }).facilityIds || []
-      });
+    if (editData && isOpen) {
+      const fetchFullData = async () => {
+        setIsLoading(true);
+        try {
+          // Fetch the project 3 times with different language headers
+          const [enData, deData, plData] = await Promise.all([
+            getProjectById(editData.id, 'en'),
+            getProjectById(editData.id, 'de'),
+            getProjectById(editData.id, 'pl')
+          ]);
+
+          console.log('[AddProjectModal] Triple GET success:', { 
+            en: enData.name, 
+            de: deData.name, 
+            pl: plData.name 
+          });
+
+          setForm({
+            name: {
+              en: enData.name,
+              de: deData.name,
+              pl: plData.name
+            },
+            description: {
+              en: enData.description,
+              de: deData.description,
+              pl: plData.description
+            },
+            developerId: enData.developerId,
+            locationId: enData.locationId,
+            facilityIds: (enData as any).facilityIds || []
+          });
+        } catch (err) {
+          console.error('[AddProjectModal] Failed to fetch localized project data:', err);
+          setError('Failed to load full project data for editing.');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchFullData();
     } else {
       setForm(EMPTY_FORM);
+      setIsLoading(false);
     }
     setImageFiles([]);
     setImagePreviews([]);
@@ -157,9 +191,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           id: editData.id,
           name: form.name,
           description: form.description,
-          developerId: form.developerId,
-          locationId: form.locationId,
-          facilityIds: form.facilityIds,
+          developerId: form.developerId || 0,
+          locationId: form.locationId || 0,
         });
         projectId = typeof res === 'number' ? res : res.id;
       } else {
@@ -195,7 +228,13 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         </div>
 
         {/* Body */}
-        <div className="p-10 overflow-y-auto space-y-10 scrollbar-hide">
+        <div className="p-10 overflow-y-auto space-y-10 scrollbar-hide relative min-h-[400px]">
+          {isLoading && !isEditMode === false && (
+            <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-30 flex flex-col items-center justify-center gap-4">
+              <div className="w-12 h-12 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-[#16273B] font-bold text-sm animate-pulse">Fetching multilingual data...</p>
+            </div>
+          )}
           
           {/* Main Info Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50/50 p-6 rounded-[28px] border border-gray-100">

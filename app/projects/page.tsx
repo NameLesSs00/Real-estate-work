@@ -7,8 +7,32 @@ import { MapPin, Loader2 } from 'lucide-react';
 import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { getDeveloperById, resolveImageUrl } from '@/lib/api/developers';
 
+import { motion, AnimatePresence } from 'framer-motion';
+
+import { useLanguage } from '@/lib/contexts/LanguageContext';
+
 const DEFAULT_IMAGE = '/assists/defaultImage.png';
 const DEFAULT_DEVELOPER_LOGO = '/assists/defaultLogo.png';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.98 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1,
+    transition: { duration: 0.5, ease: "easeOut" }
+  }
+};
 
 interface ProjectWithLogo extends Project {
   developerLogoUrl: string | null;
@@ -32,6 +56,7 @@ async function enrichWithLogo(projects: Project[]): Promise<ProjectWithLogo[]> {
 }
 
 export default function ProjectsPage() {
+  const { t, getLocalized } = useLanguage();
   const [projects, setProjects]           = useState<ProjectWithLogo[]>([]);
   const [page, setPage]                   = useState(1);
   const [hasMore, setHasMore]             = useState(true);
@@ -48,12 +73,12 @@ export default function ProjectsPage() {
       setProjects((prev) => pageNumber === 1 ? enriched : [...prev, ...enriched]);
       setHasMore(data.hasNextPage);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load projects.');
+      setError(err instanceof Error ? err.message : t('projects.error') as string);
     } finally {
       setLoading(false);
       setInitialLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchPage(1);
@@ -70,17 +95,22 @@ export default function ProjectsPage() {
       <div className="max-w-[1200px] mx-auto px-6 md:px-10">
 
         {/* Page Header */}
-        <div className="mb-12">
+        <motion.div 
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-12"
+        >
           <h1 className="text-[36px] md:text-[48px] font-bold text-[#1B2134] leading-tight">
-            Explore Projects
+            {t('projects.title') as string}
           </h1>
-        </div>
+        </motion.div>
 
         {/* Initial Loading */}
         {initialLoading && (
           <div className="flex flex-col items-center justify-center py-32 gap-4 text-gray-400">
             <Loader2 className="animate-spin" size={36} />
-            <p className="text-[16px]">Loading projects…</p>
+            <p className="text-[16px]">{t('projects.loading') as string}</p>
           </div>
         )}
 
@@ -92,87 +122,101 @@ export default function ProjectsPage() {
               onClick={() => fetchPage(1)}
               className="bg-[#1B2134] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#252d46] transition-all"
             >
-              Try Again
+              {t('projects.tryAgain') as string}
             </button>
           </div>
         )}
 
         {/* Project Cards */}
         {!initialLoading && !error && (
-          <div className="flex flex-col gap-8">
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col gap-8"
+          >
             {projects.length === 0 ? (
               <div className="text-center py-24 text-gray-400 text-[18px]">
-                No projects found.
+                {t('projects.noResults') as string}
               </div>
             ) : (
-              projects.map((project) => {
-                const heroImage =
-                  project.imageUrls?.[0]
-                    ? (resolveProjectImageUrl(project.imageUrls[0]) ?? DEFAULT_IMAGE)
-                    : DEFAULT_IMAGE;
+              <AnimatePresence mode="popLayout">
+                {projects.map((project) => {
+                  const heroImage =
+                    project.imageUrls?.[0]
+                      ? (resolveProjectImageUrl(project.imageUrls[0]) ?? DEFAULT_IMAGE)
+                      : DEFAULT_IMAGE;
 
-                return (
-                  <div
-                    key={project.id}
-                    className="bg-white rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.05)] overflow-hidden border border-[#F0EDE8] hover:shadow-[0_16px_48px_rgba(0,0,0,0.09)] hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row"
-                  >
-                    {/* Left: Hero Image */}
-                    <div className="relative w-full md:w-[400px] h-[240px] md:h-auto flex-shrink-0">
-                      <Image
-                        src={heroImage}
-                        alt={project.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
+                  const localizedName = getLocalized(project.name);
+                  const localizedDesc = getLocalized(project.description);
 
-                    {/* Right: Content */}
-                    <div className="flex-1 p-7 md:p-10 flex flex-col justify-between relative">
+                  return (
+                    <motion.div
+                      key={project.id}
+                      variants={itemVariants}
+                      layout
+                      className="bg-white rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.05)] overflow-hidden border border-[#F0EDE8] hover:shadow-[0_16px_48px_rgba(0,0,0,0.09)] hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row"
+                    >
+                      {/* Left: Hero Image */}
+                      <Link href={`/projects/${project.id}`} className="relative w-full md:w-[400px] h-[240px] md:h-auto flex-shrink-0 overflow-hidden block">
+                        <Image
+                          src={heroImage}
+                          alt={localizedName}
+                          fill
+                          draggable={false}
+                          className="object-cover transition-transform duration-700 hover:scale-105"
+                        />
+                      </Link>
 
-                      {/* Developer Logo — top right */}
-                      <div className="absolute top-7 right-7">
-                        <div className="relative w-[100px] h-[50px]">
-                          <Image
-                            src={project.developerLogoUrl || DEFAULT_DEVELOPER_LOGO}
-                            alt={project.developerName}
-                            fill
-                            className="object-contain"
-                          />
-                        </div>
-                      </div>
+                      {/* Right: Content */}
+                      <div className="flex-1 p-7 md:p-10 flex flex-col justify-between relative">
 
-                      {/* Top Content */}
-                      <div className="flex flex-col gap-3 pr-28">
-                        {/* Project Name */}
-                        <h2 className="text-[22px] md:text-[28px] font-bold text-[#1B2134] leading-tight">
-                          {project.name}
-                        </h2>
-
-                        {/* Location */}
-                        <div className="flex items-center gap-2 text-[14px] text-[#888]">
-                          <MapPin size={16} className="text-[#C7B7A1] flex-shrink-0" />
-                          <span>{project.locationName || 'Location not listed'}</span>
+                        {/* Developer Logo — top right */}
+                        <div className="absolute top-7 right-7">
+                          <div className="relative w-[100px] h-[50px]">
+                            <Image
+                              src={project.developerLogoUrl || DEFAULT_DEVELOPER_LOGO}
+                              alt={project.developerName}
+                              fill
+                              draggable={false}
+                              className="object-contain"
+                            />
+                          </div>
                         </div>
 
-                        {/* Description */}
-                        <p className="text-[14px] md:text-[15px] text-[#666] leading-relaxed line-clamp-3 mt-1">
-                          {project.description}
-                        </p>
-                      </div>
+                        {/* Top Content */}
+                        <div className="flex flex-col gap-3 pr-28">
+                          {/* Project Name */}
+                          <h2 className="text-[22px] md:text-[28px] font-bold text-[#1B2134] leading-tight">
+                            {localizedName}
+                          </h2>
 
-                      {/* Bottom: View Details Button */}
-                      <div className="flex justify-end mt-8">
-                        <Link
-                          href={`/projects/${project.id}`}
-                          className="bg-[#1B2134] text-white px-10 py-3.5 rounded-full text-[15px] font-semibold hover:bg-[#252d46] hover:-translate-y-0.5 transition-all"
-                        >
-                          View Details
-                        </Link>
+                          {/* Location */}
+                          <div className="flex items-center gap-2 text-[14px] text-[#888]">
+                            <MapPin size={16} className="text-[#C7B7A1] flex-shrink-0" />
+                            <span>{project.locationName || t('projects.noLocation') as string}</span>
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-[14px] md:text-[15px] text-[#666] leading-relaxed line-clamp-3 mt-1">
+                            {localizedDesc}
+                          </p>
+                        </div>
+
+                        {/* Bottom: View Details Button */}
+                        <div className="flex justify-end mt-8">
+                          <Link
+                            href={`/projects/${project.id}`}
+                            className="bg-[#1B2134] text-white px-10 py-3.5 rounded-full text-[15px] font-semibold hover:bg-[#252d46] hover:-translate-y-0.5 transition-all"
+                          >
+                            {t('projects.viewDetails') as string}
+                          </Link>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
             )}
 
             {/* Show More */}
@@ -186,10 +230,10 @@ export default function ProjectsPage() {
                   {loading ? (
                     <>
                       <Loader2 size={20} className="animate-spin" />
-                      Loading…
+                      {t('projects.loadingMore') as string}
                     </>
                   ) : (
-                    'Show More'
+                    t('projects.showMore') as string
                   )}
                 </button>
               </div>
@@ -198,10 +242,10 @@ export default function ProjectsPage() {
             {/* End of results */}
             {!hasMore && projects.length > 0 && (
               <p className="text-center text-[14px] text-gray-400 pt-4">
-                All {projects.length} projects loaded.
+                {t('projects.allLoaded') as string}
               </p>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

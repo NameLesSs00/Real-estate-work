@@ -16,7 +16,7 @@ const tabs = [
 ];
 
 const ExploreUnits = () => {
-  const { t } = useLanguage();
+  const { t, getLocalized } = useLanguage();
   const [activeTab, setActiveTab] = useState(0);
   const [units, setUnits] = useState<UnitListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,12 +25,20 @@ const ExploreUnits = () => {
     async function loadUnits() {
       setIsLoading(true);
       try {
-        // Different pages/filters for each tab
-        const pageMap: Record<number, number> = { 0: 1, 1: 2, 2: 1 };
-        const data = await getUnitsFiltered({ PageNumber: pageMap[activeTab], PageSize: 6 });
+        // Fetch a larger set to allow meaningful client-side sorting if API doesn't support it
+        // Or if the API is simple, we take the first page and sort it.
+        // For 'Hot Deal', we'll just take the first page as is (latest).
+        const data = await getUnitsFiltered({ PageNumber: 1, PageSize: 50 });
         let items = data.items;
-        // For Best Price tab, sort ascending by price client-side
-        if (activeTab === 2) items = [...items].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+
+        if (activeTab === 1) {
+          // Recommended: Most expensive first
+          items = [...items].sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+        } else if (activeTab === 2) {
+          // Best Price: Cheapest first
+          items = [...items].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+        }
+        
         setUnits(items.slice(0, 6));
       } catch (err) {
         console.error('Failed to load units:', err);
@@ -74,7 +82,7 @@ const ExploreUnits = () => {
               <PropertyCard
                 key={unit.id}
                 id={unit.id}
-                title={unit.name || 'Untitled Unit'}
+                title={getLocalized(unit.name) || 'Untitled Unit'}
                 type={unit.propertyType || unit.unitType || 'Unit'}
                 location={unit.locationName || 'Unknown Location'}
                 price={`EGP ${unit.price?.toLocaleString()}`}

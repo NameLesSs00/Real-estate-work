@@ -1,6 +1,7 @@
 import { API_BASE_URL } from './config';
 import { ApiResponse } from './auth';
 import { getAccessToken } from '@/lib/auth/tokens';
+import { getHeaders } from './common';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -44,9 +45,21 @@ export interface UpdateDeveloperPayload {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function getAuthHeader(): Record<string, string> {
+function getHeaders(): Record<string, string> {
   const token = getAccessToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  const headers: Record<string, string> = {};
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  // Read current language from NEXT_LOCALE cookie
+  const lang = (typeof document !== 'undefined' ? 
+    document.cookie.match(/(?:^|; )NEXT_LOCALE=([^;]*)/)?.[1] : 'en') || 'en';
+  
+  headers['Language'] = lang.toUpperCase(); // EN, DE, PL
+
+  return headers;
 }
 
 /** Prefix a relative image path from the API with the base URL */
@@ -66,7 +79,7 @@ export async function getDevelopers(pageNumber = 1, searchKeyword = ''): Promise
   if (searchKeyword) url.searchParams.append('SearchKeyword', searchKeyword);
 
   const res = await fetch(url.toString(), { 
-    headers: { ...getAuthHeader() } 
+    headers: { ...getHeaders() } 
   });
   if (!res.ok) {
     throw new Error('Failed to fetch developers.');
@@ -81,7 +94,7 @@ export async function getDevelopers(pageNumber = 1, searchKeyword = ''): Promise
 /** GET /api/Developers/{id} */
 export async function getDeveloperById(id: number): Promise<Developer> {
   const res = await fetch(`${API_BASE_URL}/api/Developers/${id}`, {
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     throw new Error('Failed to fetch developer.');
@@ -97,7 +110,7 @@ export async function getDeveloperById(id: number): Promise<Developer> {
 export async function createDeveloper(payload: CreateDeveloperPayload): Promise<number | Developer> {
   const res = await fetch(`${API_BASE_URL}/api/Developers`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -117,7 +130,7 @@ export async function createDeveloper(payload: CreateDeveloperPayload): Promise<
 export async function updateDeveloper(payload: UpdateDeveloperPayload): Promise<number | Developer> {
   const res = await fetch(`${API_BASE_URL}/api/Developers`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
     body: JSON.stringify(payload),
   });
   if (!res.ok) {
@@ -137,7 +150,7 @@ export async function updateDeveloper(payload: UpdateDeveloperPayload): Promise<
 export async function deleteDeveloper(id: number): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/Developers/${id}`, {
     method: 'DELETE',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     const text = await res.text();
@@ -152,7 +165,7 @@ export async function uploadDeveloperLogo(id: number, file: File): Promise<void>
   formData.append('file', file);
   const res = await fetch(`${API_BASE_URL}/api/Developers/${id}/logo`, {
     method: 'POST',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
     body: formData,
   });
   if (!res.ok) {
@@ -166,7 +179,7 @@ export async function uploadDeveloperLogo(id: number, file: File): Promise<void>
 export async function deleteDeveloperLogo(id: number): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/Developers/${id}/logo`, {
     method: 'DELETE',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     const text = await res.text();
@@ -181,7 +194,7 @@ export async function uploadGalleryImages(id: number, files: File[]): Promise<st
   files.forEach((file) => formData.append('files', file));
   const res = await fetch(`${API_BASE_URL}/api/Developers/${id}/gallery`, {
     method: 'POST',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
     body: formData,
   });
   if (!res.ok) {
@@ -197,7 +210,7 @@ export async function uploadGalleryImages(id: number, files: File[]): Promise<st
 export async function deleteGalleryImage(imageId: number): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/Developers/gallery/${imageId}`, {
     method: 'DELETE',
-    headers: { ...getAuthHeader() },
+    headers: { ...getHeaders() },
   });
   if (!res.ok) {
     const text = await res.text();

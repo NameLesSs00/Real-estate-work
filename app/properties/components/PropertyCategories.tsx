@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './PropertyCategories.css';
 
 interface Props {
@@ -9,13 +10,15 @@ interface Props {
   onCategorySelect?: (type: string) => void;
 }
 
-const propertyTypes = [
-  { name: 'Studio', value: '3', image: '/assists/Properties/Studios.png' },
-  { name: 'Villa', value: '1', image: '/assists/Properties/Villas.png' },
-  { name: 'Apartment', value: '0', image: '/assists/Properties/Standalone.png' },
-];
-
 const PropertyCategories = ({ selectedType, onCategorySelect }: Props) => {
+  const { t } = useLanguage();
+
+  const propertyTypes = [
+    { name: t('propertiesPage.sidebar.studio'), value: '3', image: '/assists/Properties/Studios.png' },
+    { name: t('propertiesPage.sidebar.villa'), value: '1', image: '/assists/Properties/Villas.png' },
+    { name: t('propertiesPage.sidebar.apartment'), value: '0', image: '/assists/Properties/Standalone.png' },
+  ];
+
   const handleSelect = (value: string) => {
     if (onCategorySelect) onCategorySelect(value);
   };
@@ -30,10 +33,10 @@ const PropertyCategories = ({ selectedType, onCategorySelect }: Props) => {
             <Image src="/assists/Properties/star3.png" alt="star" width={12} height={12} style={{ height: 'auto' }} />
           </div>
           <h2 className="property-categories-title">
-            Discover a World of Possibilities
+            {t('propertiesPage.categories.title') as string}
           </h2>
           <p className="property-categories-subtitle">
-            Our portfolio of properties is as diverse as your dreams. Explore the following categories to find the perfect property that resonates with your vision of home
+            {t('propertiesPage.categories.subtitle') as string}
           </p>
         </div>
 
@@ -48,7 +51,7 @@ const PropertyCategories = ({ selectedType, onCategorySelect }: Props) => {
               <div className="property-type-image-wrapper">
                 <Image
                   src={category.image}
-                  alt={category.name}
+                  alt={category.name as string}
                   fill
                   className="property-type-image"
                 />

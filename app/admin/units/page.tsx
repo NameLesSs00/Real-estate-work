@@ -5,8 +5,8 @@ import Image from 'next/image';
 import AddUnitModal from '@/components/admin/AddUnitModal';
 import DeleteUnitModal from '@/components/admin/DeleteUnitModal';
 import UnitDetailsModal from '@/components/admin/UnitDetailsModal';
+import MarkAsSoldModal from '@/components/admin/MarkAsSoldModal';
 import { getUnits, ApiUnit } from '@/lib/api/projects';
-import { markUnitSold } from '@/lib/api/units';
 
 export default function UnitsPage() {
   const [units, setUnits] = useState<ApiUnit[]>([]);
@@ -30,6 +30,8 @@ export default function UnitsPage() {
   const [deletingUnitName, setDeletingUnitName] = useState('');
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [viewingUnitId, setViewingUnitId] = useState<number | null>(null);
+  // Mark As Sold modal
+  const [markSoldUnit, setMarkSoldUnit] = useState<ApiUnit | null>(null);
 
   const fetchUnits = useCallback(async (page = 1) => {
     setIsLoading(true);
@@ -75,17 +77,14 @@ export default function UnitsPage() {
     setIsDetailsModalOpen(true);
   };
 
-  const handleMarkSold = async (unit: ApiUnit) => {
-    if (!confirm(`Are you sure you want to mark "${unit.name}" as sold?`)) return;
-    try {
-      await markUnitSold(unit.id);
-      setNotification({ type: 'success', message: 'Unit marked as sold successfully.' });
-      setTimeout(() => setNotification(null), 3000);
-      fetchUnits(currentPage);
-    } catch (err: unknown) {
-      setNotification({ type: 'error', message: err instanceof Error ? err.message : String(err) });
-      setTimeout(() => setNotification(null), 3000);
-    }
+  const handleMarkSold = (unit: ApiUnit) => {
+    setMarkSoldUnit(unit);
+  };
+
+  const handleMarkSoldSuccess = () => {
+    setNotification({ type: 'success', message: 'Unit marked as sold successfully.' });
+    setTimeout(() => setNotification(null), 3000);
+    fetchUnits(currentPage);
   };
 
   const handleSuccess = () => fetchUnits(currentPage);
@@ -310,6 +309,13 @@ export default function UnitsPage() {
         onClose={() => { setIsDetailsModalOpen(false); setViewingUnitId(null); }}
         unitId={viewingUnitId}
         onUpdate={handleSuccess}
+      />
+      <MarkAsSoldModal
+        isOpen={markSoldUnit !== null}
+        unitId={markSoldUnit?.id ?? null}
+        unitName={markSoldUnit?.name ?? ''}
+        onClose={() => setMarkSoldUnit(null)}
+        onSuccess={handleMarkSoldSuccess}
       />
     </div>
   );

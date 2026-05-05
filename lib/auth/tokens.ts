@@ -22,8 +22,9 @@ const REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
  */
 export function saveTokens(accessToken: string, refreshTokenValue: string): void {
   const secure = location.protocol === 'https:' ? '; Secure' : '';
-  document.cookie = `${ACCESS_TOKEN_KEY}=${accessToken}; Path=/; Max-Age=${ACCESS_TOKEN_MAX_AGE}; SameSite=Strict${secure}`;
-  document.cookie = `${REFRESH_TOKEN_KEY}=${refreshTokenValue}; Path=/; Max-Age=${REFRESH_TOKEN_MAX_AGE}; SameSite=Strict${secure}`;
+  // Use SameSite=Lax for better compatibility with redirects and different subdomains
+  document.cookie = `${ACCESS_TOKEN_KEY}=${encodeURIComponent(accessToken)}; Path=/; Max-Age=${ACCESS_TOKEN_MAX_AGE}; SameSite=Lax${secure}`;
+  document.cookie = `${REFRESH_TOKEN_KEY}=${encodeURIComponent(refreshTokenValue)}; Path=/; Max-Age=${REFRESH_TOKEN_MAX_AGE}; SameSite=Lax${secure}`;
 }
 
 /**

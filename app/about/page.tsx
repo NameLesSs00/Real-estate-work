@@ -21,16 +21,16 @@ export default function AboutPage() {
           className="flex flex-col gap-12"
         >
           <div className="flex flex-col gap-4">
-            <h2 className="text-[28px] md:text-[34px] font-radley text-[#1B2134]">{t('whoWeAre.visionTitle')}</h2>
+            <h2 className="text-[28px] md:text-[34px] font-radley text-[#1B2134]">{t('aboutPage.visionTitle')}</h2>
             <p className="text-[15px] md:text-[17px] text-[#555555] leading-relaxed font-poppins">
-              {t('whoWeAre.visionText')}
+              {t('aboutPage.visionText')}
             </p>
           </div>
 
           <div className="flex flex-col gap-4">
-            <h2 className="text-[28px] md:text-[34px] font-radley text-[#1B2134]">{t('whoWeAre.missionTitle')}</h2>
+            <h2 className="text-[28px] md:text-[34px] font-radley text-[#1B2134]">{t('aboutPage.missionTitle')}</h2>
             <p className="text-[15px] md:text-[17px] text-[#555555] leading-relaxed font-poppins">
-              {t('whoWeAre.missionText')}
+              {t('aboutPage.missionText')}
             </p>
           </div>
 
@@ -52,7 +52,7 @@ export default function AboutPage() {
           <div className="relative w-full max-w-[600px] aspect-[4/5]">
             <Image 
               src="/assists/aboutUs/aboutUS.png" 
-              alt="Our Vision and Mission" 
+              alt={t('aboutPage.visionTitle') as string} 
               fill
               className="object-contain"
               priority
@@ -98,7 +98,7 @@ export default function AboutPage() {
             className="bg-[#F8F5F080] rounded-[40px] px-8 py-12 flex flex-col items-center text-center gap-6"
           >
             <div className="w-28 h-28 bg-[#F8F5F080] rounded-full flex items-center justify-center">
-              <Image src="/assists/aboutUs/money.png" alt="Property Sales" width={64} height={64} />
+              <Image src="/assists/aboutUs/money.png" alt={t('aboutPage.offers.sales.title') as string} width={64} height={64} />
             </div>
             <h3 className="text-[22px] md:text-[26px] font-semibold text-[#1B2134] font-poppins">{t('aboutPage.offers.sales.title')}</h3>
             <p className="text-[15px] md:text-[17px] text-[#666] leading-relaxed font-poppins max-w-[450px]">
@@ -116,7 +116,7 @@ export default function AboutPage() {
             className="bg-[#F8F5F080] rounded-[40px] px-8 py-12 flex flex-col items-center text-center gap-6"
           >
             <div className="w-28 h-28 bg-[#F8F5F080] rounded-full flex items-center justify-center">
-              <Image src="/assists/aboutUs/home.png" alt="Property Rentals" width={64} height={64} />
+              <Image src="/assists/aboutUs/home.png" alt={t('aboutPage.offers.rentals.title') as string} width={64} height={64} />
             </div>
             <h3 className="text-[22px] md:text-[26px] font-semibold text-[#1B2134] font-poppins">{t('aboutPage.offers.rentals.title')}</h3>
             <p className="text-[15px] md:text-[17px] text-[#666] leading-relaxed font-poppins max-w-[450px]">
@@ -134,7 +134,7 @@ export default function AboutPage() {
             className="bg-[#F8F5F080] rounded-[40px] px-8 py-12 flex flex-col items-center text-center gap-6"
           >
             <div className="w-28 h-28 bg-[#F8F5F080] rounded-full flex items-center justify-center">
-              <Image src="/assists/aboutUs/sun.png" alt="Investment Opportunities" width={64} height={64} />
+              <Image src="/assists/aboutUs/sun.png" alt={t('aboutPage.offers.investment.title') as string} width={64} height={64} />
             </div>
             <h3 className="text-[22px] md:text-[26px] font-semibold text-[#1B2134] font-poppins">{t('aboutPage.offers.investment.title')}</h3>
             <p className="text-[15px] md:text-[17px] text-[#666] leading-relaxed font-poppins max-w-[450px]">

@@ -4,26 +4,31 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
+import { useRouter } from 'next/navigation';
 import './Categories.css';
 
 const categories = [
   {
     key: 'Apartments',
+    value: '0',
     count: '10 Listings',
     image: '/assists/categoriesHome/appartment.png',
   },
   {
     key: 'Houses',
+    value: '2', // Mapping Houses to TownHouse (2) or similar backend enum
     count: '12 Listings',
     image: '/assists/categoriesHome/home.png',
   },
   {
     key: 'Vails',
+    value: '1', // Mapping Vails to Villa (1)
     count: '9 Listings',
     image: '/assists/categoriesHome/vails.png',
   },
   {
     key: 'Studio',
+    value: '3', // Mapping Studio to Studio (3)
     count: '7 Listings',
     image: '/assists/categoriesHome/studio.png',
   },
@@ -31,6 +36,11 @@ const categories = [
 
 const Categories = () => {
   const { t } = useLanguage();
+  const router = useRouter();
+
+  const handleCategoryClick = (value: string) => {
+    router.push(`/properties?propertyType=${value}`);
+  };
 
   return (
     <section className="categories-section overflow-hidden">
@@ -81,7 +91,8 @@ const Categories = () => {
                 y: -12,
                 transition: { duration: 0.2, ease: "easeOut" }
               }}
-              className="category-card"
+              className="category-card cursor-pointer"
+              onClick={() => handleCategoryClick(category.value)}
             >
               <div className="category-image-wrapper">
                 <Image
