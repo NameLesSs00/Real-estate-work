@@ -242,6 +242,7 @@
       "inquiryOptions": {
         "buy": "Buy a Property",
         "sell": "Sell a Property",
+        "rent": "Rent a Property",
         "investment": "Investment Inquiry",
         "other": "Other"
       },
@@ -250,6 +251,7 @@
         "referral": "Friend / Referral",
         "search": "Search Engine",
         "ads": "Advertisement",
+        "seo": "SEO",
         "other": "Other"
       }
     },

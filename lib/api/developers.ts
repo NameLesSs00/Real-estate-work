@@ -1,6 +1,6 @@
 import { API_BASE_URL } from './config';
 import { ApiResponse } from './auth';
-import { getAccessToken } from '@/lib/auth/tokens';
+
 import { getHeaders } from './common';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -45,22 +45,7 @@ export interface UpdateDeveloperPayload {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function getHeaders(): Record<string, string> {
-  const token = getAccessToken();
-  const headers: Record<string, string> = {};
-  
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
 
-  // Read current language from NEXT_LOCALE cookie
-  const lang = (typeof document !== 'undefined' ? 
-    document.cookie.match(/(?:^|; )NEXT_LOCALE=([^;]*)/)?.[1] : 'en') || 'en';
-  
-  headers['Language'] = lang.toUpperCase(); // EN, DE, PL
-
-  return headers;
-}
 
 /** Prefix a relative image path from the API with the base URL */
 export function resolveImageUrl(path: string | null): string | null {

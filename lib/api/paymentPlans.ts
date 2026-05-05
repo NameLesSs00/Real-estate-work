@@ -13,6 +13,16 @@ export interface PaymentPlan {
   createdAt: string;
   updatedBy: string;
   updatedAt: string | null;
+  // Fallbacks
+  installmentMonthes?: number;
+  installmentMothes?: number;
+  InstallmentMonthes?: number;
+  InstallmentMothes?: number;
+  InstallmentDownPayment?: number;
+  PaymentType?: string;
+  planStatus?: string;
+  PlanStatus?: string;
+  paymentPlanId?: number;
 }
 
 export interface CreatePaymentPlanPayload {

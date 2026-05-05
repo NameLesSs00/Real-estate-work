@@ -1,5 +1,4 @@
 import { API_BASE_URL } from './config';
-import { getAccessToken } from '@/lib/auth/tokens';
 import { getHeaders } from './common';
 
 export interface CurrencyConfig {

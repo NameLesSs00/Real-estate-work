@@ -242,6 +242,7 @@
       "inquiryOptions": {
         "buy": "Eine Immobilie kaufen",
         "sell": "Eine Immobilie verkaufen",
+        "rent": "Eine Immobilie mieten",
         "investment": "Investment-Anfrage",
         "other": "Sonstiges"
       },
@@ -250,6 +251,7 @@
         "referral": "Freund / Empfehlung",
         "search": "Suchmaschine",
         "ads": "Werbung",
+        "seo": "SEO",
         "other": "Sonstiges"
       }
     },

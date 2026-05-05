@@ -30,7 +30,7 @@ const Hero = () => {
   const [currency, setCurrency] = useState('EGP');
   const [location, setLocation] = useState('');
   const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
+  const [maxPrice] = useState('');
   const [locations, setLocations] = useState<string[]>([]);
 
   const { t } = useLanguage();

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { addUnitToProject, updateUnit, getUnitById, ApiUnit, getProjects, LocalizedString } from '@/lib/api/projects';
+import { addUnitToProject, updateUnit, getUnitById, ApiUnit, getProjects, LocalizedString, uploadUnitImages, PaymentPlan, UnitPayload } from '@/lib/api/projects';
 import { getServices, createService, Service } from '@/lib/api/services';
 import { getPaymentPlansByUnit, createPaymentPlan, updatePaymentPlan, deletePaymentPlan } from '@/lib/api/paymentPlans';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
@@ -30,7 +30,7 @@ const EMPTY_FORM = {
   isFeatured: false,
   currencyCode: 'EGP',
   type: 'Buy' as 'Buy' | 'Rent',
-  status: 'primary' as 'primary' | 'resale' | '',
+  status: 0 as 0 | 1, // 0=Primary, 1=Resale
   paymentPlans: [] as { id?: number; installmentMonthes: number | ''; installmentDownPayment: number | ''; paymentType: string }[],
   servicesIds: [] as number[],
 };
@@ -43,6 +43,10 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [heroPreview, setHeroPreview] = useState<string | null>(null);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
   const [isAddingService, setIsAddingService] = useState(false);
   const [newServiceName, setNewServiceName] = useState({ en: '', de: '', pl: '' });
@@ -119,7 +123,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           isFeatured: editData.isFeatured,
           currencyCode: editData.currencyCode || 'EGP',
           type: editData.type || 'Buy',
-          status: editData.status || 'primary',
+          status: (editData.status !== undefined ? (editData.status === 'resale' ? 1 : 0) : 0) as 0 | 1,
         });
 
         try {
@@ -130,14 +134,14 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
           setForm(prev => ({
             ...prev,
-            servicesIds: (detail.services || []).map((s: Service) => s.id),
+            servicesIds: (detail.Services || detail.services || []).map((s: Service) => s.id),
             // Handle kitchen typo variations
-            noKithchen: ((detail as any).noKitchen ?? (detail as any).noKithchen ?? (detail as any).NoKitchen ?? prev.noKithchen)?.toString(),
+            noKithchen: (detail.NoKitchen ?? detail.noKitchen ?? prev.noKithchen)?.toString(),
             paymentPlans: [
-              ...(detail.paymentPlans || (detail as any).PaymentPlans || []),
+              ...(detail.PaymentPlans || detail.paymentPlans || []),
               ...extraPlans
             ].map(p => {
-              const plan = p as any;
+              const plan = p as PaymentPlan;
               return {
                 id: plan.id ?? plan.paymentPlanId, // Track ID for edit mode
                 installmentMonthes: plan.installmentMonths ?? plan.installmentMonthes ?? plan.installmentMothes ?? plan.InstallmentMonthes ?? plan.InstallmentMothes ?? 0,
@@ -155,10 +159,31 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
       setForm(EMPTY_FORM);
       setSelectedProjectId(projectId ?? null);
     }
+    setHeroFile(null);
+    setHeroPreview(null);
+    setGalleryFiles([]);
+    setGalleryPreviews([]);
     setError('');
   }, [isOpen, editData, projectId, isEditMode]);
 
   if (!isOpen) return null;
+
+  const handleHeroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    setHeroFile(file);
+    setHeroPreview(file ? URL.createObjectURL(file) : null);
+  };
+
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    setGalleryFiles(prev => [...prev, ...files]);
+    setGalleryPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setGalleryFiles(prev => prev.filter((_, i) => i !== index));
+    setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
+  };
 
   const set = (field: keyof typeof EMPTY_FORM, lang?: keyof LocalizedString) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -200,7 +225,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     
     setIsLoading(true); setError('');
     try {
-      const unitPayload = {
+      const unitPayload: UnitPayload = {
         name: form.name,
         description: form.description,
         price: Number(form.price),
@@ -208,8 +233,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         propertyType: Number(form.propertyType),
         noBathRoom: Number(form.noBathRoom),
         noBedRoom: Number(form.noBedRoom),
-        noKitchen: Number(form.noKithchen), // Mapping the typo'd state to the likely correct field
-        noKithchen: Number(form.noKithchen), // Keeping the typo for safety if backend uses it
+        noKithchen: Number(form.noKithchen),
+        noKitchen: Number(form.noKithchen),
         floorNumber: Number(form.floorNumber),
         area: Number(form.area),
         floorName: form.floorName,
@@ -224,7 +249,9 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         })),
         servicesIds: form.servicesIds,
         type: form.type,
-        status: form.type === 'Buy' ? form.status : '',
+        status: form.type === 'Buy' ? (form.status === 0 ? 'primary' : 'resale') : 'resale',
+        isActive: true,
+        IsActive: true,
       };
 
       if (isEditMode && editData) {
@@ -264,7 +291,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               status: 1, // Assume Active
               installmentDownPayment: p.installmentDownPayment,
               installmentYears: Math.ceil(p.installmentMonthes / 12),
-              // @ts-ignore
+              // @ts-expect-error - installmentMonths is used by some backend versions
               installmentMonths: p.installmentMonthes
             }).catch(e => console.error('Failed to update plan', e));
           }
@@ -273,10 +300,41 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         }
 
       } else {
-        await addUnitToProject({
+        const newUnitId = await addUnitToProject({
           projectId: selectedProjectId!,
           units: [unitPayload],
         });
+        
+        let targetUnitId = newUnitId;
+        // If the API returns the Project ID instead of the Unit ID, fetch to find the actual Unit ID
+        if (newUnitId === selectedProjectId) {
+           try {
+             const { getUnits } = await import('@/lib/api/projects');
+             const unitsRes = await getUnits(1, selectedProjectId ?? undefined);
+             if (unitsRes.items && unitsRes.items.length > 0) {
+               // Find the unit we just created by matching the exact English name we sent
+               const addedUnit = unitsRes.items.find(u => u.name === form.name.en);
+               if (addedUnit) {
+                 targetUnitId = addedUnit.id;
+               } else {
+                 // Fallback to highest ID assuming it's the newest
+                 targetUnitId = Math.max(...unitsRes.items.map(u => u.id));
+               }
+             }
+           } catch (e) {
+             console.warn('[AddUnitModal] Failed to fetch actual unit ID for image upload', e);
+           }
+        }
+
+        // Upload hero first (position 0), then gallery images
+        const allFiles = [...(heroFile ? [heroFile] : []), ...galleryFiles];
+        if (allFiles.length > 0 && targetUnitId) {
+          try {
+            await uploadUnitImages(targetUnitId, allFiles);
+          } catch (imgErr) {
+            console.warn('[AddUnitModal] Image upload failed, unit was still created:', imgErr);
+          }
+        }
       }
       onSuccess(); onClose();
     } catch (err: unknown) {
@@ -446,8 +504,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               <div className="space-y-2">
                 <label className="text-[#16273B] font-semibold text-[15px]">Listing Status</label>
                 <select value={form.status} onChange={set('status')} className={inputCls}>
-                  <option value="primary">Primary</option>
-                  <option value="resale">Resale</option>
+                  <option value={0}>Primary</option>
+                  <option value={1}>Resale</option>
                 </select>
               </div>
             )}
@@ -659,7 +717,72 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 {services.length === 0 && <p className="text-sm text-gray-500 italic">No services available.</p>}
               </div>
             </div>
-          
+               {/* Image Upload — Hero + Gallery (Side by Side) */}
+          {!isEditMode && (
+            <div className="space-y-4 pt-4 border-t border-gray-100">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Hero / Cover Image */}
+                <div>
+                  <label className="text-[#16273B] font-bold text-[15px] flex items-center gap-2 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-amber-400" />
+                    Hero / Cover Image
+                  </label>
+                  <p className="text-[12px] text-gray-400 mb-3">Main cover photo for the unit.</p>
+
+                  {heroPreview ? (
+                    <div className="relative w-full aspect-video rounded-xl overflow-hidden border-2 border-amber-400">
+                      <Image src={heroPreview} alt="Hero preview" fill className="object-cover" />
+                      <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-black tracking-widest uppercase bg-amber-400 text-white shadow-md">⭐ Hero</div>
+                      <button
+                        type="button"
+                        onClick={() => { setHeroFile(null); setHeroPreview(null); }}
+                        className="absolute top-2 right-2 w-7 h-7 bg-white/90 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50 shadow cursor-pointer text-lg font-bold"
+                      >×</button>
+                    </div>
+                  ) : (
+                    <label htmlFor="unit-hero-upload" className="border-2 border-dashed border-amber-200 bg-amber-50/30 hover:bg-amber-50/60 rounded-xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors h-[140px]">
+                      <span className="text-2xl">🖼️</span>
+                      <p className="text-gray-600 font-semibold text-sm">Upload Hero</p>
+                    </label>
+                  )}
+                  <input type="file" id="unit-hero-upload" className="hidden" accept="image/*" onChange={handleHeroChange} />
+                </div>
+
+                {/* Gallery Images */}
+                <div>
+                  <label className="text-[#16273B] font-bold text-[15px] flex items-center gap-2 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-[#16273B]" />
+                    Gallery Images
+                  </label>
+                  <p className="text-[12px] text-gray-400 mb-3">Additional images for the unit gallery.</p>
+
+                  <label htmlFor="unit-gallery-upload" className="border-2 border-dashed border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer bg-gray-50/50 hover:bg-gray-100/50 transition-colors h-[140px]">
+                    <Image src="/admin/units/addUnit/upload.png" alt="Upload" width={28} height={28} className="opacity-50" />
+                    <p className="text-gray-600 font-semibold text-sm">Upload Gallery</p>
+                    <input type="file" id="unit-gallery-upload" className="hidden" accept="image/*" multiple onChange={handleGalleryChange} />
+                  </label>
+                </div>
+              </div>
+
+              {/* Gallery Previews (Full Width below) */}
+              {galleryPreviews.length > 0 && (
+                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 mt-2">
+                  {galleryPreviews.map((src, i) => (
+                    <div key={i} className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group">
+                      <Image src={src} alt={`Gallery ${i + 1}`} fill className="object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeGalleryImage(i)}
+                        className="absolute top-1 right-1 w-6 h-6 bg-white/90 rounded-md flex items-center justify-center text-red-500 opacity-0 group-hover:opacity-100 transition-opacity shadow cursor-pointer text-sm font-bold"
+                      >×</button>
+                      <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[9px] font-black bg-black/50 text-white">{i + 1}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Featured toggle */}
           <label className="flex items-center gap-3 cursor-pointer pt-4 border-t border-gray-100">
             <input type="checkbox" checked={form.isFeatured}

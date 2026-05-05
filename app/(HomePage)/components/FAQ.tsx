@@ -7,10 +7,11 @@ import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './FAQ.css';
 
 const FAQ = () => {
-  const { t } = useLanguage();
+  const { t, tRaw } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   
-  const faqData = (t('faq.questions') as { q: string; a: string }[]) || [];
+  const rawFaq = tRaw('faq.questions');
+  const faqData: { q: string; a: string }[] = Array.isArray(rawFaq) ? (rawFaq as { q: string; a: string }[]) : [];
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -26,10 +27,10 @@ const FAQ = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="faq-header"
         >
-          <span className="faq-tag">{t('faq.tag') as string}</span>
-          <h2 className="faq-title">{t('faq.title') as string}</h2>
+          <span className="faq-tag">{t('faq.tag')}</span>
+          <h2 className="faq-title">{t('faq.title')}</h2>
           <p className="faq-subtitle">
-            {t('faq.subtitle') as string}
+            {t('faq.subtitle')}
           </p>
           <div className="faq-accent-line"></div>
         </motion.div>

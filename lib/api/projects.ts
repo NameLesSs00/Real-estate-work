@@ -39,6 +39,7 @@ export interface Project {
   imageUrls: string[];
   units?: ApiUnit[];
   facilities?: string[];
+  facilityIds?: number[];
   createdBy: string;
   createdAt: string;
   updatedBy: string;
@@ -80,12 +81,28 @@ export interface UpdateProjectPayload {
 // ─── Unit Types ───────────────────────────────────────────────────────────────
 
 export interface PaymentPlan {
+  id?: number;
+  paymentPlanId?: number;
   installmentMonthes: number;
   installmentMonths?: number;
   installmentMothes?: number;
+  InstallmentMonthes?: number;
+  InstallmentMothes?: number;
   installmentDownPayment: number;
+  InstallmentDownPayment?: number;
   paymentType: string;
+  PaymentType?: string;
   planStatus?: string;
+  PlanStatus?: string;
+  unitStatus?: string;
+  unitDetailId?: number;
+  Id?: number;
+  unitId?: number;
+  unitName?: string;
+  createdBy?: string;
+  createdAt?: string;
+  updatedBy?: string | null;
+  updatedAt?: string | null;
 }
 
 export interface UnitPayload {
@@ -98,12 +115,17 @@ export interface UnitPayload {
   floorNumber: number;
   area: number;
   noKithchen: number;
+  noKitchen?: number;
   floorName: string;
   view: number;
   paymentPlans: PaymentPlan[];
   isFeatured: boolean;
   currencyCode: string;
   servicesIds: number[];
+  status: string;
+  type: string;
+  isActive: boolean;
+  IsActive: boolean;
 }
 
 export interface AddUnitPayload {
@@ -120,48 +142,73 @@ export interface UpdateUnitPayload {
   noBathRoom: number;
   noBedRoom: number;
   noKithchen: number;
+  noKitchen?: number;
   floorName: string;
   view: number;
   isFeatured: boolean;
   currencyCode?: string;
   paymentPlans?: PaymentPlan[];
   servicesIds?: number[];
+  status: string;
+  type: string;
+  isActive?: boolean;
+  IsActive?: boolean;
 }
 
 // Rich unit from GET /api/Units/{id}
 export interface UnitDetail {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  propertyType: string;
-  isFeatured: boolean;
-  isActive: boolean;
-  locationName: string;
-  projectName: string;
-  noBathRoom: number;
-  noBedRoom: number;
-  floorNumber: number;
-  floorName: string;
-  area: number;
-  noKitchen: number;
-  view: number;
+  Id: number;
+  Name: string | LocalizedString;
+  Description: string | LocalizedString;
+  Price: number;
+  PropertyType: string;
+  IsFeatured: boolean;
+  IsActive: boolean;
+  Status: string;
+  Type: string;
+  LocationName: string;
+  ProjectName: string;
+  NoBathRoom: number;
+  NoBedRoom: number;
+  FloorNumber: number;
+  FloorName: string;
+  Area: number;
+  NoKitchen: number;
+  View: number;
+  CurrencyCode?: string;
+  PaymentPlans: PaymentPlan[];
+  ImageUrls: string[];
+  Facilities: Facility[];
+  Services: Service[];
+  CreatedBy: string;
+  CreatedAt: string;
+  UpdatedBy: string;
+  UpdatedAt: string | null;
+
+  // Fallbacks for UI compatibility
+  id?: number;
+  name?: string | LocalizedString;
+  description?: string | LocalizedString;
+  price?: number;
+  propertyType?: string;
+  imageUrls?: string[];
+  noBedRoom?: number;
+  noBathRoom?: number;
+  area?: number;
+  floorNumber?: number;
+  floorName?: string;
+  noKitchen?: number;
+  isActive?: boolean;
+  isFeatured?: boolean;
+  services?: Service[];
+  paymentPlans?: PaymentPlan[];
   currencyCode?: string;
-  paymentPlans: {
-    planStatus: string;
-    installmentMothes: number;
-    installmentMonthes?: number;
-    installmentMonths?: number;
-    installmentDownPayment: number;
-    paymentType: string;
-  }[];
-  imageUrls: string[];
-  facilities: Facility[];
-  services: Service[];
-  createdBy: string;
-  createdAt: string;
-  updatedBy: string;
-  updatedAt: string | null;
+  type?: string;
+  status?: string;
+  projectName?: string;
+  locationName?: string;
+  createdBy?: string;
+  updatedBy?: string;
 }
 
 export interface UnitsListPage {
@@ -342,8 +389,8 @@ export async function deleteProjectImage(id: number, imageUrl?: string): Promise
 
 // ─── Unit Endpoints (via Projects) ───────────────────────────────────────────
 
-/** POST /api/Projects/AddUnitProject */
-export async function addUnitToProject(payload: AddUnitPayload): Promise<void> {
+/** POST /api/Projects/AddUnitProject — returns the new unit ID */
+export async function addUnitToProject(payload: AddUnitPayload): Promise<number | null> {
   const res = await fetch(`${API_BASE_URL}/api/Projects/AddUnitProject`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...getHeaders() },
@@ -362,6 +409,14 @@ export async function addUnitToProject(payload: AddUnitPayload): Promise<void> {
       }
     }
     throw new Error('Failed to add unit to project.');
+  }
+  try {
+    const json = await res.json();
+    // Some APIs return a raw integer ID, others return an ApiResponse object
+    if (typeof json === 'number') return json;
+    return json?.data ?? json?.id ?? null;
+  } catch {
+    return null;
   }
 }
 
@@ -446,9 +501,11 @@ export async function deleteUnitImages(id: number, imageUrl?: string): Promise<v
 // ─── Standalone Units Endpoints (/api/Units) ─────────────────────────────────
 
 /** GET /api/Units?pageNumber=N */
-export async function getUnits(pageNumber = 1): Promise<UnitsListPage> {
+export async function getUnits(pageNumber = 1, projectId?: number): Promise<UnitsListPage> {
+  let url = `${API_BASE_URL}/api/Units?pageNumber=${pageNumber}`;
+  if (projectId) url += `&ProjectId=${projectId}`;
   const res = await fetch(
-    `${API_BASE_URL}/api/Units?pageNumber=${pageNumber}`,
+    url,
     { headers: { ...getHeaders() } }
   );
   if (!res.ok) {

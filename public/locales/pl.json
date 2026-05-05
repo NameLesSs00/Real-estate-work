@@ -242,6 +242,7 @@
       "inquiryOptions": {
         "buy": "Kupno nieruchomości",
         "sell": "Sprzedaż nieruchomości",
+        "rent": "Wynajem nieruchomości",
         "investment": "Zapytanie inwestycyjne",
         "other": "Inne"
       },
@@ -250,6 +251,7 @@
         "referral": "Znajomy / Polecenie",
         "search": "Wyszukiwarka",
         "ads": "Reklama",
+        "seo": "SEO",
         "other": "Inne"
       }
     },

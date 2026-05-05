@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight } from "lucide-react";
-import { getUnitById, resolveProjectImageUrl } from "@/lib/api/projects";
+import { getUnitById, resolveProjectImageUrl, LocalizedString } from "@/lib/api/projects";
+import { Facility } from "@/lib/api/facilities";
+import { Service } from "@/lib/api/services";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
@@ -41,19 +43,19 @@ export default async function PropertyDetailsPage({ params }: Props) {
   }
 
   const mainImage =
-    (unitData.imageUrls?.[0] ? resolveProjectImageUrl(unitData.imageUrls[0]) : null) ??
+    (unitData.ImageUrls?.[0] ? resolveProjectImageUrl(unitData.ImageUrls[0]) : null) ??
     `${BASE}/mainImg.png`;
-  const thumbnails = (unitData.imageUrls?.slice(1, 5) ?? [])
+  const thumbnails = (unitData.ImageUrls?.slice(1, 5) ?? [])
     .map((url) => resolveProjectImageUrl(url))
     .filter((u): u is string => u !== null);
 
   const overviewStats = [
-    { label: t.projectDetails.propertyType || "Property Type", value: unitData.propertyType || "Unit",         icon: <Home        size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.bedrooms || "Bedrooms",      value: unitData.noBedRoom  || 0,                icon: <BedDouble   size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.bathrooms || "Bathrooms",     value: unitData.noBathRoom || 0,                icon: <Bath        size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.kitchens || "Kitchens",      value: unitData.noKitchen  || 0,                icon: <Utensils    size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.areaSize || "Area Size",     value: `${unitData.area || 0} M²`,           icon: <Maximize2   size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.floor || "Floor",         value: unitData.floorNumber || 0,               icon: <Layers      size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.propertyType || "Property Type", value: unitData.PropertyType || unitData.propertyType || "Unit", icon: <Home size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.bedrooms || "Bedrooms",      value: unitData.NoBedRoom || unitData.noBedRoom || 0, icon: <BedDouble size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.bathrooms || "Bathrooms",     value: unitData.NoBathRoom || unitData.noBathRoom || 0, icon: <Bath size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.kitchens || "Kitchens",      value: unitData.NoKitchen || unitData.noKitchen || 0, icon: <Utensils size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.areaSize || "Area Size",     value: `${unitData.Area || unitData.area || 0} M²`, icon: <Maximize2 size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.floor || "Floor",         value: unitData.FloorNumber || unitData.floorNumber || 0, icon: <Layers size={16} className="text-gray-500" /> },
   ];
 
   return (
@@ -65,19 +67,19 @@ export default async function PropertyDetailsPage({ params }: Props) {
           <Home size={14} className="text-gray-400" />
           <Link href="/" className="hover:text-gray-700 transition-colors">{t.header.home || "Home"}</Link>
           <ChevronRight size={13} />
-          <span>{unitData.propertyType || "Property"}</span>
+          <span>{unitData.PropertyType || "Property"}</span>
           <ChevronRight size={13} />
           <span className="text-gray-700 font-semibold">{t.projectDetails.title || "Property Details"}</span>
         </nav>
 
         {/* Title + Location */}
         <h1 className="text-[28px] font-bold text-gray-900 mb-1 font-poppins">
-          {unitData.name || "Untitled Property"}
+          {typeof unitData.Name === 'string' ? unitData.Name : (unitData.Name?.[locale as keyof LocalizedString] || unitData.Name?.en || "Untitled Property")}
         </h1>
         <div className="flex items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-1.5 text-[13px] text-gray-500 font-poppins">
             <MapPin size={14} className="text-gray-400 flex-shrink-0" />
-            <span>{unitData.floorName || t.projectDetails.noLocation || "Location not available"}</span>
+            <span>{unitData.FloorName || t.projectDetails.noLocation || "Location not available"}</span>
           </div>
           <CopyLinkButton />
         </div>
@@ -91,7 +93,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
             <div className="relative w-full aspect-[4/3] rounded-[12px] overflow-hidden bg-gray-200">
               <Image
                 src={mainImage}
-                alt={unitData.name || "Property Image"}
+                alt={(typeof unitData.name === 'string' ? unitData.name : (unitData.name?.[locale as keyof LocalizedString] || unitData.name?.en)) || "Property Image"}
                 fill
                 className="object-cover"
                 priority
@@ -143,19 +145,19 @@ export default async function PropertyDetailsPage({ params }: Props) {
             {t.projectDetails.description || "Description"}
           </h2>
           <p className="text-[14px] text-gray-600 leading-relaxed font-poppins whitespace-pre-wrap">
-            {unitData.description || t.projectDetails.noDescription || "No description provided."}
+            {(typeof unitData.Description === 'string' ? unitData.Description : (unitData.Description?.[locale as keyof LocalizedString] || unitData.Description?.en)) || t.projectDetails.noDescription || "No description provided."}
           </p>
         </div>
 
         {/* ── Features & Services ── */}
-        {((unitData.facilities?.length ?? 0) > 0 || (unitData.services?.length ?? 0) > 0) && (
+        {((unitData.Facilities?.length ?? 0) > 0 || (unitData.Services?.length ?? 0) > 0) && (
           <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
             <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
               {t.projectDetails.featuresServices || "Features & Services"}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-6">
-              {unitData.facilities?.map((f: any, i: number) => {
-                const name = typeof f.name === 'string' ? f.name : (f.name?.[locale] || f.name?.en || 'Unknown');
+              {unitData.Facilities?.map((f: Facility, i: number) => {
+                const name = typeof f.name === 'string' ? f.name : (f.name?.[locale as keyof LocalizedString] || f.name?.en || 'Unknown');
                 return (
                   <div key={`f-${i}`} className="flex items-center gap-2.5 text-gray-700">
                     <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
@@ -163,8 +165,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   </div>
                 );
               })}
-              {unitData.services?.map((s: any, i: number) => {
-                const name = typeof s.name === 'string' ? s.name : (s.name?.[locale] || s.name?.en || 'Unknown');
+              {unitData.Services?.map((s: Service, i: number) => {
+                const name = typeof s.name === 'string' ? s.name : (s.name?.[locale as keyof LocalizedString] || s.name?.en || 'Unknown');
                 return (
                   <div key={`s-${i}`} className="flex items-center gap-2.5 text-gray-700">
                     <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />

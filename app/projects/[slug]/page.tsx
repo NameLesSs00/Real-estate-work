@@ -6,14 +6,11 @@ import Link from 'next/link';
 import { MapPin, ChevronRight, Loader2 } from 'lucide-react';
 import { getProjectById, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { getDeveloperById } from '@/lib/api/developers';
-
-import { motion } from 'framer-motion';
-
+import { motion, type Variants } from 'framer-motion';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
-
-const DEFAULT_IMAGE  = '/assists/defaultImage.png';
-
 import ImageGallery from '@/components/ImageGallery';
+
+const DEFAULT_IMAGE = '/assists/defaultImage.png';
 
 // ─── Static stats cards ───────────────────────────────────────────────────────
 const STATS = [
@@ -24,7 +21,7 @@ const STATS = [
   { icon: '/assists/project/size.png',        label: 'spaces',          value: 'Various Sizes'          },
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -35,12 +32,12 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { duration: 0.5, ease: 'easeOut' as const }
   }
 };
 

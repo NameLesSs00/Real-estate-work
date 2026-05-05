@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { createDeal, CreateDealPayload } from '@/lib/api/deals';
-import { getProjects, Project, getUnitById } from '@/lib/api/projects';
+import { getProjects, Project, getUnitById, PaymentPlan } from '@/lib/api/projects';
 import { getUnitsFiltered, UnitListItem } from '@/lib/api/units';
 
 interface CreateDealModalProps {
@@ -21,7 +21,7 @@ export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDe
   // Dropdown Data
   const [projects, setProjects] = useState<Project[]>([]);
   const [units, setUnits] = useState<UnitListItem[]>([]);
-  const [paymentPlans, setPaymentPlans] = useState<any[]>([]);
+  const [paymentPlans, setPaymentPlans] = useState<PaymentPlan[]>([]);
 
   // Selection state
   const [selectedProjectId, setSelectedProjectId] = useState('');
@@ -78,7 +78,7 @@ export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDe
       try {
         const data = await getUnitById(Number(selectedUnitId));
         // Note: The API likely returns IDs in the paymentPlans, adding fallback checks
-        const plans = (data as any).paymentPlans || (data as any).PaymentPlans || [];
+        const plans = data.paymentPlans || data.PaymentPlans || [];
         setPaymentPlans(plans);
         setForm(p => ({ ...p, unitPlanId: 0 }));
       } catch (err) {

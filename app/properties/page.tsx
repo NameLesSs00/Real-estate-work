@@ -329,11 +329,7 @@ function PropertiesPageContent() {
             </div>
             <div className="p-6 border-t border-gray-100 bg-gray-50 flex items-center gap-4 shrink-0">
               <button 
-                onClick={() => {
-                  setDraftFilters({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '' });
-                  setIsSidebarOpen(false);
-                  handleSearch({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '' });
-                }}
+                onClick={clearFilters}
                 className="flex-1 py-4 text-[14px] font-bold text-gray-500 hover:text-[#1B2134] transition-colors cursor-pointer"
               >
                 {t('propertiesPage.sidebar.resetAll') as string}

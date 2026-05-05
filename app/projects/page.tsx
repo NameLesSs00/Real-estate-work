@@ -7,14 +7,14 @@ import { MapPin, Loader2 } from 'lucide-react';
 import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { getDeveloperById, resolveImageUrl } from '@/lib/api/developers';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 const DEFAULT_IMAGE = '/assists/defaultImage.png';
 const DEFAULT_DEVELOPER_LOGO = '/assists/defaultLogo.png';
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -24,13 +24,13 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30, scale: 0.98 },
   visible: { 
     opacity: 1, 
     y: 0, 
     scale: 1,
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { duration: 0.5, ease: 'easeOut' as const }
   }
 };
 

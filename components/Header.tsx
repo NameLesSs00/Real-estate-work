@@ -19,7 +19,7 @@ const Header = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
 
-  const locations = (t('header.locations') as string[]) || [];
+  const locations = (t('header.locations') as unknown as string[]) || [];
 
   // Close dropdown when clicking outside
   useEffect(() => {

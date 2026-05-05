@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { createLead } from "@/lib/api/leads";
+import { createContact, ContactType, HearFrom } from "@/lib/api/contacts";
 import { useLanguage } from "@/lib/contexts/LanguageContext";
 
 const BASE = "/assists/contactUs";
@@ -40,8 +40,15 @@ export default function ContactPage() {
     setLoading(true);
     setError('');
     try {
-      const notes = [form.inquiryType && `Inquiry: ${form.inquiryType}`, form.source && `Source: ${form.source}`, form.message].filter(Boolean).join('\n');
-      await createLead({ fullName: `${form.firstName} ${form.lastName}`.trim(), email: form.email, phone: form.phone, notes });
+      await createContact({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        phone: form.phone,
+        type: (form.inquiryType as ContactType) || 'GeneralInquiry',
+        hearFrom: (form.source as HearFrom) || 'Other',
+        notes: form.message,
+      });
       setSuccess(true);
       setForm({ firstName: '', lastName: '', email: '', phone: '', inquiryType: '', source: '', message: '', agreed: false });
     } catch (err) {
@@ -129,9 +136,9 @@ export default function ContactPage() {
                   <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.inquiryType') as string}</label>
                   <select name="inquiryType" value={form.inquiryType} onChange={handleChange} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors text-[#1B2134] appearance-none cursor-pointer">
                     <option value="">{t('contactPage.form.inquiryType') as string}</option>
-                    <option value="Buy a Property">{t('contactPage.form.inquiryOptions.buy') as string}</option>
-                    <option value="Sell a Property">{t('contactPage.form.inquiryOptions.sell') as string}</option>
-                    <option value="Investment Inquiry">{t('contactPage.form.inquiryOptions.investment') as string}</option>
+                    <option value="BuyUnit">{t('contactPage.form.inquiryOptions.buy') as string}</option>
+                    <option value="SellUnit">{t('contactPage.form.inquiryOptions.sell') as string}</option>
+                    <option value="RentUnit">{t('contactPage.form.inquiryOptions.rent') as string}</option>
                     <option value="Other">{t('contactPage.form.inquiryOptions.other') as string}</option>
                   </select>
                 </div>
@@ -139,10 +146,11 @@ export default function ContactPage() {
                   <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.source') as string}</label>
                   <select name="source" value={form.source} onChange={handleChange} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors text-[#1B2134] appearance-none cursor-pointer">
                     <option value="">{t('contactPage.form.source') as string}</option>
-                    <option value="Social Media">{t('contactPage.form.sourceOptions.social') as string}</option>
-                    <option value="Friend / Referral">{t('contactPage.form.sourceOptions.referral') as string}</option>
-                    <option value="Search Engine">{t('contactPage.form.sourceOptions.search') as string}</option>
+                    <option value="SocialMedia">{t('contactPage.form.sourceOptions.social') as string}</option>
+                    <option value="Friend">{t('contactPage.form.sourceOptions.referral') as string}</option>
+                    <option value="SearchEngine">{t('contactPage.form.sourceOptions.search') as string}</option>
                     <option value="Advertisement">{t('contactPage.form.sourceOptions.ads') as string}</option>
+                    <option value="SEO">{t('contactPage.form.sourceOptions.seo') as string}</option>
                     <option value="Other">{t('contactPage.form.sourceOptions.other') as string}</option>
                   </select>
                 </div>

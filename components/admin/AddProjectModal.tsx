@@ -28,8 +28,10 @@ const EMPTY_FORM = {
 export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }: AddProjectModalProps) {
   useBodyScrollLock(isOpen);
   const [form, setForm] = useState(EMPTY_FORM);
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [heroPreview, setHeroPreview] = useState<string | null>(null);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [developers, setDevelopers] = useState<DropdownOption[]>([]);
   const [locations, setLocations] = useState<DropdownOption[]>([]);
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -137,7 +139,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             },
             developerId: enData.developerId,
             locationId: enData.locationId,
-            facilityIds: (enData as any).facilityIds || []
+            facilityIds: enData.facilityIds || []
           });
         } catch (err) {
           console.error('[AddProjectModal] Failed to fetch localized project data:', err);
@@ -152,8 +154,10 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       setForm(EMPTY_FORM);
       setIsLoading(false);
     }
-    setImageFiles([]);
-    setImagePreviews([]);
+    setHeroFile(null);
+    setHeroPreview(null);
+    setGalleryFiles([]);
+    setGalleryPreviews([]);
     setError('');
   }, [editData, isOpen]);
 
@@ -174,10 +178,21 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       }
     };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleHeroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+    setHeroFile(file);
+    setHeroPreview(file ? URL.createObjectURL(file) : null);
+  };
+
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    setImageFiles(files);
-    setImagePreviews(files.map((f) => URL.createObjectURL(f)));
+    setGalleryFiles(prev => [...prev, ...files]);
+    setGalleryPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setGalleryFiles(prev => prev.filter((_, i) => i !== index));
+    setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
@@ -205,7 +220,9 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         });
         projectId = typeof res === 'number' ? res : res.id;
       }
-      if (imageFiles.length > 0) await uploadProjectImages(projectId, imageFiles);
+      // Upload hero first (position 0), then gallery images
+      const allFiles = [...(heroFile ? [heroFile] : []), ...galleryFiles];
+      if (allFiles.length > 0) await uploadProjectImages(projectId, allFiles);
       onSuccess(); onClose();
     } catch (err) {
       console.error('[AddProjectModal]', err);
@@ -424,29 +441,65 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             </div>
           </div>
 
-          {/* Image Upload */}
-          <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Images (optional)</label>
-            {imagePreviews.length > 0 ? (
-              <div className="grid grid-cols-3 gap-2">
-                {imagePreviews.map((src, i) => (
-                  <div key={i} className="relative aspect-video rounded-xl overflow-hidden border border-gray-100">
-                    <Image src={src} alt="preview" fill className="object-cover" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <label htmlFor="proj-img-upload"
-                className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center bg-gray-50/50 hover:bg-gray-100/50 transition-colors cursor-pointer">
-                <Image src="/admin/units/addUnit/upload.png" alt="Upload" width={36} height={36} className="mb-3 opacity-60" />
-                <p className="text-gray-500 font-medium text-sm mb-1">Click to upload images</p>
-                <p className="text-gray-400 text-xs">PNG, JPG, WEBP</p>
+          {/* Image Upload — Hero + Gallery */}
+          <div className="space-y-6">
+            <div>
+              <label className="text-[#16273B] font-bold text-[15px] flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
+                Hero / Cover Image
               </label>
-            )}
-            <input type="file" id="proj-img-upload" className="hidden" accept="image/*" multiple onChange={handleImageChange} />
-            {imagePreviews.length > 0 && (
-              <label htmlFor="proj-img-upload" className="inline-block text-[13px] text-[#16273B] underline cursor-pointer">Change images</label>
-            )}
+              <p className="text-[12px] text-gray-400 mb-3">This single image appears as the main cover photo.</p>
+
+              {heroPreview ? (
+                <div className="relative w-full aspect-video rounded-xl overflow-hidden border-2 border-amber-400">
+                  <Image src={heroPreview} alt="Hero preview" fill className="object-cover" />
+                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-black tracking-widest uppercase bg-amber-400 text-white shadow-md">⭐ Hero</div>
+                  <button
+                    type="button"
+                    onClick={() => { setHeroFile(null); setHeroPreview(null); }}
+                    className="absolute top-2 right-2 w-7 h-7 bg-white/90 rounded-lg flex items-center justify-center text-red-500 hover:bg-red-50 shadow cursor-pointer text-lg font-bold"
+                  >×</button>
+                </div>
+              ) : (
+                <label htmlFor="proj-hero-upload" className="border-2 border-dashed border-amber-200 bg-amber-50/30 hover:bg-amber-50/60 rounded-xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors">
+                  <span className="text-2xl">🖼️</span>
+                  <p className="text-gray-600 font-semibold text-sm">Click to upload Hero image</p>
+                  <p className="text-gray-400 text-xs">PNG, JPG, WEBP — single file</p>
+                </label>
+              )}
+              <input type="file" id="proj-hero-upload" className="hidden" accept="image/*" onChange={handleHeroChange} />
+            </div>
+
+            <div>
+              <label className="text-[#16273B] font-bold text-[15px] flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 rounded-full bg-[#16273B]" />
+                Gallery Images
+              </label>
+              <p className="text-[12px] text-gray-400 mb-3">Additional images shown in the project gallery. You can add multiple.</p>
+
+              {galleryPreviews.length > 0 && (
+                <div className="grid grid-cols-4 gap-2 mb-3">
+                  {galleryPreviews.map((src, i) => (
+                    <div key={i} className="relative aspect-video rounded-lg overflow-hidden border border-gray-200 group">
+                      <Image src={src} alt={`Gallery ${i + 1}`} fill className="object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => removeGalleryImage(i)}
+                        className="absolute top-1 right-1 w-6 h-6 bg-white/90 rounded-md flex items-center justify-center text-red-500 opacity-0 group-hover:opacity-100 transition-opacity shadow cursor-pointer text-sm font-bold"
+                      >×</button>
+                      <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[9px] font-black bg-black/50 text-white">{i + 1}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <label htmlFor="proj-gallery-upload" className="border-2 border-dashed border-gray-200 rounded-xl p-5 flex flex-col items-center justify-center gap-2 cursor-pointer bg-gray-50/50 hover:bg-gray-100/50 transition-colors">
+                <Image src="/admin/units/addUnit/upload.png" alt="Upload" width={28} height={28} className="opacity-50" />
+                <p className="text-gray-600 font-semibold text-sm">{galleryPreviews.length > 0 ? '+ Add more gallery images' : 'Click to upload gallery images'}</p>
+                <p className="text-gray-400 text-xs">PNG, JPG, WEBP — multiple files allowed</p>
+              </label>
+              <input type="file" id="proj-gallery-upload" className="hidden" accept="image/*" multiple onChange={handleGalleryChange} />
+            </div>
           </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}

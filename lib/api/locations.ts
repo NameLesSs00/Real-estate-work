@@ -1,6 +1,7 @@
-import { getAccessToken } from '@/lib/auth/tokens';
+
 import { API_BASE_URL } from './config';
 import { ApiResponse } from './auth';
+import { getHeaders } from './common';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -18,6 +19,12 @@ export interface Location {
   updatedAt: string | null;
 }
 
+export interface LocalizedString {
+  en: string;
+  de: string;
+  pl: string;
+}
+
 export interface LocationsPage {
   items: Location[];
   pageNumber: number;
@@ -28,42 +35,27 @@ export interface LocationsPage {
 }
 
 export interface CreateLocationPayload {
-  city: string;
-  district: string;
-  street: string;
-  country: string;
-  latitude: null;
-  longitude: null;
+  city: LocalizedString;
+  district: LocalizedString;
+  street?: string;
+  country?: string;
+  latitude: string;
+  longitude: string;
 }
 
 export interface UpdateLocationPayload {
   id: number;
-  city: string;
-  district: string;
-  street: string;
-  country: string;
-  latitude: null;
-  longitude: null;
+  city: LocalizedString;
+  district: LocalizedString;
+  street?: string;
+  country?: string;
+  latitude: string;
+  longitude: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function getHeaders(): Record<string, string> {
-  const token = getAccessToken();
-  const headers: Record<string, string> = {};
-  
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
 
-  // Read current language from NEXT_LOCALE cookie
-  const lang = (typeof document !== 'undefined' ? 
-    document.cookie.match(/(?:^|; )NEXT_LOCALE=([^;]*)/)?.[1] : 'en') || 'en';
-  
-  headers['Language'] = lang.toUpperCase(); // EN, DE, PL
-
-  return headers;
-}
 
 // ─── Endpoints ───────────────────────────────────────────────────────────────
 

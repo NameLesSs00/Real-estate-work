@@ -51,24 +51,27 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
     setIsLoading(true);
     setError('');
     try {
+      const cityPayload = { en: form.city, de: form.city, pl: form.city };
+      const districtPayload = { en: form.district, de: form.district, pl: form.district };
+
       if (isEditMode && editData) {
         await updateLocation({
           id: editData.id,
-          city: form.city,
-          district: form.district,
+          city: cityPayload,
+          district: districtPayload,
           street: form.street,
           country: form.country,
-          latitude: null,
-          longitude: null,
+          latitude: "",
+          longitude: "",
         });
       } else {
         await createLocation({
-          city: form.city,
-          district: form.district,
+          city: cityPayload,
+          district: districtPayload,
           street: form.street,
           country: form.country,
-          latitude: null,
-          longitude: null,
+          latitude: "",
+          longitude: "",
         });
       }
       onSuccess();

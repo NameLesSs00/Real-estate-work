@@ -9,15 +9,16 @@ type TranslationValue = string | number | boolean | null | { [key: string]: Tran
 interface LanguageContextProps {
   language: Language;
   setLanguage: (lang: Language) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  t: (key: string) => any;
-  getLocalized: (data: any) => string;
+  t: (key: string) => string;
+  tRaw: (key: string) => TranslationValue;
+  getLocalized: (data: string | Record<string, string> | null | undefined) => string;
 }
 
 const LanguageContext = createContext<LanguageContextProps>({
   language: 'en',
   setLanguage: () => {},
   t: (key) => key,
+  tRaw: (key) => key,
   getLocalized: (data) => (typeof data === 'string' ? data : ''),
 });
 
@@ -54,8 +55,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('language', lang);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const t = (key: string): any => {
+  const tRaw = (key: string): TranslationValue => {
     const keys = key.split('.');
     let result: TranslationValue = translations;
     for (const k of keys) {
@@ -68,12 +68,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return result;
   };
 
+  const t = (key: string): string => {
+    const result = tRaw(key);
+    return typeof result === 'string' ? result : key;
+  };
+
   /**
    * getLocalized(project.name)
    * Handles objects like { en: "Name", de: "Name DE" }
    * Fallbacks: current language -> en -> any available string -> empty string
    */
-  const getLocalized = (data: any): string => {
+  const getLocalized = (data: string | Record<string, string> | null | undefined): string => {
     if (!data) return '';
     if (typeof data === 'string') return data;
     if (typeof data === 'object') {
@@ -90,11 +95,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       const firstAvailable = Object.values(data).find(v => typeof v === 'string' && v.trim() !== '');
       return (firstAvailable as string) || '';
     }
-    return String(data);
+    return '';
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, getLocalized }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, tRaw, getLocalized }}>
       {children}
     </LanguageContext.Provider>
   );
