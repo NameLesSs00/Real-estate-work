@@ -26,6 +26,7 @@ const Footer = () => {
               width={200} 
               height={60}
               className="mb-4"
+              style={{ height: 'auto' }}
             />
             <div className="h-[1px] w-full bg-white/20 mb-6"></div>
           </div>

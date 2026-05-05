@@ -11,10 +11,14 @@ export interface UnitFilters {
   SearchTerm?: string;
   MinPrice?: number;
   MaxPrice?: number;
-  UnitType?: string;
+
   ProjectId?: number;
   PageNumber?: number;
   PageSize?: number;
+  Currency?: string;
+  UnitType?: string;   // "Buy" or "Rent" as per user request
+  PropertyType?: string; // For Apartment/Villa/etc
+  Status?: string;      // For primary/resale
 }
 
 export interface UnitListItem {
@@ -66,6 +70,10 @@ export async function getUnitsFiltered(filters: UnitFilters = {}): Promise<Pagin
   if (filters.MaxPrice !== undefined) params.set('MaxPrice', String(filters.MaxPrice));
   if (filters.UnitType) params.set('UnitType', filters.UnitType);
   if (filters.ProjectId !== undefined) params.set('ProjectId', String(filters.ProjectId));
+  if (filters.Currency) params.set('Currency', filters.Currency);
+
+  if (filters.PropertyType) params.set('PropertyType', filters.PropertyType);
+  if (filters.Status) params.set('Status', filters.Status);
   params.set('PageNumber', String(filters.PageNumber ?? 1));
   params.set('PageSize', String(filters.PageSize ?? 12));
 

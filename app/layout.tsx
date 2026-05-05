@@ -37,6 +37,7 @@ const allura = Allura({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://thegate-estates.com"),
   title: {
     default: "The Gate Estates | Premium Real Estate in Egypt",
     template: "%s | The Gate Estates",

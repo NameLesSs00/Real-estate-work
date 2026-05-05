@@ -1,25 +1,23 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import './PropertyCategories.css';
 
 interface Props {
+  selectedType?: string;
   onCategorySelect?: (type: string) => void;
 }
 
 const propertyTypes = [
-  { name: 'Studio', image: '/assists/Properties/Studios.png' },
-  { name: 'Villa', image: '/assists/Properties/Villas.png' },
-  { name: 'Apartment', image: '/assists/Properties/Standalone.png' }, // mapped Standalone to Apartment for demo
+  { name: 'Studio', value: '3', image: '/assists/Properties/Studios.png' },
+  { name: 'Villa', value: '1', image: '/assists/Properties/Villas.png' },
+  { name: 'Apartment', value: '0', image: '/assists/Properties/Standalone.png' },
 ];
 
-const PropertyCategories = ({ onCategorySelect }: Props) => {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
-  const handleSelect = (index: number, name: string) => {
-    setActiveIndex(index);
-    if (onCategorySelect) onCategorySelect(name);
+const PropertyCategories = ({ selectedType, onCategorySelect }: Props) => {
+  const handleSelect = (value: string) => {
+    if (onCategorySelect) onCategorySelect(value);
   };
 
   return (
@@ -27,9 +25,9 @@ const PropertyCategories = ({ onCategorySelect }: Props) => {
       <div className="property-categories-container">
         <div className="property-categories-header">
           <div className="stars-container">
-            <Image src="/assists/Properties/star1.png" alt="star" width={32} height={32} />
-            <Image src="/assists/Properties/star2.png" alt="star" width={20} height={20} />
-            <Image src="/assists/Properties/star3.png" alt="star" width={12} height={12} />
+            <Image src="/assists/Properties/star1.png" alt="star" width={32} height={32} style={{ height: 'auto' }} />
+            <Image src="/assists/Properties/star2.png" alt="star" width={20} height={20} style={{ height: 'auto' }} />
+            <Image src="/assists/Properties/star3.png" alt="star" width={12} height={12} style={{ height: 'auto' }} />
           </div>
           <h2 className="property-categories-title">
             Discover a World of Possibilities
@@ -43,8 +41,8 @@ const PropertyCategories = ({ onCategorySelect }: Props) => {
           {propertyTypes.map((category, index) => (
             <div 
               key={index} 
-              className={`property-type-card cursor-pointer ${activeIndex === index ? 'active' : ''}`}
-              onClick={() => handleSelect(index, category.name)}
+              className={`property-type-card cursor-pointer ${selectedType === category.value ? 'active' : ''}`}
+              onClick={() => handleSelect(category.value)}
             >
               <div className="property-type-label">{category.name}</div>
               <div className="property-type-image-wrapper">

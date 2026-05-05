@@ -24,6 +24,8 @@ export interface ApiUnit {
   imageUrls: string[];
   paymentPlans?: PaymentPlan[];
   isActive?: boolean;
+  type?: 'Buy' | 'Rent';
+  status?: 'primary' | 'resale';
 }
 
 export interface Project {

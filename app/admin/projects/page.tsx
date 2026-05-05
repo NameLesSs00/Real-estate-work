@@ -167,7 +167,7 @@ export default function ProjectsPage() {
                           title={!firstImage ? "Default Image" : undefined}
                         >
                           <Image 
-                            src={firstImage || '/admin/defalutImage.jpg'} 
+                            src={firstImage || '/admin/defaultImage.jpg'} 
                             alt={project.name} 
                             fill 
                             className="object-cover" 

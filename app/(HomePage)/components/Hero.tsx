@@ -7,7 +7,16 @@ import { Filter, X, Search } from "lucide-react";
 import { getLocations } from "@/lib/api/locations";
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
-const PROPERTY_TYPES = ['Apartment', 'Villa', 'Studio', 'Penthouse', 'Chalet', 'Town House', 'Twin House'];
+const PROPERTY_TYPES = [
+  { name: 'Apartment', value: '0' },
+  { name: 'Villa', value: '1' },
+  { name: 'TownHouse', value: '2' },
+  { name: 'Studio', value: '3' },
+  { name: 'Penthouse', value: '4' },
+  { name: 'Chalet', value: '5' },
+];
+
+const CURRENCIES = ['EGP', 'USD', 'EUR'];
 
 const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -17,7 +26,8 @@ const Hero = () => {
 
   // Search state
   const [searchTerm, setSearchTerm] = useState('');
-  const [unitType, setUnitType] = useState('');
+  const [propertyType, setPropertyType] = useState('');
+  const [currency, setCurrency] = useState('EGP');
   const [location, setLocation] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -47,12 +57,13 @@ const Hero = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (searchTerm) params.set('q', searchTerm);
-    if (unitType) params.set('type', unitType);
+    if (searchTerm) params.set('searchTerm', searchTerm);
+    if (propertyType) params.set('propertyType', propertyType);
+    if (currency) params.set('currency', currency);
     if (location) params.set('location', location);
     if (minPrice) params.set('minPrice', minPrice);
     if (maxPrice) params.set('maxPrice', maxPrice);
-    router.push(`/search?${params.toString()}`);
+    router.push(`/properties?${params.toString()}`);
   };
 
   return (
@@ -114,9 +125,15 @@ const Hero = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#1B2134]">{t('hero.propertyType') as string}</label>
-                    <select value={unitType} onChange={e => setUnitType(e.target.value)} className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/40 text-[#1B2134] font-medium text-[15px] outline-none appearance-none cursor-pointer shadow-sm">
+                    <select value={propertyType} onChange={e => setPropertyType(e.target.value)} className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/40 text-[#1B2134] font-medium text-[15px] outline-none appearance-none cursor-pointer shadow-sm">
                       <option value="">{t('hero.allTypes') as string}</option>
-                      {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                      {PROPERTY_TYPES.map(t => <option key={t.value} value={t.value}>{t.name}</option>)}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[14px] font-semibold text-[#1B2134]">Currency</label>
+                    <select value={currency} onChange={e => setCurrency(e.target.value)} className="bg-white/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/40 text-[#1B2134] font-medium text-[15px] outline-none appearance-none cursor-pointer shadow-sm">
+                      {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="flex flex-col gap-2">

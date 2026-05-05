@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import Image from 'next/image';
 import { createProject, updateProject, uploadProjectImages, Project, LocalizedString } from '@/lib/api/projects';
 import { getDevelopers } from '@/lib/api/developers';
@@ -25,6 +26,7 @@ const EMPTY_FORM = {
 };
 
 export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }: AddProjectModalProps) {
+  useBodyScrollLock(isOpen);
   const [form, setForm] = useState(EMPTY_FORM);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -146,6 +148,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
 
   const handleSubmit = async () => {
     if (!form.name.en.trim()) { setError('Project name (English) is required.'); return; }
+    if (!form.locationId) { setError('Location is required.'); return; }
     setIsLoading(true); setError('');
     try {
       let projectId: number;
@@ -181,7 +184,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
-      <div className="bg-white rounded-[32px] w-full max-w-[900px] max-h-[92vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded-[32px] w-full max-w-[1100px] max-h-[92vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
 
         {/* Header */}
         <div className="bg-[#16273B] rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
@@ -211,7 +214,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
               <div className="space-y-3">
                 <label className="text-[#16273B] font-bold text-[16px] flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#16273B]"></span>
-                  Location
+                  Location *
                 </label>
                 <select value={form.locationId ?? ''} onChange={handleChange('locationId')}
                   className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] bg-white cursor-pointer shadow-sm transition-all hover:border-[#16273B]/30">

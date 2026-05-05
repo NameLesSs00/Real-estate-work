@@ -5,21 +5,39 @@
 }
 
 .properties-hero {
-  background-color: #ffffff;
-  padding: 180px 0 40px;
+  background-image: url('/assists/articles/heroBlogs.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 180px 0 80px;
   display: flex;
   justify-content: center;
   width: 100%;
+  position: relative;
+}
+
+.properties-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .properties-hero-content {
   max-width: 1200px;
+  position: relative;
+  z-index: 1;
+}
+
+.properties-hero-content {
+  max-width: 1200px;
+  position: relative;
+  z-index: 1;
 }
 
 .properties-hero-title {
   font-family: var(--font-poppins);
-  color: #1b2134;
-  font-size: 38px;
+  color: #ffffff;
+  font-size: 42px;
   font-weight: 600;
   line-height: 1.2;
   margin-bottom: 16px;
@@ -27,10 +45,10 @@
 
 .properties-hero-subtitle {
   font-family: var(--font-poppins);
-  color: #949494;
-  font-size: 15px;
+  color: #e0e0e0;
+  font-size: 16px;
   line-height: 1.6;
-  max-width: 950px;
+  max-width: 800px;
 }
 
 .properties-filters-wrapper {
@@ -77,6 +95,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   margin-bottom: 60px;
+  direction: ltr; /* Ensure first results start from left regardless of language settings */
 }
 
 .load-more-wrapper {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import Image from 'next/image';
 import { getProjectById, uploadProjectImages, deleteProjectImage, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 
@@ -12,6 +13,7 @@ interface ProjectDetailsModalProps {
 }
 
 export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpdate }: ProjectDetailsModalProps) {
+  useBodyScrollLock(isOpen);
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');

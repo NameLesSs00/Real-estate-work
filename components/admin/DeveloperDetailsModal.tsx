@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import Image from 'next/image';
 import {
   getDeveloperById,
@@ -25,6 +26,7 @@ export default function DeveloperDetailsModal({
   developerId,
   onUpdate,
 }: DeveloperDetailsModalProps) {
+  useBodyScrollLock(isOpen);
   const [developer, setDeveloper] = useState<Developer | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -168,7 +170,7 @@ export default function DeveloperDetailsModal({
                     title={!developer.logoImage ? "Default Logo" : undefined}
                   >
                     <Image
-                      src={developer.logoImage ? (resolveImageUrl(developer.logoImage) ?? '/admin/defalutLogo.png') : '/admin/defalutLogo.png'}
+                      src={developer.logoImage ? (resolveImageUrl(developer.logoImage) ?? '/admin/defaultLogo.png') : '/admin/defaultLogo.png'}
                       alt={developer.name}
                       fill
                       className="object-contain"

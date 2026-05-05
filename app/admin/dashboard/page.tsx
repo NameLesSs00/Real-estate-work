@@ -174,7 +174,7 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-4">
                     <div className="relative w-[90px] h-[65px] rounded-xl overflow-hidden bg-gray-100 shrink-0">
                       <Image
-                        src={unit.imageUrls?.[0] ? (unit.imageUrls[0].startsWith('http') ? unit.imageUrls[0] : `https://api.thegate-estates.com/${unit.imageUrls[0]}`) : '/assists/defalutImage.jpg'}
+                        src={unit.imageUrls?.[0] ? (unit.imageUrls[0].startsWith('http') ? unit.imageUrls[0] : `https://api.thegate-estates.com/${unit.imageUrls[0]}`) : '/assists/defaultImage.png'}
                         alt={unit.name}
                         fill
                         className="object-cover"

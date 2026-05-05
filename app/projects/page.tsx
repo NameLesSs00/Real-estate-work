@@ -7,8 +7,8 @@ import { MapPin, Loader2 } from 'lucide-react';
 import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { getDeveloperById, resolveImageUrl } from '@/lib/api/developers';
 
-const DEFAULT_IMAGE = '/assists/defalutImage.jpg';
-const DEFAULT_DEVELOPER_LOGO = '/assists/defalutLogo.png';
+const DEFAULT_IMAGE = '/assists/defaultImage.png';
+const DEFAULT_DEVELOPER_LOGO = '/assists/defaultLogo.png';
 
 interface ProjectWithLogo extends Project {
   developerLogoUrl: string | null;

@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import Image from 'next/image';
+import Link from 'next/link';
+import { ExternalLink } from 'lucide-react';
 import { getUnitById, markUnitSold, UnitDetail, resolveProjectImageUrl, uploadUnitImages, deleteUnitImages } from '@/lib/api/projects';
 
 interface UnitDetailsModalProps {
@@ -19,6 +22,7 @@ const InfoCard = ({ label, value }: { label: string; value: React.ReactNode }) =
 );
 
 export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: UnitDetailsModalProps) {
+  useBodyScrollLock(isOpen);
   const [unit, setUnit] = useState<UnitDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -188,6 +192,14 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
                 ) : (
                   <span className="inline-flex px-4 py-1.5 rounded-full bg-[#FEE2E2] text-[#991B1B] text-[13px] font-bold">Sold</span>
                 )}
+                <Link 
+                  href={`/properties/${unit.id}`}
+                  target="_blank"
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EBF3FF] text-[#1447E6] text-[13px] font-bold hover:bg-[#D6E6FF] transition-all cursor-pointer shadow-sm border border-[#D6E6FF]"
+                >
+                  <ExternalLink size={14} />
+                  View as Client
+                </Link>
               </div>
 
               {/* Info Cards */}

@@ -7,7 +7,7 @@ import { MapPin, ChevronRight, Loader2 } from 'lucide-react';
 import { getProjectById, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { getDeveloperById } from '@/lib/api/developers';
 
-const DEFAULT_IMAGE  = '/assists/defalutImage.jpg';
+const DEFAULT_IMAGE  = '/assists/defaultImage.png';
 
 import ImageGallery from '@/components/ImageGallery';
 

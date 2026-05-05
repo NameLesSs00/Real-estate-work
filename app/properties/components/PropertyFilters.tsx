@@ -11,11 +11,24 @@ interface Props {
   onSearch: (filters: FilterState) => void;
 }
 
-const PROPERTY_TYPES = ['Apartment', 'Villa', 'Studio', 'Penthouse', 'Chalet', 'Town House', 'Twin House'];
+const PROPERTY_TYPES = [
+  { name: 'Apartment', value: '0' },
+  { name: 'Villa', value: '1' },
+  { name: 'TownHouse', value: '2' },
+  { name: 'Studio', value: '3' },
+  { name: 'Penthouse', value: '4' },
+  { name: 'Chalet', value: '5' },
+];
+
+const CATEGORIES = [
+  { name: 'Buy', value: 'Buy' },
+  { name: 'Rent', value: 'Rent' },
+];
 
 const PropertyFilters = ({ onSearch }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
+  const [propertyType, setPropertyType] = useState('');
   const [unitType, setUnitType] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -30,7 +43,7 @@ const PropertyFilters = ({ onSearch }: Props) => {
   }, []);
 
   const handleSearch = () => {
-    onSearch({ searchTerm, location, unitType, minPrice, maxPrice });
+    onSearch({ searchTerm, location, propertyType, unitType, minPrice, maxPrice, currency: 'EGP', status: '' });
   };
 
   return (
@@ -70,14 +83,32 @@ const PropertyFilters = ({ onSearch }: Props) => {
           <div className="filter-left">
             <Image src="/assists/Properties/PropertyType.png" alt="Property Type" width={20} height={20} className="filter-icon" />
             <select 
+              value={propertyType} 
+              onChange={(e) => setPropertyType(e.target.value)} 
+              className="filter-text bg-transparent outline-none appearance-none cursor-pointer absolute inset-0 w-full h-full opacity-0"
+            >
+              <option value="">All Types</option>
+              {PROPERTY_TYPES.map(t => <option key={t.value} value={t.value}>{t.name}</option>)}
+            </select>
+            <span className="filter-text pointer-events-none">
+              {PROPERTY_TYPES.find(t => t.value === propertyType)?.name || 'Property Type'}
+            </span>
+          </div>
+          <ChevronDown className="filter-chevron pointer-events-none" size={18} />
+        </div>
+
+        <div className="filter-dropdown relative group">
+          <div className="filter-left">
+            <Image src="/assists/Properties/PropertyType.png" alt="Category" width={20} height={20} className="filter-icon" />
+            <select 
               value={unitType} 
               onChange={(e) => setUnitType(e.target.value)} 
               className="filter-text bg-transparent outline-none appearance-none cursor-pointer absolute inset-0 w-full h-full opacity-0"
             >
-              <option value="">All Types</option>
-              {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+              <option value="">All Categories</option>
+              {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.name}</option>)}
             </select>
-            <span className="filter-text pointer-events-none">{unitType || 'Property Type'}</span>
+            <span className="filter-text pointer-events-none">{unitType || 'Category'}</span>
           </div>
           <ChevronDown className="filter-chevron pointer-events-none" size={18} />
         </div>

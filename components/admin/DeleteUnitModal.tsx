@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import Image from 'next/image';
 import { deleteUnit } from '@/lib/api/projects';
 
@@ -13,6 +14,7 @@ interface DeleteUnitModalProps {
 }
 
 export default function DeleteUnitModal({ isOpen, onClose, onSuccess, unitId, unitName }: DeleteUnitModalProps) {
+  useBodyScrollLock(isOpen);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 

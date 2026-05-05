@@ -57,7 +57,13 @@ const Header = () => {
 
   const handleDropdownClick = (title: string) => {
     if (activeDropdown === title) {
-      router.push('/properties');
+      // If title is "Buy" (or localized version), go to /properties?unitType=Buy
+      const buyTitle = t('header.buy');
+      if (title === buyTitle) {
+        router.push('/properties?unitType=Buy');
+      } else {
+        router.push('/properties');
+      }
       setActiveDropdown(null);
     } else {
       setActiveDropdown(title);
@@ -99,7 +105,7 @@ const Header = () => {
                 Array.isArray(locations) && locations.map((loc) => (
                   <Link 
                     key={loc} 
-                    href={`/search?type=${type}&location=${loc}`}
+                    href={`/properties?type=${type}&location=${loc}`}
                     onClick={() => setActiveDropdown(null)}
                     className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[16px] font-medium transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
                   >
@@ -151,11 +157,13 @@ const Header = () => {
               <NavDropdown 
                 title={t('header.buy')} 
                 items={[
-                  { label: t('header.primary'), href: "/search?type=primary" },
-                  { label: t('header.resale'), href: "/search?type=resale" }
+                  { label: t('header.primary'), href: "/properties?unitType=Buy&status=primary" },
+                  { label: t('header.resale'), href: "/properties?unitType=Buy&status=resale" }
                 ]} 
               />
-              <NavDropdown title={t('header.rent')} type="rent" />
+              <Link href="/properties?unitType=Rent" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
+                {t('header.rent')}
+              </Link>
 
               <Link href="/about" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
               <Link href="/contact" className="text-[18px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
@@ -258,7 +266,7 @@ const Header = () => {
                 <button 
                   onClick={() => {
                     if (mobileExpanded === 'buy') {
-                      router.push('/properties');
+                      router.push('/properties?unitType=Buy');
                       setIsMenuOpen(false);
                     } else {
                       setMobileExpanded('buy');
@@ -278,8 +286,8 @@ const Header = () => {
                       className="overflow-hidden bg-[#F8F5F0] rounded-xl mt-2"
                     >
                       {[
-                        { label: t('header.primary'), href: "/search?type=primary" },
-                        { label: t('header.resale'), href: "/search?type=resale" }
+                        { label: t('header.primary'), href: "/properties?unitType=Buy&status=primary" },
+                        { label: t('header.resale'), href: "/properties?unitType=Buy&status=resale" }
                       ].map(item => (
                         <Link 
                           key={item.label} 
@@ -296,43 +304,9 @@ const Header = () => {
               </div>
 
               {/* Rent Mobile */}
-              <div>
-                <button 
-                  onClick={() => {
-                    if (mobileExpanded === 'rent') {
-                      router.push('/properties');
-                      setIsMenuOpen(false);
-                    } else {
-                      setMobileExpanded('rent');
-                    }
-                  }}
-                  className="w-full flex items-center justify-between text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2 cursor-pointer"
-                >
-                  {t('header.rent')}
-                  {mobileExpanded === 'rent' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </button>
-                <AnimatePresence>
-                  {mobileExpanded === 'rent' && (
-                    <motion.div 
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden bg-[#F8F5F0] rounded-xl mt-2"
-                    >
-                      {Array.isArray(locations) && locations.map(loc => (
-                        <Link 
-                          key={loc} 
-                          href={`/search?type=rent&location=${loc}`}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block px-6 py-3 text-[#1b2134] font-medium border-b border-white last:border-0"
-                        >
-                          {loc}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <Link href="/properties?unitType=Rent" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">
+                {t('header.rent')}
+              </Link>
 
               <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.about')}</Link>
               <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.contact')}</Link>

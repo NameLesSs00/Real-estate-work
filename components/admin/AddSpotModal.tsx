@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import Image from 'next/image';
 import { createLocation, updateLocation, Location } from '@/lib/api/locations';
 
@@ -14,6 +15,7 @@ interface AddSpotModalProps {
 const EMPTY_FORM = { city: '', district: '', street: '', country: '' };
 
 export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: AddSpotModalProps) {
+  useBodyScrollLock(isOpen);
   const [form, setForm] = useState(EMPTY_FORM);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -109,6 +111,7 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
               onChange={handleChange('city')}
               placeholder="e.g. Cairo"
               className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
+              required
             />
           </div>
 
@@ -121,6 +124,7 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
               onChange={handleChange('district')}
               placeholder="e.g. New Cairo"
               className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
+              required
             />
           </div>
 

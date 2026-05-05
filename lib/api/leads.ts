@@ -6,20 +6,28 @@ function authHeader(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+export interface LeadRequest {
+  fullName: string;
+  email: string;
+  phone: string;
+  unitId?: number;
+  notes: string;
+}
+
 export interface Lead {
   id: number;
   fullName: string;
   email: string;
   phone: string;
-  projectName: string;
-  unitId: number;
-  propertyName: string;
-  notes: string;
+  projectName?: string;
+  unitId?: number;
+  propertyName?: string;
+  notes?: string;
   statusLead: string;
-  createdBy: string;
+  createdBy?: string;
   createdAt: string;
-  updatedBy: string;
-  updatedAt: string;
+  updatedBy?: string;
+  updatedAt?: string;
 }
 
 export interface PaginatedLeads {
@@ -31,65 +39,31 @@ export interface PaginatedLeads {
   hasNextPage: boolean;
 }
 
-export interface CreateLeadPayload {
-  fullName: string;
-  email: string;
-  phone: string;
-  unitId?: number;
-  notes?: string;
-}
-
-/** GET /api/Leads */
 export async function getLeads(page = 1, size = 10, unitId?: number): Promise<PaginatedLeads> {
   const params = new URLSearchParams({ PageNumber: String(page), PageSize: String(size) });
-  if (unitId !== undefined) params.set('UnitId', String(unitId));
+  if (unitId) params.set('UnitId', String(unitId));
+
   const res = await fetch(`${API_BASE_URL}/api/Leads?${params}`, {
     headers: { ...authHeader() },
   });
+
   if (!res.ok) throw new Error('Failed to fetch leads.');
   const json = await res.json();
   return json.data || json;
 }
 
-/** GET /api/Leads/{id} */
-export async function getLeadById(id: number): Promise<Lead> {
-  const res = await fetch(`${API_BASE_URL}/api/Leads/${id}`, {
-    headers: { ...authHeader() },
-  });
-  if (!res.ok) throw new Error('Failed to fetch lead.');
-  const json = await res.json();
-  return json.data || json;
-}
-
-/** POST /api/Leads — public, no auth required */
-export async function createLead(payload: CreateLeadPayload): Promise<number> {
+export async function createLead(lead: LeadRequest): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/Leads`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(lead),
   });
+
   if (!res.ok) {
-    const json = await res.json().catch(() => ({}));
-    throw new Error(json.message || 'Failed to submit inquiry.');
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || 'Failed to submit request.');
   }
-  const json = await res.json();
-  return json.data ?? json;
 }
 
-/** PUT /api/Leads/view/lead/{LeadId} */
-export async function markLeadViewed(leadId: number): Promise<void> {
-  const res = await fetch(`${API_BASE_URL}/api/Leads/view/lead/${leadId}`, {
-    method: 'PUT',
-    headers: { ...authHeader() },
-  });
-  if (!res.ok) throw new Error('Failed to mark lead as viewed.');
-}
-
-/** PUT /api/Leads/cancel/lead/{LeadId} */
-export async function cancelLead(leadId: number): Promise<void> {
-  const res = await fetch(`${API_BASE_URL}/api/Leads/cancel/lead/${leadId}`, {
-    method: 'PUT',
-    headers: { ...authHeader() },
-  });
-  if (!res.ok) throw new Error('Failed to cancel lead.');
-}

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { addUnitToProject, updateUnit, getUnitById, ApiUnit, getProjects, LocalizedString } from '@/lib/api/projects';
 import { getServices, createService, Service } from '@/lib/api/services';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 interface AddUnitModalProps {
   isOpen: boolean;
@@ -27,11 +28,14 @@ const EMPTY_FORM = {
   view: 0,
   isFeatured: false,
   currencyCode: 'EGP',
+  type: 'Buy' as 'Buy' | 'Rent',
+  status: 'primary' as 'primary' | 'resale' | '',
   paymentPlans: [] as { installmentMonthes: number | ''; installmentDownPayment: number | ''; paymentType: string }[],
   servicesIds: [] as number[],
 };
 
 export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, editData }: AddUnitModalProps) {
+  useBodyScrollLock(isOpen);
   const [form, setForm] = useState(EMPTY_FORM);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(projectId ?? null);
   const [projects, setProjects] = useState<{ id: number; name: string; locationName?: string }[]>([]);
@@ -113,6 +117,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           view: editData.view,
           isFeatured: editData.isFeatured,
           currencyCode: editData.currencyCode || 'EGP',
+          type: editData.type || 'Buy',
+          status: editData.status || 'primary',
         });
 
         try {
@@ -199,6 +205,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         isFeatured: form.isFeatured,
         paymentPlans: validatedPlans,
         servicesIds: form.servicesIds,
+        type: form.type,
+        status: form.type === 'Buy' ? form.status : '',
       };
 
       if (isEditMode && editData) {
@@ -222,7 +230,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
-      <div className="bg-white rounded-[32px] w-full max-w-[900px] max-h-[94vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded-[32px] w-full max-w-[1200px] max-h-[94vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
 
         <div className="bg-[#16273B] rounded-t-[32px] px-8 py-6 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[24px] font-bold tracking-tight">{isEditMode ? 'Edit Unit Details' : 'Register New Unit'}</h2>
@@ -367,6 +375,22 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               </select>
             </div>
             <div className="space-y-2">
+              <label className="text-[#16273B] font-semibold text-[15px]">Listing Type</label>
+              <select value={form.type} onChange={set('type')} className={inputCls}>
+                <option value="Buy">Buy</option>
+                <option value="Rent">Rent</option>
+              </select>
+            </div>
+            {form.type === 'Buy' && (
+              <div className="space-y-2">
+                <label className="text-[#16273B] font-semibold text-[15px]">Listing Status</label>
+                <select value={form.status} onChange={set('status')} className={inputCls}>
+                  <option value="primary">Primary</option>
+                  <option value="resale">Resale</option>
+                </select>
+              </div>
+            )}
+            <div className="space-y-2">
               <label className="text-[#16273B] font-semibold text-[15px]">Bedrooms</label>
               <input type="number" value={form.noBedRoom} onChange={set('noBedRoom')} min={0} className={inputCls} />
             </div>
@@ -429,22 +453,26 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-gray-700">Down Payment</label>
-                      <input
-                        type="number"
-                        min={0}
-                        value={plan.installmentDownPayment}
-                        onChange={(e) => {
-                          const val = e.target.value === '' ? '' : Number(e.target.value);
-                          setForm(prev => ({
-                            ...prev,
-                            paymentPlans: prev.paymentPlans.map((p, i) => 
-                              i === index ? { ...p, installmentDownPayment: val } : p
-                            )
-                          }));
-                        }}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
-                      />
+                      <label className="text-sm font-medium text-gray-700">Down Payment (%)</label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          min={0}
+                          max={100}
+                          value={plan.installmentDownPayment}
+                          onChange={(e) => {
+                            const val = e.target.value === '' ? '' : Number(e.target.value);
+                            setForm(prev => ({
+                              ...prev,
+                              paymentPlans: prev.paymentPlans.map((p, i) => 
+                                i === index ? { ...p, installmentDownPayment: val } : p
+                              )
+                            }));
+                          }}
+                          className="w-full border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
+                      </div>
                     </div>
                   </div>
                   <div className="space-y-1.5">

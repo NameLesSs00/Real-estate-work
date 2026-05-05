@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import Image from 'next/image';
 import {
   createDeveloper,
@@ -24,6 +25,7 @@ export default function AddDeveloperModal({
   onSuccess,
   editData,
 }: AddDeveloperModalProps) {
+  useBodyScrollLock(isOpen);
   const [form, setForm] = useState(EMPTY_FORM);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);

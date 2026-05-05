@@ -81,7 +81,7 @@ const ExploreUnits = () => {
                 beds={unit.noBedRoom || 0}
                 baths={unit.noBathRoom || 0}
                 area={`${unit.area || 0} m²`}
-                image={resolveProjectImageUrl(unit.imageUrls?.[0]) || '/assists/defalutImage.jpg'}
+                image={resolveProjectImageUrl(unit.imageUrls?.[0]) || '/assists/defaultImage.png'}
                 status={unit.unitStatus || 'For Sale'}
                 isDefaultImage={!unit.imageUrls || unit.imageUrls.length === 0}
               />

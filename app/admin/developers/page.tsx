@@ -171,7 +171,7 @@ export default function DevelopersPage() {
                           title={!logoUrl ? "Default Logo" : undefined}
                         >
                           <Image
-                            src={logoUrl || '/admin/defalutLogo.png'}
+                            src={logoUrl || '/admin/defaultLogo.png'}
                             alt={dev.name}
                             fill
                             className="object-contain"
