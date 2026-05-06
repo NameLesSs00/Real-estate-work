@@ -197,9 +197,9 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
                     {project.units.map((unit) => (
                       <div key={unit.id} className="bg-white border border-gray-100 rounded-2xl p-4 flex gap-4 hover:shadow-md transition-shadow">
                         <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                          {unit.imageUrls?.[0] || (unit as any).ImageUrls?.[0] ? (
+                          {(unit.imageUrls?.[0] || (unit as unknown as { ImageUrls?: string[] }).ImageUrls?.[0]) ? (
                             <Image 
-                              src={resolveProjectImageUrl(unit.imageUrls?.[0] || (unit as any).ImageUrls?.[0]) || ''} 
+                              src={resolveProjectImageUrl(unit.imageUrls?.[0] || (unit as unknown as { ImageUrls?: string[] }).ImageUrls?.[0] || null) || ''} 
                               alt="Unit" 
                               fill 
                               className="object-cover" 

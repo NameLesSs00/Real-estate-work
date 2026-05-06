@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
-import { createProject, updateProject, getProjectById, uploadProjectImages, Project, LocalizedString, addProjectFacility, deleteProjectFacility } from '@/lib/api/projects';
+import { createProject, updateProject, getProjectById, uploadProjectImages, Project, LocalizedString, deleteProjectFacility } from '@/lib/api/projects';
 import { getDevelopers } from '@/lib/api/developers';
 import { getLocations } from '@/lib/api/locations';
 import { getFacilities, createFacility, Facility } from '@/lib/api/facilities';
@@ -131,8 +131,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
 
           // Map facilities robustly (handle lowercase, uppercase, and objects)
           const currentFacilityIds = enData.facilityIds || 
-            (enData as any).Facilities?.map((f: any) => f.id) || 
-            (enData as any).facilities?.map((f: any) => typeof f === 'object' ? f.id : null).filter(Boolean) || 
+            (enData as unknown as { Facilities?: { id: number }[] }).Facilities?.map((f) => f.id) || 
+            (enData as unknown as { facilities?: ({ id: number } | number)[] }).facilities?.map((f) => typeof f === 'object' ? f.id : null).filter((id): id is number => id !== null) || 
             [];
 
           setInitialFacilityIds(currentFacilityIds);
@@ -229,7 +229,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           locationId: form.locationId || 0,
           facilityIds: form.facilityIds,
           // Try sending uppercase Facilities if the backend expects it
-          Facilities: form.facilityIds.map(id => ({ id })) as any
+          Facilities: form.facilityIds.map(id => ({ id }))
         });
         projectId = typeof res === 'number' ? res : res.id;
 

@@ -79,7 +79,7 @@ export interface UpdateProjectPayload {
   developerId: number;
   locationId: number;
   facilityIds?: number[];
-  Facilities?: any[];
+  Facilities?: { id: number }[];
 }
 
 // ─── Unit Types ───────────────────────────────────────────────────────────────
