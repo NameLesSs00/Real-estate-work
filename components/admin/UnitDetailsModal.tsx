@@ -108,17 +108,27 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
                 🔴 Mark as Sold
               </button>
             )}
-            <button
-              onClick={onClose}
-              className="ml-auto bg-[#16273B] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer"
-            >
-              Close
-            </button>
+            <div className="ml-auto flex items-center gap-3">
+              <a
+                href={`/properties/${unit?.Id || unit?.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold px-8 py-3.5 rounded-2xl transition-all border border-blue-100 text-center"
+              >
+                View as Client
+              </a>
+              <button
+                onClick={onClose}
+                className="bg-[#16273B] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer"
+              >
+                Close
+              </button>
           </div>
         </div>
       </div>
+    </div>
 
-      {/* Internal Mark As Sold Modal */}
+    {/* Internal Mark As Sold Modal */}
       {unit && (
         <MarkAsSoldModal
           isOpen={isMarkSoldModalOpen}

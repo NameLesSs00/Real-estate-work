@@ -86,7 +86,13 @@ export interface CreateUnitOutsidePayload {
   type: string;
   floorName: string;
   isFeatured: boolean;
-  paymentPlan: {
+  paymentPlans: {
+    commissionRate: number;
+    installmentMothes: number;
+    installmentDownPayment: number;
+    paymentType: string;
+  }[];
+  paymentPlan?: {
     commissionRate: number;
     installmentMothes: number;
     installmentDownPayment: number;

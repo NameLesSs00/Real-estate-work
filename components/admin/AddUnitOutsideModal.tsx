@@ -156,45 +156,73 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
     if (!form.country.trim()) { setError('Country is required.'); return; }
     if (Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
 
+    const validatedPlans = form.paymentPlans.map((p) => {
+      const isCash = p.paymentType === 'Cash';
+      return {
+        CommissionRate: Number(p.commissionRate) || 0,
+        InstallmentMothes: isCash ? 0 : (Number(p.installmentMothes) || 0),
+        InstallmentDownPayment: isCash ? 0 : (Number(p.installmentDownPayment) || 0),
+        PaymentType: p.paymentType,
+      };
+    });
+
+    if (validatedPlans.some(p => p.PaymentType === 'Installment' && p.InstallmentMothes <= 0)) {
+      setError('Installment plans must have months greater than 0.');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
     try {
-      const plans = form.paymentPlans.map((p) => ({
-        commissionRate: Number(p.commissionRate) || 0,
-        installmentMothes: Number(p.installmentMothes) || 0,
-        installmentDownPayment: Number(p.installmentDownPayment) || 0,
-        paymentType: p.paymentType,
-      }));
+      const plans = validatedPlans;
 
       if (isEdit && editData) {
         const fd = new FormData();
         fd.append('Id', String(editData.id));
+        fd.append('id', String(editData.id));
         fd.append('Name.En', form.name.en);
+        fd.append('name.en', form.name.en);
         fd.append('Name.De', form.name.de);
         fd.append('Name.Pl', form.name.pl);
         fd.append('Description.En', form.description.en);
+        fd.append('description.en', form.description.en);
         fd.append('Description.De', form.description.de);
         fd.append('Description.Pl', form.description.pl);
         fd.append('Price', String(Number(form.price) || 0));
+        fd.append('price', String(Number(form.price) || 0));
         fd.append('CurrencyCode', form.currencyCode);
+        fd.append('currencyCode', form.currencyCode);
         fd.append('Area', String(Number(form.area) || 0));
+        fd.append('area', String(Number(form.area) || 0));
         fd.append('NoBathRoom', String(Number(form.noBathRoom) || 0));
+        fd.append('noBathRoom', String(Number(form.noBathRoom) || 0));
         fd.append('NoBedRoom', String(Number(form.noBedRoom) || 0));
+        fd.append('noBedRoom', String(Number(form.noBedRoom) || 0));
         fd.append('NoKitchen', String(Number(form.noKitchen) || 0));
+        fd.append('noKitchen', String(Number(form.noKitchen) || 0));
         fd.append('Country', form.country);
+        fd.append('country', form.country);
         fd.append('City', form.city);
+        fd.append('city', form.city);
         fd.append('Street', form.street);
+        fd.append('street', form.street);
         fd.append('PropertyType', form.propertyType);
+        fd.append('propertyType', form.propertyType);
         fd.append('FloorNumber', String(Number(form.floorNumber) || 0));
+        fd.append('floorNumber', String(Number(form.floorNumber) || 0));
         fd.append('View', form.view);
+        fd.append('view', form.view);
         fd.append('Type', form.type);
+        fd.append('type', form.type);
         fd.append('FloorName', form.floorName);
+        fd.append('floorName', form.floorName);
         fd.append('IsFeatured', String(form.isFeatured));
+        fd.append('isFeatured', String(form.isFeatured));
         plans.forEach((p, i) => {
-          fd.append(`PaymentPlan[${i}].commissionRate`, String(p.commissionRate));
-          fd.append(`PaymentPlan[${i}].installmentMothes`, String(p.installmentMothes));
-          fd.append(`PaymentPlan[${i}].installmentDownPayment`, String(p.installmentDownPayment));
-          fd.append(`PaymentPlan[${i}].paymentType`, p.paymentType);
+          fd.append(`PaymentPlans[${i}].CommissionRate`, String(p.CommissionRate));
+          fd.append(`PaymentPlans[${i}].InstallmentMothes`, String(p.InstallmentMothes));
+          fd.append(`PaymentPlans[${i}].InstallmentDownPayment`, String(p.InstallmentDownPayment));
+          fd.append(`PaymentPlans[${i}].PaymentType`, p.PaymentType);
         });
         imageFiles.forEach((f) => fd.append('Images', f));
         await updateUnitOutside(fd);
@@ -217,7 +245,12 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
           type: form.type,
           floorName: form.floorName,
           isFeatured: form.isFeatured,
-          paymentPlan: plans,
+          paymentPlans: plans.map(p => ({
+            commissionRate: p.CommissionRate,
+            installmentMothes: p.InstallmentMothes,
+            installmentDownPayment: p.InstallmentDownPayment,
+            paymentType: p.PaymentType
+          })),
         });
         if (imageFiles.length > 0 && newId) {
           await addUnitOutsideImages(Number(newId), imageFiles).catch(() => {});
@@ -456,24 +489,33 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                           className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
                         />
                       </div>
-                      <div className="space-y-1.5">
-                        <label className="text-[12px] font-semibold text-gray-600">Months</label>
-                        <input
-                          type="number" min={0}
-                          value={plan.installmentMothes}
-                          onChange={(e) => updatePlan(i, 'installmentMothes', e.target.value ? Number(e.target.value) : 0)}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="text-[12px] font-semibold text-gray-600">Down Payment %</label>
-                        <input
-                          type="number" min={0} max={100}
-                          value={plan.installmentDownPayment}
-                          onChange={(e) => updatePlan(i, 'installmentDownPayment', e.target.value ? Number(e.target.value) : 0)}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
-                        />
-                      </div>
+                      {plan.paymentType === 'Installment' ? (
+                        <>
+                          <div className="space-y-1.5">
+                            <label className="text-[12px] font-semibold text-gray-600">Months</label>
+                            <input
+                              type="number" min={0}
+                              value={plan.installmentMothes}
+                              onChange={(e) => updatePlan(i, 'installmentMothes', e.target.value ? Number(e.target.value) : 0)}
+                              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-[12px] font-semibold text-gray-600">Down Payment %</label>
+                            <input
+                              type="number" min={0} max={100}
+                              value={plan.installmentDownPayment}
+                              onChange={(e) => updatePlan(i, 'installmentDownPayment', e.target.value ? Number(e.target.value) : 0)}
+                              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="space-y-1.5 col-span-2 flex flex-col justify-center">
+                           <label className="text-[12px] font-semibold text-gray-600">Cash Amount</label>
+                           <p className="text-[14px] font-bold text-[#16273B]">{form.currencyCode} {form.price.toLocaleString()}</p>
+                        </div>
+                      )}
                     </div>
                     <button
                       type="button"

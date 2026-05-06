@@ -592,48 +592,55 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             {form.paymentPlans.map((plan, index) => (
               <div key={index} className="flex items-start gap-4 p-4 border border-gray-200 rounded-xl bg-gray-50/50">
                 <div className="flex-1 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-gray-700">Installment Months</label>
-                      <input
-                        type="number"
-                        min={0}
-                        value={plan.installmentMonthes}
-                        onChange={(e) => {
-                          const val = e.target.value === '' ? '' : Number(e.target.value);
-                          setForm(prev => ({
-                            ...prev,
-                            paymentPlans: prev.paymentPlans.map((p, i) => 
-                              i === index ? { ...p, installmentMonthes: val } : p
-                            )
-                          }));
-                        }}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-gray-700">Down Payment (%)</label>
-                      <div className="relative">
+                  {plan.paymentType === 'Installment' ? (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-sm font-medium text-gray-700">Installment Months</label>
                         <input
                           type="number"
                           min={0}
-                          max={100}
-                          value={plan.installmentDownPayment}
+                          value={plan.installmentMonthes}
                           onChange={(e) => {
                             const val = e.target.value === '' ? '' : Number(e.target.value);
                             setForm(prev => ({
                               ...prev,
                               paymentPlans: prev.paymentPlans.map((p, i) => 
-                                i === index ? { ...p, installmentDownPayment: val } : p
+                                i === index ? { ...p, installmentMonthes: val } : p
                               )
                             }));
                           }}
-                          className="w-full border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-sm font-medium text-gray-700">Down Payment (%)</label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            min={0}
+                            max={100}
+                            value={plan.installmentDownPayment}
+                            onChange={(e) => {
+                              const val = e.target.value === '' ? '' : Number(e.target.value);
+                              setForm(prev => ({
+                                ...prev,
+                                paymentPlans: prev.paymentPlans.map((p, i) => 
+                                  i === index ? { ...p, installmentDownPayment: val } : p
+                                )
+                              }));
+                            }}
+                            className="w-full border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="bg-white border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700">Cash Amount</span>
+                      <span className="text-lg font-bold text-[#16273B]">{form.currencyCode} {form.price.toLocaleString()}</span>
+                    </div>
+                  )}
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-gray-700">Payment Type</label>
                     <select
