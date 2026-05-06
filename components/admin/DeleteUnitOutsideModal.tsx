@@ -51,7 +51,7 @@ export default function DeleteUnitOutsideModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between shrink-0">
-          <h2 className="text-white text-[20px] font-bold">Delete Outside Unit</h2>
+          <h2 className="text-white text-[20px] font-bold">Delete Resale Unit</h2>
           <button
             onClick={onClose}
             className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none"

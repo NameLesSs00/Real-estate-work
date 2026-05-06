@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
@@ -6,7 +7,8 @@ import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 import PropertyCategories from './components/PropertyCategories';
 import PropertyCard from '@/components/PropertyCard';
-import { getUnitsFiltered, UnitListItem } from '@/lib/api/units';
+import { getUnitsFiltered } from '@/lib/api/units';
+import { getUnitOutsides } from '@/lib/api/unitOutsides';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
 import { ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
 import './properties.css';
@@ -34,7 +36,7 @@ export default function PropertiesPage() {
 function PropertiesPageContent() {
   const { t, getLocalized } = useLanguage();
   const searchParams = useSearchParams();
-  const [units, setUnits] = useState<UnitListItem[]>([]);
+  const [units, setUnits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,22 +67,49 @@ function PropertiesPageContent() {
     setLoading(true);
     setError('');
     try {
-      const data = await getUnitsFiltered({
-        SearchTerm: f.searchTerm || undefined,
-        UnitType: f.unitType || undefined,
-        MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
-        MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
-        Currency: f.currency || undefined,
+      if (f.status?.toLowerCase() === 'resale') {
+        const data = await getUnitOutsides({
+          SearchTerm: f.searchTerm || undefined,
+          MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
+          MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
+          Currency: f.currency || undefined,
+          City: f.location || undefined,
+          PageNumber: page,
+          PageSize: 6,
+        });
+        
+        // Map UnitOutside to match what PropertyCard expects
+        const mappedUnits = data.items.map((u: any) => ({
+          ...u,
+          isResale: true,
+          mappedId: `out-${u.id}`,
+          locationName: `${u.city || ''}${u.city && u.country ? ', ' : ''}${u.country || ''}`,
+          unitStatus: 'Resale',
+          unitType: u.type,
+          imageUrls: u.images?.sort((a: any, b: any) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0)).map((img: any) => img.imageUrl) || []
+        }));
+        
+        setUnits(mappedUnits);
+        setTotalPages(data.totalPages || 1);
+        setTotalCount(data.totalCount);
+      } else {
+        const data = await getUnitsFiltered({
+          SearchTerm: f.searchTerm || undefined,
+          UnitType: f.unitType || undefined,
+          MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
+          MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
+          Currency: f.currency || undefined,
 
-        PropertyType: f.propertyType || undefined,
-        Status: f.status || undefined,
-        LocationId: f.locationId ? Number(f.locationId) : undefined,
-        PageNumber: page,
-        PageSize: 6,
-      });
-      setUnits(data.items);
-      setTotalPages(data.totalPages || 1);
-      setTotalCount(data.totalCount);
+          PropertyType: f.propertyType || undefined,
+          Status: f.status || undefined,
+          LocationId: f.locationId ? Number(f.locationId) : undefined,
+          PageNumber: page,
+          PageSize: 6,
+        });
+        setUnits(data.items);
+        setTotalPages(data.totalPages || 1);
+        setTotalCount(data.totalCount);
+      }
       setCurrentPage(page);
     } catch (err) {
       setError('Failed to load properties. Please try again.');
@@ -186,12 +215,12 @@ function PropertiesPageContent() {
             <div className="properties-list-grid">
               {units.map((unit) => (
                 <PropertyCard
-                  key={unit.id}
-                  id={unit.id}
+                  key={unit.mappedId || unit.id}
+                  id={unit.mappedId || unit.id}
                   title={getLocalized(unit.name)}
                   type={unit.propertyType || unit.unitType || 'Unit'}
                   location={unit.locationName || '—'}
-                  price={`EGP ${unit.price?.toLocaleString()}`}
+                  price={`${unit.currencyCode || 'EGP'} ${unit.price?.toLocaleString()}`}
                   beds={unit.noBedRoom}
                   baths={unit.noBathRoom}
                   area={`${unit.area} m²`}

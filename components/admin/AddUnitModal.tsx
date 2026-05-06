@@ -225,6 +225,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const handleSubmit = async () => {
     if (!form.name.en.trim()) { setError('Unit name (English) is required.'); return; }
     if (!isEditMode && !selectedProjectId) { setError('Please select a project.'); return; }
+    if (!form.price || Number(form.price) <= 0) { setError('Price must be greater than 0.'); return; }
     if (!form.area || Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
     
     const validatedPlans = form.paymentPlans.map(p => {
@@ -267,7 +268,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         })),
         servicesIds: form.servicesIds.map(id => Number(id)),
         type: form.type === 'Buy' ? 'Buy' : 'Rent',
-        status: form.type === 'Buy' ? (form.status === 0 ? 'Primary' : 'Resale') : '',
+        status: form.type === 'Buy' ? 'Primary' : '',
         isActive: true,
       };
 
@@ -543,15 +544,6 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 <option value="Rent">Rent</option>
               </select>
             </div>
-            {form.type === 'Buy' && (
-              <div className="space-y-2">
-                <label className="text-[#16273B] font-semibold text-[15px]">Listing Status</label>
-                <select value={form.status} onChange={set('status')} className={inputCls}>
-                  <option value={0}>Primary</option>
-                  <option value={1}>Resale</option>
-                </select>
-              </div>
-            )}
             <div className="space-y-2">
               <label className="text-[#16273B] font-semibold text-[15px]">Bedrooms</label>
               <input type="number" value={form.noBedRoom} onChange={set('noBedRoom')} min={0} className={inputCls} />

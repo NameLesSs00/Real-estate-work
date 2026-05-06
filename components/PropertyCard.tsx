@@ -6,7 +6,7 @@ import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './PropertyCard.css';
 
 export interface PropertyCardProps {
-  id: number;
+  id: number | string;
   title: string;
   type: string;
   location: string;

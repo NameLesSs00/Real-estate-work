@@ -28,7 +28,7 @@ export default function UnitsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
 
-  // ── Outside Units state ──
+  // ── Resale Units state ──
   const [outsideUnits, setOutsideUnits] = useState<UnitOutside[]>([]);
   const [outsideLoading, setOutsideLoading] = useState(false);
   const [outsideError, setOutsideError] = useState('');
@@ -37,7 +37,7 @@ export default function UnitsPage() {
   const [outsideTotalPages, setOutsideTotalPages] = useState(1);
   const [outsideTotalCount, setOutsideTotalCount] = useState(0);
   const [outsideNotification, setOutsideNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
-  // Outside modals
+  // Resale modals
   const [isAddOutsideOpen, setIsAddOutsideOpen] = useState(false);
   const [editingOutside, setEditingOutside] = useState<UnitOutside | null>(null);
   const [deletingOutside, setDeletingOutside] = useState<UnitOutside | null>(null);
@@ -77,7 +77,7 @@ export default function UnitsPage() {
       setOutsideTotalCount(data.totalCount); setOutsidePage(data.pageNumber);
     } catch (err) {
       console.error('[UnitsPage] Outside fetch error:', err);
-      setOutsideError('Failed to load outside units. Please try again.');
+      setOutsideError('Failed to load resale units. Please try again.');
     } finally { setOutsideLoading(false); }
   }, []);
 
@@ -136,7 +136,7 @@ export default function UnitsPage() {
           <p className="text-[#64748B] text-[17px]">
             {activeTab === 'project'
               ? `${totalCount} project unit${totalCount !== 1 ? 's' : ''} total`
-              : `${outsideTotalCount} outside unit${outsideTotalCount !== 1 ? 's' : ''} total`}
+              : `${outsideTotalCount} resale unit${outsideTotalCount !== 1 ? 's' : ''} total`}
           </p>
         </div>
         <button
@@ -144,7 +144,7 @@ export default function UnitsPage() {
           className="bg-[#16273B] text-white px-10 py-5 rounded-[24px] flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-xl hover:shadow-2xl active:scale-95 group cursor-pointer"
         >
           <Image src="/admin/projects/mingcute_add-fill.png" alt="Add" width={24} height={24} className="group-hover:rotate-90 transition-transform duration-300" />
-          <span className="text-[18px] font-semibold">{activeTab === 'project' ? 'Add Unit' : 'Add Outside Unit'}</span>
+          <span className="text-[18px] font-semibold">{activeTab === 'project' ? 'Add Unit' : 'Add Resale Unit'}</span>
         </button>
       </div>
 
@@ -160,7 +160,7 @@ export default function UnitsPage() {
                 : 'text-[#64748B] hover:text-[#16273B] hover:bg-gray-50'
             }`}
           >
-            {tab === 'project' ? 'Project Units' : 'Outside Units'}
+            {tab === 'project' ? 'Project Units' : 'Resale Units'}
           </button>
         ))}
       </div>
@@ -344,7 +344,7 @@ export default function UnitsPage() {
       </>
       )}
 
-      {/* ── OUTSIDE TAB ── */}
+      {/* ── RESALE TAB ── */}
       {activeTab === 'outside' && (
         <>
           {outsideNotification && (
@@ -361,7 +361,7 @@ export default function UnitsPage() {
             </div>
             <input
               type="text"
-              placeholder="Search outside units..."
+              placeholder="Search resale units..."
               className="w-full bg-white border border-gray-100 rounded-[28px] py-5 pl-18 pr-10 text-[17px] text-[#16273B] focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 transition-all shadow-sm placeholder:text-[#94A3B8]"
               value={outsideSearch}
               onChange={(e) => setOutsideSearch(e.target.value)}
@@ -381,7 +381,7 @@ export default function UnitsPage() {
             ) : outsideUnits.filter(u => u.name.toLowerCase().includes(outsideSearch.toLowerCase())).length === 0 ? (
               <div className="flex items-center justify-center py-20">
                 <p className="text-[#64748B] text-[17px]">
-                  {outsideSearch ? 'No units match your search.' : 'No outside units yet. Click "Add Outside Unit" to create one!'}
+                  {outsideSearch ? 'No units match your search.' : 'No resale units yet. Click "Add Resale Unit" to create one!'}
                 </p>
               </div>
             ) : (
@@ -488,13 +488,13 @@ export default function UnitsPage() {
       <AddUnitOutsideModal
         isOpen={isAddOutsideOpen}
         onClose={() => { setIsAddOutsideOpen(false); setEditingOutside(null); }}
-        onSuccess={() => { fetchOutsideUnits(outsidePage); setOutsideNotification({ type: 'success', message: isAddOutsideOpen && !editingOutside ? 'Outside unit created!' : 'Outside unit updated!' }); setTimeout(() => setOutsideNotification(null), 3000); }}
+        onSuccess={() => { fetchOutsideUnits(outsidePage); setOutsideNotification({ type: 'success', message: isAddOutsideOpen && !editingOutside ? 'Resale unit created!' : 'Resale unit updated!' }); setTimeout(() => setOutsideNotification(null), 3000); }}
         editData={editingOutside}
       />
       <DeleteUnitOutsideModal
         isOpen={deletingOutside !== null}
         onClose={() => setDeletingOutside(null)}
-        onSuccess={() => { fetchOutsideUnits(outsidePage); setDeletingOutside(null); setOutsideNotification({ type: 'success', message: 'Outside unit deleted.' }); setTimeout(() => setOutsideNotification(null), 3000); }}
+        onSuccess={() => { fetchOutsideUnits(outsidePage); setDeletingOutside(null); setOutsideNotification({ type: 'success', message: 'Resale unit deleted.' }); setTimeout(() => setOutsideNotification(null), 3000); }}
         unitId={deletingOutside?.id ?? null}
         unitName={deletingOutside?.name}
       />
@@ -509,7 +509,7 @@ export default function UnitsPage() {
         isOpen={markSoldOutside !== null}
         unit={markSoldOutside}
         onClose={() => setMarkSoldOutside(null)}
-        onSuccess={() => { fetchOutsideUnits(outsidePage); setMarkSoldOutside(null); setOutsideNotification({ type: 'success', message: 'Outside unit marked as sold.' }); setTimeout(() => setOutsideNotification(null), 3000); }}
+        onSuccess={() => { fetchOutsideUnits(outsidePage); setMarkSoldOutside(null); setOutsideNotification({ type: 'success', message: 'Resale unit marked as sold.' }); setTimeout(() => setOutsideNotification(null), 3000); }}
       />
     </div>
   );

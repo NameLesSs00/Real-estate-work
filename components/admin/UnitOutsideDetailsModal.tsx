@@ -110,7 +110,7 @@ export default function UnitOutsideDetailsModal({
         {/* Header */}
         <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between shrink-0">
           <div>
-            <h2 className="text-white text-[20px] font-bold">Outside Unit Details</h2>
+            <h2 className="text-white text-[20px] font-bold">Resale Unit Details</h2>
             {unit && (
               <p className="text-white/60 text-[13px]">
                 {unit.city}, {unit.country}

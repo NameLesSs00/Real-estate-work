@@ -312,7 +312,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
         {/* Header */}
         <div className="bg-[#16273B] rounded-t-[32px] px-8 py-6 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[22px] font-bold">
-            {isEdit ? 'Edit Outside Unit' : 'Add Outside Unit'}
+            {isEdit ? 'Edit Resale Unit' : 'Add Resale Unit'}
           </h2>
           <button onClick={onClose} className="hover:rotate-90 transition-transform duration-300 cursor-pointer border-none bg-transparent outline-none">
             <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={28} height={28} />
