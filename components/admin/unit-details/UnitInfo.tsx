@@ -47,7 +47,7 @@ export default function UnitInfo({ unit }: UnitInfoProps) {
           value={`${unit.CurrencyCode || unit.currencyCode || 'EGP'} ${(unit.Price ?? unit.price ?? 0).toLocaleString()}`} 
         />
         <InfoCard label="Property Type" value={unit.PropertyType || unit.propertyType || '—'} />
-        <InfoCard label="Listing Status" value={unit.Type === 'Buy' ? (Number(unit.Status) === 0 ? 'Primary' : 'Resale') : unit.Type} />
+        <InfoCard label="Listing Status" value={unit.Type || unit.type || '—'} />
         <InfoCard label="Project" value={unit.ProjectName || unit.projectName || '—'} />
         <InfoCard label="Location" value={unit.LocationName || unit.locationName || '—'} />
       </div>
@@ -57,8 +57,8 @@ export default function UnitInfo({ unit }: UnitInfoProps) {
         <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
           <p className="text-[13px] text-gray-500 font-medium mb-2">Description</p>
           <p className="text-[#16273B] text-[15px] leading-relaxed">
-            {typeof unit.Description === 'object' ? unit.Description.en : unit.Description || 
-             (typeof unit.description === 'object' ? unit.description.en : unit.description)}
+            {typeof unit.Description === 'object' ? (unit.Description.en || unit.Description.de || unit.Description.pl) : 
+             (typeof unit.description === 'object' ? (unit.description.en || unit.description.de || unit.description.pl) : (unit.Description || unit.description))}
           </p>
         </div>
       )}
@@ -81,7 +81,7 @@ export default function UnitInfo({ unit }: UnitInfoProps) {
       </div>
 
       {/* Meta */}
-      <div className="text-[12px] text-gray-400 flex gap-6">
+      <div className="text-[12px] text-gray-400 flex gap-6 mt-4">
         <span>Created by <strong className="text-gray-500">{unit.createdBy || 'Admin'}</strong></span>
         {unit.updatedBy && (
           <span>Updated by <strong className="text-gray-500">{unit.updatedBy}</strong></span>

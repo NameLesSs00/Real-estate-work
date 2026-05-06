@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getDealById, Deal } from '@/lib/api/deals';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 interface DealDetailModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface DealDetailModalProps {
 }
 
 export default function DealDetailModal({ isOpen, dealId, onClose }: DealDetailModalProps) {
+  useEscapeKey(onClose, isOpen);
   const [deal, setDeal] = useState<Deal | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');

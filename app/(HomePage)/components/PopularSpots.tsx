@@ -9,16 +9,16 @@ import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './PopularSpots.css';
 
 const CURATED_SPOTS = [
-  { name: 'El Gouna', cityKeys: ['elgouna', 'gouna', 'elguona'], image: '/assists/PopularSpots/ElGuona.png', className: 'spot-card--el-guona' },
-  { name: 'Sahl Hasheesh', cityKeys: ['sahlhasheesh', 'shalhasheesh'], image: '/assists/PopularSpots/ShalHasheesh.png', className: 'spot-card--sahl-hasheesh' },
-  { name: 'Hurghada', cityKeys: ['hurghada'], image: '/assists/PopularSpots/Hurghada.png', className: 'spot-card--hurghada' },
-  { name: 'Soma Bay', cityKeys: ['somabay'], image: '/assists/PopularSpots/SomaBay.png', className: 'spot-card--soma-bay' },
-  { name: 'Makadi Heights', cityKeys: ['makadi', 'makadiheights'], image: '/assists/PopularSpots/Makadi.png', className: 'spot-card--makadi' },
+  { name: 'El Gouna', id: 8, cityKeys: ['elgouna', 'gouna', 'elguona'], image: '/assists/PopularSpots/ElGuona.png', className: 'spot-card--el-guona' },
+  { name: 'Sahl Hasheesh', id: 6, cityKeys: ['sahlhasheesh', 'shalhasheesh'], image: '/assists/PopularSpots/ShalHasheesh.png', className: 'spot-card--sahl-hasheesh' },
+  { name: 'Hurghada', id: 4, cityKeys: ['hurghada'], image: '/assists/PopularSpots/Hurghada.png', className: 'spot-card--hurghada' },
+  { name: 'Soma Bay', id: 9, cityKeys: ['somabay'], image: '/assists/PopularSpots/SomaBay.png', className: 'spot-card--soma-bay' },
+  { name: 'Makadi Heights', id: 10, cityKeys: ['makadi', 'makadiheights'], image: '/assists/PopularSpots/Makadi.png', className: 'spot-card--makadi' },
 ];
 
 const PopularSpots = () => {
   const { t } = useLanguage();
-  const [spots, setSpots] = useState<{ name: string; count: number; image: string; className: string; searchKey: string }[]>([]);
+  const [spots, setSpots] = useState<{ name: string; count: number; image: string; className: string; id: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const PopularSpots = () => {
             count: count,
             image: spot.image,
             className: spot.className,
-            searchKey: spot.name // Used for the search link
+            id: spot.id
           };
         });
 
@@ -56,7 +56,7 @@ const PopularSpots = () => {
           count: 0,
           image: spot.image,
           className: spot.className,
-          searchKey: spot.name
+          id: spot.id
         })));
       } finally {
         setLoading(false);
@@ -83,7 +83,7 @@ const PopularSpots = () => {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }} className="popular-spots-grid">
             {spots.map((spot) => (
               <motion.div key={spot.name} variants={{ hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }} className={`spot-card ${spot.className}`}>
-                <Link href={`/search?location=${encodeURIComponent(spot.searchKey)}`} className="block w-full h-full">
+                <Link href={`/properties?locationId=${spot.id}`} className="block w-full h-full">
                   <div className="spot-card-image-wrapper">
                     <Image src={spot.image} alt={spot.name} fill className="spot-card-img" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" />
                   </div>

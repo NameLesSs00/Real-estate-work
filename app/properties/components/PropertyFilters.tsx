@@ -43,7 +43,7 @@ const PropertyFilters = ({ onSearch }: Props) => {
   }, []);
 
   const handleSearch = () => {
-    onSearch({ searchTerm, location, propertyType, unitType, minPrice, maxPrice, currency: 'EGP', status: '' });
+    onSearch({ searchTerm, location, propertyType, unitType, minPrice, maxPrice, currency: 'EGP', status: '', locationId: '' });
   };
 
   return (

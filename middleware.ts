@@ -46,5 +46,6 @@ export function middleware(request: NextRequest) {
 
 // Only run on /admin paths — skip static files and API routes
 export const config = {
+  // matcher: [],
   matcher: ['/admin/:path*'],
 };

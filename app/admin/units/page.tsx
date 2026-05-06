@@ -7,8 +7,10 @@ import DeleteUnitModal from '@/components/admin/DeleteUnitModal';
 import UnitDetailsModal from '@/components/admin/UnitDetailsModal';
 import MarkAsSoldModal from '@/components/admin/MarkAsSoldModal';
 import { getUnits, ApiUnit } from '@/lib/api/projects';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 export default function UnitsPage() {
+  const { getLocalized } = useLanguage();
   const [units, setUnits] = useState<ApiUnit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -68,7 +70,7 @@ export default function UnitsPage() {
 
   const handleDelete = (unit: ApiUnit) => {
     setDeletingUnitId(unit.id);
-    setDeletingUnitName(unit.name);
+    setDeletingUnitName(getLocalized(unit.name));
     setIsDeleteModalOpen(true);
   };
 
@@ -89,10 +91,12 @@ export default function UnitsPage() {
 
   const handleSuccess = () => fetchUnits(currentPage);
 
-  const filteredUnits = units.filter((u) =>
-    u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (u.description || '').toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredUnits = units.filter((u) => {
+    const name = getLocalized(u.name);
+    const description = getLocalized(u.description);
+    return name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           description.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div className="p-10 lg:p-14 font-inter bg-[#F8F9FA] min-h-full scrollbar-hide">
@@ -176,10 +180,10 @@ export default function UnitsPage() {
                         className="text-[16px] font-bold text-[#16273B] cursor-pointer hover:text-blue-600 transition-colors"
                         onClick={() => handleView(unit)}
                       >
-                        {unit.name}
+                        {getLocalized(unit.name)}
                       </span>
                       {unit.description && (
-                        <p className="text-[13px] text-[#94A3B8] mt-0.5 line-clamp-1">{unit.description}</p>
+                        <p className="text-[13px] text-[#94A3B8] mt-0.5 line-clamp-1">{getLocalized(unit.description)}</p>
                       )}
                     </td>
                     <td className="py-6 px-4">
@@ -313,7 +317,7 @@ export default function UnitsPage() {
       <MarkAsSoldModal
         isOpen={markSoldUnit !== null}
         unitId={markSoldUnit?.id ?? null}
-        unitName={markSoldUnit?.name ?? ''}
+        unitName={getLocalized(markSoldUnit?.name ?? '')}
         onClose={() => setMarkSoldUnit(null)}
         onSuccess={handleMarkSoldSuccess}
       />

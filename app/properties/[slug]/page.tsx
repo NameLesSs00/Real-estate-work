@@ -42,10 +42,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
     notFound();
   }
 
+  const unitImages = unitData.ImageUrls || unitData.imageUrls || [];
   const mainImage =
-    (unitData.ImageUrls?.[0] ? resolveProjectImageUrl(unitData.ImageUrls[0]) : null) ??
+    (unitImages[0] ? resolveProjectImageUrl(unitImages[0]) : null) ??
     `${BASE}/mainImg.png`;
-  const thumbnails = (unitData.ImageUrls?.slice(1, 5) ?? [])
+  const thumbnails = (unitImages.slice(1, 5) ?? [])
     .map((url) => resolveProjectImageUrl(url))
     .filter((u): u is string => u !== null);
 
@@ -157,7 +158,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-6">
               {unitData.Facilities?.map((f: Facility, i: number) => {
-                const name = typeof f.name === 'string' ? f.name : (f.name?.[locale as keyof LocalizedString] || f.name?.en || 'Unknown');
+                const name = (typeof f.name === 'string' ? f.name : (f.name?.[locale] || f.name?.en || 'Unknown')) as string;
                 return (
                   <div key={`f-${i}`} className="flex items-center gap-2.5 text-gray-700">
                     <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
@@ -166,7 +167,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                 );
               })}
               {unitData.Services?.map((s: Service, i: number) => {
-                const name = typeof s.name === 'string' ? s.name : (s.name?.[locale as keyof LocalizedString] || s.name?.en || 'Unknown');
+                const name = (typeof s.name === 'string' ? s.name : (s.name?.[locale] || s.name?.en || 'Unknown')) as string;
                 return (
                   <div key={`s-${i}`} className="flex items-center gap-2.5 text-gray-700">
                     <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />

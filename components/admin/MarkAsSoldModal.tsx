@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { markUnitSold } from '@/lib/api/units';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 interface MarkAsSoldModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function MarkAsSoldModal({
   onClose,
   onSuccess,
 }: MarkAsSoldModalProps) {
+  useEscapeKey(onClose, isOpen);
   const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
-import { createProject, updateProject, getProjectById, uploadProjectImages, Project, LocalizedString } from '@/lib/api/projects';
+import { createProject, updateProject, getProjectById, uploadProjectImages, Project, LocalizedString, addProjectFacility, deleteProjectFacility } from '@/lib/api/projects';
 import { getDevelopers } from '@/lib/api/developers';
 import { getLocations } from '@/lib/api/locations';
 import { getFacilities, createFacility, Facility } from '@/lib/api/facilities';
@@ -27,7 +28,9 @@ const EMPTY_FORM = {
 
 export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }: AddProjectModalProps) {
   useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [initialFacilityIds, setInitialFacilityIds] = useState<number[]>([]);
   const [heroFile, setHeroFile] = useState<File | null>(null);
   const [heroPreview, setHeroPreview] = useState<string | null>(null);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
@@ -126,6 +129,14 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             pl: plData.name 
           });
 
+          // Map facilities robustly (handle lowercase, uppercase, and objects)
+          const currentFacilityIds = enData.facilityIds || 
+            (enData as any).Facilities?.map((f: any) => f.id) || 
+            (enData as any).facilities?.map((f: any) => typeof f === 'object' ? f.id : null).filter(Boolean) || 
+            [];
+
+          setInitialFacilityIds(currentFacilityIds);
+          
           setForm({
             name: {
               en: enData.name,
@@ -139,7 +150,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             },
             developerId: enData.developerId,
             locationId: enData.locationId,
-            facilityIds: enData.facilityIds || []
+            facilityIds: currentFacilityIds
           });
         } catch (err) {
           console.error('[AddProjectModal] Failed to fetch localized project data:', err);
@@ -152,6 +163,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       fetchFullData();
     } else {
       setForm(EMPTY_FORM);
+      setInitialFacilityIds([]);
       setIsLoading(false);
     }
     setHeroFile(null);
@@ -202,14 +214,34 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
     try {
       let projectId: number;
       if (isEditMode && editData) {
+        console.log('[AddProjectModal] Updating project:', {
+          id: editData.id,
+          name: form.name,
+          facilityIds: form.facilityIds,
+          initial: initialFacilityIds
+        });
+
         const res = await updateProject(editData.id, {
           id: editData.id,
           name: form.name,
           description: form.description,
           developerId: form.developerId || 0,
           locationId: form.locationId || 0,
+          facilityIds: form.facilityIds,
+          // Try sending uppercase Facilities if the backend expects it
+          Facilities: form.facilityIds.map(id => ({ id })) as any
         });
         projectId = typeof res === 'number' ? res : res.id;
+
+        // Sync facilities (Deletions only via individual endpoint)
+        const toDelete = initialFacilityIds.filter(id => !form.facilityIds.includes(id));
+        console.log('[AddProjectModal] Syncing deletions:', toDelete);
+
+        for (const id of toDelete) {
+          await deleteProjectFacility(projectId, id).catch(e => {
+            console.error('Failed to delete facility', id, e);
+          });
+        }
       } else {
         const res = await createProject({
           name: form.name,
@@ -410,7 +442,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
               </div>
             )}
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[200px] overflow-y-auto pr-2 scrollbar-thin">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[250px] overflow-y-auto pr-2 scrollbar-thin">
               {facilities.map((fac) => {
                 let facName = fac.name;
                 if (typeof fac.name === 'object' && fac.name !== null) {
@@ -419,9 +451,26 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 }
                 const isChecked = form.facilityIds.includes(fac.id);
                 return (
-                  <label key={fac.id} className={`flex items-center gap-3 cursor-pointer p-3 rounded-xl transition-all border ${isChecked ? 'bg-[#16273B]/5 border-[#16273B]/20' : 'bg-white border-gray-100 hover:border-gray-200'}`}>
+                  <label 
+                    key={fac.id} 
+                    className={`group flex items-center gap-3 cursor-pointer p-4 rounded-[18px] transition-all border-2 ${
+                      isChecked 
+                        ? 'bg-[#16273B] border-[#16273B] shadow-md shadow-[#16273B]/10' 
+                        : 'bg-white border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
+                      isChecked ? 'bg-white border-white' : 'bg-transparent border-gray-300'
+                    }`}>
+                      {isChecked && (
+                        <svg className="w-3.5 h-3.5 text-[#16273B] fill-current" viewBox="0 0 20 20">
+                          <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" />
+                        </svg>
+                      )}
+                    </div>
                     <input 
                       type="checkbox" 
+                      className="hidden"
                       checked={isChecked}
                       onChange={(e) => {
                         const checked = e.target.checked;
@@ -432,9 +481,12 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                             : prev.facilityIds.filter(id => id !== fac.id)
                         }));
                       }}
-                      className="w-4 h-4 rounded accent-[#16273B] cursor-pointer" 
                     />
-                    <span className="text-[#16273B] text-[13px] font-medium line-clamp-1">{facName as string}</span>
+                    <span className={`text-[14px] font-bold transition-colors ${
+                      isChecked ? 'text-white' : 'text-[#16273B]'
+                    }`}>
+                      {facName as string}
+                    </span>
                   </label>
                 );
               })}

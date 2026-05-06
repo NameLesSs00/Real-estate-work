@@ -1,10 +1,11 @@
 import { API_BASE_URL } from './config';
 import { getHeaders } from './common';
+import { LocalizedString } from './projects';
 
 
 export interface Service {
   id: number;
-  name: string | { en?: string; de?: string; pl?: string; [key: string]: unknown };
+  name: string | LocalizedString;
 }
 
 export interface CreateServicePayload {

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
 import {
   getDeveloperById,
@@ -27,6 +28,7 @@ export default function DeveloperDetailsModal({
   onUpdate,
 }: DeveloperDetailsModalProps) {
   useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
   const [developer, setDeveloper] = useState<Developer | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');

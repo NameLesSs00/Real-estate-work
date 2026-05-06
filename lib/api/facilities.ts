@@ -1,5 +1,6 @@
 import { API_BASE_URL } from './config';
 import { getAccessToken } from '@/lib/auth/tokens';
+import { LocalizedString } from './projects';
 
 function authHeader(): Record<string, string> {
   const token = getAccessToken();
@@ -8,7 +9,7 @@ function authHeader(): Record<string, string> {
 
 export interface Facility {
   id: number;
-  name: string | { en?: string; de?: string; pl?: string; [key: string]: unknown };
+  name: string | LocalizedString;
 }
 
 /** GET /api/Facilities */

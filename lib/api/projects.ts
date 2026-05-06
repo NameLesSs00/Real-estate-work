@@ -8,13 +8,14 @@ import { Service } from './services';
 
 export interface ApiUnit {
   id: number;
-  name: string;
-  description: string;
+  name: string | LocalizedString;
+  description: string | LocalizedString;
   price: number;
-  propertyType: number;
+  propertyType: number | string;
   noBathRoom: number;
   noBedRoom: number;
   noKithchen: number;
+  noKitchen?: number;
   floorNumber: number;
   floorName: string;
   area: number;
@@ -60,6 +61,7 @@ export interface LocalizedString {
   en: string;
   de: string;
   pl: string;
+  [key: string]: string;
 }
 
 export interface CreateProjectPayload {
@@ -76,6 +78,8 @@ export interface UpdateProjectPayload {
   description: LocalizedString;
   developerId: number;
   locationId: number;
+  facilityIds?: number[];
+  Facilities?: any[];
 }
 
 // ─── Unit Types ───────────────────────────────────────────────────────────────
@@ -125,7 +129,6 @@ export interface UnitPayload {
   status: string;
   type: string;
   isActive: boolean;
-  IsActive: boolean;
 }
 
 export interface AddUnitPayload {
@@ -141,18 +144,19 @@ export interface UpdateUnitPayload {
   propertyType: number;
   noBathRoom: number;
   noBedRoom: number;
-  noKithchen: number;
-  noKitchen?: number;
-  floorName: string;
-  view: number;
-  isFeatured: boolean;
-  currencyCode?: string;
-  paymentPlans?: PaymentPlan[];
-  servicesIds?: number[];
+  noKitchen: number;
+  noKithchen?: number;
+  area: number;
   status: string;
   type: string;
+  floorNumber: number;
+  view: number;
+  floorName: string;
+  servicesIds?: number[];
+  paymentPlans?: PaymentPlan[];
+  isFeatured: boolean;
+  currencyCode?: string;
   isActive?: boolean;
-  IsActive?: boolean;
 }
 
 // Rich unit from GET /api/Units/{id}
@@ -198,6 +202,7 @@ export interface UnitDetail {
   floorNumber?: number;
   floorName?: string;
   noKitchen?: number;
+  view?: number;
   isActive?: boolean;
   isFeatured?: boolean;
   services?: Service[];
@@ -550,5 +555,35 @@ export async function markUnitSold(unitId: number, notes = ''): Promise<void> {
     const text = await res.text();
     console.error('[Units] Mark sold failed:', res.status, text);
     throw new Error('Failed to mark unit as sold.');
+  }
+}
+
+/** PUT /api/Projects/add-prject-facility (Actually trying POST if PUT failed) */
+export async function addProjectFacility(projectId: number, facilityId: number): Promise<void> {
+  // If the user didn't specify the add endpoint, it's possible it doesn't exist 
+  // or it's a POST request. Let's try POST to avoid the {id} route conflict.
+  const res = await fetch(`${API_BASE_URL}/api/Projects/add-prject-facility`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
+    body: JSON.stringify({ projectId, faciltyId: facilityId }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('[Projects] Add facility failed:', res.status, text);
+    throw new Error('Failed to add facility to project.');
+  }
+}
+
+/** PUT /api/Projects/delete-prject-facility */
+export async function deleteProjectFacility(projectId: number, facilityId: number): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/api/Projects/delete-prject-facility`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders() },
+    body: JSON.stringify({ projectId, faciltyId: facilityId }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('[Projects] Delete facility failed:', res.status, text);
+    throw new Error('Failed to remove facility from project.');
   }
 }

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
 import { getProjectById, uploadProjectImages, deleteProjectImage, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 
@@ -14,6 +15,7 @@ interface ProjectDetailsModalProps {
 
 export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpdate }: ProjectDetailsModalProps) {
   useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
   const [project, setProject] = useState<Project | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -164,7 +166,6 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
                         <div key={i} className="group relative aspect-video rounded-xl overflow-hidden border border-gray-100 bg-gray-100">
                           <Image src={resolved} alt="Project" fill className="object-cover" />
                           
-                          {/* Single Image Delete Button */}
                           <button 
                             onClick={(e) => {
                               e.stopPropagation();
@@ -178,6 +179,51 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
                         </div>
                       ) : null;
                     })}
+                  </div>
+                )}
+              </div>
+              
+              {/* Units List */}
+              <div>
+                <h4 className="text-[18px] font-bold text-[#16273B] mb-4">
+                  Units <span className="text-[14px] font-normal text-gray-400">({project.units?.length || 0})</span>
+                </h4>
+                {(!project.units || project.units.length === 0) ? (
+                  <div className="bg-gray-50 rounded-2xl p-8 text-center text-gray-400">
+                    <p className="text-sm italic">No units assigned to this project yet.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {project.units.map((unit) => (
+                      <div key={unit.id} className="bg-white border border-gray-100 rounded-2xl p-4 flex gap-4 hover:shadow-md transition-shadow">
+                        <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                          {unit.imageUrls?.[0] || (unit as any).ImageUrls?.[0] ? (
+                            <Image 
+                              src={resolveProjectImageUrl(unit.imageUrls?.[0] || (unit as any).ImageUrls?.[0]) || ''} 
+                              alt="Unit" 
+                              fill 
+                              className="object-cover" 
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                              <span className="text-xs">No Img</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h5 className="font-bold text-[#16273B] text-[15px] truncate">
+                            {typeof unit.name === 'string' ? unit.name : (unit.name?.en || 'Untitled')}
+                          </h5>
+                          <p className="text-[#1447E6] font-bold text-[13px] mt-0.5">
+                            {unit.currencyCode} {unit.price.toLocaleString()}
+                          </p>
+                          <div className="flex gap-3 mt-2">
+                            <span className="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{unit.noBedRoom} Beds</span>
+                            <span className="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{unit.area} m²</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

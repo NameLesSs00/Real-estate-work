@@ -7,6 +7,7 @@ export interface UnitFilters {
   MinPrice?: number;
   MaxPrice?: number;
 
+  LocationId?: number;
   ProjectId?: number;
   PageNumber?: number;
   PageSize?: number;
@@ -65,6 +66,7 @@ export async function getUnitsFiltered(filters: UnitFilters = {}): Promise<Pagin
   if (filters.MaxPrice !== undefined) params.set('MaxPrice', String(filters.MaxPrice));
   if (filters.UnitType) params.set('UnitType', filters.UnitType);
   if (filters.ProjectId !== undefined) params.set('ProjectId', String(filters.ProjectId));
+  if (filters.LocationId !== undefined) params.set('LocationId', String(filters.LocationId));
   if (filters.Currency) params.set('Currency', filters.Currency);
 
   if (filters.PropertyType) params.set('PropertyType', filters.PropertyType);

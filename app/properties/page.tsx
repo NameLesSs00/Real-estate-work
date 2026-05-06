@@ -20,6 +20,7 @@ export interface FilterState {
   currency: string;
   unitType: string;   // Buy/Rent (mapped to UnitType API param)
   status: string;     // primary/resale
+  locationId: string;
 }
 
 export default function PropertiesPage() {
@@ -39,8 +40,8 @@ function PropertiesPageContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [filters, setFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '' });
-  const [draftFilters, setDraftFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '' });
+  const [filters, setFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '', locationId: '' });
+  const [draftFilters, setDraftFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '', locationId: '' });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const openSidebar = () => {
@@ -54,7 +55,7 @@ function PropertiesPageContent() {
   };
 
   const clearFilters = () => {
-    const empty = { searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '' };
+    const empty = { searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '', locationId: '' };
     setDraftFilters(empty);
     handleSearch(empty);
     setIsSidebarOpen(false);
@@ -73,6 +74,7 @@ function PropertiesPageContent() {
 
         PropertyType: f.propertyType || undefined,
         Status: f.status || undefined,
+        LocationId: f.locationId ? Number(f.locationId) : undefined,
         PageNumber: page,
         PageSize: 6,
       });
@@ -99,6 +101,7 @@ function PropertiesPageContent() {
       currency: searchParams.get('currency') || 'EGP',
       unitType: searchParams.get('unitType') || searchParams.get('type') || '', 
       status: searchParams.get('status') || '',
+      locationId: searchParams.get('locationId') || '',
     };
     
     // Special case: if unitType is 'Rent' or 'Buy', it's the UnitType filter.

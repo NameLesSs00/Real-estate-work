@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createDeal, CreateDealPayload } from '@/lib/api/deals';
 import { getProjects, Project, getUnitById, PaymentPlan } from '@/lib/api/projects';
 import { getUnitsFiltered, UnitListItem } from '@/lib/api/units';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 interface CreateDealModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface CreateDealModalProps {
 const DEFAULT: CreateDealPayload = { unitPlanId: 0, fullName: '', email: '', phone: '' };
 
 export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDealModalProps) {
+  useEscapeKey(onClose, isOpen);
   const [form, setForm] = useState<CreateDealPayload>(DEFAULT);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');

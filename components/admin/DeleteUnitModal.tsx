@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
 import { deleteUnit } from '@/lib/api/projects';
 
@@ -15,6 +16,7 @@ interface DeleteUnitModalProps {
 
 export default function DeleteUnitModal({ isOpen, onClose, onSuccess, unitId, unitName }: DeleteUnitModalProps) {
   useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 

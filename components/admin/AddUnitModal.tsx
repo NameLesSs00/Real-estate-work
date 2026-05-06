@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { addUnitToProject, updateUnit, getUnitById, ApiUnit, getProjects, LocalizedString, uploadUnitImages, PaymentPlan, UnitPayload } from '@/lib/api/projects';
+import { addUnitToProject, updateUnit, getUnitById, ApiUnit, getProjects, LocalizedString, uploadUnitImages, PaymentPlan, UnitPayload, UpdateUnitPayload } from '@/lib/api/projects';
 import { getServices, createService, Service } from '@/lib/api/services';
 import { getPaymentPlansByUnit, createPaymentPlan, updatePaymentPlan, deletePaymentPlan } from '@/lib/api/paymentPlans';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 interface AddUnitModalProps {
   isOpen: boolean;
@@ -37,6 +38,7 @@ const EMPTY_FORM = {
 
 export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, editData }: AddUnitModalProps) {
   useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
   const [form, setForm] = useState(EMPTY_FORM);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(projectId ?? null);
   const [projects, setProjects] = useState<{ id: number; name: string; locationName?: string }[]>([]);
@@ -107,51 +109,64 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
     if (isEditMode && editData) {
       const loadEditData = async () => {
-        setForm({
-          ...EMPTY_FORM,
-          name: typeof editData.name === 'string' ? { en: editData.name, de: editData.name, pl: editData.name } : editData.name,
-          description: typeof editData.description === 'string' ? { en: editData.description, de: editData.description, pl: editData.description } : editData.description,
-          price: editData.price,
-          propertyType: getPropertyTypeValue(editData.propertyType),
-          noBathRoom: editData.noBathRoom?.toString() || '',
-          noBedRoom: editData.noBedRoom?.toString() || '',
-          noKithchen: editData.noKithchen?.toString() || '',
-          floorNumber: editData.floorNumber?.toString() || '',
-          area: editData.area?.toString() || '',
-          floorName: editData.floorName,
-          view: editData.view,
-          isFeatured: editData.isFeatured,
-          currencyCode: editData.currencyCode || 'EGP',
-          type: editData.type || 'Buy',
-          status: (editData.status !== undefined ? (editData.status === 'resale' ? 1 : 0) : 0) as 0 | 1,
-        });
-
+        setIsLoading(true);
         try {
+          // Fetch the unit 3 times with different language headers
+          const [enData, deData, plData] = await Promise.all([
+            getUnitById(editData.id, 'en'),
+            getUnitById(editData.id, 'de'),
+            getUnitById(editData.id, 'pl')
+          ]);
+
           const [detail, extraPlans] = await Promise.all([
             getUnitById(editData.id),
             getPaymentPlansByUnit(editData.id).catch(() => [])
           ]);
 
-          setForm(prev => ({
-            ...prev,
+          setForm({
+            ...EMPTY_FORM,
+            name: {
+              en: (enData.Name || enData.name || '') as string,
+              de: (deData.Name || deData.name || '') as string,
+              pl: (plData.Name || plData.name || '') as string
+            },
+            description: {
+              en: (enData.Description || enData.description || '') as string,
+              de: (deData.Description || deData.description || '') as string,
+              pl: (plData.Description || plData.description || '') as string
+            },
+            price: enData.Price || (enData.price as number) || 0,
+            propertyType: getPropertyTypeValue(enData.PropertyType || (enData.propertyType as string) || ''),
+            noBathRoom: (enData.NoBathRoom || enData.noBathRoom)?.toString() || '',
+            noBedRoom: (enData.NoBedRoom || enData.noBedRoom)?.toString() || '',
+            noKithchen: (enData.NoKitchen ?? enData.noKitchen)?.toString() || '',
+            floorNumber: (enData.FloorNumber || enData.floorNumber)?.toString() || '',
+            area: (enData.Area || enData.area)?.toString() || '',
+            floorName: enData.FloorName || (enData.floorName as string) || '',
+            view: (enData.View || enData.view || 0) as number,
+            isFeatured: enData.IsFeatured ?? enData.isFeatured ?? false,
+            currencyCode: enData.CurrencyCode || (enData.currencyCode as string) || 'EGP',
+            type: (enData.Type || enData.type || 'Buy') as 'Buy' | 'Rent',
+            status: ((enData.Status || enData.status) === 'resale' ? 1 : 0) as 0 | 1,
             servicesIds: (detail.Services || detail.services || []).map((s: Service) => s.id),
-            // Handle kitchen typo variations
-            noKithchen: (detail.NoKitchen ?? detail.noKitchen ?? prev.noKithchen)?.toString(),
             paymentPlans: [
               ...(detail.PaymentPlans || detail.paymentPlans || []),
               ...extraPlans
             ].map(p => {
               const plan = p as PaymentPlan;
               return {
-                id: plan.id ?? plan.paymentPlanId, // Track ID for edit mode
+                id: plan.id ?? plan.paymentPlanId,
                 installmentMonthes: plan.installmentMonths ?? plan.installmentMonthes ?? plan.installmentMothes ?? plan.InstallmentMonthes ?? plan.InstallmentMothes ?? 0,
                 installmentDownPayment: plan.installmentDownPayment ?? plan.InstallmentDownPayment ?? 0,
                 paymentType: plan.paymentType ?? plan.PaymentType ?? 'Installment'
               };
             })
-          }));
+          });
         } catch (err) {
-          console.error('[AddUnitModal] Failed to fetch unit detail', err);
+          console.error('[AddUnitModal] Failed to fetch localized unit data:', err);
+          setError('Failed to load full unit data for editing.');
+        } finally {
+          setIsLoading(false);
         }
       };
       loadEditData();
@@ -242,20 +257,42 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         isFeatured: form.isFeatured,
         paymentPlans: validatedPlans.map(p => ({
           ...p,
-          installmentMothes: p.installmentMonthes, 
           installmentMonthes: p.installmentMonthes,
           installmentMonths: p.installmentMonthes,
-          installmentYears: Math.ceil(p.installmentMonthes / 12)
+          installmentMothes: p.installmentMonthes,
         })),
         servicesIds: form.servicesIds,
         type: form.type,
-        status: form.type === 'Buy' ? (form.status === 0 ? 'primary' : 'resale') : 'resale',
+        status: form.type === 'Buy' ? (form.status === 0 ? 'primary' : 'resale') : '',
         isActive: true,
-        IsActive: true,
       };
 
       if (isEditMode && editData) {
-        await updateUnit({ id: editData.id, ...unitPayload });
+        // Prepare UpdateUnitPayload strictly
+        const updatePayload: UpdateUnitPayload = {
+          id: editData.id,
+          name: form.name,
+          description: form.description,
+          price: Number(form.price),
+          propertyType: Number(form.propertyType),
+          noBathRoom: Number(form.noBathRoom),
+          noBedRoom: Number(form.noBedRoom),
+          noKitchen: Number(form.noKithchen),
+          noKithchen: Number(form.noKithchen),
+          area: Number(form.area),
+          status: unitPayload.status,
+          type: unitPayload.type,
+          floorNumber: Number(form.floorNumber),
+          view: Number(form.view),
+          floorName: form.floorName,
+          servicesIds: form.servicesIds,
+          paymentPlans: unitPayload.paymentPlans,
+          isFeatured: form.isFeatured,
+          currencyCode: form.currencyCode,
+          isActive: true,
+        };
+
+        await updateUnit(updatePayload);
         
         // Handle payment plans individually because UpdateUnit doesn't save them
         try {

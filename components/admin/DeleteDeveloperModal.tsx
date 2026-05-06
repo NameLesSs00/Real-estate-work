@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
 import { deleteDeveloper } from '@/lib/api/developers';
 
@@ -21,6 +22,7 @@ export default function DeleteDeveloperModal({
   developerName,
 }: DeleteDeveloperModalProps) {
   useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 

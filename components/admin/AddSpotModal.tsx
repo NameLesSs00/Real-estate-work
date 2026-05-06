@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
 import { createLocation, updateLocation, Location } from '@/lib/api/locations';
 
@@ -16,6 +17,7 @@ const EMPTY_FORM = { city: '', district: '', street: '', country: '' };
 
 export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: AddSpotModalProps) {
   useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
   const [form, setForm] = useState(EMPTY_FORM);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');

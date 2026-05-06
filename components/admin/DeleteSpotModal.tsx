@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
 import { deleteLocation } from '@/lib/api/locations';
 
@@ -14,6 +15,7 @@ interface DeleteSpotModalProps {
 
 export default function DeleteSpotModal({ isOpen, locationId, onClose, onSuccess }: DeleteSpotModalProps) {
   useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
