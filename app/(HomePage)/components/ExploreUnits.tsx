@@ -90,7 +90,7 @@ const ExploreUnits = () => {
                 baths={unit.noBathRoom || 0}
                 area={`${unit.area || 0} m²`}
                 image={resolveProjectImageUrl(unit.imageUrls?.[0]) || '/assists/defaultImage.png'}
-                status={unit.unitStatus || 'For Sale'}
+                status={!unit.isActive ? 'Sold' : (unit.unitStatus || 'For Sale')}
                 unitType={unit.unitType}
                 isDefaultImage={!unit.imageUrls || unit.imageUrls.length === 0}
               />

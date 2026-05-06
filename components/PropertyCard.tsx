@@ -54,7 +54,13 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         <div className="unit-status-tag">
           {status === 'Sold' 
             ? t('propertyCard.status.sold') 
-            : (unitType === 'Rent' ? t('propertyCard.status.rent') : t('propertyCard.status.sale'))}
+            : unitType === 'Rent' 
+              ? t('propertyCard.status.rent') 
+              : status === 'Primary' 
+                ? t('propertyCard.status.primary') 
+                : status === 'Resale' 
+                  ? t('propertyCard.status.resale') 
+                  : t('propertyCard.status.sale')}
         </div>
       </Link>
       <div className="unit-content">

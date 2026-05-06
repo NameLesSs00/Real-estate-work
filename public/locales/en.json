@@ -311,7 +311,9 @@
     "status": {
       "sale": "Sell",
       "rent": "Rent",
-      "sold": "Sold"
+      "sold": "Sold",
+      "primary": "Primary",
+      "resale": "Resale"
     },
     "details": {
       "bedroom": "Bedroom",

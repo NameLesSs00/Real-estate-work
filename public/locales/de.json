@@ -311,7 +311,9 @@
     "status": {
       "sale": "Verkaufen",
       "rent": "Mieten",
-      "sold": "Verkauft"
+      "sold": "Verkauft",
+      "primary": "Primär",
+      "resale": "Weiterverkauf"
     },
     "details": {
       "bedroom": "Schlafzimmer",

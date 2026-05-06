@@ -196,7 +196,7 @@ function PropertiesPageContent() {
                   baths={unit.noBathRoom}
                   area={`${unit.area} m²`}
                   image={resolveProjectImageUrl(unit.imageUrls?.[0]) || '/assists/defaultImage.png'}
-                  status={unit.isActive ? 'For Sale' : 'Sold'}
+                  status={!unit.isActive ? 'Sold' : (unit.unitStatus || 'For Sale')}
                   unitType={unit.unitType}
                   isDefaultImage={!unit.imageUrls || unit.imageUrls.length === 0}
                 />
