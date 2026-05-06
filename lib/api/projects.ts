@@ -261,7 +261,7 @@ export async function getProjectById(id: number, lang?: string): Promise<Project
   const res = await fetch(`${API_BASE_URL}/api/Projects/${id}`, {
     headers: { ...getHeaders(lang) },
   });
-  if (!res.ok) {
+ if (!res.ok) {
     const text = await res.text();
     console.error('[Projects] Fetch by ID failed:', res.status, text);
     throw new Error('Failed to fetch project.');
@@ -298,7 +298,7 @@ export async function createProject(payload: CreateProjectPayload): Promise<numb
 export async function updateProject(id: number, payload: UpdateProjectPayload): Promise<number | Project> {
   const headers = { 'Content-Type': 'application/json', ...getHeaders(undefined, true) };
   
-  const res = await fetch(`${API_BASE_URL}/api/Projects/${id}`, {
+  const res = await fetch(`${API_BASE_URL}/api/Projects`, {
     method: 'PUT',
     headers,
     body: JSON.stringify(payload),

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getSoldUnitById, SoldUnit } from '@/lib/api/units';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 interface SoldUnitDetailModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface SoldUnitDetailModalProps {
 }
 
 export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: SoldUnitDetailModalProps) {
+  useEscapeKey(onClose, isOpen);
   const [unit, setUnit] = useState<SoldUnit | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');

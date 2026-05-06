@@ -1,0 +1,97 @@
+'use client';
+
+import React, { useState } from 'react';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
+import Image from 'next/image';
+import { deleteUnitOutside } from '@/lib/api/unitOutsides';
+
+interface DeleteUnitOutsideModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+  unitId: number | null;
+  unitName?: string;
+}
+
+export default function DeleteUnitOutsideModal({
+  isOpen,
+  onClose,
+  onSuccess,
+  unitId,
+  unitName,
+}: DeleteUnitOutsideModalProps) {
+  useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  if (!isOpen) return null;
+
+  const handleConfirm = async () => {
+    if (!unitId) return;
+    setIsLoading(true);
+    setError('');
+    try {
+      await deleteUnitOutside(unitId);
+      onSuccess();
+      onClose();
+    } catch (err) {
+      console.error('[DeleteUnitOutsideModal]', err);
+      setError('Failed to delete unit. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
+      <div
+        className="bg-white rounded-[24px] w-full max-w-[500px] flex flex-col shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between shrink-0">
+          <h2 className="text-white text-[20px] font-bold">Delete Outside Unit</h2>
+          <button
+            onClick={onClose}
+            className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none"
+          >
+            <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={24} height={24} />
+          </button>
+        </div>
+
+        <div className="p-10 text-center space-y-6">
+          <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+              <path d="M10 11v6M14 11v6" />
+              <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+            </svg>
+          </div>
+          <p className="text-[#475467] text-[18px] leading-relaxed">
+            Are you sure you want to delete{' '}
+            <span className="font-bold text-[#16273B]">{unitName || 'this unit'}</span>?{' '}
+            This action cannot be undone.
+          </p>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          <div className="flex gap-4">
+            <button
+              onClick={onClose}
+              className="flex-1 py-4 rounded-xl border border-gray-200 text-[#16273B] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirm}
+              disabled={isLoading}
+              className="flex-1 py-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {isLoading ? 'Deleting...' : 'Delete'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

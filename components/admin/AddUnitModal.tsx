@@ -148,7 +148,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             currencyCode: enData.CurrencyCode || (enData.currencyCode as string) || 'EGP',
             type: (enData.Type || enData.type || 'Buy') as 'Buy' | 'Rent',
             status: ((enData.Status || enData.status) === 'resale' ? 1 : 0) as 0 | 1,
-            servicesIds: (detail.Services || detail.services || []).map((s: Service) => s.id),
+            servicesIds: (detail.Services || detail.services || []).map((s: { id?: number; Id?: number }) => s.id !== undefined ? s.id : s.Id).filter((id: number | undefined) => id !== undefined),
             paymentPlans: [
               ...(detail.PaymentPlans || detail.paymentPlans || []),
               ...extraPlans
@@ -243,55 +243,58 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
       const unitPayload: UnitPayload = {
         name: form.name,
         description: form.description,
-        price: Number(form.price),
-        currencyCode: form.currencyCode,
+        price: Number(form.price) || 0,
+        currencyCode: form.currencyCode || 'EGP',
         propertyType: Number(form.propertyType),
-        noBathRoom: Number(form.noBathRoom),
-        noBedRoom: Number(form.noBedRoom),
-        noKithchen: Number(form.noKithchen),
-        noKitchen: Number(form.noKithchen),
-        floorNumber: Number(form.floorNumber),
-        area: Number(form.area),
-        floorName: form.floorName,
-        view: Number(form.view),
-        isFeatured: form.isFeatured,
+        noBathRoom: Number(form.noBathRoom) || 0,
+        noBedRoom: Number(form.noBedRoom) || 0,
+        noKithchen: Number(form.noKithchen) || 0,
+        noKitchen: Number(form.noKithchen) || 0,
+        floorNumber: Number(form.floorNumber) || 0,
+        area: Number(form.area) || 0,
+        floorName: form.floorName || '',
+        view: Number(form.view) || 0,
+        isFeatured: !!form.isFeatured,
         paymentPlans: validatedPlans.map(p => ({
           ...p,
-          installmentMonthes: p.installmentMonthes,
-          installmentMonths: p.installmentMonthes,
-          installmentMothes: p.installmentMonthes,
+          installmentMonthes: Number(p.installmentMonthes),
+          installmentMonths: Number(p.installmentMonthes),
+          installmentMothes: Number(p.installmentMonthes),
         })),
-        servicesIds: form.servicesIds,
-        type: form.type,
-        status: form.type === 'Buy' ? (form.status === 0 ? 'primary' : 'resale') : '',
+        servicesIds: form.servicesIds.map(id => Number(id)),
+        type: form.type === 'Buy' ? 'Buy' : 'Rent',
+        status: form.type === 'Buy' ? (form.status === 0 ? 'Primary' : 'Resale') : '',
         isActive: true,
       };
+
+      console.log('[AddUnitModal] Creating unit with payload:', JSON.stringify(unitPayload, null, 2));
 
       if (isEditMode && editData) {
         // Prepare UpdateUnitPayload strictly
         const updatePayload: UpdateUnitPayload = {
-          id: editData.id,
+          id: Number(editData.id),
           name: form.name,
           description: form.description,
-          price: Number(form.price),
+          price: Number(form.price) || 0,
           propertyType: Number(form.propertyType),
-          noBathRoom: Number(form.noBathRoom),
-          noBedRoom: Number(form.noBedRoom),
-          noKitchen: Number(form.noKithchen),
-          noKithchen: Number(form.noKithchen),
-          area: Number(form.area),
+          noBathRoom: Number(form.noBathRoom) || 0,
+          noBedRoom: Number(form.noBedRoom) || 0,
+          noKitchen: Number(form.noKithchen) || 0,
+          noKithchen: Number(form.noKithchen) || 0,
+          area: Number(form.area) || 0,
           status: unitPayload.status,
           type: unitPayload.type,
-          floorNumber: Number(form.floorNumber),
-          view: Number(form.view),
-          floorName: form.floorName,
-          servicesIds: form.servicesIds,
+          floorNumber: Number(form.floorNumber) || 0,
+          view: Number(form.view) || 0,
+          floorName: form.floorName || '',
+          servicesIds: form.servicesIds.map(id => Number(id)),
           paymentPlans: unitPayload.paymentPlans,
-          isFeatured: form.isFeatured,
-          currencyCode: form.currencyCode,
+          isFeatured: !!form.isFeatured,
+          currencyCode: form.currencyCode || 'EGP',
           isActive: true,
         };
 
+        console.log('[AddUnitModal] Updating unit with payload:', JSON.stringify(updatePayload, null, 2));
         await updateUnit(updatePayload);
         
         // Handle payment plans individually because UpdateUnit doesn't save them
@@ -706,10 +709,18 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                     onClick={async () => {
                       setIsSubmittingQuick(true);
                       try {
-                        await createService({ name: newServiceName });
+                        const newId = await createService({ name: newServiceName });
                         setNewServiceName({ en: '', de: '', pl: '' });
                         setIsAddingService(false);
                         await fetchData();
+                        
+                        // Automatically select the newly created service
+                        if (typeof newId === 'number') {
+                          setForm(prev => ({
+                            ...prev,
+                            servicesIds: [...prev.servicesIds, newId]
+                          }));
+                        }
                       } catch {
                         alert('Failed to add service');
                       } finally {

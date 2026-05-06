@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
 import { getUnitById, UnitDetail } from '@/lib/api/projects';
 import { getPaymentPlansByUnit, PaymentPlan } from '@/lib/api/paymentPlans';
@@ -20,6 +21,7 @@ interface UnitDetailsModalProps {
 
 export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: UnitDetailsModalProps) {
   useBodyScrollLock(isOpen);
+  useEscapeKey(onClose, isOpen);
   const [unit, setUnit] = useState<UnitDetail | null>(null);
   const [extraPlans, setExtraPlans] = useState<PaymentPlan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
