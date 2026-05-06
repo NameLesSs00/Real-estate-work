@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image";
 export const dynamic = "force-dynamic";
 import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight } from "lucide-react";
-import { getUnitById, resolveProjectImageUrl, LocalizedString } from "@/lib/api/projects";
-import { Facility } from "@/lib/api/facilities";
-import { Service } from "@/lib/api/services";
+import { getUnitById, resolveProjectImageUrl } from "@/lib/api/projects";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
@@ -189,7 +188,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
             {/* Thumbnails */}
             {thumbnails.length > 0 && (
               <div className="grid grid-cols-4 gap-3">
-                {thumbnails.map((thumb, i) => (
+                {thumbnails.map((thumb: string, i: number) => (
                   <div
                     key={i}
                     className="relative w-full aspect-[4/3] rounded-[10px] overflow-hidden cursor-pointer bg-gray-200"

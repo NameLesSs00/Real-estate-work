@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -113,7 +114,7 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
                 href={`/properties/${(() => {
                   const id = unit?.Id || unit?.id;
                   if (!id) return '';
-                  const rawName = typeof unit?.Name === 'string' ? unit.Name : (unit?.Name?.en || unit?.name?.en || unit?.name || '');
+                  const rawName = typeof (unit as any)?.Name === 'string' ? (unit as any).Name : ((unit as any)?.Name?.en || (unit as any)?.name?.en || (unit as any)?.name || '');
                   const slug = typeof rawName === 'string' ? rawName.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-') : '';
                   return slug ? `${id}-${slug}` : id;
                 })()}`}
