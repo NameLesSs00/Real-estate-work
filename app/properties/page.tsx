@@ -75,11 +75,12 @@ function PropertiesPageContent() {
           Currency: f.currency || undefined,
           City: f.location || undefined,
           PageNumber: page,
-          PageSize: 6,
+          PageSize: 6, 
         });
         
         // Map UnitOutside to match what PropertyCard expects
-        const mappedUnits = data.items.map((u: any) => ({
+        const items = Array.isArray(data) ? data : (data.items || []);
+        const mappedUnits = items.map((u: any) => ({
           ...u,
           isResale: true,
           mappedId: `out-${u.id}`,
@@ -88,10 +89,10 @@ function PropertiesPageContent() {
           unitType: u.type,
           imageUrls: u.images?.sort((a: any, b: any) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0)).map((img: any) => img.imageUrl) || []
         }));
-        
+
         setUnits(mappedUnits);
         setTotalPages(data.totalPages || 1);
-        setTotalCount(data.totalCount);
+        setTotalCount(data.totalCount || items.length);
       } else {
         const data = await getUnitsFiltered({
           SearchTerm: f.searchTerm || undefined,
