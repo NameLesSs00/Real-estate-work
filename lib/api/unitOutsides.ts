@@ -144,9 +144,10 @@ export async function getUnitOutsides(
 }
 
 /** GET /api/UnitOutsides/{id} */
-export async function getUnitOutsideById(id: number): Promise<UnitOutside> {
+export async function getUnitOutsideById(id: number, lang?: string): Promise<UnitOutside> {
   const res = await fetch(`${API_BASE_URL}/api/UnitOutsides/${id}`, {
-    headers: { ...getHeaders() },
+    headers: { ...getHeaders(lang) },
+    cache: 'no-store'
   });
   if (!res.ok) throw new Error('Failed to fetch outside unit details.');
   const json = await res.json();

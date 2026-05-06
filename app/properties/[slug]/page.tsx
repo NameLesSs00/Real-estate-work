@@ -1,4 +1,5 @@
 import Image from "next/image";
+export const dynamic = "force-dynamic";
 import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight } from "lucide-react";
 import { getUnitById, resolveProjectImageUrl, LocalizedString } from "@/lib/api/projects";
 import { Facility } from "@/lib/api/facilities";
@@ -32,32 +33,94 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const locale = cookieStore.get('NEXT_LOCALE')?.value || 'en';
   const t = await getTranslations(locale);
 
-  const unitId = parseInt(slug.split("-")[0], 10);
+  const isExplicitlyOutside = slug.startsWith("out-");
+  const idString = isExplicitlyOutside ? slug.replace("out-", "").split("-")[0] : slug.split("-")[0];
+  const unitId = parseInt(idString, 10);
+
   if (isNaN(unitId)) notFound();
 
-  let unitData;
-  try {
-    unitData = await getUnitById(unitId, locale);
-  } catch {
-    notFound();
+  let unitData: any;
+  let isOutside = false;
+
+  if (isExplicitlyOutside) {
+    try {
+      const { getUnitOutsideById } = await import("@/lib/api/unitOutsides");
+      unitData = await getUnitOutsideById(unitId, locale);
+      isOutside = true;
+    } catch {
+      notFound();
+    }
+  } else {
+    try {
+      unitData = await getUnitById(unitId, locale);
+    } catch {
+      try {
+        const { getUnitOutsideById } = await import("@/lib/api/unitOutsides");
+        unitData = await getUnitOutsideById(unitId, locale);
+        isOutside = true;
+      } catch {
+        notFound();
+      }
+    }
   }
 
-  const unitImages = unitData.ImageUrls || unitData.imageUrls || [];
-  const mainImage =
-    (unitImages[0] ? resolveProjectImageUrl(unitImages[0]) : null) ??
-    `${BASE}/mainImg.png`;
-  const thumbnails = (unitImages.slice(1, 5) ?? [])
-    .map((url) => resolveProjectImageUrl(url))
-    .filter((u): u is string => u !== null);
+  // Unified data extractor mapped directly to the backend JSON format
+  const extractString = (val: any): string => {
+    if (!val) return "";
+    if (typeof val === 'string' && val.trim() !== '') return val;
+    if (typeof val === 'object') {
+      const locStr = val[locale] || val.en || val.de || val.pl;
+      if (typeof locStr === 'string' && locStr.trim() !== '') return locStr;
+    }
+    return "";
+  };
+
+  const d = unitData?.data || unitData || {};
+
+  const propertyName = extractString(d.name) || extractString(d.Name) || "Untitled Property";
+  const propertyDescription = extractString(d.description) || extractString(d.Description) || "";
+  const propertyPrice = d.price || d.Price || 0;
+  const propertyCurrency = d.currencyCode || d.CurrencyCode || "USD";
+  const propertyArea = d.area || d.Area || 0;
+  const propertyBedrooms = d.noBedRoom || d.NoBedRoom || 0;
+  const propertyBathrooms = d.noBathRoom || d.NoBathRoom || 0;
+  const propertyKitchens = d.noKitchen || d.NoKitchen || 0;
+  const propertyFloorName = extractString(d.floorName) || extractString(d.FloorName) || "";
+  const propertyFloorNum = d.floorNumber || d.FloorNumber || 0;
+  const unitTypeName = extractString(d.unitType) || extractString(d.UnitType) || "";
+  const unitStatusName = extractString(d.unitStatus) || extractString(d.UnitStatus) || "";
+  const propertyType = extractString(d.propertyType) || extractString(d.PropertyType) || "Property";
+  const projName = extractString(d.projectName) || extractString(d.ProjectName) || "";
+  const locName = extractString(d.location?.name) ||
+    extractString(d.locationName) ||
+    extractString(d.LocationName) ||
+    "";
+
+  const propertyLocation = locName ||
+    (isOutside ? [d.city || d.cityName, d.district || d.districtName, d.country || d.countryName].filter(Boolean).join(' - ') : "") ||
+    propertyFloorName || "";
+
+  const unitImages = (d.imageUrls?.length ? d.imageUrls : null) ||
+    (d.ImageUrls?.length ? d.ImageUrls : null) ||
+    (d.images || d.Images || [])?.map((img: any) => {
+      if (typeof img === 'string') return img;
+      return img?.imageUrl || img?.ImageUrl || img?.url || img?.Url || "";
+    }).filter(Boolean) ||
+    [];
+
+  const mainImage = (unitImages[0] ? resolveProjectImageUrl(unitImages[0] as string) : null) ?? `${BASE}/mainImg.png`;
+  const thumbnails = (unitImages.slice(1, 12) ?? [])
+    .map((url: any) => typeof url === 'string' ? resolveProjectImageUrl(url) : null)
+    .filter((u: string | null): u is string => u !== null);
 
   const overviewStats = [
-    { label: t.projectDetails.propertyType || "Property Type", value: unitData.PropertyType || unitData.propertyType || "Unit", icon: <Home size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.bedrooms || "Bedrooms",      value: unitData.NoBedRoom || unitData.noBedRoom || 0, icon: <BedDouble size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.bathrooms || "Bathrooms",     value: unitData.NoBathRoom || unitData.noBathRoom || 0, icon: <Bath size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.kitchens || "Kitchens",      value: unitData.NoKitchen || unitData.noKitchen || 0, icon: <Utensils size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.areaSize || "Area Size",     value: `${unitData.Area || unitData.area || 0} M²`, icon: <Maximize2 size={16} className="text-gray-500" /> },
-    { label: t.projectDetails.floor || "Floor",         value: unitData.FloorNumber || unitData.floorNumber || 0, icon: <Layers size={16} className="text-gray-500" /> },
-  ];
+    { label: t.projectDetails.propertyType || "Property Type", value: propertyType, icon: <Home size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.bedrooms || "Bedrooms", value: propertyBedrooms, icon: <BedDouble size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.bathrooms || "Bathrooms", value: propertyBathrooms, icon: <Bath size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.kitchens || "Kitchens", value: propertyKitchens, icon: <Utensils size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.areaSize || "Area Size", value: propertyArea ? `${propertyArea} M²` : null, icon: <Maximize2 size={16} className="text-gray-500" /> },
+    { label: t.projectDetails.floor || "Floor", value: propertyFloorNum, icon: <Layers size={16} className="text-gray-500" /> },
+  ].filter(stat => stat.value !== null && stat.value !== undefined && stat.value !== 0 && stat.value !== "");
 
   return (
     <div className="min-h-screen bg-[#F8F8F8] pt-36 pb-20">
@@ -68,21 +131,43 @@ export default async function PropertyDetailsPage({ params }: Props) {
           <Home size={14} className="text-gray-400" />
           <Link href="/" className="hover:text-gray-700 transition-colors">{t.header.home || "Home"}</Link>
           <ChevronRight size={13} />
-          <span>{unitData.PropertyType || "Property"}</span>
+          <span>{propertyType}</span>
           <ChevronRight size={13} />
           <span className="text-gray-700 font-semibold">{t.projectDetails.title || "Property Details"}</span>
         </nav>
 
         {/* Title + Location */}
-        <h1 className="text-[28px] font-bold text-gray-900 mb-1 font-poppins">
-          {typeof unitData.Name === 'string' ? unitData.Name : (unitData.Name?.[locale as keyof LocalizedString] || unitData.Name?.en || "Untitled Property")}
-        </h1>
-        <div className="flex items-center justify-between gap-4 mb-6">
-          <div className="flex items-center gap-1.5 text-[13px] text-gray-500 font-poppins">
-            <MapPin size={14} className="text-gray-400 flex-shrink-0" />
-            <span>{unitData.FloorName || t.projectDetails.noLocation || "Location not available"}</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+          <div>
+            {projName && <p className="text-[#E8A33E] font-bold text-[14px] mb-1 uppercase tracking-wider">{projName}</p>}
+            <h1 className="text-[32px] font-bold text-gray-900 mb-2 font-poppins leading-tight">
+              {propertyName}
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 text-[13px] text-gray-500 font-poppins">
+              {propertyLocation && propertyLocation.length >= 3 && (
+                <div className="flex items-center gap-1.5">
+                  <MapPin size={14} className="text-gray-400 flex-shrink-0" />
+                  <span>{propertyLocation}</span>
+                </div>
+              )}
+              {(unitTypeName || unitStatusName) && (
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+                  <div className="flex items-center gap-2">
+                    {unitTypeName && <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitTypeName}</span>}
+                    {unitStatusName && <span className="bg-amber-50 text-amber-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitStatusName}</span>}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-          <CopyLinkButton />
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-[12px] text-gray-400 font-medium uppercase tracking-wider">{t.projectDetails.price || "Price"}</p>
+              <p className="text-[28px] font-bold text-[#16273B] leading-none">{propertyCurrency} {propertyPrice.toLocaleString()}</p>
+            </div>
+            <CopyLinkButton />
+          </div>
         </div>
 
         {/* ── Main Two-Column Section ── */}
@@ -94,7 +179,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
             <div className="relative w-full aspect-[4/3] rounded-[12px] overflow-hidden bg-gray-200">
               <Image
                 src={mainImage}
-                alt={(typeof unitData.name === 'string' ? unitData.name : (unitData.name?.[locale as keyof LocalizedString] || unitData.name?.en)) || "Property Image"}
+                alt={propertyName}
                 fill
                 className="object-cover"
                 priority
@@ -146,19 +231,19 @@ export default async function PropertyDetailsPage({ params }: Props) {
             {t.projectDetails.description || "Description"}
           </h2>
           <p className="text-[14px] text-gray-600 leading-relaxed font-poppins whitespace-pre-wrap">
-            {(typeof unitData.Description === 'string' ? unitData.Description : (unitData.Description?.[locale as keyof LocalizedString] || unitData.Description?.en)) || t.projectDetails.noDescription || "No description provided."}
+            {propertyDescription || t.projectDetails.noDescription || "No description provided."}
           </p>
         </div>
 
         {/* ── Features & Services ── */}
-        {((unitData.Facilities?.length ?? 0) > 0 || (unitData.Services?.length ?? 0) > 0) && (
+        {((d.Facilities?.length ?? 0) > 0 || (d.Services?.length ?? 0) > 0 || (d.facilities?.length ?? 0) > 0 || (d.services?.length ?? 0) > 0) && (
           <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
             <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
               {t.projectDetails.featuresServices || "Features & Services"}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-6">
-              {unitData.Facilities?.map((f: Facility, i: number) => {
-                const name = (typeof f.name === 'string' ? f.name : (f.name?.[locale] || f.name?.en || 'Unknown')) as string;
+              {(d.facilities || d.Facilities || [])?.map((f: any, i: number) => {
+                const name = (typeof f === 'string' ? f : (typeof f.name === 'string' ? f.name : (f.name?.[locale] || f.name?.en || 'Unknown'))) as string;
                 return (
                   <div key={`f-${i}`} className="flex items-center gap-2.5 text-gray-700">
                     <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
@@ -166,8 +251,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   </div>
                 );
               })}
-              {unitData.Services?.map((s: Service, i: number) => {
-                const name = (typeof s.name === 'string' ? s.name : (s.name?.[locale] || s.name?.en || 'Unknown')) as string;
+              {(d.services || d.Services || [])?.map((s: any, i: number) => {
+                const name = (typeof s === 'string' ? s : (typeof s.name === 'string' ? s.name : (s.name?.[locale] || s.name?.en || 'Unknown'))) as string;
                 return (
                   <div key={`s-${i}`} className="flex items-center gap-2.5 text-gray-700">
                     <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />

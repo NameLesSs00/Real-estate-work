@@ -530,6 +530,7 @@ export async function getUnits(pageNumber = 1, projectId?: number): Promise<Unit
 export async function getUnitById(id: number, lang?: string): Promise<UnitDetail> {
   const res = await fetch(`${API_BASE_URL}/api/Units/${id}`, {
     headers: { ...getHeaders(lang) },
+    cache: 'no-store'
   });
   if (!res.ok) {
     const text = await res.text();

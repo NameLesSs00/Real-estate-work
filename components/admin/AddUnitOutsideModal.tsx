@@ -75,26 +75,39 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
       (async () => {
         setIsLoading(true);
         try {
-          const d = await getUnitOutsideById(editData.id);
+          const [enData, deData, plData] = await Promise.all([
+            getUnitOutsideById(editData.id, 'en'),
+            getUnitOutsideById(editData.id, 'de'),
+            getUnitOutsideById(editData.id, 'pl')
+          ]);
+
           setForm({
-            name: { en: d.name ?? '', de: '', pl: '' },
-            description: { en: d.description ?? '', de: '', pl: '' },
-            price: d.price ?? '',
-            currencyCode: d.currencyCode || 'USD',
-            area: d.area ?? '',
-            noBedRoom: d.noBedRoom ?? '',
-            noBathRoom: d.noBathRoom ?? '',
-            noKitchen: d.noKitchen ?? '',
-            country: d.country ?? '',
-            city: d.city ?? '',
-            street: d.street ?? '',
-            propertyType: d.propertyType ?? 'Apartment',
-            floorNumber: d.floorNumber ?? '',
-            floorName: d.floorName ?? '',
-            view: d.view ?? '',
-            type: d.type ?? 'Buy',
-            isFeatured: d.isFeatured ?? false,
-            paymentPlans: (d.paymentPlans ?? []).map((p) => ({
+            name: { 
+              en: enData.name ?? '', 
+              de: deData.name ?? '', 
+              pl: plData.name ?? '' 
+            },
+            description: { 
+              en: enData.description ?? '', 
+              de: deData.description ?? '', 
+              pl: plData.description ?? '' 
+            },
+            price: enData.price ?? '',
+            currencyCode: enData.currencyCode || 'USD',
+            area: enData.area ?? '',
+            noBedRoom: enData.noBedRoom ?? '',
+            noBathRoom: enData.noBathRoom ?? '',
+            noKitchen: enData.noKitchen ?? '',
+            country: enData.country ?? '',
+            city: enData.city ?? '',
+            street: enData.street ?? '',
+            propertyType: enData.propertyType ?? 'Apartment',
+            floorNumber: enData.floorNumber ?? '',
+            floorName: enData.floorName ?? '',
+            view: enData.view ?? '',
+            type: enData.type ?? 'Buy',
+            isFeatured: enData.isFeatured ?? false,
+            paymentPlans: (enData.paymentPlans ?? []).map((p) => ({
               id: p.id,
               commissionRate: p.commissionRate ?? 0,
               installmentMothes: p.installmentMothes ?? 0,

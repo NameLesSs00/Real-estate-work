@@ -340,7 +340,12 @@ export default function UnitOutsideDetailsModal({
           )}
           <div className="ml-auto flex items-center gap-3">
             <a
-              href={`/properties/${unit?.id}`}
+              href={`/properties/out-${(() => {
+                if (!unit?.id) return '';
+                const rawName = unit.name || '';
+                const slug = typeof rawName === 'string' ? rawName.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-') : '';
+                return slug ? `${unit.id}-${slug}` : unit.id;
+              })()}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold px-8 py-3.5 rounded-2xl transition-all border border-blue-100 text-center"

@@ -110,7 +110,13 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
             )}
             <div className="ml-auto flex items-center gap-3">
               <a
-                href={`/properties/${unit?.Id || unit?.id}`}
+                href={`/properties/${(() => {
+                  const id = unit?.Id || unit?.id;
+                  if (!id) return '';
+                  const rawName = typeof unit?.Name === 'string' ? unit.Name : (unit?.Name?.en || unit?.name?.en || unit?.name || '');
+                  const slug = typeof rawName === 'string' ? rawName.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-') : '';
+                  return slug ? `${id}-${slug}` : id;
+                })()}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold px-8 py-3.5 rounded-2xl transition-all border border-blue-100 text-center"
