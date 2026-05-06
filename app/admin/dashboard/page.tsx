@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -25,9 +26,9 @@ export default function DashboardPage() {
   const [totalProjects, setTotalProjects] = useState<number | null>(null);
   const [totalDevelopers, setTotalDevelopers] = useState<number | null>(null);
   const [pendingCount, setPendingCount] = useState<number | null>(null);
-  const [recentUnits, setRecentUnits] = useState<{ id: number; name: string; locationName: string; price: number; isActive: boolean; imageUrls: string[] }[]>([]);
+  const [recentUnits, setRecentUnits] = useState<{ id: number; name: string; locationName: string; price: number; currencyCode?: string; isActive: boolean; imageUrls: string[] }[]>([]);
   const [pendingRequests, setPendingRequests] = useState<{ id: number; unitName: string; applicantName: string; status: string }[]>([]);
-  const [recentDeals, setRecentDeals] = useState<{ id: number; unit: { unitName: string; price: number; projectName: string }; dealType: string; createdAt: string }[]>([]);
+  const [recentDeals, setRecentDeals] = useState<{ id: number; unit: { unitName: string; price: number; currencyCode?: string; projectName: string }; dealType: string; createdAt: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,6 +51,7 @@ export default function DashboardPage() {
               name: u.name,
               locationName: u.locationName,
               price: u.price,
+              currencyCode: u.currencyCode,
               isActive: u.isActive,
               imageUrls: u.imageUrls,
             }))
@@ -71,7 +73,10 @@ export default function DashboardPage() {
         if (dealsData.status === 'fulfilled') {
           setRecentDeals(dealsData.value.items.map(d => ({
             id: d.id,
-            unit: d.unit,
+            unit: {
+              ...d.unit,
+              currencyCode: (d.unit as any).currencyCode
+            },
             dealType: d.dealType,
             createdAt: d.createdAt,
           })));
@@ -186,7 +191,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <div className="text-right pr-1">
-                    <p className="text-[16px] font-bold text-[#16273B]">EGP {unit.price?.toLocaleString()}</p>
+                    <p className="text-[16px] font-bold text-[#16273B]">{unit.currencyCode || 'EGP'} {unit.price?.toLocaleString()}</p>
                     <span className={`text-[12px] font-semibold ${unit.isActive ? 'text-green-500' : 'text-red-400'}`}>
                       {unit.isActive ? 'Active' : 'Sold'}
                     </span>
@@ -252,7 +257,7 @@ export default function DashboardPage() {
                       <td className="py-4 px-6">
                         <span className="px-3 py-1 bg-[#EEF0F5] rounded-full text-xs font-semibold">{deal.dealType}</span>
                       </td>
-                      <td className="py-4 px-6 font-bold">EGP {deal.unit?.price?.toLocaleString()}</td>
+                      <td className="py-4 px-6 font-bold">{deal.unit?.currencyCode || 'EGP'} {deal.unit?.price?.toLocaleString()}</td>
                       <td className="py-4 px-6 text-gray-400">{new Date(deal.createdAt).toLocaleDateString()}</td>
                     </tr>
                   ))}

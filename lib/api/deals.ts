@@ -14,6 +14,7 @@ export interface Deal {
     unitId: number;
     unitName: string;
     price: number;
+    currencyCode?: string;
     area: number;
     isActive: boolean;
     projectId: number;
