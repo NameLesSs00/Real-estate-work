@@ -85,7 +85,7 @@ const ExploreUnits = () => {
                 title={getLocalized(unit.name) || 'Untitled Unit'}
                 type={unit.propertyType || unit.unitType || 'Unit'}
                 location={unit.locationName || 'Unknown Location'}
-                price={`EGP ${unit.price?.toLocaleString()}`}
+                price={`${unit.currencyCode || unit.currency || 'EGP'} ${unit.price?.toLocaleString()}`}
                 beds={unit.noBedRoom || 0}
                 baths={unit.noBathRoom || 0}
                 area={`${unit.area || 0} m²`}

@@ -22,6 +22,8 @@ export interface UnitListItem {
   name: string;
   description: string;
   price: number;
+  currencyCode?: string;
+  currency?: string;
   area: number;
   noBathRoom: number;
   noBedRoom: number;
