@@ -31,6 +31,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
   useEscapeKey(onClose, isOpen);
   const [form, setForm] = useState(EMPTY_FORM);
   const [initialFacilityIds, setInitialFacilityIds] = useState<number[]>([]);
+  const [facilityStrings, setFacilityStrings] = useState<string[]>([]);
   const [heroFile, setHeroFile] = useState<File | null>(null);
   const [heroPreview, setHeroPreview] = useState<string | null>(null);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
@@ -136,6 +137,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             [];
 
           setInitialFacilityIds(currentFacilityIds);
+          const currentFacilities = (enData.facilities || (enData as unknown as { Facilities?: unknown[] }).Facilities || []) as unknown[];
+          setFacilityStrings(currentFacilities.map((f: unknown) => typeof f === 'string' ? f : ((f as { name?: string; Name?: string }).name || (f as { name?: string; Name?: string }).Name || 'Unknown')));
           
           setForm({
             name: {
@@ -164,6 +167,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
     } else {
       setForm(EMPTY_FORM);
       setInitialFacilityIds([]);
+      setFacilityStrings([]);
       setIsLoading(false);
     }
     setHeroFile(null);
@@ -227,9 +231,6 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           description: form.description,
           developerId: form.developerId || 0,
           locationId: form.locationId || 0,
-          facilityIds: form.facilityIds,
-          // Try sending uppercase Facilities if the backend expects it
-          Facilities: form.facilityIds.map(id => ({ id }))
         });
         projectId = typeof res === 'number' ? res : res.id;
 
@@ -443,7 +444,14 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             )}
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[250px] overflow-y-auto pr-2 scrollbar-thin">
-              {facilities.map((fac) => {
+              {isEditMode ? (
+                facilityStrings.map((facStr, idx) => (
+                  <div key={idx} className="bg-gray-100 border border-gray-200 text-[#16273B] font-bold p-4 rounded-[18px] flex items-center justify-center text-center text-[14px]">
+                    {typeof facStr === 'string' ? facStr : (facStr as unknown as { name?: string })?.name || 'Unknown'}
+                  </div>
+                ))
+              ) : (
+                facilities.map((fac) => {
                 let facName = fac.name;
                 if (typeof fac.name === 'object' && fac.name !== null) {
                   const nameObj = fac.name as { en?: string; de?: string; pl?: string };
@@ -489,7 +497,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                     </span>
                   </label>
                 );
-              })}
+              })
+            )}
             </div>
           </div>
 

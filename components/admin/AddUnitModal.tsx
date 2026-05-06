@@ -43,6 +43,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(projectId ?? null);
   const [projects, setProjects] = useState<{ id: number; name: string; locationName?: string }[]>([]);
   const [services, setServices] = useState<Service[]>([]);
+  const [serviceStrings, setServiceStrings] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [heroFile, setHeroFile] = useState<File | null>(null);
@@ -162,6 +163,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               };
             })
           });
+          const currentServices = (detail.Services || detail.services || []) as unknown[];
+          setServiceStrings(currentServices.map((s: unknown) => typeof s === 'string' ? s : ((s as { name?: string; Name?: string }).name || (s as { name?: string; Name?: string }).Name || 'Unknown')));
         } catch (err) {
           console.error('[AddUnitModal] Failed to fetch localized unit data:', err);
           setError('Failed to load full unit data for editing.');
@@ -173,6 +176,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     } else {
       setForm(EMPTY_FORM);
       setSelectedProjectId(projectId ?? null);
+      setServiceStrings([]);
     }
     setHeroFile(null);
     setHeroPreview(null);
@@ -287,7 +291,6 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           floorNumber: Number(form.floorNumber) || 0,
           view: Number(form.view) || 0,
           floorName: form.floorName || '',
-          servicesIds: form.servicesIds.map(id => Number(id)),
           paymentPlans: unitPayload.paymentPlans,
           isFeatured: !!form.isFeatured,
           currencyCode: form.currencyCode || 'EGP',
@@ -742,9 +745,16 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               )}
 
               <div className="max-h-[200px] overflow-y-auto pr-2 space-y-2 scrollbar-thin">
-                {services.map((ser) => {
-                  let serName = ser.name;
-                  if (typeof ser.name === 'object' && ser.name !== null) {
+                {isEditMode ? (
+                  serviceStrings.map((servStr, idx) => (
+                    <div key={idx} className="bg-gray-100 border border-gray-200 text-[#16273B] font-bold p-3 rounded-[12px] flex items-center justify-center text-center text-[12px]">
+                      {typeof servStr === 'string' ? servStr : (servStr as unknown as { name?: string })?.name || 'Unknown'}
+                    </div>
+                  ))
+                ) : (
+                  services.map((ser) => {
+                    let serName = ser.name;
+                    if (typeof ser.name === 'object' && ser.name !== null) {
                     const nameObj = ser.name as { en?: string; de?: string; pl?: string };
                     serName = nameObj.en || nameObj.de || nameObj.pl || 'Unknown';
                   }
@@ -768,7 +778,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                       <span className="text-[#16273B] text-[14px]">{serName as string}</span>
                     </label>
                   );
-                })}
+                })
+              )}
                 {services.length === 0 && <p className="text-sm text-gray-500 italic">No services available.</p>}
               </div>
             </div>
