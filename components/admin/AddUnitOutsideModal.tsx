@@ -38,6 +38,7 @@ const EMPTY = {
   type: 'Buy',
   isFeatured: false,
   paymentPlans: [] as {
+    id?: number;
     commissionRate: number | '';
     installmentMothes: number | '';
     installmentDownPayment: number | '';
@@ -94,6 +95,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
             type: d.type ?? 'Buy',
             isFeatured: d.isFeatured ?? false,
             paymentPlans: (d.paymentPlans ?? []).map((p) => ({
+              id: p.id,
               commissionRate: p.commissionRate ?? 0,
               installmentMothes: p.installmentMothes ?? 0,
               installmentDownPayment: p.installmentDownPayment ?? 0,
@@ -159,10 +161,16 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
     const validatedPlans = form.paymentPlans.map((p) => {
       const isCash = p.paymentType === 'Cash';
       return {
+        Id: p.id,
+        id: p.id,
         CommissionRate: Number(p.commissionRate) || 0,
+        commissionRate: Number(p.commissionRate) || 0,
         InstallmentMothes: isCash ? 0 : (Number(p.installmentMothes) || 0),
+        installmentMothes: isCash ? 0 : (Number(p.installmentMothes) || 0),
         InstallmentDownPayment: isCash ? 0 : (Number(p.installmentDownPayment) || 0),
+        installmentDownPayment: isCash ? 0 : (Number(p.installmentDownPayment) || 0),
         PaymentType: p.paymentType,
+        paymentType: p.paymentType,
       };
     });
 
@@ -219,10 +227,19 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
         fd.append('IsFeatured', String(form.isFeatured));
         fd.append('isFeatured', String(form.isFeatured));
         plans.forEach((p, i) => {
-          fd.append(`PaymentPlans[${i}].CommissionRate`, String(p.CommissionRate));
-          fd.append(`PaymentPlans[${i}].InstallmentMothes`, String(p.InstallmentMothes));
-          fd.append(`PaymentPlans[${i}].InstallmentDownPayment`, String(p.InstallmentDownPayment));
-          fd.append(`PaymentPlans[${i}].PaymentType`, p.PaymentType);
+          // Send all variants for indices to be absolutely sure
+          ['PaymentPlans', 'paymentPlans', 'PaymentPlan', 'paymentPlan'].forEach(key => {
+            if (p.Id !== undefined) fd.append(`${key}[${i}].Id`, String(p.Id));
+            if (p.id !== undefined) fd.append(`${key}[${i}].id`, String(p.id));
+            fd.append(`${key}[${i}].CommissionRate`, String(p.CommissionRate));
+            fd.append(`${key}[${i}].commissionRate`, String(p.CommissionRate));
+            fd.append(`${key}[${i}].InstallmentMothes`, String(p.InstallmentMothes));
+            fd.append(`${key}[${i}].installmentMothes`, String(p.InstallmentMothes));
+            fd.append(`${key}[${i}].InstallmentDownPayment`, String(p.InstallmentDownPayment));
+            fd.append(`${key}[${i}].installmentDownPayment`, String(p.InstallmentDownPayment));
+            fd.append(`${key}[${i}].PaymentType`, p.PaymentType);
+            fd.append(`${key}[${i}].paymentType`, p.PaymentType);
+          });
         });
         imageFiles.forEach((f) => fd.append('Images', f));
         await updateUnitOutside(fd);

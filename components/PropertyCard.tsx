@@ -17,6 +17,7 @@ export interface PropertyCardProps {
   image: string;
   status?: string;
   isDefaultImage?: boolean;
+  unitType?: string;
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
@@ -30,7 +31,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   area,
   image,
   status = 'For Sale',
-  isDefaultImage = false
+  isDefaultImage = false,
+  unitType
 }) => {
   const { t } = useLanguage();
   
@@ -49,7 +51,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           className="unit-image"
         />
         <div className="unit-price-tag">{price}</div>
-        <div className="unit-status-tag">{status === 'For Sale' ? t('propertyCard.status.sale') : t('propertyCard.status.sold')}</div>
+        <div className="unit-status-tag">
+          {status === 'Sold' 
+            ? t('propertyCard.status.sold') 
+            : (unitType === 'Rent' ? t('propertyCard.status.rent') : t('propertyCard.status.sale'))}
+        </div>
       </Link>
       <div className="unit-content">
         <h3 className="unit-title">{title}</h3>

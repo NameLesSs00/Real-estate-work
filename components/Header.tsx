@@ -74,7 +74,7 @@ const Header = () => {
     <div className="relative">
       <button 
         onClick={() => handleDropdownClick(title)}
-        className="flex items-center gap-2 text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors py-2 outline-none cursor-pointer"
+        className="flex items-center gap-2 text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors py-2 outline-none cursor-pointer"
       >
         {title}
         <ChevronDown size={16} className={`transition-transform duration-300 ${activeDropdown === title ? 'rotate-180' : ''}`} />
@@ -96,7 +96,7 @@ const Header = () => {
                     key={item.label} 
                     href={item.href}
                     onClick={() => setActiveDropdown(null)}
-                    className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[16px] font-semibold transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
+                    className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[0.9375rem] font-semibold transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
                   >
                     {item.label}
                   </Link>
@@ -107,7 +107,7 @@ const Header = () => {
                     key={loc} 
                     href={`/properties?type=${type}&location=${loc}`}
                     onClick={() => setActiveDropdown(null)}
-                    className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[16px] font-medium transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
+                    className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[0.9375rem] font-medium transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
                   >
                     {loc}
                   </Link>
@@ -146,11 +146,11 @@ const Header = () => {
             <div className="flex items-center gap-6">
               <Link
                 href="/"
-                className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors"
+                className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors"
               >
                 {t('header.home')}
               </Link>
-              <Link href="/projects" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
+              <Link href="/projects" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
                 {t('header.projects')}
               </Link>
               
@@ -161,13 +161,13 @@ const Header = () => {
                   { label: t('header.resale'), href: "/properties?unitType=Buy&status=resale" }
                 ]} 
               />
-              <Link href="/properties?unitType=Rent" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
+              <Link href="/properties?unitType=Rent" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
                 {t('header.rent')}
               </Link>
 
-              <Link href="/about" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
-              <Link href="/contact" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
-              <Link href="/blogs" className="text-[16px] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.blogs')}</Link>
+              <Link href="/about" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
+              <Link href="/contact" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
+              <Link href="/blogs" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.blogs')}</Link>
             </div>
 
             {/* Social Links & Language */}

@@ -309,7 +309,8 @@
   },
   "propertyCard": {
     "status": {
-      "sale": "For Sale",
+      "sale": "Sell",
+      "rent": "Rent",
       "sold": "Sold"
     },
     "details": {

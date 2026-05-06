@@ -309,7 +309,8 @@
   },
   "propertyCard": {
     "status": {
-      "sale": "Na sprzedaż",
+      "sale": "Sprzedaż",
+      "rent": "Wynajem",
       "sold": "Sprzedane"
     },
     "details": {

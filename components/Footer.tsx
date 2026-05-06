@@ -30,7 +30,7 @@ const Footer = () => {
             />
             <div className="h-[1px] w-full bg-white/20 mb-6"></div>
           </div>
-          <p className="text-[16px] leading-[1.6] text-[#D9D9D9] max-w-[300px]">
+          <p className="text-[0.9375rem] leading-[1.6] text-[#D9D9D9] max-w-[300px]">
             {t('footer.about')}
           </p>
         </div>
@@ -68,7 +68,7 @@ const Footer = () => {
           <ul className="flex flex-col gap-6 text-[#D9D9D9]">
             <li className="flex items-center gap-4">
               <Phone size={20} />
-              <a href="tel:+201021111666" className="hover:text-white transition-colors">+20 102 111 1666</a>
+              <a href="tel:+2001220512555" className="hover:text-white transition-colors">+2001220512555</a>
             </li>
             <li className="flex items-center gap-4">
               <Earth size={20} />

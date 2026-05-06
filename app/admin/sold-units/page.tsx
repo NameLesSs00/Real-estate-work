@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { getSoldUnits, SoldUnit, reactivateUnit } from '@/lib/api/units';
+import { getSoldUnits, SoldUnit } from '@/lib/api/units';
 import SoldUnitDetailModal from '@/components/admin/SoldUnitDetailModal';
 
 export default function SoldUnitsPage() {
   const [soldUnits, setSoldUnits] = useState<SoldUnit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,26 +54,9 @@ export default function SoldUnitsPage() {
     fetchSoldUnits(1);
   };
 
-  const handleReactivate = async (unit: SoldUnit) => {
-    if (!confirm(`Reactivate "${unit.unitName}"? This will mark it as active again.`)) return;
-    try {
-      await reactivateUnit({
-        projectId: 0,
-        unitId: unit.unitId,
-        isFeatured: false,
-        paymentPlans: [],
-      });
-      notify('success', `"${unit.unitName}" has been reactivated.`);
-      fetchSoldUnits(currentPage, searchQuery, soldTypeFilter);
-    } catch (err: unknown) {
-      notify('error', err instanceof Error ? err.message : 'Failed to reactivate unit.');
-    }
-  };
 
-  const notify = (type: 'success' | 'error', message: string) => {
-    setNotification({ type, message });
-    setTimeout(() => setNotification(null), 3500);
-  };
+
+
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -104,16 +87,7 @@ export default function SoldUnitsPage() {
         </div>
       </div>
 
-      {/* Notification */}
-      {notification && (
-        <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 shadow-sm border ${
-          notification.type === 'success'
-            ? 'bg-green-50 border-green-100 text-green-700'
-            : 'bg-red-50 border-red-100 text-red-700'
-        }`}>
-          <span className="font-medium text-[15px]">{notification.message}</span>
-        </div>
-      )}
+
 
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-3 mb-8">
@@ -262,14 +236,7 @@ export default function SoldUnitsPage() {
                             style={{ WebkitMask: "url('/admin/units/view.png') center/contain no-repeat", mask: "url('/admin/units/view.png') center/contain no-repeat" }}
                           />
                         </button>
-                        {/* Reactivate */}
-                        <button
-                          onClick={() => handleReactivate(unit)}
-                          title="Reactivate Unit"
-                          className="bg-[#DCFCE7] text-[#166534] hover:bg-[#86EFAC] px-4 py-2 rounded-xl text-[12px] font-bold transition-all cursor-pointer shadow-sm hover:shadow-md whitespace-nowrap"
-                        >
-                          Reactivate
-                        </button>
+
                       </div>
                     </td>
                   </tr>
