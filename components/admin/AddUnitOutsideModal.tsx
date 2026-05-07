@@ -168,10 +168,17 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
 
   const handleSubmit = async () => {
     if (!form.name.en.trim()) { setError('English name is required.'); return; }
-    if (!form.city.trim()) { setError('City is required.'); return; }
+    if (!form.description.en.trim()) { setError('English description is required.'); return; }
+    if (!form.price || Number(form.price) <= 0) { setError('Price must be greater than 0.'); return; }
     if (!form.country.trim()) { setError('Country is required.'); return; }
-    if (Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
-    if (!form.view) { setError('Please enter a view.'); return; }
+    if (!form.city.trim()) { setError('City is required.'); return; }
+    if (!form.street.trim()) { setError('Street is required.'); return; }
+    if (!form.area || Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
+    if (form.noBedRoom === '') { setError('Number of bedrooms is required.'); return; }
+    if (form.noBathRoom === '') { setError('Number of bathrooms is required.'); return; }
+    if (form.noKitchen === '') { setError('Number of kitchens is required.'); return; }
+    if (form.floorNumber === '') { setError('Floor number is required.'); return; }
+    if (!form.view.trim()) { setError('View is required.'); return; }
 
     // Remove VIEW_MAPPING as view is now a custom string input
 
@@ -357,7 +364,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                   </div>
                   <div className="space-y-2">
                     <label className="text-[14px] font-bold text-[#16273B]">
-                      Description ({langTab.toUpperCase()})
+                      Description ({langTab.toUpperCase()}) {langTab === 'en' && '*'}
                     </label>
                     <textarea
                       rows={3}
@@ -385,7 +392,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                     <input type="text" value={form.city} onChange={setField('city')} placeholder="e.g. Cairo" className={inputCls} />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[13px] font-semibold text-[#16273B]">Street</label>
+                    <label className="text-[13px] font-semibold text-[#16273B]">Street *</label>
                     <input type="text" value={form.street} onChange={setField('street')} placeholder="e.g. 10 Nile St" className={inputCls} />
                   </div>
                 </div>
@@ -394,7 +401,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
               {/* ── Price & Currency ── */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2 col-span-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">Price</label>
+                  <label className="text-[13px] font-semibold text-[#16273B]">Price *</label>
                   <div className="flex gap-2">
                     <input
                       type="number"
@@ -419,7 +426,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                   <input type="number" value={form.area} onChange={(e) => setForm((p) => ({ ...p, area: e.target.value ? Number(e.target.value) : '' }))} min={0} className={inputCls} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">Property Type</label>
+                  <label className="text-[13px] font-semibold text-[#16273B]">Property Type *</label>
                   <select value={form.propertyType} onChange={setField('propertyType')} className={inputCls}>
                     {[
                       { label: 'Apartment', value: 'Apartment' },
@@ -443,7 +450,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                   { label: 'Floor Number', field: 'floorNumber' },
                 ] .map(({ label, field }) => (
                   <div key={field} className="space-y-2">
-                    <label className="text-[13px] font-semibold text-[#16273B]">{label}</label>
+                    <label className="text-[13px] font-semibold text-[#16273B]">{label} *</label>
                     <input
                       type="number"
                       min={0}
@@ -458,7 +465,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                   <input type="text" value={form.floorName} onChange={setField('floorName')} placeholder="e.g. Ground" className={inputCls} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">View</label>
+                  <label className="text-[13px] font-semibold text-[#16273B]">View *</label>
                   <input 
                     type="text" 
                     value={form.view} 
@@ -468,7 +475,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">Listing Type</label>
+                  <label className="text-[13px] font-semibold text-[#16273B]">Listing Type *</label>
                   <select value={form.type} onChange={setField('type')} className={inputCls}>
                     <option value="Buy">Buy</option>
                     <option value="Rent">Rent</option>

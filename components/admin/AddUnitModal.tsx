@@ -234,10 +234,15 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
   const handleSubmit = async () => {
     if (!form.name.en.trim()) { setError('Unit name (English) is required.'); return; }
+    if (!form.description.en.trim()) { setError('Unit description (English) is required.'); return; }
     if (!isEditMode && !selectedProjectId) { setError('Please select a project.'); return; }
     if (!form.price || Number(form.price) <= 0) { setError('Price must be greater than 0.'); return; }
     if (!form.area || Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
-    if (!form.view) { setError('Please enter a view.'); return; }
+    if (form.noBedRoom === '') { setError('Number of bedrooms is required.'); return; }
+    if (form.noBathRoom === '') { setError('Number of bathrooms is required.'); return; }
+    if (form.noKithchen === '') { setError('Number of kitchens is required.'); return; }
+    if (form.floorNumber === '') { setError('Floor number is required.'); return; }
+    if (!form.view.trim()) { setError('View is required.'); return; }
 
     // Remove VIEW_MAPPING as view is now a custom string input
     
@@ -472,7 +477,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                       className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#16273B] font-bold text-[15px]">Description (EN)</label>
+                    <label className="text-[#16273B] font-bold text-[15px]">Description (EN) *</label>
                     <textarea value={form.description.en || ''} onChange={set('description', 'en')} placeholder="Describe the unit in English..." rows={4} 
                       className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
                   </div>
@@ -523,7 +528,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
           <div className="grid grid-cols-2 gap-5">
             <div className="space-y-2">
-              <label className="text-[14px] font-bold text-[#16273B] ml-1">Price</label>
+              <label className="text-[14px] font-bold text-[#16273B] ml-1">Price *</label>
               <div className="flex gap-2">
                 <input type="number" value={form.price}
                   onChange={(e) => setForm((prev) => ({ ...prev, price: e.target.value ? Number(e.target.value) : '' }))}
@@ -542,7 +547,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Property Type</label>
+              <label className="text-[#16273B] font-semibold text-[15px]">Property Type *</label>
               <select value={form.propertyType} onChange={set('propertyType')} className={inputCls}>
                 <option value={0}>Apartment</option>
                 <option value={1}>Villa</option>
@@ -552,26 +557,26 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Listing Type</label>
+              <label className="text-[#16273B] font-semibold text-[15px]">Listing Type *</label>
               <select value={form.type} onChange={set('type')} className={inputCls}>
                 <option value="Buy">Buy</option>
                 <option value="Rent">Rent</option>
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Bedrooms</label>
+              <label className="text-[#16273B] font-semibold text-[15px]">Bedrooms *</label>
               <input type="number" value={form.noBedRoom} onChange={set('noBedRoom')} min={0} className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Bathrooms</label>
+              <label className="text-[#16273B] font-semibold text-[15px]">Bathrooms *</label>
               <input type="number" value={form.noBathRoom} onChange={set('noBathRoom')} min={0} className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Kitchens</label>
+              <label className="text-[#16273B] font-semibold text-[15px]">Kitchens *</label>
               <input type="number" value={form.noKithchen} onChange={set('noKithchen')} min={0} className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Floor Number</label>
+              <label className="text-[#16273B] font-semibold text-[15px]">Floor Number *</label>
               <input type="number" value={form.floorNumber} onChange={set('floorNumber')} className={inputCls} />
             </div>
             <div className="space-y-2">
@@ -579,11 +584,11 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               <input type="text" value={form.floorName} onChange={set('floorName')} placeholder="e.g. Ground Floor" className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">Area (m²)</label>
+              <label className="text-[#16273B] font-semibold text-[15px]">Area (m²) *</label>
               <input type="number" value={form.area} onChange={set('area')} min={0} className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#16273B] font-semibold text-[15px]">View</label>
+              <label className="text-[#16273B] font-semibold text-[15px]">View *</label>
               <input 
                 type="text" 
                 value={form.view} 
