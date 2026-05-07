@@ -328,7 +328,10 @@
     "details": {
       "bedroom": "Sypialnia",
       "bathroom": "Łazienka",
-      "viewDetails": "Pokaż szczegóły"
+      "viewDetails": "Pokaż szczegóły",
+      "area": "Powierzchnia",
+      "instalment": "Raty",
+      "cash": "Gotówka"
     }
   },
   "faqPage": {

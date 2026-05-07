@@ -32,7 +32,7 @@ const categoryConfig = [
 ];
 
 const Categories = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const router = useRouter();
   const [counts, setCounts] = React.useState<Record<string, number>>({});
   const [loading, setLoading] = React.useState(true);
@@ -62,7 +62,7 @@ const Categories = () => {
   }, []);
 
   const handleCategoryClick = (value: string) => {
-    router.push(`/properties?propertyType=${value}`);
+    router.push(`/${language}/properties?propertyType=${value}`);
   };
 
   return (

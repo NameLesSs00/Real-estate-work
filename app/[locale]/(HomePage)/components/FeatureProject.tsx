@@ -10,6 +10,7 @@ import { getProjects, Project, resolveProjectImageUrl } from '@/lib/api/projects
 import { getServices, Service } from '@/lib/api/services';
 
 import './FeatureProject.css';
+import { slugify } from '@/lib/utils';
 
 const DEFAULT_LOGO = '/assists/defaultLogo.png';
 
@@ -183,7 +184,7 @@ const FeatureProject = () => {
                 )}
 
                   <div className="project-actions">
-                    <Link href={`/projects/${activeProject.id}`}>
+                    <Link href={`/${language}/projects/${activeProject.id}-${slugify(activeProject.name)}`}>
                       <button className="get-in-touch-btn">{t('featureProject.viewProjectDetails') as string}</button>
                     </Link>
                   </div>
@@ -212,7 +213,7 @@ const FeatureProject = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="show-more-projects-wrapper"
         >
-          <Link href="/projects" className="show-more-projects-link">
+          <Link href={`/${language}/projects`} className="show-more-projects-link">
             <button className="show-more-projects-btn">{t('featureProject.showMore') as string}</button>
           </Link>
         </motion.div>

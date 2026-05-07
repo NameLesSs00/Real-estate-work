@@ -5,11 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Loader2 } from 'lucide-react';
 import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
-import { getDeveloperById, resolveImageUrl } from '@/lib/api/developers';
 
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 
 import { useLanguage } from '@/lib/contexts/LanguageContext';
+import { slugify } from '@/lib/utils';
 
 const DEFAULT_IMAGE = '/assists/defaultImage.png';
 const DEFAULT_DEVELOPER_LOGO = '/assists/defaultLogo.png';
@@ -34,30 +34,9 @@ const itemVariants: Variants = {
   }
 };
 
-interface ProjectWithLogo extends Project {
-  developerLogoUrl: string | null;
-}
-
-async function enrichWithLogo(projects: Project[]): Promise<ProjectWithLogo[]> {
-  return Promise.all(
-    projects.map(async (p) => {
-      let developerLogoUrl: string | null = null;
-      if (p.developerId) {
-        try {
-          const dev = await getDeveloperById(p.developerId);
-          developerLogoUrl = resolveImageUrl(dev.logoImage);
-        } catch {
-          // silently fall back
-        }
-      }
-      return { ...p, developerLogoUrl: developerLogoUrl || DEFAULT_DEVELOPER_LOGO };
-    })
-  );
-}
-
 export default function ProjectsPage() {
-  const { t, getLocalized } = useLanguage();
-  const [projects, setProjects]           = useState<ProjectWithLogo[]>([]);
+  const { t, getLocalized, language } = useLanguage();
+  const [projects, setProjects]           = useState<Project[]>([]);
   const [page, setPage]                   = useState(1);
   const [hasMore, setHasMore]             = useState(true);
   const [loading, setLoading]             = useState(false);
@@ -68,9 +47,8 @@ export default function ProjectsPage() {
     try {
       setLoading(true);
       setError(null);
-      const data = await getProjects(pageNumber);
-      const enriched = await enrichWithLogo(data.items);
-      setProjects((prev) => pageNumber === 1 ? enriched : [...prev, ...enriched]);
+      const data = await getProjects(pageNumber, 10, language);
+      setProjects((prev) => pageNumber === 1 ? data.items : [...prev, ...data.items]);
       setHasMore(data.hasNextPage);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t('projects.error') as string);
@@ -78,7 +56,7 @@ export default function ProjectsPage() {
       setLoading(false);
       setInitialLoading(false);
     }
-  }, [t]);
+  }, [t, language]);
 
   useEffect(() => {
     fetchPage(1);
@@ -158,7 +136,7 @@ export default function ProjectsPage() {
                       className="bg-white rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.05)] overflow-hidden border border-[#F0EDE8] hover:shadow-[0_16px_48px_rgba(0,0,0,0.09)] hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row"
                     >
                       {/* Left: Hero Image */}
-                      <Link href={`/projects/${project.id}`} className="relative w-full md:w-[400px] h-[240px] md:h-auto flex-shrink-0 overflow-hidden block">
+                      <Link href={`/${language}/projects/${project.id}-${slugify(localizedName)}`} className="relative w-full md:w-[400px] h-[240px] md:h-auto flex-shrink-0 overflow-hidden block">
                         <Image
                           src={heroImage}
                           alt={localizedName}
@@ -175,7 +153,7 @@ export default function ProjectsPage() {
                         <div className="absolute top-7 right-7">
                           <div className="relative w-[100px] h-[50px]">
                             <Image
-                              src={project.developerLogoUrl || DEFAULT_DEVELOPER_LOGO}
+                              src={resolveProjectImageUrl(project.logoImage) || DEFAULT_DEVELOPER_LOGO}
                               alt={project.developerName}
                               fill
                               draggable={false}
@@ -206,7 +184,7 @@ export default function ProjectsPage() {
                         {/* Bottom: View Details Button */}
                         <div className="flex justify-end mt-8">
                           <Link
-                            href={`/projects/${project.id}`}
+                            href={`/${language}/projects/${project.id}-${slugify(localizedName)}`}
                             className="bg-[#1B2134] text-white px-10 py-3.5 rounded-full text-[15px] font-semibold hover:bg-[#252d46] hover:-translate-y-0.5 transition-all"
                           >
                             {t('projects.viewDetails') as string}

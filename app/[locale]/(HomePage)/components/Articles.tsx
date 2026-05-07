@@ -23,7 +23,7 @@ const articles = [
 ];
 
 const Articles = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <section className="articles-section overflow-hidden">
@@ -82,7 +82,7 @@ const Articles = () => {
               </div>
               <div className="article-overlay">
                 <h3 className="article-card-title">{article.title}</h3>
-                <Link href="/blogs/how-to-choose-property" className="read-more-btn">
+                <Link href={`/${language}/blogs/how-to-choose-property`} className="read-more-btn">
                   {t('articles.readMore') as string}
                   <Image 
                     src="/assists/articles/arrow-right.png" 
@@ -104,7 +104,7 @@ const Articles = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="show-more-blogs-wrapper"
         >
-          <Link href="/blogs" className="show-more-blogs-button inline-block text-center">
+          <Link href={`/${language}/blogs`} className="show-more-blogs-button inline-block text-center">
             {t('articles.showMore') as string}
           </Link>
         </motion.div>

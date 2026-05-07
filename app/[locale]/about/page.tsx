@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 export default function AboutPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="flex flex-col min-h-screen bg-white pt-32 overflow-hidden">
@@ -172,7 +172,7 @@ export default function AboutPage() {
             {t('aboutPage.ctaSubtitle')}
           </p>
           <Link 
-            href="/#contact" 
+            href={`/${language}/#contact`} 
             className="mt-4 bg-white text-[#1B2134] px-14 py-4 rounded-full font-bold text-[18px] hover:bg-[#F8F5F0] transition-all transform hover:scale-105"
           >
             {t('aboutPage.contactBtn')}

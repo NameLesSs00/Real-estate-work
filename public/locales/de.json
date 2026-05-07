@@ -328,7 +328,10 @@
     "details": {
       "bedroom": "Schlafzimmer",
       "bathroom": "Badezimmer",
-      "viewDetails": "Details anzeigen"
+      "viewDetails": "Details anzeigen",
+      "area": "Fläche",
+      "instalment": "Ratenzahlung",
+      "cash": "Barzahlung"
     }
   },
   "faqPage": {

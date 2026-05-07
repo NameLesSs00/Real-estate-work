@@ -1,8 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin } from 'lucide-react';
+import { MapPin, Banknote } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
+import { slugify } from '@/lib/utils';
 import './PropertyCard.css';
 
 export interface PropertyCardProps {
@@ -18,6 +19,7 @@ export interface PropertyCardProps {
   status?: string;
   isDefaultImage?: boolean;
   unitType?: string;
+  paymentPlan?: string;
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
@@ -32,14 +34,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   image,
   status = 'For Sale',
   isDefaultImage = false,
-  unitType
+  unitType,
+  paymentPlan
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
+  const propertySlug = `${id}-${slugify(title)}`;
+
   return (
     <div className="unit-card">
       <Link 
-        href={`/properties/${id}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+        href={`/${language}/properties/${propertySlug}`}
         className="unit-image-wrapper block"
         title={isDefaultImage ? "Default Image" : undefined}
       >
@@ -84,11 +89,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           </div>
           <div className="unit-detail">
             <Image src="/assists/card/fluent_slide-size-24-regular.png" alt="Area" width={24} height={24} draggable={false} className="unit-detail-icon" />
-            <span>{area}</span>
+            <span>{t('propertyCard.details.area')}: {area}</span>
           </div>
+          {paymentPlan && (
+            <div className="unit-detail">
+              <Banknote size={24} className="unit-detail-icon" />
+              <span>{paymentPlan === 'Instalment' ? t('propertyCard.details.instalment') : t('propertyCard.details.cash')}</span>
+            </div>
+          )}
         </div>
         <Link 
-          href={`/properties/${id}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+          href={`/${language}/properties/${propertySlug}`}
           className="unit-button text-center inline-block"
         >
           {t('propertyCard.details.viewDetails')}

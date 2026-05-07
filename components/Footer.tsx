@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const pathname = usePathname();
 
   if (pathname?.startsWith('/admin')) return null;
@@ -39,26 +39,26 @@ const Footer = () => {
         <div className="flex flex-col gap-6">
           <h3 className="text-[20px] font-semibold">{t('footer.usefulLinks')}</h3>
           <ul className="flex flex-col gap-4 text-[#D9D9D9]">
-            <li><Link href="/" className="hover:text-white transition-colors">{t('header.home')}</Link></li>
+            <li><Link href={`/${language}`} className="hover:text-white transition-colors">{t('header.home')}</Link></li>
             <li className="flex items-center gap-2 hover:text-white transition-colors">
-              <Link href="/projects" className="flex items-center gap-2 hover:text-white transition-colors">
+              <Link href={`/${language}/projects`} className="flex items-center gap-2 hover:text-white transition-colors">
                 {t('header.projects')} 
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </Link>
             </li>
-            <li><Link href="/about" className="hover:text-white transition-colors">{t('header.about')}</Link></li>
+            <li><Link href={`/${language}/about`} className="hover:text-white transition-colors">{t('header.about')}</Link></li>
             <li>
-              <Link href="/properties" className="flex items-center gap-2 hover:text-white transition-colors">
+              <Link href={`/${language}/properties`} className="flex items-center gap-2 hover:text-white transition-colors">
                 {t('header.buy')} 
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </Link>
             </li>
-            <li><Link href="/blogs" className="hover:text-white transition-colors">{t('header.blogs')}</Link></li>
-            <li><Link href="/contact" className="hover:text-white transition-colors">{t('header.contact')}</Link></li>
+            <li><Link href={`/${language}/blogs`} className="hover:text-white transition-colors">{t('header.blogs')}</Link></li>
+            <li><Link href={`/${language}/contact`} className="hover:text-white transition-colors">{t('header.contact')}</Link></li>
           </ul>
         </div>
 

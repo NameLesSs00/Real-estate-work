@@ -8,7 +8,7 @@ import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './WhoWeAre.css';
 
 const WhoWeAre = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <section id="about" className="who-we-are-section overflow-hidden">
@@ -87,7 +87,7 @@ const WhoWeAre = () => {
             </div>
 
             <div className="view-more-btn-wrapper">
-              <Link href="/about">
+              <Link href={`/${language}/about`}>
                 <button className="view-more-btn">{t('whoWeAre.viewMore') as string}</button>
               </Link>
             </div>

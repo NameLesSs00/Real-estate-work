@@ -1,9 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useParams, useRouter, usePathname } from 'next/navigation';
 import enTranslations from '../../public/locales/en.json';
 
-type Language = 'en' | 'de' | 'pl';
+export type Language = 'en' | 'de' | 'pl';
 
 type TranslationValue = string | number | boolean | null | { [key: string]: TranslationValue } | TranslationValue[];
 
@@ -26,26 +27,24 @@ const LanguageContext = createContext<LanguageContextProps>({
 export const useLanguage = () => useContext(LanguageContext);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('en');
+  const params = useParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  
+  // Initialize from URL param if available, otherwise default to 'en'
+  const urlLocale = params?.locale as Language;
+  const [language, setLanguageState] = useState<Language>(urlLocale || 'en');
   const [translations, setTranslations] = useState<Record<string, TranslationValue>>(enTranslations as Record<string, TranslationValue>);
   const [isReady, setIsReady] = useState(false);
 
-  // Sync with localStorage on mount
+  // Sync state with URL locale changes
   useEffect(() => {
-    const savedLang = localStorage.getItem('language') as Language;
-    if (savedLang && ['en', 'de', 'pl'].includes(savedLang)) {
-      setLanguageState(savedLang);
-      if (savedLang === 'en') {
-        setIsReady(true); // English is already bundled
-      }
-    } else {
-      setIsReady(true); // Default to English
+    if (urlLocale && urlLocale !== language) {
+      setLanguageState(urlLocale);
     }
-  }, []);
+  }, [urlLocale, language]);
 
   useEffect(() => {
-    // If it's English and we haven't fetched anything yet, we are already "ready" 
-    // because we bundled it. But we fetch anyway to ensure we have the latest if updated.
     const fetchTranslations = async () => {
       try {
         const res = await fetch(`/locales/${language}.json`);
@@ -60,14 +59,19 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       }
     };
     
-    // Only skip fetch if we already have English and language is English
-    // but usually, it's safer to fetch to be sure.
     fetchTranslations();
   }, [language]);
 
   const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    localStorage.setItem('language', lang);
+    if (lang === language) return;
+    
+    // Redirect to the new locale path
+    // Example: /en/about -> /de/about
+    const segments = pathname.split('/');
+    segments[1] = lang;
+    const newPath = segments.join('/');
+    
+    router.push(newPath);
   };
 
   const tRaw = (key: string): TranslationValue => {
@@ -88,11 +92,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return typeof result === 'string' ? result : key;
   };
 
-  /**
-   * getLocalized(project.name)
-   * Handles objects like { en: "Name", de: "Name DE" }
-   * Fallbacks: current language -> en -> any available string -> empty string
-   */
   const getLocalized = (data: string | Record<string, string> | null | undefined): string => {
     if (!data) return '';
     if (typeof data === 'string') return data;
@@ -101,12 +100,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       if (val && typeof val === 'string' && val.trim() !== '') {
         return val;
       }
-      // Fallback to English
       const enVal = data['en'];
       if (enVal && typeof enVal === 'string' && enVal.trim() !== '') {
         return enVal;
       }
-      // Fallback to any available string in the object
       const firstAvailable = Object.values(data).find(v => typeof v === 'string' && v.trim() !== '');
       return (firstAvailable as string) || '';
     }
@@ -155,3 +152,4 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     </LanguageContext.Provider>
   );
 }
+

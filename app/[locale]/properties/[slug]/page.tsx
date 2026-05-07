@@ -7,7 +7,6 @@ import { getServices } from "@/lib/api/services";
 import { getFacilities } from "@/lib/api/facilities";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
 import CopyLinkButton from "@/components/CopyLinkButton";
 import LeadForm from "./components/LeadForm";
 import ImageGallery from "@/components/ImageGallery";
@@ -26,17 +25,17 @@ const BASE = "/assists/PropertyDetails";
 
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 };
 
 export default async function PropertyDetailsPage({ params }: Props) {
-  const { slug } = await params;
-  const cookieStore = await cookies();
-  const locale = cookieStore.get('NEXT_LOCALE')?.value || 'en';
+  const { slug, locale } = await params;
   const t = await getTranslations(locale);
 
   const isExplicitlyOutside = slug.startsWith("out-");
-  const idString = isExplicitlyOutside ? slug.replace("out-", "").split("-")[0] : slug.split("-")[0];
+  // Handle out-ID-name or ID-name
+  const baseSlug = isExplicitlyOutside ? slug.replace("out-", "") : slug;
+  const idString = baseSlug.split("-")[0];
   const unitId = parseInt(idString, 10);
 
   if (isNaN(unitId)) notFound();
@@ -154,7 +153,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-1 text-[13px] text-gray-400 mb-5 font-poppins">
           <Home size={14} className="text-gray-400" />
-          <Link href="/" className="hover:text-gray-700 transition-colors">{t.header.home || "Home"}</Link>
+          <Link href={`/${locale}`} className="hover:text-gray-700 transition-colors">{t.header.home || "Home"}</Link>
           <ChevronRight size={13} />
           <span>{propertyType}</span>
           <ChevronRight size={13} />

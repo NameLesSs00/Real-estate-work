@@ -328,7 +328,10 @@
     "details": {
       "bedroom": "Bedroom",
       "bathroom": "Bathroom",
-      "viewDetails": "View Details"
+      "viewDetails": "View Details",
+      "area": "Area",
+      "instalment": "Instalment",
+      "cash": "Cash"
     }
   },
   "faqPage": {

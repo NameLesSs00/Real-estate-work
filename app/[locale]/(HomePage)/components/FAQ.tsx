@@ -9,7 +9,7 @@ import Link from 'next/link';
 import './FAQ.css';
 
 const FAQ = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [faqData, setFaqData] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -109,7 +109,7 @@ const FAQ = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="faq-view-all-wrapper"
             >
-              <Link href="/faq" className="faq-view-all-link">
+              <Link href={`/${language}/faq`} className="faq-view-all-link">
                 {t('faq.viewAll') as string || 'View All FAQs'}
                 <ChevronDown className="faq-view-all-icon" />
               </Link>

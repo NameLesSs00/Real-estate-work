@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { MapPin, ChevronRight, Loader2, Check } from 'lucide-react';
 import { getProjectById, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { getFacilities, Facility } from '@/lib/api/facilities';
-import { getDeveloperById } from '@/lib/api/developers';
 import { motion, type Variants } from 'framer-motion';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import ImageGallery from '@/components/ImageGallery';
@@ -39,11 +38,14 @@ const itemVariants: Variants = {
 export default function ProjectDetailsPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }) {
-  const { t, getLocalized } = useLanguage();
+  const { t, getLocalized, language } = useLanguage();
   const { slug } = use(params);
-  const projectId = Number(slug);
+  
+  // Extract ID from slug (e.g., "123-my-project" -> 123)
+  const idPart = slug.split('-')[0];
+  const projectId = Number(idPart);
 
   const [project,     setProject]     = useState<Project | null>(null);
   const [facilities,  setFacilities]  = useState<Facility[]>([]);
@@ -64,14 +66,6 @@ export default function ProjectDetailsPage({
       ]);
       setProject(data);
       setFacilities(facs);
-
-      if (data.developerId) {
-        try {
-          await getDeveloperById(data.developerId);
-        } catch {
-          // silently fall back
-        }
-      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t('projects.error') as string);
     } finally {
@@ -106,7 +100,7 @@ export default function ProjectDetailsPage({
       <div className="min-h-screen bg-white flex flex-col items-center justify-center pt-36 gap-4">
         <p className="text-red-500 text-[16px] font-poppins">{error ?? t('projectDetails.notFound') as string}</p>
         <Link
-          href="/projects"
+          href={`/${language}/projects`}
           className="bg-[#1B2134] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#252d46] transition-all"
         >
           {t('projectDetails.backToProjects') as string}
@@ -130,7 +124,7 @@ export default function ProjectDetailsPage({
 
           {/* Breadcrumb */}
           <motion.nav variants={itemVariants} className="flex items-center gap-1.5 text-[14px] text-[#888]">
-            <Link href="/projects" className="hover:text-[#1B2134] transition-colors">{t('projects.title') as string}</Link>
+            <Link href={`/${language}/projects`} className="hover:text-[#1B2134] transition-colors">{t('projects.title') as string}</Link>
             <ChevronRight size={13} className="text-[#bbb]" />
             <span className="text-[#1B2134] font-semibold">{localizedName}</span>
           </motion.nav>

@@ -22,7 +22,7 @@ const infoCards = [
 ];
 
 export default function ContactPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', inquiryType: '', source: '', message: '', agreed: false });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -186,7 +186,7 @@ export default function ContactPage() {
           <p className="text-[16px] text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">
             {t('contactPage.cta.subtitle') as string}
           </p>
-          <Link href="/properties" className="inline-block bg-[#1B2134] text-white font-bold px-10 py-4 rounded-full text-[16px] hover:bg-[#D59E52] transition-all duration-300 shadow-xl hover:scale-110 active:scale-95">
+          <Link href={`/${language}/properties`} className="inline-block bg-[#1B2134] text-white font-bold px-10 py-4 rounded-full text-[16px] hover:bg-[#D59E52] transition-all duration-300 shadow-xl hover:scale-110 active:scale-95">
             {t('contactPage.cta.btn') as string}
           </Link>
         </motion.div>

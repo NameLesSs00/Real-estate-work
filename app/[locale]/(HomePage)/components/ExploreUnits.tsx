@@ -16,7 +16,7 @@ const tabs = [
 ];
 
 const ExploreUnits = () => {
-  const { t, getLocalized } = useLanguage();
+  const { t, getLocalized, language } = useLanguage();
   const [activeTab, setActiveTab] = useState(0);
   const [units, setUnits] = useState<UnitListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -93,13 +93,14 @@ const ExploreUnits = () => {
                 status={!unit.isActive ? 'Sold' : (unit.unitStatus || 'For Sale')}
                 unitType={unit.unitType}
                 isDefaultImage={!unit.imageUrls || unit.imageUrls.length === 0}
+                paymentPlan={(unit.paymentPlans && unit.paymentPlans.length > 1) ? 'Instalment' : (unit.paymentPlans?.length === 1 ? 'Cash' : undefined)}
               />
             ))}
           </div>
         )}
 
         <div className="show-more-wrapper">
-          <Link href="/properties" className="show-more-button">{t('exploreUnits.showMore') as string}</Link>
+          <Link href={`/${language}/properties`} className="show-more-button">{t('exploreUnits.showMore') as string}</Link>
         </div>
       </div>
     </section>

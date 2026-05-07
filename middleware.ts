@@ -1,51 +1,83 @@
-/**
- * middleware.ts
- *
- * Next.js Edge Middleware — protects all /admin routes.
- *
- * Rules:
- *  - /admin/login  → always accessible (the auth entry point)
- *  - /admin/*      → requires a valid access token cookie
- *                    → if missing, redirect to /not-found
- */
-
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { ACCESS_TOKEN_KEY } from '@/lib/auth/tokens';
 
+const locales = ['en', 'de', 'pl'];
+const defaultLocale = 'en';
+
+function getLocale(request: NextRequest): string {
+  // 1. Check cookie
+  const cookieLocale = request.cookies.get('NEXT_LOCALE')?.value;
+  if (cookieLocale && locales.includes(cookieLocale)) return cookieLocale;
+
+  // 2. Check Accept-Language header
+  const acceptLanguage = request.headers.get('accept-language');
+  if (acceptLanguage) {
+    const preferredLocale = acceptLanguage.split(',')[0].split('-')[0].toLowerCase();
+    if (locales.includes(preferredLocale)) return preferredLocale;
+  }
+
+  return defaultLocale;
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Ignore static files (images, css, etc.)
-  // If the path has a file extension, we don't need to authenticate it
-  if (pathname.includes('.')) {
+  // 1. Skip static files and API routes
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/backend') ||
+    pathname.startsWith('/locales') ||
+    pathname.startsWith('/assists') ||
+    pathname.includes('.')
+  ) {
     return NextResponse.next();
   }
 
-  // Allow the login page AND its static images through
-  if (pathname.startsWith('/admin/login')) {
-    return NextResponse.next();
-  }
+  // 2. Check if the pathname already has a locale
+  const pathnameHasLocale = locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  );
 
-  // Protect every other /admin/* route
-  if (pathname.startsWith('/admin')) {
-    const accessToken = request.cookies.get(ACCESS_TOKEN_KEY)?.value;
+  // 3. Admin Protection (Existing logic, adapted for locale prefix)
+  // We check if the path (with or without locale) starts with /admin
+  const isAdminPath = pathnameHasLocale 
+    ? locales.some(l => pathname.startsWith(`/${l}/admin`))
+    : pathname.startsWith('/admin');
 
-    if (!accessToken) {
-      console.error(
-        `[Middleware] Unauthenticated access attempt to "${pathname}" — redirecting to /not-found`
-      );
-      const notFoundUrl = request.nextUrl.clone();
-      notFoundUrl.pathname = '/not-found';
-      return NextResponse.redirect(notFoundUrl);
+  if (isAdminPath) {
+    // If it's the login page, allow it
+    const isLogin = pathnameHasLocale
+      ? locales.some(l => pathname === `/${l}/admin/login` || pathname.startsWith(`/${l}/admin/login/`))
+      : pathname === '/admin/login' || pathname.startsWith('/admin/login/');
+
+    if (!isLogin) {
+      const accessToken = request.cookies.get(ACCESS_TOKEN_KEY)?.value;
+      if (!accessToken) {
+        console.error(`[Middleware] Unauthenticated access attempt to "${pathname}" — redirecting to /not-found`);
+        const url = request.nextUrl.clone();
+        // Redirect to localized not-found if possible
+        const locale = pathnameHasLocale ? pathname.split('/')[1] : getLocale(request);
+        url.pathname = `/${locale}/not-found`;
+        return NextResponse.redirect(url);
+      }
     }
+  }
+
+  // 4. Redirect if no locale is present
+  if (!pathnameHasLocale) {
+    const locale = getLocale(request);
+    const url = request.nextUrl.clone();
+    url.pathname = `/${locale}${pathname === '/' ? '' : pathname}`;
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
 }
 
-// Only run on /admin paths — skip static files and API routes
 export const config = {
-  // matcher: [],
-  matcher: ['/admin/:path*'],
+  // Match all paths except static assets
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\..*).*)'],
 };
+

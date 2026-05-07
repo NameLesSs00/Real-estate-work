@@ -60,9 +60,9 @@ const Header = () => {
       // If title is "Buy" (or localized version), go to /properties?unitType=Buy
       const buyTitle = t('header.buy');
       if (title === buyTitle) {
-        router.push('/properties?unitType=Buy');
+        router.push(`/${language}/properties?unitType=Buy`);
       } else {
-        router.push('/properties');
+        router.push(`/${language}/properties`);
       }
       setActiveDropdown(null);
     } else {
@@ -94,7 +94,7 @@ const Header = () => {
                 items.map((item) => (
                   <Link 
                     key={item.label} 
-                    href={item.href}
+                    href={`/${language}${item.href}`}
                     onClick={() => setActiveDropdown(null)}
                     className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[0.9375rem] font-semibold transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
                   >
@@ -105,7 +105,7 @@ const Header = () => {
                 Array.isArray(locations) && locations.map((loc) => (
                   <Link 
                     key={loc} 
-                    href={`/properties?type=${type}&location=${loc}`}
+                    href={`/${language}/properties?type=${type}&location=${loc}`}
                     onClick={() => setActiveDropdown(null)}
                     className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[0.9375rem] font-medium transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
                   >
@@ -129,7 +129,7 @@ const Header = () => {
         <header className="w-full bg-white rounded-[100px] shadow-md py-6 px-6 md:px-12 flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/">
+            <Link href={`/${language}`}>
               <Image 
                 src="/assists/header/headerLogo.png" 
                 alt="THE GATE ESTATES" 
@@ -145,12 +145,12 @@ const Header = () => {
           <nav className="hidden lg:flex items-center gap-6" ref={dropdownRef}>
             <div className="flex items-center gap-6">
               <Link
-                href="/"
+                href={`/${language}`}
                 className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors"
               >
                 {t('header.home')}
               </Link>
-              <Link href="/projects" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
+              <Link href={`/${language}/projects`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
                 {t('header.projects')}
               </Link>
               
@@ -161,14 +161,14 @@ const Header = () => {
                   { label: t('header.resale'), href: "/properties?unitType=Buy&status=resale" }
                 ]} 
               />
-              <Link href="/properties?unitType=Rent" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
+              <Link href={`/${language}/properties?unitType=Rent`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
                 {t('header.rent')}
               </Link>
-
-              <Link href="/about" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
-              <Link href="/contact" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
-              <Link href="/blogs" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.blogs')}</Link>
-              <Link href="/faq" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.faq')}</Link>
+|
+              <Link href={`/${language}/about`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
+              <Link href={`/${language}/contact`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
+              <Link href={`/${language}/blogs`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.blogs')}</Link>
+              <Link href={`/${language}/faq`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.faq')}</Link>
             </div>
 
             {/* Social Links & Language */}
@@ -211,7 +211,7 @@ const Header = () => {
 
             {/* List Your Property Button */}
             <Link 
-              href="/list-property"
+              href={`/${language}/list-property`}
               className="bg-[#1B2134] text-white px-6 py-3 rounded-full font-semibold text-[15px] hover:bg-[#c7b7a1] transition-all whitespace-nowrap shadow-sm"
             >
               {t('header.listProperty')}
@@ -259,15 +259,15 @@ const Header = () => {
 
             {/* Menu Items */}
             <div className="flex-1 px-8 py-4 flex flex-col gap-6 pb-12">
-              <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.home')}</Link>
-              <Link href="/projects" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.projects')}</Link>
+              <Link href={`/${language}`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.home')}</Link>
+              <Link href={`/${language}/projects`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.projects')}</Link>
               
               {/* Buy Mobile */}
               <div>
                 <button 
                   onClick={() => {
                     if (mobileExpanded === 'buy') {
-                      router.push('/properties?unitType=Buy');
+                      router.push(`/${language}/properties?unitType=Buy`);
                       setIsMenuOpen(false);
                     } else {
                       setMobileExpanded('buy');
@@ -305,18 +305,18 @@ const Header = () => {
               </div>
 
               {/* Rent Mobile */}
-              <Link href="/properties?unitType=Rent" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">
+              <Link href={`/${language}/properties?unitType=Rent`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">
                 {t('header.rent')}
               </Link>
 
-              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.about')}</Link>
-              <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.contact')}</Link>
-              <Link href="/blogs" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.blogs')}</Link>
-              <Link href="/faq" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.faq')}</Link>
+              <Link href={`/${language}/about`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.about')}</Link>
+              <Link href={`/${language}/contact`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.contact')}</Link>
+              <Link href={`/${language}/blogs`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.blogs')}</Link>
+              <Link href={`/${language}/faq`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.faq')}</Link>
 
               <div className="mt-6">
                 <Link 
-                  href="/list-property" 
+                  href={`/${language}/list-property`} 
                   onClick={() => setIsMenuOpen(false)}
                   className="block w-full bg-[#1B2134] text-white text-center py-4 rounded-full font-bold text-[18px] shadow-lg active:scale-95 transition-all"
                 >

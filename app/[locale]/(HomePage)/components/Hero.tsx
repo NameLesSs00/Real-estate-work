@@ -30,7 +30,7 @@ const Hero = () => {
   const [maxPrice] = useState('');
   const [locations, setLocations] = useState<Location[]>([]);
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     const video = videoRef.current;
@@ -59,7 +59,7 @@ const Hero = () => {
     if (locationId) params.set('locationId', locationId);
     if (minPrice) params.set('minPrice', minPrice);
     if (maxPrice) params.set('maxPrice', maxPrice);
-    router.push(`/properties?${params.toString()}`);
+    router.push(`/${language}/properties?${params.toString()}`);
   };
 
   return (
