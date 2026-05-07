@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -105,7 +106,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
             floorNumber: enData.floorNumber ?? '',
             floorName: enData.floorName ?? '',
             view: (enData.view ?? '').toString(),
-            type: enData.type ?? 'Buy',
+            type: enData.type || (enData as any).unitType || (enData as any).Type || (enData as any).UnitType || 'Buy',
             isFeatured: enData.isFeatured ?? false,
             paymentPlans: (enData.paymentPlans ?? []).map((p) => ({
               id: p.id,
@@ -234,7 +235,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
       fd.append('FloorNumber', String(Number(form.floorNumber) || 0));
       fd.append('FloorName', form.floorName);
       fd.append('View', String(viewValue));
-      fd.append('Type', form.type);
+      fd.append('Type', form.type || 'Buy');
       fd.append('Status', 'Resale');
       fd.append('IsFeatured', String(form.isFeatured));
       
@@ -269,7 +270,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
           propertyType: propTypeValue,
           floorNumber: Number(form.floorNumber) || 0,
           view: viewValue,
-          type: form.type,
+          type: form.type || 'Buy',
           status: 'Resale',
           floorName: form.floorName,
           isFeatured: form.isFeatured,
