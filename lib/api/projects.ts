@@ -35,11 +35,12 @@ export interface Project {
   description: string;
   developerId: number | null;
   developerName: string;
+  logoImage: string;
   locationId: number | null;
   locationName: string;
   imageUrls: string[];
   units?: ApiUnit[];
-  facilities?: string[];
+  facilities?: number[] | string[];
   facilityIds?: number[];
   createdBy: string;
   createdAt: string;
@@ -121,7 +122,7 @@ export interface UnitPayload {
   noKithchen: number;
   noKitchen?: number;
   floorName: string;
-  view: string | number;
+  view: string;
   paymentPlans: PaymentPlan[];
   isFeatured: boolean;
   currencyCode: string;
@@ -150,7 +151,7 @@ export interface UpdateUnitPayload {
   status: string;
   type: string;
   floorNumber: number;
-  view: string | number;
+  view: string;
   floorName: string;
   servicesIds?: number[];
   paymentPlans?: PaymentPlan[];
@@ -237,10 +238,10 @@ export function resolveProjectImageUrl(path: string | null): string | null {
 
 // ─── Project Endpoints ────────────────────────────────────────────────────────
 
-/** GET /api/Projects?pageNumber=N */
-export async function getProjects(pageNumber = 1, lang?: string): Promise<ProjectsPage> {
+/** GET /api/Projects?pageNumber=N&pageSize=M */
+export async function getProjects(pageNumber = 1, pageSize = 10, lang?: string): Promise<ProjectsPage> {
   const res = await fetch(
-    `${API_BASE_URL}/api/Projects?pageNumber=${pageNumber}`,
+    `${API_BASE_URL}/api/Projects?pageNumber=${pageNumber}&pageSize=${pageSize}`,
     { headers: { ...getHeaders(lang) } }
   );
   if (!res.ok) {

@@ -34,7 +34,7 @@ export interface UnitOutside {
   street: string;
   propertyType: string | number;
   floorNumber: number;
-  view: string | number;
+  view: string;
   type: string;
   status?: string;
   floorName: string;
@@ -64,6 +64,7 @@ export interface UnitOutsideFilters {
   MaxPrice?: number;
   City?: string;
   Country?: string;
+  PropertyType?: string | number;
   Currency?: string;
   PageNumber?: number;
   PageSize?: number;
@@ -83,7 +84,7 @@ export interface CreateUnitOutsidePayload {
   street: string;
   propertyType: string | number;
   floorNumber: number;
-  view: string | number;
+  view: string;
   type: string;
   status?: string;
   floorName: string;
@@ -133,6 +134,7 @@ export async function getUnitOutsides(
   if (filters.MaxPrice !== undefined) params.set('MaxPrice', String(filters.MaxPrice));
   if (filters.City) params.set('City', filters.City);
   if (filters.Country) params.set('Country', filters.Country);
+  if (filters.PropertyType !== undefined) params.set('PropertyType', String(filters.PropertyType));
   if (filters.Currency) params.set('Currency', filters.Currency);
   params.set('PageNumber', String(filters.PageNumber ?? 1));
   params.set('PageSize', String(filters.PageSize ?? 10));

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
+
 import { createLead } from '@/lib/api/leads';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
@@ -10,7 +10,7 @@ interface LeadFormProps {
   unitId: number;
 }
 
-const icoSend = "/assists/PropertyDetails/send.png";
+
 
 export default function LeadForm({ unitId }: LeadFormProps) {
   const { t } = useLanguage();
@@ -71,8 +71,8 @@ export default function LeadForm({ unitId }: LeadFormProps) {
       </h3>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div>
-          <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[13px] font-medium text-[#1B2134]">
             {t('projectDetails.fullName') as string} <span className="text-red-500">*</span>
           </label>
           <input
@@ -81,12 +81,12 @@ export default function LeadForm({ unitId }: LeadFormProps) {
             placeholder={t('projectDetails.fullName') as string}
             value={formData.fullName}
             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-            className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"
+            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors font-poppins"
           />
         </div>
 
-        <div>
-          <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[13px] font-medium text-[#1B2134]">
             {t('projectDetails.phoneNumber') as string} <span className="text-red-500">*</span>
           </label>
           <input
@@ -95,34 +95,48 @@ export default function LeadForm({ unitId }: LeadFormProps) {
             placeholder={t('projectDetails.phoneNumber') as string}
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"
+            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors font-poppins"
           />
         </div>
 
-        <div>
-          <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
-            {t('projectDetails.email') as string}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[13px] font-medium text-[#1B2134]">
+            {t('projectDetails.email') as string} <span className="text-red-500">*</span>
           </label>
           <input
             type="email"
+            required
             placeholder={t('projectDetails.email') as string}
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"
+            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors font-poppins"
           />
         </div>
 
-        <div>
-          <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
-            {t('projectDetails.message') as string}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[13px] font-medium text-[#1B2134]">
+            {t('projectDetails.message') as string} <span className="text-red-500">*</span>
           </label>
           <textarea
             placeholder={t('projectDetails.message') as string}
+            required
             rows={4}
             value={formData.notes}
             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-            className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors resize-none"
+            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors resize-none font-poppins"
           />
+        </div>
+
+        <div className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            id="terms"
+            required
+            className="mt-0.5 w-4 h-4 accent-[#1B2134] cursor-pointer flex-shrink-0"
+          />
+          <label htmlFor="terms" className="text-[13px] text-[#666] leading-snug cursor-pointer font-poppins">
+            {t('projectDetails.agreeTerms') as string}
+          </label>
         </div>
 
         {error && <p className="text-red-500 text-[12px] font-poppins">{error}</p>}
@@ -130,21 +144,24 @@ export default function LeadForm({ unitId }: LeadFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#1B2134] text-white rounded-full py-3 text-[14px] font-semibold font-poppins flex items-center justify-center gap-2 hover:bg-[#2d3555] transition-all mt-1 disabled:opacity-50"
+          className="w-full bg-[#1B2134] text-white rounded-full py-4 text-[15px] font-semibold flex items-center justify-center gap-3 hover:bg-[#252d46] transition-all mt-1 disabled:opacity-50 cursor-pointer"
         >
           {loading ? (
             <>
-              <Loader2 className="animate-spin" size={16} />
+              <Loader2 className="animate-spin" size={18} />
               {t('contactPage.form.sending') as string}
             </>
           ) : (
             <>
               {t('projectDetails.bookVisit') as string}
-              <Image src={icoSend} alt="Send" width={15} height={15} className="w-[15px] h-[15px] invert" />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
             </>
           )}
         </button>
       </form>
+
     </div>
   );
 }

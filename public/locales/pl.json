@@ -9,6 +9,7 @@
     "about": "O nas",
     "contact": "Kontakt",
     "blogs": "Blogi",
+    "faq": "FAQ",
     "listProperty": "Zgłoś nieruchomość",
     "locations": [
       "El Gouna",
@@ -140,7 +141,8 @@
         "q": "Czy to dobry czas na inwestowanie w nieruchomości?",
         "a": "Biorąc pod uwagę obecne trendy rynkowe i wzrost wartości nieruchomości, jest to doskonały czas na inwestycje długoterminowe."
       }
-    ]
+    ],
+    "viewAll": "Zobacz wszystkie pytania"
   },
   "aboutPage": {
     "visionTitle": "Nasza wizja",
@@ -198,6 +200,7 @@
     "sendAnother": "Wyślij kolejne zapytanie",
     "description": "Opis",
     "noDescription": "Brak opisu.",
+    "facilities": "Udogodnienia",
     "overview": "Przegląd",
     "featuresServices": "Funkcje i usługi",
     "reviews": "Recenzje",
@@ -285,6 +288,8 @@
       "title": "Filtry",
       "searchKeywords": "Słowa kluczowe",
       "placeholderSearch": "np. Skyline...",
+      "country": "Kraj",
+      "placeholderCountry": "np. Egipt...",
       "location": "Lokalizacja",
       "status": "Status nieruchomości",
       "propertyType": "Typ nieruchomości",
@@ -318,5 +323,12 @@
       "bathroom": "Łazienka",
       "viewDetails": "Pokaż szczegóły"
     }
+  },
+  "faqPage": {
+    "tag": "WSPARCIE",
+    "title": "Często zadawane pytania",
+    "subtitle": "Wszystko, co musisz wiedzieć o kupnie, sprzedaży i wynajmie z The Gate Estates.",
+    "loading": "Ładowanie pytań...",
+    "noQuestions": "Obecnie brak dostępnych pytań FAQ. Zapraszamy wkrótce!"
   }
 }

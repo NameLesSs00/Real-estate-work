@@ -1,8 +1,8 @@
-Services
+Questions
 
 
 GET
-/api/Services
+/api/Questions
 
 
 Parameters
@@ -23,13 +23,15 @@ Schema
 [
   {
     "id": 0,
-    "name": "string"
+    "title": "string",
+    "description": "string",
+    "createdAt": "2026-05-07T13:54:57.513Z"
   }
 ]
 No links
 
 POST
-/api/Services
+/api/Questions
 
 
 Parameters
@@ -42,7 +44,8 @@ application/json
 Example Value
 Schema
 {
-  "name": "string"
+  "title": "string",
+  "description": "string"
 }
 Responses
 Code	Description	Links
@@ -55,11 +58,16 @@ text/plain
 Controls Accept header.
 Example Value
 Schema
-0
+{
+  "id": 0,
+  "title": "string",
+  "description": "string",
+  "createdAt": "2026-05-07T13:54:55.654Z"
+}
 No links
 
 PUT
-/api/Services
+/api/Questions
 
 
 Parameters
@@ -73,7 +81,8 @@ Example Value
 Schema
 {
   "id": 0,
-  "name": "string"
+  "title": "string",
+  "description": "string"
 }
 Responses
 Code	Description	Links
@@ -86,11 +95,16 @@ text/plain
 Controls Accept header.
 Example Value
 Schema
-0
+{
+  "id": 0,
+  "title": "string",
+  "description": "string",
+  "createdAt": "2026-05-07T13:54:55.656Z"
+}
 No links
 
 GET
-/api/Services/{id}
+/api/Questions/{id}
 
 
 Parameters
@@ -113,12 +127,14 @@ Example Value
 Schema
 {
   "id": 0,
-  "name": "string"
+  "title": "string",
+  "description": "string",
+  "createdAt": "2026-05-07T13:54:55.659Z"
 }
 No links
 
 DELETE
-/api/Services/{id}
+/api/Questions/{id}
 
 
 Parameters
@@ -140,3 +156,4 @@ Controls Accept header.
 Example Value
 Schema
 true
+

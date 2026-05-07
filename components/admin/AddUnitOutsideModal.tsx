@@ -101,30 +101,10 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
             country: enData.country ?? '',
             city: enData.city ?? '',
             street: enData.street ?? '',
-            propertyType: (() => {
-              const pt = enData.propertyType ?? '';
-              const reverseMapping: Record<number | string, string> = {
-                0: 'Apartment',
-                1: 'Villa',
-                2: 'Townhouse',
-                3: 'Studio',
-                4: 'Penthouse'
-              };
-              return reverseMapping[pt] || pt.toString();
-            })(),
+            propertyType: (enData.propertyType ?? '').toString(),
             floorNumber: enData.floorNumber ?? '',
             floorName: enData.floorName ?? '',
-            view: (() => {
-              const v = enData.view ?? '';
-              const reverseMapping: Record<number | string, string> = {
-                0: 'Sea',
-                1: 'Mountain',
-                2: 'Garden',
-                3: 'Pool',
-                4: 'SeaAndPool'
-              };
-              return reverseMapping[v] || v.toString();
-            })(),
+            view: (enData.view ?? '').toString(),
             type: enData.type ?? 'Buy',
             isFeatured: enData.isFeatured ?? false,
             paymentPlans: (enData.paymentPlans ?? []).map((p) => ({
@@ -190,23 +170,11 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
     if (!form.city.trim()) { setError('City is required.'); return; }
     if (!form.country.trim()) { setError('Country is required.'); return; }
     if (Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
-    if (!form.view) { setError('Please select a view.'); return; }
+    if (!form.view) { setError('Please enter a view.'); return; }
 
-    const VIEW_MAPPING: Record<string, number> = {
-      'Sea': 0,
-      'Mountain': 1,
-      'Garden': 2,
-      'Pool': 3,
-      'SeaAndPool': 4
-    };
+    // Remove VIEW_MAPPING as view is now a custom string input
 
-    const PROPERTY_TYPE_MAPPING: Record<string, number> = {
-      'Apartment': 0,
-      'Villa': 1,
-      'Townhouse': 2,
-      'Studio': 3,
-      'Penthouse': 4
-    };
+
 
     const validatedPlans = form.paymentPlans.map((p) => {
       const isCash = p.paymentType === 'Cash';
@@ -232,8 +200,8 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
     setIsLoading(true);
     setError('');
     try {
-      const viewValue = VIEW_MAPPING[form.view] ?? 0;
-      const propTypeValue = PROPERTY_TYPE_MAPPING[form.propertyType] ?? 0;
+      const viewValue = form.view.toString();
+      const propTypeValue = form.propertyType;
       const fd = new FormData();
       
       // Basic Info
@@ -490,12 +458,13 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                 </div>
                 <div className="space-y-2">
                   <label className="text-[13px] font-semibold text-[#16273B]">View</label>
-                  <select value={form.view} onChange={setField('view')} className={inputCls}>
-                    <option value="">Select View</option>
-                    {['Sea', 'Mountain', 'Garden', 'Pool', 'SeaAndPool'].map((v) => (
-                      <option key={v} value={v}>{v}</option>
-                    ))}
-                  </select>
+                  <input 
+                    type="text" 
+                    value={form.view} 
+                    onChange={setField('view')} 
+                    placeholder="e.g. Sea View" 
+                    className={inputCls} 
+                  />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[13px] font-semibold text-[#16273B]">Listing Type</label>

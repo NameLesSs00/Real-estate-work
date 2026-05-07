@@ -21,6 +21,7 @@ export default function ListPropertyPage() {
                 <input 
                   type="text" 
                   placeholder="Property Title" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>
@@ -29,6 +30,7 @@ export default function ListPropertyPage() {
                 <input 
                   type="text" 
                   placeholder="Price" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>
@@ -37,6 +39,7 @@ export default function ListPropertyPage() {
                 <input 
                   type="text" 
                   placeholder="Unit Size" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>
@@ -46,7 +49,7 @@ export default function ListPropertyPage() {
               <div className="space-y-2">
                 <label className="text-[#16273B] font-semibold text-[15px]">Sale Or Rent</label>
                 <div className="relative">
-                  <select className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 appearance-none text-[#16273B]">
+                  <select required className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 appearance-none text-[#16273B]">
                     <option value="">Sale Or Rent</option>
                     <option value="sale">Sale</option>
                     <option value="rent">Rent</option>
@@ -61,7 +64,7 @@ export default function ListPropertyPage() {
               <div className="space-y-2">
                 <label className="text-[#16273B] font-semibold text-[15px]">Property Type</label>
                 <div className="relative">
-                  <select className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 appearance-none text-[#16273B]">
+                  <select required className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 appearance-none text-[#16273B]">
                     <option value="">Property type</option>
                     <option value="apartment">Apartment</option>
                     <option value="villa">Villa</option>
@@ -77,7 +80,7 @@ export default function ListPropertyPage() {
               <div className="space-y-2">
                 <label className="text-[#16273B] font-semibold text-[15px]">Rooms</label>
                 <div className="relative">
-                  <select className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 appearance-none text-[#16273B]">
+                  <select required className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 appearance-none text-[#16273B]">
                     <option value="">bedrooms</option>
                     <option value="1">1 Bedroom</option>
                     <option value="2">2 Bedrooms</option>
@@ -98,6 +101,7 @@ export default function ListPropertyPage() {
               <textarea 
                 placeholder="Property Description" 
                 rows={6}
+                required
                 className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400 resize-none"
               />
             </div>
@@ -107,7 +111,8 @@ export default function ListPropertyPage() {
                 <label className="text-[#16273B] font-semibold text-[15px]">Address</label>
                 <input 
                   type="text" 
-                  placeholder="Price" 
+                  placeholder="Address" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>
@@ -115,7 +120,8 @@ export default function ListPropertyPage() {
                 <label className="text-[#16273B] font-semibold text-[15px]">City</label>
                 <input 
                   type="text" 
-                  placeholder="Price" 
+                  placeholder="City" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>
@@ -123,7 +129,8 @@ export default function ListPropertyPage() {
                 <label className="text-[#16273B] font-semibold text-[15px]">Area</label>
                 <input 
                   type="text" 
-                  placeholder="Price" 
+                  placeholder="Area" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>
@@ -160,6 +167,7 @@ export default function ListPropertyPage() {
                 <input 
                   type="text" 
                   placeholder="Full Name" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>
@@ -168,6 +176,7 @@ export default function ListPropertyPage() {
                 <input 
                   type="email" 
                   placeholder="Email" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>
@@ -176,6 +185,7 @@ export default function ListPropertyPage() {
                 <input 
                   type="text" 
                   placeholder="Phone Number" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>
@@ -184,6 +194,7 @@ export default function ListPropertyPage() {
                 <input 
                   type="text" 
                   placeholder="Address" 
+                  required
                   className="w-full bg-white border border-[#AAAAAA] rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#16273B]/5 placeholder:text-gray-400"
                 />
               </div>

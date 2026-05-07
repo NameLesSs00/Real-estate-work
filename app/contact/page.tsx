@@ -119,8 +119,8 @@ export default function ContactPage() {
                   <input name="firstName" value={form.firstName} onChange={handleChange} type="text" placeholder={t('contactPage.form.placeholderFirstName') as string} required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.lastName') as string}</label>
-                  <input name="lastName" value={form.lastName} onChange={handleChange} type="text" placeholder={t('contactPage.form.placeholderLastName') as string} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
+                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.lastName') as string} <span className="text-red-400">*</span></label>
+                  <input name="lastName" value={form.lastName} onChange={handleChange} type="text" placeholder={t('contactPage.form.placeholderLastName') as string} required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.email') as string} <span className="text-red-400">*</span></label>
@@ -133,8 +133,8 @@ export default function ContactPage() {
                   <input name="phone" value={form.phone} onChange={handleChange} type="tel" placeholder={t('contactPage.form.placeholderPhone') as string} required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors placeholder:text-gray-300" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.inquiryType') as string}</label>
-                  <select name="inquiryType" value={form.inquiryType} onChange={handleChange} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors text-[#1B2134] appearance-none cursor-pointer">
+                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.inquiryType') as string} <span className="text-red-400">*</span></label>
+                  <select name="inquiryType" value={form.inquiryType} onChange={handleChange} required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors text-[#1B2134] appearance-none cursor-pointer">
                     <option value="">{t('contactPage.form.inquiryType') as string}</option>
                     <option value="BuyUnit">{t('contactPage.form.inquiryOptions.buy') as string}</option>
                     <option value="SellUnit">{t('contactPage.form.inquiryOptions.sell') as string}</option>
@@ -143,8 +143,8 @@ export default function ContactPage() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.source') as string}</label>
-                  <select name="source" value={form.source} onChange={handleChange} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors text-[#1B2134] appearance-none cursor-pointer">
+                  <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.source') as string} <span className="text-red-400">*</span></label>
+                  <select name="source" value={form.source} onChange={handleChange} required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors text-[#1B2134] appearance-none cursor-pointer">
                     <option value="">{t('contactPage.form.source') as string}</option>
                     <option value="SocialMedia">{t('contactPage.form.sourceOptions.social') as string}</option>
                     <option value="Friend">{t('contactPage.form.sourceOptions.referral') as string}</option>
@@ -156,12 +156,12 @@ export default function ContactPage() {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.message') as string}</label>
-                <textarea name="message" value={form.message} onChange={handleChange} placeholder={t('contactPage.form.placeholderMessage') as string} rows={6} className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors resize-none placeholder:text-gray-300" />
+                <label className="text-[13px] font-semibold text-[#1B2134]">{t('contactPage.form.message') as string} <span className="text-red-400">*</span></label>
+                <textarea name="message" value={form.message} onChange={handleChange} placeholder={t('contactPage.form.placeholderMessage') as string} rows={6} required className="bg-white border border-[#E0E0E0] rounded-[10px] px-4 py-3 text-[14px] outline-none focus:border-[#1B2134] transition-colors resize-none placeholder:text-gray-300" />
               </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
                 <label className="flex items-center gap-3 cursor-pointer">
-                  <input name="agreed" type="checkbox" checked={form.agreed} onChange={handleChange} className="w-4 h-4 rounded border-gray-300 accent-[#1B2134] cursor-pointer" />
+                  <input name="agreed" type="checkbox" checked={form.agreed} onChange={handleChange} required className="w-4 h-4 rounded border-gray-300 accent-[#1B2134] cursor-pointer" />
                   <span className="text-[13px] text-gray-500">{t('contactPage.form.agreed') as string}</span>
                 </label>
                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit" disabled={loading} className="flex items-center gap-3 bg-[#1B2134] text-white px-8 py-3.5 rounded-full font-semibold text-[15px] hover:bg-[#2d3555] shadow-lg transition-all duration-300 whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">

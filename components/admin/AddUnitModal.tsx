@@ -143,17 +143,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             floorNumber: (enData.FloorNumber || enData.floorNumber)?.toString() || '',
             area: (enData.Area || enData.area)?.toString() || '',
             floorName: enData.FloorName || (enData.floorName as string) || '',
-            view: (() => {
-              const v = enData.View ?? enData.view ?? '';
-              const reverseMapping: Record<number | string, string> = {
-                0: 'Sea',
-                1: 'Mountain',
-                2: 'Garden',
-                3: 'Pool',
-                4: 'SeaAndPool'
-              };
-              return reverseMapping[v] || v.toString();
-            })(),
+            view: (enData.View ?? enData.view ?? '').toString(),
             isFeatured: enData.IsFeatured ?? enData.isFeatured ?? false,
             currencyCode: enData.CurrencyCode || (enData.currencyCode as string) || 'EGP',
             type: (enData.Type || enData.type || 'Buy') as 'Buy' | 'Rent',
@@ -247,15 +237,9 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     if (!isEditMode && !selectedProjectId) { setError('Please select a project.'); return; }
     if (!form.price || Number(form.price) <= 0) { setError('Price must be greater than 0.'); return; }
     if (!form.area || Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
-    if (!form.view) { setError('Please select a view.'); return; }
+    if (!form.view) { setError('Please enter a view.'); return; }
 
-    const VIEW_MAPPING: Record<string, number> = {
-      'Sea': 0,
-      'Mountain': 1,
-      'Garden': 2,
-      'Pool': 3,
-      'SeaAndPool': 4
-    };
+    // Remove VIEW_MAPPING as view is now a custom string input
     
     const validatedPlans = form.paymentPlans.map(p => {
       const isCash = p.paymentType === 'Cash';
@@ -274,7 +258,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     
     setIsLoading(true); setError('');
     try {
-      const viewValue = VIEW_MAPPING[form.view] ?? 0;
+      const viewValue = form.view.toString();
       const unitPayload: UnitPayload = {
         name: form.name,
         description: form.description,
@@ -600,12 +584,13 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             </div>
             <div className="space-y-2">
               <label className="text-[#16273B] font-semibold text-[15px]">View</label>
-              <select value={form.view} onChange={set('view')} className={inputCls}>
-                <option value="">Select View</option>
-                {['Sea', 'Mountain', 'Garden', 'Pool', 'SeaAndPool'].map((v) => (
-                  <option key={v} value={v}>{v}</option>
-                ))}
-              </select>
+              <input 
+                type="text" 
+                value={form.view} 
+                onChange={set('view')} 
+                placeholder="e.g. Sea View, Garden View" 
+                className={inputCls} 
+              />
             </div>
           </div>
 

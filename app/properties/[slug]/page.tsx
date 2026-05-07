@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Image from "next/image";
+
 export const dynamic = "force-dynamic";
-import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight } from "lucide-react";
+import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight, Check, Eye } from "lucide-react";
 import { getUnitById, resolveProjectImageUrl } from "@/lib/api/projects";
+import { getServices } from "@/lib/api/services";
+import { getFacilities } from "@/lib/api/facilities";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
@@ -21,7 +23,7 @@ async function getTranslations(locale: string) {
 }
 
 const BASE = "/assists/PropertyDetails";
-const icoCheck = `${BASE}/weui_done2-outlined.png`;
+
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -41,6 +43,19 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   let unitData: any;
   let isOutside = false;
+  let allServices: any[] = [];
+  let allFacilities: any[] = [];
+
+  try {
+    const [servicesData, facilitiesData] = await Promise.all([
+      getServices(),
+      getFacilities()
+    ]);
+    allServices = servicesData;
+    allFacilities = facilitiesData;
+  } catch (err) {
+    console.error("Failed to fetch auxiliary data:", err);
+  }
 
   if (isExplicitlyOutside) {
     try {
@@ -89,6 +104,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const propertyFloorNum = d.floorNumber || d.FloorNumber || 0;
   const unitTypeName = extractString(d.unitType) || extractString(d.UnitType) || "";
   const unitStatusName = extractString(d.unitStatus) || extractString(d.UnitStatus) || "";
+  const unitView = extractString(d.view) || extractString(d.View) || "";
   const propertyType = extractString(d.propertyType) || extractString(d.PropertyType) || "Property";
   const projName = extractString(d.projectName) || extractString(d.ProjectName) || "";
   const locName = extractString(d.location?.name) ||
@@ -126,6 +142,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
     { label: t.projectDetails.kitchens || "Kitchens", value: propertyKitchens, icon: <Utensils size={16} className="text-gray-500" /> },
     { label: t.projectDetails.areaSize || "Area Size", value: propertyArea ? `${propertyArea} M²` : null, icon: <Maximize2 size={16} className="text-gray-500" /> },
     { label: t.projectDetails.floor || "Floor", value: propertyFloorNum, icon: <Layers size={16} className="text-gray-500" /> },
+    { label: "View", value: unitView, icon: <Eye size={16} className="text-gray-500" /> },
   ].filter(stat => stat.value !== null && stat.value !== undefined && stat.value !== 0 && stat.value !== "");
 
   return (
@@ -162,6 +179,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   <div className="flex items-center gap-2">
                     {unitTypeName && <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitTypeName}</span>}
                     {unitStatusName && <span className="bg-amber-50 text-amber-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitStatusName}</span>}
+                    {unitView && <span className="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">View: {unitView}</span>}
                   </div>
                 </div>
               )}
@@ -191,68 +209,102 @@ export default async function PropertyDetailsPage({ params }: Props) {
         </div>
 
         {/* ── Overview Card (full width) ── */}
-        <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
-          <div className="mb-4 pb-4 border-b border-[#F0F0F0]">
-            <h2 className="text-[17px] font-bold text-gray-900 font-poppins">{t.projectDetails.overview || "Overview"}</h2>
+        <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">{t.projectDetails.overview || "Overview"}</h2>
+            <div className="h-px flex-1 bg-gray-100"></div>
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-y-5 divide-x divide-[#F0F0F0]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
             {overviewStats.map((stat, i) => (
-              <div key={i} className="flex flex-col items-center text-center px-3">
-                <div className="flex items-center gap-1.5 mb-1">
+              <div key={i} className="flex flex-col items-center text-center group">
+                <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 group-hover:bg-[#1B2134] group-hover:text-white transition-all">
                   {stat.icon}
-                  <span className="text-[15px] font-bold text-gray-900 font-poppins">{stat.value}</span>
                 </div>
-                <span className="text-[12px] text-gray-400 font-poppins">{stat.label}</span>
+                <span className="text-[16px] font-bold text-[#1B2134] font-poppins mb-1">{stat.value}</span>
+                <span className="text-[12px] text-gray-400 font-poppins uppercase tracking-wider">{stat.label}</span>
               </div>
             ))}
           </div>
         </div>
 
+        {/* ── Features & Services ── */}
+        {!isOutside && (() => {
+          const combinedIds = Array.from(new Set([
+            ...(d.services || d.Services || []),
+            ...(d.facilities || d.Facilities || [])
+          ]));
+          if (combinedIds.length === 0) return null;
+
+          return (
+            <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm mb-8">
+              <div className="flex items-center gap-3 mb-8">
+                <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
+                  {t.projectDetails.featuresServices || "Features & Services"}
+                </h2>
+                <div className="h-px flex-1 bg-gray-100"></div>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {combinedIds.map((id: any, i: number) => {
+                  const numericId = Number(id);
+                  const foundService = allServices.find(s => s.id === numericId);
+                  const foundFacility = allFacilities.find(f => f.id === numericId);
+                  const nameObj = foundService?.name || foundFacility?.name;
+                  
+                  let localizedName = "";
+                  if (typeof nameObj === 'string') {
+                    localizedName = nameObj;
+                  } else if (nameObj) {
+                    localizedName = nameObj[locale] || nameObj.en || nameObj.de || nameObj.pl || `Item ${numericId}`;
+                  } else {
+                    localizedName = `Feature ${numericId}`;
+                  }
+
+                  return (
+                    <div key={i} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
+                      <div className="w-8 h-8 rounded-full bg-[#1B2134]/5 flex items-center justify-center text-[#1B2134] group-hover:bg-[#1B2134] group-hover:text-white transition-all">
+                        <Check size={16} strokeWidth={3} />
+                      </div>
+                      <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#1B2134] transition-colors">
+                        {localizedName}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
+
         {/* ── Description ── */}
-        <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
-          <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
-            {t.projectDetails.description || "Description"}
-          </h2>
-          <p className="text-[14px] text-gray-600 leading-relaxed font-poppins whitespace-pre-wrap">
-            {propertyDescription || t.projectDetails.noDescription || "No description provided."}
-          </p>
+        <div className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
+              {t.projectDetails.description || "Description"}
+            </h2>
+            <div className="h-px flex-1 bg-[#E5E2DE]"></div>
+          </div>
+          <div className="flex flex-col gap-4">
+            {propertyDescription
+              ? propertyDescription.split('\n\n').map((para, i) => (
+                  <p key={i} className="text-[15px] text-[#666] leading-relaxed font-poppins">
+                    {para}
+                  </p>
+                ))
+              : <p className="text-[14px] text-gray-400 italic font-poppins">{t.projectDetails.noDescription || "No description provided."}</p>
+            }
+          </div>
         </div>
 
-        {/* ── Features & Services ── */}
-        {((d.Facilities?.length ?? 0) > 0 || (d.Services?.length ?? 0) > 0 || (d.facilities?.length ?? 0) > 0 || (d.services?.length ?? 0) > 0) && (
-          <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm mb-5">
-            <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
-              {t.projectDetails.featuresServices || "Features & Services"}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-6">
-              {(d.facilities || d.Facilities || [])?.map((f: any, i: number) => {
-                const name = (typeof f === 'string' ? f : (typeof f.name === 'string' ? f.name : (f.name?.[locale] || f.name?.en || 'Unknown'))) as string;
-                return (
-                  <div key={`f-${i}`} className="flex items-center gap-2.5 text-gray-700">
-                    <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span className="text-[13px] font-poppins">{name}</span>
-                  </div>
-                );
-              })}
-              {(d.services || d.Services || [])?.map((s: any, i: number) => {
-                const name = (typeof s === 'string' ? s : (typeof s.name === 'string' ? s.name : (s.name?.[locale] || s.name?.en || 'Unknown'))) as string;
-                return (
-                  <div key={`s-${i}`} className="flex items-center gap-2.5 text-gray-700">
-                    <Image src={icoCheck} alt="check" width={14} height={14} className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span className="text-[13px] font-poppins">{name}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
         {/* ── Reviews Placeholder ── */}
-        <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 shadow-sm">
-          <h2 className="text-[17px] font-bold text-gray-900 mb-3 pb-3 border-b border-[#F0F0F0] font-poppins">
-            {t.projectDetails.reviews || "Reviews"}
-          </h2>
-          <p className="text-[13px] text-gray-400 italic font-poppins text-center py-6">
+        <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm">
+          <div className="flex items-center gap-3 mb-6">
+            <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
+              {t.projectDetails.reviews || "Reviews"}
+            </h2>
+            <div className="h-px flex-1 bg-gray-100"></div>
+          </div>
+          <p className="text-[14px] text-gray-400 italic font-poppins text-center py-8">
             {t.projectDetails.commentsLater || "Comment section will be added later"}
           </p>
         </div>

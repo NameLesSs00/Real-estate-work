@@ -168,6 +168,7 @@ const Header = () => {
               <Link href="/about" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
               <Link href="/contact" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
               <Link href="/blogs" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.blogs')}</Link>
+              <Link href="/faq" className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.faq')}</Link>
             </div>
 
             {/* Social Links & Language */}
@@ -311,6 +312,7 @@ const Header = () => {
               <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.about')}</Link>
               <Link href="/contact" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.contact')}</Link>
               <Link href="/blogs" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.blogs')}</Link>
+              <Link href="/faq" onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.faq')}</Link>
 
               <div className="mt-6">
                 <Link 

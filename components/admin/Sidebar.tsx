@@ -19,6 +19,7 @@ const menuItems = [
   { name: 'Services',      path: '/admin/services',     icon: '/admin/sidebar/setting-2.png' },
   { name: 'Spots',         path: '/admin/spots',        icon: '/admin/sidebar/location.png' },
   { name: 'Blogs',         path: '/admin/blogs',        icon: '/admin/sidebar/blogger.png' },
+  { name: 'FAQ',           path: '/admin/faq',          icon: '/admin/sidebar/setting-2.png' },
   { name: 'Setting',       path: '/admin/settings',     icon: '/admin/sidebar/setting-2.png' },
 ];
 

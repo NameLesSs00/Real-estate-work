@@ -9,6 +9,7 @@
     "about": "About Us",
     "contact": "Contact Us",
     "blogs": "Blogs",
+    "faq": "FAQ",
     "listProperty": "List Your Property",
     "locations": [
       "El Gouna",
@@ -140,7 +141,8 @@
         "q": "Is it a good time to invest in real estate?",
         "a": "With current market trends and property appreciation, it is an excellent time for long-term investments."
       }
-    ]
+    ],
+    "viewAll": "View All FAQs"
   },
   "aboutPage": {
     "visionTitle": "Our Vision",
@@ -198,6 +200,7 @@
     "sendAnother": "Send another request",
     "description": "Description",
     "noDescription": "No description available.",
+    "facilities": "Facilities",
     "overview": "Overview",
     "featuresServices": "Features & Services",
     "reviews": "Reviews",
@@ -285,6 +288,8 @@
       "title": "Filters",
       "searchKeywords": "Search Keywords",
       "placeholderSearch": "e.g. Skyline...",
+      "country": "Country",
+      "placeholderCountry": "e.g. Egypt...",
       "location": "Location",
       "status": "Property Status",
       "propertyType": "Property Type",
@@ -318,5 +323,12 @@
       "bathroom": "Bathroom",
       "viewDetails": "View Details"
     }
+  },
+  "faqPage": {
+    "tag": "SUPPORT",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about buying, selling, and renting with The Gate Estates.",
+    "loading": "Loading questions...",
+    "noQuestions": "No FAQs available at the moment. Check back soon!"
   }
 }

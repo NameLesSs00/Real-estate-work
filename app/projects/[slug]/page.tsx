@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback, use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, ChevronRight, Loader2 } from 'lucide-react';
+import { MapPin, ChevronRight, Loader2, Check } from 'lucide-react';
 import { getProjectById, resolveProjectImageUrl, Project } from '@/lib/api/projects';
+import { getFacilities, Facility } from '@/lib/api/facilities';
 import { getDeveloperById } from '@/lib/api/developers';
 import { motion, type Variants } from 'framer-motion';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
@@ -12,14 +13,7 @@ import ImageGallery from '@/components/ImageGallery';
 
 const DEFAULT_IMAGE = '/assists/defaultImage.png';
 
-// ─── Static stats cards ───────────────────────────────────────────────────────
-const STATS = [
-  { icon: '/assists/project/building-4.png', label: 'totalUnits',     value: 'Exclusive Residences' },
-  { icon: '/assists/project/buildings-2.png', label: 'buildingFloors', value: 'Low-Rise Design'        },
-  { icon: '/assists/project/calendar.png',    label: 'deliveryDate',   value: 'Coming Soon'            },
-  { icon: '/assists/project/story.png',       label: 'status',          value: 'Under Development'      },
-  { icon: '/assists/project/size.png',        label: 'spaces',          value: 'Various Sizes'          },
-];
+
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -52,6 +46,7 @@ export default function ProjectDetailsPage({
   const projectId = Number(slug);
 
   const [project,     setProject]     = useState<Project | null>(null);
+  const [facilities,  setFacilities]  = useState<Facility[]>([]);
   const [loading,     setLoading]     = useState(true);
   const [error,       setError]       = useState<string | null>(null);
 
@@ -63,8 +58,12 @@ export default function ProjectDetailsPage({
     }
     try {
       setLoading(true);
-      const data = await getProjectById(projectId);
+      const [data, facs] = await Promise.all([
+        getProjectById(projectId),
+        getFacilities()
+      ]);
       setProject(data);
+      setFacilities(facs);
 
       if (data.developerId) {
         try {
@@ -150,9 +149,31 @@ export default function ProjectDetailsPage({
                   {localizedName}
                 </h1>
 
-                <div className="flex items-center gap-2 text-[15px] text-[#888]">
-                  <MapPin size={18} className="text-[#C7B7A1] flex-shrink-0" />
-                  <span>{project.locationName || t('projects.noLocation') as string}</span>
+                <div className="flex flex-wrap items-center gap-6 mt-2">
+                  <div className="flex items-center gap-2 text-[15px] text-[#666]">
+                    <MapPin size={18} className="text-[#C7B7A1] flex-shrink-0" />
+                    <span>{project.locationName || t('projects.noLocation') as string}</span>
+                  </div>
+
+                  {project.developerName && (
+                    <div className="flex items-center gap-8 mt-4 group">
+                      {project.logoImage && (
+                        <div className="relative w-24 h-24 flex-shrink-0 transition-all duration-700 ease-in-out">
+                          <Image 
+                            src={resolveProjectImageUrl(project.logoImage) || DEFAULT_IMAGE} 
+                            alt={project.developerName} 
+                            fill 
+                            className="object-contain"
+                          />
+                        </div>
+                      )}
+                      <div className="h-12 w-px bg-[#E5E2DE]" />
+                      <div className="flex flex-col">
+                        <span className="text-[12px] text-[#C7B7A1] font-bold uppercase tracking-[0.2em] mb-1">Developed By</span>
+                        <span className="text-[24px] font-bold text-[#1B2134] tracking-tight">{project.developerName}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -171,6 +192,7 @@ export default function ProjectDetailsPage({
                     <input
                       type="text"
                       placeholder={t('projectDetails.fullName') as string}
+                      required
                       className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors"
                     />
                   </div>
@@ -181,6 +203,7 @@ export default function ProjectDetailsPage({
                     <input
                       type="tel"
                       placeholder={t('projectDetails.phoneNumber') as string}
+                      required
                       className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors"
                     />
                   </div>
@@ -189,6 +212,7 @@ export default function ProjectDetailsPage({
                     <input
                       type="email"
                       placeholder={t('projectDetails.email') as string}
+                      required
                       className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors"
                     />
                   </div>
@@ -197,6 +221,7 @@ export default function ProjectDetailsPage({
                     <textarea
                       placeholder={t('projectDetails.message') as string}
                       rows={4}
+                      required
                       className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors resize-none"
                     />
                   </div>
@@ -204,6 +229,7 @@ export default function ProjectDetailsPage({
                     <input
                       type="checkbox"
                       id="terms"
+                      required
                       className="mt-0.5 w-4 h-4 accent-[#1B2134] cursor-pointer flex-shrink-0"
                     />
                     <label htmlFor="terms" className="text-[13px] text-[#666] leading-snug cursor-pointer">
@@ -224,24 +250,48 @@ export default function ProjectDetailsPage({
             </motion.div>
           </div>
 
-          {/* ── Static Stats Row ── */}
-          <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 w-full">
-            {STATS.map((stat) => (
-              <div
-                key={stat.label}
-                className="bg-[#F8F8F9] border border-[#F0EDE8] rounded-[16px] p-5 flex flex-col items-center text-center gap-2 shadow-sm"
-              >
-                <div className="relative w-8 h-8">
-                  <Image src={stat.icon} alt={t(`featureProject.labels.${stat.label}`) as string} fill draggable={false} className="object-contain opacity-50" />
-                </div>
-                <p className="text-[12px] text-[#AAA]">{t(`featureProject.labels.${stat.label}`) as string}</p>
-                <p className="text-[13px] font-semibold text-[#1B2134] leading-tight">{stat.value}</p>
+          {/* ── Facilities Grid (Replaces Stats) ── */}
+          {((project.facilityIds && project.facilityIds.length > 0) || (project.facilities && project.facilities.length > 0)) && (
+            <motion.div variants={itemVariants} className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm">
+              <h2 className="text-[20px] font-bold text-[#1B2134] mb-6 flex items-center gap-3">
+                {t('projectDetails.facilities') || 'Facilities'}
+                <span className="h-px flex-1 bg-gray-100"></span>
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {project.facilityIds && project.facilityIds.length > 0 ? (
+                  project.facilityIds.map((facId) => {
+                    const facName = facilities.find(f => f.id === facId)?.name;
+                    const localizedFacName = typeof facName === 'string' ? facName : (facName ? getLocalized(facName) : `Facility ${facId}`);
+                    return (
+                      <div key={facId} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
+                        <div className="w-8 h-8 rounded-full bg-[#1B2134]/5 flex items-center justify-center text-[#1B2134] group-hover:bg-[#1B2134] group-hover:text-white transition-all">
+                          <Check size={16} strokeWidth={3} />
+                        </div>
+                        <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#1B2134] transition-colors">{localizedFacName}</span>
+                      </div>
+                    );
+                  })
+                ) : project.facilities && project.facilities.length > 0 ? (
+                  project.facilities.map((facId) => {
+                    const id = Number(facId);
+                    const facName = facilities.find(f => f.id === id)?.name;
+                    const localizedFacName = typeof facName === 'string' ? facName : (facName ? getLocalized(facName) : `Facility ${facId}`);
+                    return (
+                      <div key={facId} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
+                        <div className="w-8 h-8 rounded-full bg-[#1B2134]/5 flex items-center justify-center text-[#1B2134] group-hover:bg-[#1B2134] group-hover:text-white transition-all">
+                          <Check size={16} strokeWidth={3} />
+                        </div>
+                        <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#1B2134] transition-colors">{localizedFacName}</span>
+                      </div>
+                    );
+                  })
+                ) : null}
               </div>
-            ))}
-          </motion.div>
+            </motion.div>
+          )}
 
           {/* ── Description ── */}
-          <motion.div variants={itemVariants} className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[20px] p-8 shadow-sm w-full">
+          <motion.div variants={itemVariants} className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm">
             <h2 className="text-[20px] font-bold text-[#1B2134] mb-4">{t('projectDetails.description') as string}</h2>
             <hr className="border-[#F0EDE8] mb-6" />
             <div className="flex flex-col gap-4">

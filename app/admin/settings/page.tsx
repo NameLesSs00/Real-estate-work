@@ -176,7 +176,6 @@ export default function SettingsPage() {
             { id: 'profile', label: 'My Profile', icon: User },
             { id: 'security', label: 'Security', icon: Shield },
             { id: 'admins', label: 'Admin Management', icon: Users },
-            { id: 'admins', label: 'Admin Management', icon: Users },
           ].map((tab) => (
             <button
               key={tab.id}

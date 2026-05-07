@@ -13,6 +13,27 @@ import { getLocations, Location } from '@/lib/api/locations';
 import { ChevronLeft, ChevronRight, Filter, X, MapPin, ChevronDown } from 'lucide-react';
 import './properties.css';
 
+// Maps the numeric propertyType button value to the string name the UnitOutsides API expects
+const PROPERTY_TYPE_MAP: Record<string, string> = {
+  '': '',
+  '0': 'Apartment',
+  '1': 'Villa',
+  '2': 'TownHouse',
+  '3': 'Studio',
+  '4': 'Penthouse',
+  '5': 'Chalet',
+};
+
+// Reverse map for display on cards
+const PROPERTY_TYPE_LABEL: Record<string, string> = {
+  '0': 'Apartment', 'Apartment': 'Apartment',
+  '1': 'Villa',     'Villa': 'Villa',
+  '2': 'TownHouse', 'TownHouse': 'TownHouse',
+  '3': 'Studio',    'Studio': 'Studio',
+  '4': 'Penthouse', 'Penthouse': 'Penthouse',
+  '5': 'Chalet',    'Chalet': 'Chalet',
+};
+
 export interface FilterState {
   searchTerm: string;
   location: string;
@@ -23,6 +44,7 @@ export interface FilterState {
   unitType: string;   // Buy/Rent (mapped to UnitType API param)
   status: string;     // primary/resale
   locationId: string;
+  country: string;
 }
 
 export default function PropertiesPage() {
@@ -42,8 +64,8 @@ function PropertiesPageContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [filters, setFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '', locationId: '' });
-  const [draftFilters, setDraftFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '', locationId: '' });
+  const [filters, setFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', unitType: '', status: '', locationId: '', country: '' });
+  const [draftFilters, setDraftFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', unitType: '', status: '', locationId: '', country: '' });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [locations, setLocations] = useState<Location[]>([]);
 
@@ -64,7 +86,7 @@ function PropertiesPageContent() {
   };
 
   const clearFilters = () => {
-    const empty = { searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '', locationId: '' };
+    const empty = { searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', unitType: '', status: '', locationId: '', country: '' };
     setDraftFilters(empty);
     handleSearch(empty);
     setIsSidebarOpen(false);
@@ -74,49 +96,132 @@ function PropertiesPageContent() {
     setLoading(true);
     setError('');
     try {
-      if (f.status?.toLowerCase() === 'resale') {
+      // Reset pagination if needed (usually handled by calling fetchUnits(1, ...))
+      
+      const isResaleOnly = f.status?.toLowerCase() === 'resale';
+      const isPrimaryOnly = f.status?.toLowerCase() === 'primary';
+      const isRent = f.unitType?.toLowerCase() === 'rent';
+      // const isAny = !f.status;
+
+      if (isResaleOnly) {
+        // --- RESALE ONLY ---
+        const propertyTypeName = f.propertyType ? PROPERTY_TYPE_MAP[f.propertyType] || f.propertyType : undefined;
         const data = await getUnitOutsides({
           SearchTerm: f.searchTerm || undefined,
           MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
           MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
           Currency: f.currency || undefined,
           City: f.location || undefined,
+          Country: f.country || undefined,
+          PropertyType: propertyTypeName || undefined,
           PageNumber: page,
           PageSize: 6, 
         });
         
-        // Map UnitOutside to match what PropertyCard expects
         const items = Array.isArray(data) ? data : (data.items || []);
-        const mappedUnits = items.map((u: any) => ({
+        let mappedUnits = items.map((u: any) => ({
           ...u,
           isResale: true,
           mappedId: `out-${u.id}`,
+          resolvedName: typeof u.name === 'string' ? u.name : (u.name?.en || u.name?.de || u.name?.pl || 'Unit'),
           locationName: `${u.city || ''}${u.city && u.country ? ', ' : ''}${u.country || ''}`,
           unitStatus: 'Resale',
           unitType: u.type,
+          propertyTypeLabel: PROPERTY_TYPE_LABEL[String(u.propertyType)] || String(u.propertyType || 'Unit'),
           imageUrls: u.images?.sort((a: any, b: any) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0)).map((img: any) => img.imageUrl) || []
         }));
+
+        // Frontend filter fallback
+        if (f.currency) {
+          mappedUnits = mappedUnits.filter((u: any) => 
+            (u.currencyCode || u.currency || 'EGP').toUpperCase() === f.currency.toUpperCase()
+          );
+        }
 
         setUnits(mappedUnits);
         setTotalPages(data.totalPages || 1);
         setTotalCount(data.totalCount || items.length);
-      } else {
+      } else if (isPrimaryOnly || isRent) {
+        // --- PRIMARY ONLY OR RENT ---
         const data = await getUnitsFiltered({
           SearchTerm: f.searchTerm || undefined,
           UnitType: f.unitType || undefined,
           MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
           MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
           Currency: f.currency || undefined,
-
           PropertyType: f.propertyType || undefined,
-          Status: f.status || undefined,
+          Status: isPrimaryOnly ? 'primary' : undefined,
           LocationId: f.locationId ? Number(f.locationId) : undefined,
           PageNumber: page,
           PageSize: 6,
         });
-        setUnits(data.items);
+        
+        let finalItems = data.items || [];
+        if (f.currency) {
+          finalItems = finalItems.filter((u: any) => 
+            (u.currencyCode || u.currency || 'EGP').toUpperCase() === f.currency.toUpperCase()
+          );
+        }
+        setUnits(finalItems);
         setTotalPages(data.totalPages || 1);
         setTotalCount(data.totalCount);
+      } else {
+        // --- ANY (BOTH PRIMARY & RESALE) ---
+        // Fetch 3 from each to make a total of 6? Or 6 from each? 
+        // Let's do 6 from each to ensure we have enough data.
+        const [primaryData, resaleData] = await Promise.all([
+          getUnitsFiltered({
+            SearchTerm: f.searchTerm || undefined,
+            UnitType: 'Buy',
+            MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
+            MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
+            Currency: f.currency || undefined,
+            PropertyType: f.propertyType || undefined,
+            Status: 'primary',
+            LocationId: f.locationId ? Number(f.locationId) : undefined,
+            PageNumber: page,
+            PageSize: 4, // Fetch slightly fewer since we combine
+          }),
+          getUnitOutsides({
+            SearchTerm: f.searchTerm || undefined,
+            MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
+            MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
+            Currency: f.currency || undefined,
+            City: f.location || undefined,
+            Country: f.country || undefined,
+            PropertyType: f.propertyType ? PROPERTY_TYPE_MAP[f.propertyType] || f.propertyType : undefined,
+            PageNumber: page,
+            PageSize: 4,
+          })
+        ]);
+
+        const pItems = primaryData.items || [];
+        const rItems = Array.isArray(resaleData) ? resaleData : (resaleData.items || []);
+        
+        const mappedResale = rItems.map((u: any) => ({
+          ...u,
+          isResale: true,
+          mappedId: `out-${u.id}`,
+          resolvedName: typeof u.name === 'string' ? u.name : (u.name?.en || u.name?.de || u.name?.pl || 'Unit'),
+          locationName: `${u.city || ''}${u.city && u.country ? ', ' : ''}${u.country || ''}`,
+          unitStatus: 'Resale',
+          unitType: u.type,
+          propertyTypeLabel: PROPERTY_TYPE_LABEL[String(u.propertyType)] || String(u.propertyType || 'Unit'),
+          imageUrls: u.images?.sort((a: any, b: any) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0)).map((img: any) => img.imageUrl) || []
+        }));
+
+        let combined = [...pItems, ...mappedResale];
+        
+        // Frontend filter fallback
+        if (f.currency) {
+          combined = combined.filter((u: any) => 
+            (u.currencyCode || u.currency || 'EGP').toUpperCase() === f.currency.toUpperCase()
+          );
+        }
+
+        setUnits(combined);
+        setTotalPages(Math.max(primaryData.totalPages || 1, resaleData.totalPages || 1));
+        setTotalCount((primaryData.totalCount || 0) + (resaleData.totalCount || 0));
       }
       setCurrentPage(page);
     } catch (err) {
@@ -132,13 +237,14 @@ function PropertiesPageContent() {
     const initialFilters: FilterState = {
       searchTerm: searchParams.get('searchTerm') || '',
       location: searchParams.get('location') || '',
-      propertyType: searchParams.get('propertyType') || searchParams.get('unitType') || '', 
+      propertyType: searchParams.get('propertyType') || '', 
       minPrice: searchParams.get('minPrice') || '',
       maxPrice: searchParams.get('maxPrice') || '',
-      currency: searchParams.get('currency') || 'EGP',
+      currency: searchParams.get('currency') || '',
       unitType: searchParams.get('unitType') || searchParams.get('type') || '', 
       status: searchParams.get('status') || '',
       locationId: searchParams.get('locationId') || '',
+      country: searchParams.get('country') || '',
     };
     
     // Special case: if unitType is 'Rent' or 'Buy', it's the UnitType filter.
@@ -221,8 +327,8 @@ function PropertiesPageContent() {
                 <PropertyCard
                   key={unit.mappedId || unit.id}
                   id={unit.mappedId || unit.id}
-                  title={getLocalized(unit.name)}
-                  type={unit.propertyType || unit.unitType || 'Unit'}
+                  title={unit.resolvedName ?? getLocalized(unit.name)}
+                  type={unit.propertyTypeLabel || PROPERTY_TYPE_LABEL[String(unit.propertyType)] || unit.unitType || 'Unit'}
                   location={unit.locationName || '—'}
                   price={`${unit.currencyCode || unit.currency || 'EGP'} ${unit.price?.toLocaleString()}`}
                   beds={unit.noBedRoom}
@@ -276,6 +382,21 @@ function PropertiesPageContent() {
                   className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px]"
                 />
               </div>
+
+              {/* Country (Resale Only) */}
+              {draftFilters.status?.toLowerCase() === 'resale' && (
+                <div className="space-y-3">
+                  <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.country') as string}</label>
+                  <input 
+                    type="text" 
+                    placeholder={t('propertiesPage.sidebar.placeholderCountry') as string} 
+                    value={draftFilters.country}
+                    onChange={(e) => setDraftFilters({ ...draftFilters, country: e.target.value })}
+                    onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px]"
+                  />
+                </div>
+              )}
               
               {/* Location */}
               {draftFilters.status?.toLowerCase() !== 'resale' && (
@@ -342,7 +463,14 @@ function PropertiesPageContent() {
                   ].map(cat => (
                     <button 
                       key={cat.value}
-                      onClick={() => setDraftFilters({ ...draftFilters, unitType: cat.value })}
+                      onClick={() => {
+                        const isRent = cat.value === 'Rent';
+                        setDraftFilters({ 
+                          ...draftFilters, 
+                          unitType: cat.value,
+                          status: isRent ? '' : draftFilters.status 
+                        });
+                      }}
                       className={`flex-1 py-3 px-3 rounded-xl border text-[13px] font-bold transition-all ${draftFilters.unitType === cat.value ? 'bg-[#1B2134] text-white border-[#1B2134] shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
                     >
                       {cat.label}
@@ -352,66 +480,71 @@ function PropertiesPageContent() {
               </div>
 
               {/* Status (Primary/Resale) */}
-              <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.status') || 'Property Status'}</label>
-                <div className="flex items-center gap-3">
-                  {[
-                    { value: '', label: t('propertiesPage.sidebar.any') as string },
-                    { value: 'primary', label: t('header.primary') || 'Primary' },
-                    { value: 'resale', label: t('header.resale') || 'Resale' },
-                  ].map(status => (
-                    <button 
-                      key={status.value}
-                      onClick={() => setDraftFilters({ ...draftFilters, status: status.value })}
-                      className={`flex-1 py-3 px-3 rounded-xl border text-[13px] font-bold transition-all ${draftFilters.status === status.value ? 'bg-[#1B2134] text-white border-[#1B2134] shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
-                    >
-                      {status.label}
-                    </button>
-                  ))}
+              {draftFilters.unitType !== 'Rent' && (
+                <div className="space-y-3">
+                  <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.status') || 'Property Status'}</label>
+                  <div className="flex items-center gap-3">
+                    {[
+                      { value: '', label: t('propertiesPage.sidebar.any') as string },
+                      { value: 'primary', label: t('header.primary') || 'Primary' },
+                      { value: 'resale', label: t('header.resale') || 'Resale' },
+                    ].map(status => (
+                      <button 
+                        key={status.value}
+                        onClick={() => setDraftFilters({ ...draftFilters, status: status.value })}
+                        className={`flex-1 py-3 px-3 rounded-xl border text-[13px] font-bold transition-all ${draftFilters.status === status.value ? 'bg-[#1B2134] text-white border-[#1B2134] shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
+                      >
+                        {status.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Price Range */}
               <div className="space-y-3">
                 <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.priceRange') as string}</label>
                 <div className="flex items-center gap-3">
-                  <div className="relative flex-1">
+                  <div className="flex-1">
                     <input 
                       type="number" 
                       placeholder={t('propertiesPage.sidebar.min') as string} 
                       value={draftFilters.minPrice}
                       onChange={(e) => setDraftFilters({ ...draftFilters, minPrice: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl pl-4 pr-12 py-3.5 text-[14px]"
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20"
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-[12px] font-bold">{draftFilters.currency}</span>
                   </div>
                   <div className="w-4 h-px bg-gray-300" />
-                  <div className="relative flex-1">
+                  <div className="flex-1">
                     <input 
                       type="number" 
                       placeholder={t('propertiesPage.sidebar.max') as string} 
                       value={draftFilters.maxPrice}
                       onChange={(e) => setDraftFilters({ ...draftFilters, maxPrice: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl pl-4 pr-12 py-3.5 text-[14px]"
+                      className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20"
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-[12px] font-bold">{draftFilters.currency}</span>
                   </div>
                 </div>
+                <p className="text-[12px] text-gray-400 mt-1">Currency: <span className="font-semibold text-[#1B2134]">{draftFilters.currency || t('propertiesPage.sidebar.any')}</span></p>
               </div>
 
               {/* Currency */}
               <div className="space-y-3">
                 <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.currency') as string}</label>
-                <div className="flex items-center gap-3">
-                  {['EGP', 'USD', 'EUR'].map(curr => (
-                    <button 
-                      key={curr}
-                      onClick={() => setDraftFilters({ ...draftFilters, currency: curr })}
-                      className={`flex-1 py-3 px-3 rounded-xl border text-[13px] font-bold transition-all ${draftFilters.currency === curr ? 'bg-[#1B2134] text-white border-[#1B2134] shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
-                    >
-                      {curr}
-                    </button>
-                  ))}
+                <div className="relative">
+                  <select 
+                    value={draftFilters.currency}
+                    onChange={(e) => setDraftFilters({ ...draftFilters, currency: e.target.value })}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px] bg-white appearance-none cursor-pointer"
+                  >
+                    <option value="">{t('propertiesPage.sidebar.any') as string}</option>
+                    <option value="EGP">EGP</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                    <ChevronDown size={16} />
+                  </div>
                 </div>
               </div>
             </div>
