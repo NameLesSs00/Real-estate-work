@@ -32,10 +32,11 @@ export interface UnitOutside {
   country: string;
   city: string;
   street: string;
-  propertyType: string;
+  propertyType: string | number;
   floorNumber: number;
-  view: string;
+  view: string | number;
   type: string;
+  status?: string;
   floorName: string;
   isFeatured: boolean;
   isActive: boolean;
@@ -80,10 +81,11 @@ export interface CreateUnitOutsidePayload {
   country: string;
   city: string;
   street: string;
-  propertyType: string;
+  propertyType: string | number;
   floorNumber: number;
-  view: string;
+  view: string | number;
   type: string;
+  status?: string;
   floorName: string;
   isFeatured: boolean;
   paymentPlans: {
@@ -100,7 +102,7 @@ export interface CreateUnitOutsidePayload {
   }[];
 }
 
-// UnitOutsideSoldout types
+// ─── UnitOutsideSoldout types ──────────────────────────────────────────────────
 export interface UnitOutsideSoldout {
   id: number;
   unitOutsideId: number;

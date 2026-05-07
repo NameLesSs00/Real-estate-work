@@ -101,10 +101,30 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
             country: enData.country ?? '',
             city: enData.city ?? '',
             street: enData.street ?? '',
-            propertyType: enData.propertyType ?? 'Apartment',
+            propertyType: (() => {
+              const pt = enData.propertyType ?? '';
+              const reverseMapping: Record<number | string, string> = {
+                0: 'Apartment',
+                1: 'Villa',
+                2: 'Townhouse',
+                3: 'Studio',
+                4: 'Penthouse'
+              };
+              return reverseMapping[pt] || pt.toString();
+            })(),
             floorNumber: enData.floorNumber ?? '',
             floorName: enData.floorName ?? '',
-            view: enData.view ?? '',
+            view: (() => {
+              const v = enData.view ?? '';
+              const reverseMapping: Record<number | string, string> = {
+                0: 'Sea',
+                1: 'Mountain',
+                2: 'Garden',
+                3: 'Pool',
+                4: 'SeaAndPool'
+              };
+              return reverseMapping[v] || v.toString();
+            })(),
             type: enData.type ?? 'Buy',
             isFeatured: enData.isFeatured ?? false,
             paymentPlans: (enData.paymentPlans ?? []).map((p) => ({
@@ -170,6 +190,23 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
     if (!form.city.trim()) { setError('City is required.'); return; }
     if (!form.country.trim()) { setError('Country is required.'); return; }
     if (Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
+    if (!form.view) { setError('Please select a view.'); return; }
+
+    const VIEW_MAPPING: Record<string, number> = {
+      'Sea': 0,
+      'Mountain': 1,
+      'Garden': 2,
+      'Pool': 3,
+      'SeaAndPool': 4
+    };
+
+    const PROPERTY_TYPE_MAPPING: Record<string, number> = {
+      'Apartment': 0,
+      'Villa': 1,
+      'Townhouse': 2,
+      'Studio': 3,
+      'Penthouse': 4
+    };
 
     const validatedPlans = form.paymentPlans.map((p) => {
       const isCash = p.paymentType === 'Cash';
@@ -195,66 +232,58 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
     setIsLoading(true);
     setError('');
     try {
-      const plans = validatedPlans;
-
+      const viewValue = VIEW_MAPPING[form.view] ?? 0;
+      const propTypeValue = PROPERTY_TYPE_MAPPING[form.propertyType] ?? 0;
+      const fd = new FormData();
+      
+      // Basic Info
       if (isEdit && editData) {
-        const fd = new FormData();
         fd.append('Id', String(editData.id));
-        fd.append('id', String(editData.id));
-        fd.append('Name.En', form.name.en);
-        fd.append('name.en', form.name.en);
-        fd.append('Name.De', form.name.de);
-        fd.append('Name.Pl', form.name.pl);
-        fd.append('Description.En', form.description.en);
-        fd.append('description.en', form.description.en);
-        fd.append('Description.De', form.description.de);
-        fd.append('Description.Pl', form.description.pl);
-        fd.append('Price', String(Number(form.price) || 0));
-        fd.append('price', String(Number(form.price) || 0));
-        fd.append('CurrencyCode', form.currencyCode);
-        fd.append('currencyCode', form.currencyCode);
-        fd.append('Area', String(Number(form.area) || 0));
-        fd.append('area', String(Number(form.area) || 0));
-        fd.append('NoBathRoom', String(Number(form.noBathRoom) || 0));
-        fd.append('noBathRoom', String(Number(form.noBathRoom) || 0));
-        fd.append('NoBedRoom', String(Number(form.noBedRoom) || 0));
-        fd.append('noBedRoom', String(Number(form.noBedRoom) || 0));
-        fd.append('NoKitchen', String(Number(form.noKitchen) || 0));
-        fd.append('noKitchen', String(Number(form.noKitchen) || 0));
-        fd.append('Country', form.country);
-        fd.append('country', form.country);
-        fd.append('City', form.city);
-        fd.append('city', form.city);
-        fd.append('Street', form.street);
-        fd.append('street', form.street);
-        fd.append('PropertyType', form.propertyType);
-        fd.append('propertyType', form.propertyType);
-        fd.append('FloorNumber', String(Number(form.floorNumber) || 0));
-        fd.append('floorNumber', String(Number(form.floorNumber) || 0));
-        fd.append('View', form.view);
-        fd.append('view', form.view);
-        fd.append('Type', form.type);
-        fd.append('type', form.type);
-        fd.append('FloorName', form.floorName);
-        fd.append('floorName', form.floorName);
-        fd.append('IsFeatured', String(form.isFeatured));
-        fd.append('isFeatured', String(form.isFeatured));
-        plans.forEach((p, i) => {
-          // Send all variants for indices to be absolutely sure
-          ['PaymentPlans', 'paymentPlans', 'PaymentPlan', 'paymentPlan'].forEach(key => {
-            if (p.Id !== undefined) fd.append(`${key}[${i}].Id`, String(p.Id));
-            if (p.id !== undefined) fd.append(`${key}[${i}].id`, String(p.id));
-            fd.append(`${key}[${i}].CommissionRate`, String(p.CommissionRate));
-            fd.append(`${key}[${i}].commissionRate`, String(p.CommissionRate));
-            fd.append(`${key}[${i}].InstallmentMothes`, String(p.InstallmentMothes));
-            fd.append(`${key}[${i}].installmentMothes`, String(p.InstallmentMothes));
-            fd.append(`${key}[${i}].InstallmentDownPayment`, String(p.InstallmentDownPayment));
-            fd.append(`${key}[${i}].installmentDownPayment`, String(p.InstallmentDownPayment));
-            fd.append(`${key}[${i}].PaymentType`, p.PaymentType);
-            fd.append(`${key}[${i}].paymentType`, p.PaymentType);
-          });
-        });
-        imageFiles.forEach((f) => fd.append('Images', f));
+      }
+      
+      // Localized Name
+      fd.append('Name.En', form.name.en);
+      fd.append('Name.De', form.name.de || form.name.en);
+      fd.append('Name.Pl', form.name.pl || form.name.en);
+      
+      // Localized Description
+      fd.append('Description.En', form.description.en);
+      fd.append('Description.De', form.description.de || form.description.en);
+      fd.append('Description.Pl', form.description.pl || form.description.en);
+      
+      // Numbers & Strings
+      fd.append('Price', String(Number(form.price) || 0));
+      fd.append('CurrencyCode', form.currencyCode);
+      fd.append('Area', String(Number(form.area) || 0));
+      fd.append('NoBathRoom', String(Number(form.noBathRoom) || 0));
+      fd.append('NoBedRoom', String(Number(form.noBedRoom) || 0));
+      fd.append('NoKitchen', String(Number(form.noKitchen) || 0));
+      fd.append('NoKithchen', String(Number(form.noKitchen) || 0));
+      fd.append('Country', form.country);
+      fd.append('City', form.city);
+      fd.append('Street', form.street);
+      fd.append('PropertyType', String(propTypeValue));
+      fd.append('FloorNumber', String(Number(form.floorNumber) || 0));
+      fd.append('FloorName', form.floorName);
+      fd.append('View', String(viewValue));
+      fd.append('Type', form.type);
+      fd.append('Status', 'Resale');
+      fd.append('IsFeatured', String(form.isFeatured));
+      
+      // Payment Plans
+      form.paymentPlans.forEach((p, i) => {
+        const isCash = p.paymentType === 'Cash';
+        if (p.id) fd.append(`PaymentPlan[${i}].id`, String(p.id));
+        fd.append(`PaymentPlan[${i}].commissionRate`, String(Number(p.commissionRate) || 0));
+        fd.append(`PaymentPlan[${i}].installmentMothes`, String(isCash ? 0 : (Number(p.installmentMothes) || 0)));
+        fd.append(`PaymentPlan[${i}].installmentDownPayment`, String(isCash ? 0 : (Number(p.installmentDownPayment) || 0)));
+        fd.append(`PaymentPlan[${i}].paymentType`, p.paymentType);
+      });
+
+      // Images
+      imageFiles.forEach((f) => fd.append('Images', f));
+
+      if (isEdit) {
         await updateUnitOutside(fd);
       } else {
         const newId = await createUnitOutside({
@@ -269,17 +298,18 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
           country: form.country,
           city: form.city,
           street: form.street,
-          propertyType: form.propertyType,
+          propertyType: propTypeValue,
           floorNumber: Number(form.floorNumber) || 0,
-          view: form.view,
+          view: viewValue,
           type: form.type,
+          status: 'Resale',
           floorName: form.floorName,
           isFeatured: form.isFeatured,
-          paymentPlans: plans.map(p => ({
-            commissionRate: p.CommissionRate,
-            installmentMothes: p.InstallmentMothes,
-            installmentDownPayment: p.InstallmentDownPayment,
-            paymentType: p.PaymentType
+          paymentPlans: form.paymentPlans.map(p => ({
+            commissionRate: Number(p.commissionRate) || 0,
+            installmentMothes: p.paymentType === 'Cash' ? 0 : (Number(p.installmentMothes) || 0),
+            installmentDownPayment: p.paymentType === 'Cash' ? 0 : (Number(p.installmentDownPayment) || 0),
+            paymentType: p.paymentType
           })),
         });
         if (imageFiles.length > 0 && newId) {
@@ -409,7 +439,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                       onChange={(e) => setForm((p) => ({ ...p, currencyCode: e.target.value }))}
                       className="w-24 border border-gray-200 rounded-xl px-3 py-3 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] bg-white font-bold text-[13px]"
                     >
-                      {['USD', 'EUR', 'EGP', 'GBP', 'AED'].map((c) => (
+                      {['USD', 'EUR', 'EGP'].map((c) => (
                         <option key={c} value={c}>{c}</option>
                       ))}
                     </select>
@@ -422,8 +452,14 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                 <div className="space-y-2">
                   <label className="text-[13px] font-semibold text-[#16273B]">Property Type</label>
                   <select value={form.propertyType} onChange={setField('propertyType')} className={inputCls}>
-                    {['Apartment', 'Villa', 'Townhouse', 'Studio', 'Penthouse', 'Office', 'Shop'].map((t) => (
-                      <option key={t} value={t}>{t}</option>
+                    {[
+                      { label: 'Apartment', value: 'Apartment' },
+                      { label: 'Villa', value: 'Villa' },
+                      { label: 'Townhouse', value: 'Townhouse' },
+                      { label: 'Studio', value: 'Studio' },
+                      { label: 'Penthouse', value: 'Penthouse' },
+                    ].map((t) => (
+                      <option key={t.value} value={t.value}>{t.label}</option>
                     ))}
                   </select>
                 </div>
@@ -454,7 +490,12 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                 </div>
                 <div className="space-y-2">
                   <label className="text-[13px] font-semibold text-[#16273B]">View</label>
-                  <input type="text" value={form.view} onChange={setField('view')} placeholder="e.g. Sea View" className={inputCls} />
+                  <select value={form.view} onChange={setField('view')} className={inputCls}>
+                    <option value="">Select View</option>
+                    {['Sea', 'Mountain', 'Garden', 'Pool', 'SeaAndPool'].map((v) => (
+                      <option key={v} value={v}>{v}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-[13px] font-semibold text-[#16273B]">Listing Type</label>

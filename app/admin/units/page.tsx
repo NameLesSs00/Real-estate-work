@@ -409,8 +409,8 @@ export default function UnitsPage() {
                             <span
                               className="text-[16px] font-bold text-[#16273B] cursor-pointer hover:text-blue-600 transition-colors"
                               onClick={() => setViewingOutsideId(unit.id)}
-                            >{unit.name}</span>
-                            {unit.description && <p className="text-[13px] text-[#94A3B8] mt-0.5 line-clamp-1">{unit.description}</p>}
+                            >{getLocalized(unit.name)}</span>
+                            {unit.description && <p className="text-[13px] text-[#94A3B8] mt-0.5 line-clamp-1">{getLocalized(unit.description)}</p>}
                           </td>
                           <td className="py-6 px-4">
                             <span className="text-[15px] font-bold text-[#16273B]">{unit.currencyCode} {unit.price.toLocaleString()}</span>

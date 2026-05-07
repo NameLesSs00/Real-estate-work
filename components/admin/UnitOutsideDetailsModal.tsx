@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import {
@@ -34,6 +35,7 @@ export default function UnitOutsideDetailsModal({
   onUpdate,
   onMarkSold,
 }: UnitOutsideDetailsModalProps) {
+  const { language, getLocalized } = useLanguage();
   useBodyScrollLock(isOpen);
   useEscapeKey(onClose, isOpen);
 
@@ -49,7 +51,7 @@ export default function UnitOutsideDetailsModal({
     setIsLoading(true);
     setError('');
     try {
-      const data = await getUnitOutsideById(unitId);
+      const data = await getUnitOutsideById(unitId, language);
       setUnit(data);
       setActiveImageIdx(0);
     } catch (err) {
@@ -58,7 +60,7 @@ export default function UnitOutsideDetailsModal({
     } finally {
       setIsLoading(false);
     }
-  }, [unitId]);
+  }, [unitId, language]);
 
   useEffect(() => {
     if (isOpen && unitId) fetchUnit();
@@ -166,7 +168,7 @@ export default function UnitOutsideDetailsModal({
                     <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-gray-100">
                       <Image
                         src={resolveImageUrl(images[activeImageIdx]?.imageUrl ?? '')}
-                        alt={unit.name}
+                        alt={getLocalized(unit.name)}
                         fill
                         className="object-cover"
                         unoptimized
@@ -274,7 +276,7 @@ export default function UnitOutsideDetailsModal({
                   <p className="text-[12px] font-bold text-[#94A3B8] uppercase tracking-wider mb-2">
                     Description
                   </p>
-                  <p className="text-[15px] text-[#16273B] leading-relaxed">{unit.description}</p>
+                  <p className="text-[15px] text-[#16273B] leading-relaxed">{getLocalized(unit.description)}</p>
                 </div>
               )}
 
@@ -342,7 +344,8 @@ export default function UnitOutsideDetailsModal({
             <a
               href={`/properties/out-${(() => {
                 if (!unit?.id) return '';
-                const rawName = unit.name || '';
+                if (!unit?.id) return '';
+                const rawName = getLocalized(unit.name) || '';
                 const slug = typeof rawName === 'string' ? rawName.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-') : '';
                 return slug ? `${unit.id}-${slug}` : unit.id;
               })()}`}

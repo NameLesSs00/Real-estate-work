@@ -2,12 +2,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Shield, Users, ChevronLeft, ChevronRight, Loader2, AlertCircle, CheckCircle2, DollarSign } from 'lucide-react';
+import { User, Shield, Users, ChevronLeft, ChevronRight, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { updatePassword, addAdmin, AddAdminPayload, UpdatePasswordPayload } from '@/lib/api/auth';
 import { getAdmins, updateAdmin, PaginatedAdmins, UpdateAdminPayload } from '@/lib/api/admins';
-import { getCurrencies, updateEgpExchangeRate, updateEurExchangeRate } from '@/lib/api/currencies';
 
-type Tab = 'profile' | 'security' | 'admins' | 'currencies';
+type Tab = 'profile' | 'security' | 'admins';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<Tab>('profile');
@@ -39,10 +38,6 @@ export default function SettingsPage() {
     password: ''
   });
 
-  // Currency State
-  const [egpRate, setEgpRate] = useState<number>(0);
-  const [eurRate, setEurRate] = useState<number>(0);
-  const [currencyLoading, setCurrencyLoading] = useState(false);
 
   const showNotification = useCallback((type: 'success' | 'error', message: string) => {
     setNotification({ type, message });
@@ -93,53 +88,7 @@ export default function SettingsPage() {
     fetchAdmins(1);
   }, [fetchAdmins]);
 
-  const fetchCurrencyRates = useCallback(async () => {
-    setCurrencyLoading(true);
-    try {
-      const data = await getCurrencies();
-      // Adjust based on how backend sends it, assuming it returns { egpVsUsd: number, eurVsUsd: number } or similar
-      if (data) {
-        setEgpRate(data.egpVsUsd || data.usdToEgp || data.egpRate || 0);
-        setEurRate(data.eurVsUsd || data.usdToEur || data.eurRate || 0);
-      }
-    } catch (err: unknown) {
-      showNotification('error', err instanceof Error ? err.message : String(err));
-    } finally {
-      setCurrencyLoading(false);
-    }
-  }, [showNotification]);
 
-  useEffect(() => {
-    if (activeTab === 'currencies') {
-      fetchCurrencyRates();
-    }
-  }, [activeTab, fetchCurrencyRates]);
-
-  const handleUpdateEgp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setCurrencyLoading(true);
-    try {
-      await updateEgpExchangeRate(egpRate);
-      showNotification('success', 'EGP exchange rate updated successfully.');
-    } catch (err: unknown) {
-      showNotification('error', err instanceof Error ? err.message : String(err));
-    } finally {
-      setCurrencyLoading(false);
-    }
-  };
-
-  const handleUpdateEur = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setCurrencyLoading(true);
-    try {
-      await updateEurExchangeRate(eurRate);
-      showNotification('success', 'EUR exchange rate updated successfully.');
-    } catch (err: unknown) {
-      showNotification('error', err instanceof Error ? err.message : String(err));
-    } finally {
-      setCurrencyLoading(false);
-    }
-  };
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -227,7 +176,7 @@ export default function SettingsPage() {
             { id: 'profile', label: 'My Profile', icon: User },
             { id: 'security', label: 'Security', icon: Shield },
             { id: 'admins', label: 'Admin Management', icon: Users },
-            { id: 'currencies', label: 'Currencies', icon: DollarSign },
+            { id: 'admins', label: 'Admin Management', icon: Users },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -485,89 +434,6 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {activeTab === 'currencies' && (
-            <div className="bg-white rounded-[24px] p-6 md:p-8 shadow-sm border border-[#F0EDE8]">
-              <div className="mb-8">
-                <h2 className="text-[20px] font-bold text-[#1B2134] mb-2 flex items-center gap-2">
-                  <DollarSign size={24} className="text-[#1B2134]" />
-                  Currency Exchange Rates
-                </h2>
-                <p className="text-[#666] text-[15px]">Set the conversion rates used to calculate prices across the platform. All rates are relative to **1 USD**.</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* EGP Rate */}
-                <form onSubmit={handleUpdateEgp} className="bg-[#F8F5F0] rounded-[20px] p-8 shadow-inner border border-[#F0EDE8]">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold text-[#1B2134] text-[17px]">USD to EGP</h3>
-                    <span className="px-3 py-1 bg-white rounded-lg text-[12px] font-bold text-[#1B2134]/60 border border-[#F0EDE8]">Egyptian Pound</span>
-                  </div>
-                  
-                  <div className="space-y-6">
-                    <div className="space-y-3">
-                      <label className="text-[13px] font-bold text-[#1B2134] ml-1 uppercase tracking-wider opacity-60">Conversion Rate</label>
-                      <div className="relative flex items-center">
-                        <div className="absolute left-4 text-[#1B2134] font-bold border-r border-gray-200 pr-3 py-1">1 USD =</div>
-                        <input 
-                          type="number"
-                          step="0.000001"
-                          value={egpRate}
-                          onChange={(e) => setEgpRate(parseFloat(e.target.value))}
-                          className="w-full bg-white border-none rounded-xl pl-24 pr-16 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 text-[18px] font-bold text-[#1B2134]"
-                          required
-                        />
-                        <div className="absolute right-4 text-[#1B2134] font-bold opacity-40">EGP</div>
-                      </div>
-                      <p className="text-[11px] text-[#666] ml-1 italic font-medium">* If 1 USD is 50 EGP, enter 50.00</p>
-                    </div>
-                    
-                    <button 
-                      disabled={currencyLoading}
-                      className="w-full bg-[#1B2134] text-white px-8 py-4 rounded-xl font-bold text-[15px] shadow-lg shadow-[#1B2134]/10 hover:bg-[#2a344d] transition-all disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98]"
-                    >
-                      {currencyLoading ? <Loader2 className="animate-spin" size={20} /> : <CheckCircle2 size={20} />}
-                      Save EGP Rate
-                    </button>
-                  </div>
-                </form>
-
-                {/* EUR Rate */}
-                <form onSubmit={handleUpdateEur} className="bg-[#F8F5F0] rounded-[20px] p-8 shadow-inner border border-[#F0EDE8]">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold text-[#1B2134] text-[17px]">USD to EUR</h3>
-                    <span className="px-3 py-1 bg-white rounded-lg text-[12px] font-bold text-[#1B2134]/60 border border-[#F0EDE8]">Euro</span>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div className="space-y-3">
-                      <label className="text-[13px] font-bold text-[#1B2134] ml-1 uppercase tracking-wider opacity-60">Conversion Rate</label>
-                      <div className="relative flex items-center">
-                        <div className="absolute left-4 text-[#1B2134] font-bold border-r border-gray-200 pr-3 py-1">1 USD =</div>
-                        <input 
-                          type="number"
-                          step="0.000001"
-                          value={eurRate}
-                          onChange={(e) => setEurRate(parseFloat(e.target.value))}
-                          className="w-full bg-white border-none rounded-xl pl-24 pr-16 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 text-[18px] font-bold text-[#1B2134]"
-                          required
-                        />
-                        <div className="absolute right-4 text-[#1B2134] font-bold opacity-40">EUR</div>
-                      </div>
-                      <p className="text-[11px] text-[#666] ml-1 italic font-medium">* If 1 USD is 0.92 EUR, enter 0.92</p>
-                    </div>
-
-                    <button 
-                      disabled={currencyLoading}
-                      className="w-full bg-[#1B2134] text-white px-8 py-4 rounded-xl font-bold text-[15px] shadow-lg shadow-[#1B2134]/10 hover:bg-[#2a344d] transition-all disabled:opacity-50 flex items-center justify-center gap-3 active:scale-[0.98]"
-                    >
-                      {currencyLoading ? <Loader2 className="animate-spin" size={20} /> : <CheckCircle2 size={20} />}
-                      Save EUR Rate
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
         </motion.div>
       </div>
     </div>

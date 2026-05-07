@@ -9,7 +9,6 @@ import PropertyCard from '@/components/PropertyCard';
 import { getUnitsFiltered } from '@/lib/api/units';
 import { getUnitOutsides } from '@/lib/api/unitOutsides';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
-import { useCurrency } from '@/lib/contexts/CurrencyContext';
 import { getLocations, Location } from '@/lib/api/locations';
 import { ChevronLeft, ChevronRight, Filter, X, MapPin, ChevronDown } from 'lucide-react';
 import './properties.css';
@@ -36,7 +35,6 @@ export default function PropertiesPage() {
 
 function PropertiesPageContent() {
   const { t, getLocalized } = useLanguage();
-  const { convertPrice } = useCurrency();
   const searchParams = useSearchParams();
   const [units, setUnits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -226,7 +224,7 @@ function PropertiesPageContent() {
                   title={getLocalized(unit.name)}
                   type={unit.propertyType || unit.unitType || 'Unit'}
                   location={unit.locationName || '—'}
-                  price={`${filters.currency || 'EGP'} ${Math.round(convertPrice(unit.price, unit.currencyCode || unit.currency || 'EGP', filters.currency || 'EGP')).toLocaleString()}`}
+                  price={`${unit.currencyCode || unit.currency || 'EGP'} ${unit.price?.toLocaleString()}`}
                   beds={unit.noBedRoom}
                   baths={unit.noBathRoom}
                   area={`${unit.area} m²`}

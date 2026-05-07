@@ -87,12 +87,12 @@ export default function LeadForm({ unitId }: LeadFormProps) {
 
         <div>
           <label className="text-[13px] font-medium text-gray-700 mb-1.5 block font-poppins">
-            {t('projectDetails.whatsappNumber') as string} <span className="text-red-500">*</span>
+            {t('projectDetails.phoneNumber') as string} <span className="text-red-500">*</span>
           </label>
           <input
             type="tel"
             required
-            placeholder={t('projectDetails.whatsappNumber') as string}
+            placeholder={t('projectDetails.phoneNumber') as string}
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             className="w-full border border-[#E0E0E0] rounded-[8px] px-3.5 py-2.5 text-[13px] font-poppins placeholder:text-gray-300 outline-none focus:border-gray-400 transition-colors"

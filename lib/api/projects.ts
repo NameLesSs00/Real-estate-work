@@ -19,7 +19,7 @@ export interface ApiUnit {
   floorNumber: number;
   floorName: string;
   area: number;
-  view: number;
+  view: string | number;
   isFeatured: boolean;
   currencyCode: string;
   imageUrls: string[];
@@ -121,7 +121,7 @@ export interface UnitPayload {
   noKithchen: number;
   noKitchen?: number;
   floorName: string;
-  view: number;
+  view: string | number;
   paymentPlans: PaymentPlan[];
   isFeatured: boolean;
   currencyCode: string;
@@ -150,7 +150,7 @@ export interface UpdateUnitPayload {
   status: string;
   type: string;
   floorNumber: number;
-  view: number;
+  view: string | number;
   floorName: string;
   servicesIds?: number[];
   paymentPlans?: PaymentPlan[];
@@ -178,7 +178,7 @@ export interface UnitDetail {
   FloorName: string;
   Area: number;
   NoKitchen: number;
-  View: number;
+  View: string | number;
   CurrencyCode?: string;
   PaymentPlans: PaymentPlan[];
   ImageUrls: string[];
@@ -202,7 +202,7 @@ export interface UnitDetail {
   floorNumber?: number;
   floorName?: string;
   noKitchen?: number;
-  view?: number;
+  view?: string | number;
   isActive?: boolean;
   isFeatured?: boolean;
   services?: Service[];

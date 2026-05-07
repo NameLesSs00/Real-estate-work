@@ -27,7 +27,7 @@ const EMPTY_FORM = {
   floorNumber: '',
   area: '',
   floorName: '',
-  view: 0,
+  view: '',
   isFeatured: false,
   currencyCode: 'EGP',
   type: 'Buy' as 'Buy' | 'Rent',
@@ -43,7 +43,6 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(projectId ?? null);
   const [projects, setProjects] = useState<{ id: number; name: string; locationName?: string }[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-  const [serviceStrings, setServiceStrings] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [heroFile, setHeroFile] = useState<File | null>(null);
@@ -144,16 +143,40 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             floorNumber: (enData.FloorNumber || enData.floorNumber)?.toString() || '',
             area: (enData.Area || enData.area)?.toString() || '',
             floorName: enData.FloorName || (enData.floorName as string) || '',
-            view: (enData.View || enData.view || 0) as number,
+            view: (() => {
+              const v = enData.View ?? enData.view ?? '';
+              const reverseMapping: Record<number | string, string> = {
+                0: 'Sea',
+                1: 'Mountain',
+                2: 'Garden',
+                3: 'Pool',
+                4: 'SeaAndPool'
+              };
+              return reverseMapping[v] || v.toString();
+            })(),
             isFeatured: enData.IsFeatured ?? enData.isFeatured ?? false,
             currencyCode: enData.CurrencyCode || (enData.currencyCode as string) || 'EGP',
             type: (enData.Type || enData.type || 'Buy') as 'Buy' | 'Rent',
             status: ((enData.Status || enData.status) === 'resale' ? 1 : 0) as 0 | 1,
-            servicesIds: (detail.Services || detail.services || []).map((s: { id?: number; Id?: number }) => s.id !== undefined ? s.id : s.Id).filter((id: number | undefined) => id !== undefined),
-            paymentPlans: [
-              ...(detail.PaymentPlans || detail.paymentPlans || []),
-              ...extraPlans
-            ].map(p => {
+            servicesIds: (detail.Services || detail.services || []).map((s: { id?: number; Id?: number } | number) => typeof s === 'number' ? s : (s.id ?? s.Id)).filter((id: number | undefined) => id !== undefined),
+            paymentPlans: (() => {
+              const allPlans = [
+                ...(detail.PaymentPlans || detail.paymentPlans || []),
+                ...extraPlans
+              ];
+              // Use a Map to deduplicate by ID
+              const uniquePlans = new Map();
+              allPlans.forEach(p => {
+                const id = p.id ?? p.paymentPlanId;
+                if (id) {
+                  uniquePlans.set(id, p);
+                } else {
+                  // For plans without IDs (rare in edit mode), use a composite key or just add them
+                  uniquePlans.set(`temp-${p.installmentMonths}-${p.installmentDownPayment}`, p);
+                }
+              });
+              return Array.from(uniquePlans.values());
+            })().map(p => {
               const plan = p as PaymentPlan;
               return {
                 id: plan.id ?? plan.paymentPlanId,
@@ -163,8 +186,6 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               };
             })
           });
-          const currentServices = (detail.Services || detail.services || []) as unknown[];
-          setServiceStrings(currentServices.map((s: unknown) => typeof s === 'string' ? s : ((s as { name?: string; Name?: string }).name || (s as { name?: string; Name?: string }).Name || 'Unknown')));
         } catch (err) {
           console.error('[AddUnitModal] Failed to fetch localized unit data:', err);
           setError('Failed to load full unit data for editing.');
@@ -176,7 +197,6 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     } else {
       setForm(EMPTY_FORM);
       setSelectedProjectId(projectId ?? null);
-      setServiceStrings([]);
     }
     setHeroFile(null);
     setHeroPreview(null);
@@ -227,6 +247,15 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     if (!isEditMode && !selectedProjectId) { setError('Please select a project.'); return; }
     if (!form.price || Number(form.price) <= 0) { setError('Price must be greater than 0.'); return; }
     if (!form.area || Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
+    if (!form.view) { setError('Please select a view.'); return; }
+
+    const VIEW_MAPPING: Record<string, number> = {
+      'Sea': 0,
+      'Mountain': 1,
+      'Garden': 2,
+      'Pool': 3,
+      'SeaAndPool': 4
+    };
     
     const validatedPlans = form.paymentPlans.map(p => {
       const isCash = p.paymentType === 'Cash';
@@ -245,6 +274,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     
     setIsLoading(true); setError('');
     try {
+      const viewValue = VIEW_MAPPING[form.view] ?? 0;
       const unitPayload: UnitPayload = {
         name: form.name,
         description: form.description,
@@ -258,7 +288,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         floorNumber: Number(form.floorNumber) || 0,
         area: Number(form.area) || 0,
         floorName: form.floorName || '',
-        view: Number(form.view) || 0,
+        view: viewValue,
         isFeatured: !!form.isFeatured,
         paymentPlans: validatedPlans.map(p => ({
           ...p,
@@ -268,7 +298,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         })),
         servicesIds: form.servicesIds.map(id => Number(id)),
         type: form.type === 'Buy' ? 'Buy' : 'Rent',
-        status: form.type === 'Buy' ? 'Primary' : '',
+        status: 'Primary',
         isActive: true,
       };
 
@@ -287,12 +317,12 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           noKitchen: Number(form.noKithchen) || 0,
           noKithchen: Number(form.noKithchen) || 0,
           area: Number(form.area) || 0,
-          status: unitPayload.status,
+          status: 'Primary',
           type: unitPayload.type,
           floorNumber: Number(form.floorNumber) || 0,
-          view: Number(form.view) || 0,
+          view: viewValue,
           floorName: form.floorName || '',
-          paymentPlans: unitPayload.paymentPlans,
+          servicesIds: form.servicesIds,
           isFeatured: !!form.isFeatured,
           currencyCode: form.currencyCode || 'EGP',
           isActive: true,
@@ -568,6 +598,15 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               <label className="text-[#16273B] font-semibold text-[15px]">Area (m²)</label>
               <input type="number" value={form.area} onChange={set('area')} min={0} className={inputCls} />
             </div>
+            <div className="space-y-2">
+              <label className="text-[#16273B] font-semibold text-[15px]">View</label>
+              <select value={form.view} onChange={set('view')} className={inputCls}>
+                <option value="">Select View</option>
+                {['Sea', 'Mountain', 'Garden', 'Pool', 'SeaAndPool'].map((v) => (
+                  <option key={v} value={v}>{v}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="space-y-4 pt-4 border-t border-gray-100">
@@ -737,41 +776,34 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               )}
 
               <div className="max-h-[200px] overflow-y-auto pr-2 space-y-2 scrollbar-thin">
-                {isEditMode ? (
-                  serviceStrings.map((servStr, idx) => (
-                    <div key={idx} className="bg-gray-100 border border-gray-200 text-[#16273B] font-bold p-3 rounded-[12px] flex items-center justify-center text-center text-[12px]">
-                      {typeof servStr === 'string' ? servStr : (servStr as unknown as { name?: string })?.name || 'Unknown'}
-                    </div>
-                  ))
-                ) : (
-                  services.map((ser) => {
+                {services.map((ser) => {
                     let serName = ser.name;
                     if (typeof ser.name === 'object' && ser.name !== null) {
-                    const nameObj = ser.name as { en?: string; de?: string; pl?: string };
-                    serName = nameObj.en || nameObj.de || nameObj.pl || 'Unknown';
-                  }
-                  const isChecked = form.servicesIds.includes(ser.id);
-                  return (
-                    <label key={ser.id} className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100">
-                      <input 
-                        type="checkbox" 
-                        checked={isChecked}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setForm(prev => ({
-                            ...prev,
-                            servicesIds: checked 
-                              ? [...prev.servicesIds, ser.id]
-                              : prev.servicesIds.filter(id => id !== ser.id)
-                          }));
-                        }}
-                        className="w-4 h-4 rounded accent-[#16273B] cursor-pointer" 
-                      />
-                      <span className="text-[#16273B] text-[14px]">{serName as string}</span>
-                    </label>
-                  );
-                })
-              )}
+                      const nameObj = ser.name as { en?: string; de?: string; pl?: string };
+                      serName = nameObj.en || nameObj.de || nameObj.pl || 'Unknown';
+                    }
+                    const isChecked = form.servicesIds.includes(ser.id);
+                    return (
+                      <label key={ser.id} className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100">
+                        <input 
+                          type="checkbox" 
+                          checked={isChecked}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setForm(prev => ({
+                              ...prev,
+                              servicesIds: checked 
+                                ? [...prev.servicesIds, ser.id]
+                                : prev.servicesIds.filter(id => id !== ser.id)
+                            }));
+                          }}
+                          className="w-4 h-4 rounded accent-[#16273B] cursor-pointer" 
+                        />
+                        <span className="text-[#16273B] text-[14px]">{serName as string}</span>
+                      </label>
+                    );
+                  })
+                }
                 {services.length === 0 && <p className="text-sm text-gray-500 italic">No services available.</p>}
               </div>
             </div>

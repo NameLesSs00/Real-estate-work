@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import CopyLinkButton from "@/components/CopyLinkButton";
 import LeadForm from "./components/LeadForm";
+import ImageGallery from "@/components/ImageGallery";
 
 async function getTranslations(locale: string) {
   try {
@@ -107,10 +108,16 @@ export default async function PropertyDetailsPage({ params }: Props) {
     }).filter(Boolean) ||
     [];
 
-  const mainImage = (unitImages[0] ? resolveProjectImageUrl(unitImages[0] as string) : null) ?? `${BASE}/mainImg.png`;
-  const thumbnails = (unitImages.slice(1, 12) ?? [])
-    .map((url: any) => typeof url === 'string' ? resolveProjectImageUrl(url) : null)
-    .filter((u: string | null): u is string => u !== null);
+  const allResolvedImages = (unitImages || [])
+    .map((url: any) => {
+      const path = typeof url === 'string' ? url : (url?.imageUrl || url?.ImageUrl || url?.url || url?.Url);
+      return resolveProjectImageUrl(path);
+    })
+    .filter(Boolean) as string[];
+
+  if (allResolvedImages.length === 0) {
+    allResolvedImages.push(`${BASE}/mainImg.png`);
+  }
 
   const overviewStats = [
     { label: t.projectDetails.propertyType || "Property Type", value: propertyType, icon: <Home size={16} className="text-gray-500" /> },
@@ -173,31 +180,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
         <div className="flex flex-col lg:flex-row gap-5 items-start mb-5">
 
           {/* LEFT: Images (65%) */}
-          <div className="flex-1 flex flex-col gap-3">
-            {/* Main Image */}
-            <div className="relative w-full aspect-[4/3] rounded-[12px] overflow-hidden bg-gray-200">
-              <Image
-                src={mainImage}
-                alt={propertyName}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-
-            {/* Thumbnails */}
-            {thumbnails.length > 0 && (
-              <div className="grid grid-cols-4 gap-3">
-                {thumbnails.map((thumb: string, i: number) => (
-                  <div
-                    key={i}
-                    className="relative w-full aspect-[4/3] rounded-[10px] overflow-hidden cursor-pointer bg-gray-200"
-                  >
-                    <Image src={thumb} alt={`Thumbnail ${i + 1}`} fill className="object-cover hover:opacity-90 transition-opacity" />
-                  </div>
-                ))}
-              </div>
-            )}
+          <div className="flex-1 min-w-0">
+            <ImageGallery images={allResolvedImages} projectName={propertyName} />
           </div>
 
           {/* RIGHT: Get in Touch Form */}

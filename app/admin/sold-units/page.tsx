@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { getSoldUnits, SoldUnit } from '@/lib/api/units';
+import { getUnitOutsideSoldouts } from '@/lib/api/unitOutsideSoldouts';
 import SoldUnitDetailModal from '@/components/admin/SoldUnitDetailModal';
 
 export default function SoldUnitsPage() {
@@ -27,11 +28,71 @@ export default function SoldUnitsPage() {
     setIsLoading(true);
     setError('');
     try {
-      const data = await getSoldUnits({ page, size: 10, unitName: unitName || undefined, soldType: soldType || undefined });
-      setSoldUnits(data.items);
-      setTotalPages(data.totalPages);
-      setTotalCount(data.totalCount);
-      setCurrentPage(data.pageNumber);
+      let items: SoldUnit[] = [];
+      let totalP = 1;
+      let totalC = 0;
+      const currentP = page;
+
+      if (soldType === 'Resale') {
+        const data = await getUnitOutsideSoldouts({ page, size: 10, unitName: unitName || undefined });
+        items = data.items.map(u => ({
+          id: u.id,
+          unitId: u.unitOutsideId,
+          unitName: u.unitOutsideName,
+          projectName: 'Resale',
+          city: '',
+          country: '',
+          unitImages: [],
+          soldoutDate: u.soldoutDate,
+          soldType: 'Resale',
+          notes: '',
+          createdBy: '',
+          createdAt: u.soldoutDate
+        }));
+        totalP = data.totalPages;
+        totalC = data.totalCount;
+      } else if (soldType === 'Primary') {
+        // Calling Primary API. We don't pass soldType filter as the API 
+        // might not recognize 'Primary' explicitly or it might be the default.
+        const data = await getSoldUnits({ page, size: 10, unitName: unitName || undefined });
+        items = data.items.map(u => ({ ...u, soldType: u.soldType || 'Primary' }));
+        totalP = data.totalPages;
+        totalC = data.totalCount;
+      } else {
+        // "All Types"
+        const [primaryData, resaleData] = await Promise.all([
+          getSoldUnits({ page, size: 10, unitName: unitName || undefined }),
+          getUnitOutsideSoldouts({ page, size: 10, unitName: unitName || undefined })
+        ]);
+
+        const mappedPrimary = primaryData.items.map(u => ({ ...u, soldType: u.soldType || 'Primary' }));
+        const mappedResale = resaleData.items.map(u => ({
+          id: u.id,
+          unitId: u.unitOutsideId,
+          unitName: u.unitOutsideName,
+          projectName: 'Resale',
+          city: '',
+          country: '',
+          unitImages: [],
+          soldoutDate: u.soldoutDate,
+          soldType: 'Resale',
+          notes: '',
+          createdBy: '',
+          createdAt: u.soldoutDate
+        }));
+
+        items = [...mappedPrimary, ...mappedResale].sort((a, b) => 
+          new Date(b.soldoutDate).getTime() - new Date(a.soldoutDate).getTime()
+        );
+
+        totalC = primaryData.totalCount + resaleData.totalCount;
+        totalP = Math.ceil(totalC / 10);
+      }
+
+      setSoldUnits(items);
+      setTotalPages(totalP);
+      setTotalCount(totalC);
+      setCurrentPage(currentP);
     } catch (err) {
       console.error('[SoldUnitsPage] fetch error:', err);
       setError('Failed to load sold units. Please try again.');
@@ -108,7 +169,10 @@ export default function SoldUnitsPage() {
         </div>
         <select
           value={soldTypeFilter}
-          onChange={(e) => setSoldTypeFilter(e.target.value)}
+          onChange={(e) => {
+            setSoldTypeFilter(e.target.value);
+            fetchSoldUnits(1, searchQuery, e.target.value);
+          }}
           className="bg-white border border-gray-100 rounded-[20px] py-4 px-5 text-[15px] text-[#16273B] focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 shadow-sm cursor-pointer min-w-[160px]"
         >
           <option value="">All Types</option>
@@ -172,7 +236,7 @@ export default function SoldUnitsPage() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {soldUnits.map((unit) => (
-                  <tr key={unit.id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={`${unit.soldType}-${unit.id}`} className="hover:bg-gray-50/50 transition-colors">
                     {/* Unit */}
                     <td className="py-5 px-8">
                       <div className="flex items-center gap-3">
