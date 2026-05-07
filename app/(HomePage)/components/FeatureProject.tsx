@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { getProjects, Project, resolveProjectImageUrl } from '@/lib/api/projects';
 import { getServices, Service } from '@/lib/api/services';
-import { getDevelopers, resolveImageUrl } from '@/lib/api/developers';
+
 import './FeatureProject.css';
 
 const DEFAULT_LOGO = '/assists/defaultLogo.png';
@@ -17,17 +17,16 @@ const FeatureProject = () => {
   const { t, language } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-  const [developerLogoMap, setDeveloperLogoMap] = useState<Map<number, string | null>>(new Map());
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const [projData, servData, devData] = await Promise.all([
+      const [projData, servData] = await Promise.all([
         getProjects(1, 20, language),
         getServices(),
-        getDevelopers(1, ''),
       ]);
 
       // Shuffle and take up to 5 projects
@@ -36,13 +35,7 @@ const FeatureProject = () => {
       setProjects(shuffled.slice(0, 5));
       setServices(servData);
 
-      // Build developerId → resolved logoImage map
-      const logoMap = new Map<number, string | null>();
-      (devData.items || []).forEach((dev) => {
-        const resolved = dev.logoImage ? resolveImageUrl(dev.logoImage) : null;
-        logoMap.set(dev.id, resolved);
-      });
-      setDeveloperLogoMap(logoMap);
+
     } catch (err) {
       console.error('[FeatureProject] Failed to fetch data:', err);
     } finally {
@@ -77,11 +70,7 @@ const FeatureProject = () => {
   const projectImg = resolveProjectImageUrl(activeProject.imageUrls?.[0] ?? null) || '/assists/defaultImage.png';
 
   // Resolve developer logo for active project
-  const rawLogoUrl =
-    activeProject.developerId != null
-      ? developerLogoMap.get(activeProject.developerId) ?? null
-      : null;
-  const developerLogoUrl = rawLogoUrl || DEFAULT_LOGO;
+  const developerLogoUrl = resolveProjectImageUrl(activeProject.logoImage) || DEFAULT_LOGO;
 
   // Map facility IDs to names
   const projectFacilities = (activeProject.facilities || [])
@@ -193,26 +182,26 @@ const FeatureProject = () => {
                   </>
                 )}
 
-                <div className="project-actions">
-                  <Link href={`/projects/${activeProject.id}`}>
-                    <button className="get-in-touch-btn">View Project Details</button>
-                  </Link>
-                </div>
-              </motion.div>
+                  <div className="project-actions">
+                    <Link href={`/projects/${activeProject.id}`}>
+                      <button className="get-in-touch-btn">{t('featureProject.viewProjectDetails') as string}</button>
+                    </Link>
+                  </div>
+                </motion.div>
             </motion.div>
           </AnimatePresence>
+        </div>
 
-          {/* Pagination Dots */}
-          <div className="stationary-dots-container">
-            <div className="pagination-dots">
-              {projects.map((_, index) => (
-                <span
-                  key={index}
-                  className={`dot ${activeIndex === index ? 'active' : ''}`}
-                  onClick={() => setActiveIndex(index)}
-                />
-              ))}
-            </div>
+        {/* Centered Pagination Dots at the Bottom of Section */}
+        <div className="stationary-dots-container">
+          <div className="pagination-dots">
+            {projects.map((_, index) => (
+              <span
+                key={index}
+                className={`dot ${activeIndex === index ? 'active' : ''}`}
+                onClick={() => setActiveIndex(index)}
+              />
+            ))}
           </div>
         </div>
 

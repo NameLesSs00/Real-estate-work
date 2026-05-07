@@ -104,6 +104,7 @@
     "priceStart": "Preis ab",
     "projectDetails": "Projektdetails",
     "getInTouch": "Kontakt aufnehmen",
+    "viewProjectDetails": "Projektdetails anzeigen",
     "showMore": "Mehr Projekte anzeigen",
     "labels": {
       "totalUnits": "Gesamteinheiten",
@@ -210,7 +211,13 @@
     "bathrooms": "Badezimmer",
     "kitchens": "Küchen",
     "areaSize": "Fläche",
-    "floor": "Etage"
+    "floor": "Etage",
+    "paymentPlans": "Zahlungspläne",
+    "installment": "Ratenzahlung",
+    "cash": "Barzahlung",
+    "months": "Monate",
+    "downPayment": "Anzahlung",
+    "commission": "Provision"
   },
   "contactPage": {
     "title": "Kontaktieren Sie The Gate Estates",

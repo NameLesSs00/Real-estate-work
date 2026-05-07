@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const dynamic = "force-dynamic";
-import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight, Check, Eye } from "lucide-react";
+import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight, Check, Banknote, CreditCard, Calendar } from "lucide-react";
 import { getUnitById, resolveProjectImageUrl } from "@/lib/api/projects";
 import { getServices } from "@/lib/api/services";
 import { getFacilities } from "@/lib/api/facilities";
@@ -104,7 +104,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const propertyFloorNum = d.floorNumber || d.FloorNumber || 0;
   const unitTypeName = extractString(d.unitType) || extractString(d.UnitType) || "";
   const unitStatusName = extractString(d.unitStatus) || extractString(d.UnitStatus) || "";
-  const unitView = extractString(d.view) || extractString(d.View) || "";
+  const unitView = isOutside ? "" : (extractString(d.view) || extractString(d.View) || "");
+  const unitBuyRent = extractString(d.type) || extractString(d.Type) || "";
   const propertyType = extractString(d.propertyType) || extractString(d.PropertyType) || "Property";
   const projName = extractString(d.projectName) || extractString(d.ProjectName) || "";
   const locName = extractString(d.location?.name) ||
@@ -112,9 +113,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
     extractString(d.LocationName) ||
     "";
 
-  const propertyLocation = locName ||
-    (isOutside ? [d.city || d.cityName, d.district || d.districtName, d.country || d.countryName].filter(Boolean).join(' - ') : "") ||
-    propertyFloorName || "";
+  const propertyLocation = isOutside 
+    ? [extractString(d.city || d.City), extractString(d.country || d.Country), extractString(d.street || d.Street)].filter(Boolean).join(' - ')
+    : (locName || propertyFloorName || "");
 
   const unitImages = (d.imageUrls?.length ? d.imageUrls : null) ||
     (d.ImageUrls?.length ? d.ImageUrls : null) ||
@@ -130,6 +131,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
       return resolveProjectImageUrl(path);
     })
     .filter(Boolean) as string[];
+  
+  const paymentPlans = (d.paymentPlans || d.PaymentPlans || d.paymentPlan || d.PaymentPlan || []) as any[];
 
   if (allResolvedImages.length === 0) {
     allResolvedImages.push(`${BASE}/mainImg.png`);
@@ -142,7 +145,6 @@ export default async function PropertyDetailsPage({ params }: Props) {
     { label: t.projectDetails.kitchens || "Kitchens", value: propertyKitchens, icon: <Utensils size={16} className="text-gray-500" /> },
     { label: t.projectDetails.areaSize || "Area Size", value: propertyArea ? `${propertyArea} M²` : null, icon: <Maximize2 size={16} className="text-gray-500" /> },
     { label: t.projectDetails.floor || "Floor", value: propertyFloorNum, icon: <Layers size={16} className="text-gray-500" /> },
-    { label: "View", value: unitView, icon: <Eye size={16} className="text-gray-500" /> },
   ].filter(stat => stat.value !== null && stat.value !== undefined && stat.value !== 0 && stat.value !== "");
 
   return (
@@ -173,10 +175,11 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   <span>{propertyLocation}</span>
                 </div>
               )}
-              {(unitTypeName || unitStatusName) && (
+              {(unitTypeName || unitStatusName || unitBuyRent) && (
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
                   <div className="flex items-center gap-2">
+                    {unitBuyRent && <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitBuyRent}</span>}
                     {unitTypeName && <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitTypeName}</span>}
                     {unitStatusName && <span className="bg-amber-50 text-amber-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitStatusName}</span>}
                     {unitView && <span className="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">View: {unitView}</span>}
@@ -295,6 +298,71 @@ export default async function PropertyDetailsPage({ params }: Props) {
             }
           </div>
         </div>
+        
+        {/* ── Payment Plans ── */}
+        {paymentPlans.length > 0 && (
+          <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm mb-8">
+            <div className="flex items-center gap-3 mb-8">
+              <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
+                {t.projectDetails.paymentPlans || "Payment Plans"}
+              </h2>
+              <div className="h-px flex-1 bg-gray-100"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paymentPlans.map((plan, i) => {
+                const typeStr = (plan.paymentType || plan.PaymentType || "").toString().toLowerCase();
+                const isCash = typeStr === 'cash';
+                const commission = plan.commissionRate || plan.CommissionRate || 0;
+                
+                return (
+                  <div key={i} className="flex flex-col p-6 rounded-2xl bg-[#F8F9FA] border border-gray-100 hover:shadow-md transition-all">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2 rounded-lg bg-[#1B2134] text-white">
+                          {isCash ? <Banknote size={18} /> : <CreditCard size={18} />}
+                        </div>
+                        <span className="font-bold text-[#1B2134]">
+                          {isCash ? (t.projectDetails.cash || "Cash") : (t.projectDetails.installment || "Installment")}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      {isCash && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-500">{t.projectDetails.price || "Price"}</span>
+                          <span className="font-bold text-[#1B2134]">{propertyCurrency} {propertyPrice.toLocaleString()}</span>
+                        </div>
+                      )}
+                      {commission > 0 ? (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-500">{t.projectDetails.commission || "Commission"}</span>
+                          <span className="font-semibold text-[#1B2134]">{commission}%</span>
+                        </div>
+                      ) : null}
+                      {!isCash && (
+                        <>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">{t.projectDetails.months || "Months"}</span>
+                            <div className="flex items-center gap-1.5 font-semibold text-[#1B2134]">
+                              <Calendar size={14} className="text-gray-400" />
+                              {plan.installmentMothes || plan.InstallmentMothes || plan.installmentMonths || plan.InstallmentMonths || 0}
+                            </div>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">{t.projectDetails.downPayment || "Down Payment"}</span>
+                            <span className="font-semibold text-[#1B2134]">{plan.installmentDownPayment || plan.InstallmentDownPayment || 0}%</span>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* ── Reviews Placeholder ── */}
         <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm">
