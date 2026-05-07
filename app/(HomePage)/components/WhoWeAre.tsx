@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './WhoWeAre.css';
 
@@ -86,7 +87,9 @@ const WhoWeAre = () => {
             </div>
 
             <div className="view-more-btn-wrapper">
-              <button className="view-more-btn">{t('whoWeAre.viewMore') as string}</button>
+              <Link href="/about">
+                <button className="view-more-btn">{t('whoWeAre.viewMore') as string}</button>
+              </Link>
             </div>
           </motion.div>
         </div>

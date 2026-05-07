@@ -225,6 +225,11 @@
   justify-content: center;
 }
 
+.show-more-projects-link {
+  width: 100%;
+  display: block;
+}
+
 .show-more-projects-btn {
   width: 100%;
   padding: 16px;

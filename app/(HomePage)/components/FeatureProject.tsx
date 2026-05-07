@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import './FeatureProject.css';
 
@@ -128,7 +129,8 @@ const FeatureProject = () => {
             </div>
 
             <div className="project-actions">
-              <button className="get-in-touch-btn">{t('featureProject.getInTouch') as string}</button>
+              <Link href={"/contact"}>
+              <button className="get-in-touch-btn">{t('featureProject.getInTouch') as string}</button></Link>
               <div className="pagination-dots">
                 {[0, 1, 2, 3].map((index) => (
                   <span 
@@ -149,7 +151,9 @@ const FeatureProject = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="show-more-projects-wrapper"
         >
+          <Link href={"/projects"} className="show-more-projects-link">
           <button className="show-more-projects-btn">{t('featureProject.showMore') as string}</button>
+          </Link>
         </motion.div>
       </div>
     </section>

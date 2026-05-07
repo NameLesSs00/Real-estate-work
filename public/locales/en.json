@@ -33,8 +33,8 @@
   },
   "hero": {
     "title": "Discover Your Next <br /> Investment Property",
-    "searchLabel": "Search by area, compound, or developer",
-    "searchPlaceholder": "Search by area, compound, or developer",
+    "searchLabel": "Search by Property name, description",
+    "searchPlaceholder": "Search by Property name, description",
     "filters": "Filters",
     "hide": "Hide",
     "search": "Search",
@@ -69,10 +69,10 @@
     "title": "Browse Properties by <span>Category</span>",
     "subtitle": "Present homes in clear, organized categories so visitors can quickly explore the types of properties that match their needs, interests, and buying goals.",
     "types": {
-      "Apartments": "Apartments",
-      "Houses": "Houses",
-      "Vails": "Vails",
-      "Studio": "Studio"
+      "apartments": "Apartments",
+      "villas": "Villas",
+      "houses": "Houses",
+      "studio": "Studio"
     },
     "listings": "Listings"
   },
@@ -275,10 +275,6 @@
       "noResults": "No properties found",
       "adjustFilters": "Try adjusting your search filters."
     },
-    "categories": {
-      "title": "Discover a World of Possibilities",
-      "subtitle": "Our portfolio of properties is as diverse as your dreams. Explore the following categories to find the perfect property that resonates with your vision of home"
-    },
     "pagination": {
       "prev": "Prev",
       "next": "Next",
@@ -289,6 +285,8 @@
       "title": "Filters",
       "searchKeywords": "Search Keywords",
       "placeholderSearch": "e.g. Skyline...",
+      "location": "Location",
+      "status": "Property Status",
       "propertyType": "Property Type",
       "any": "Any",
       "apartment": "Apartment",

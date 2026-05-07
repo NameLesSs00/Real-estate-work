@@ -112,7 +112,10 @@
 }
 
 .show-more-button {
-  padding: 16px 60px;
+  width: 100%;
+  display: block;
+  text-align: center;
+  padding: 16px 0;
   border-radius: 50px;
   border: 1.5px solid rgba(255, 255, 255, 0.4);
   background-color: transparent;

@@ -33,8 +33,8 @@
   },
   "hero": {
     "title": "Odkryj swoją kolejną <br /> nieruchomość inwestycyjną",
-    "searchLabel": "Szukaj według obszaru, kompleksu lub dewelopera",
-    "searchPlaceholder": "Szukaj według obszaru, kompleksu lub dewelopera",
+    "searchLabel": "Szukaj po nazwie, opisie",
+    "searchPlaceholder": "Szukaj po nazwie, opisie",
     "filters": "Filtry",
     "hide": "Ukryj",
     "search": "Szukaj",
@@ -69,10 +69,10 @@
     "title": "Przeglądaj nieruchomości według <span>kategorii</span>",
     "subtitle": "Prezentujemy domy w jasnych i uporządkowanych kategoriach, aby odwiedzający mogli szybko przeglądać typy nieruchomości odpowiadające ich potrzebom, zainteresowaniom i celom zakupowym.",
     "types": {
-      "Apartments": "Apartamenty",
-      "Houses": "Domy",
-      "Vails": "Wille",
-      "Studio": "Studia"
+      "apartments": "Apartamenty",
+      "villas": "Wille",
+      "houses": "Domy",
+      "studio": "Studia"
     },
     "listings": "Oferty"
   },
@@ -275,10 +275,6 @@
       "noResults": "Nie znaleziono nieruchomości",
       "adjustFilters": "Spróbuj dostosować filtry wyszukiwania."
     },
-    "categories": {
-      "title": "Odkryj świat możliwości",
-      "subtitle": "Nasze portfolio nieruchomości jest tak różnorodne jak Twoje marzenia. Przeglądaj poniższe kategorie."
-    },
     "pagination": {
       "prev": "Poprzednia",
       "next": "Następna",
@@ -289,6 +285,8 @@
       "title": "Filtry",
       "searchKeywords": "Słowa kluczowe",
       "placeholderSearch": "np. Skyline...",
+      "location": "Lokalizacja",
+      "status": "Status nieruchomości",
       "propertyType": "Typ nieruchomości",
       "any": "Dowolny",
       "apartment": "Apartament",

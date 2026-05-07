@@ -5,31 +5,28 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { useRouter } from 'next/navigation';
+import { getUnitsFiltered } from '@/lib/api/units';
 import './Categories.css';
 
-const categories = [
+const categoryConfig = [
   {
-    key: 'Apartments',
+    key: 'apartments',
     value: '0',
-    count: '10 Listings',
     image: '/assists/categoriesHome/appartment.png',
   },
   {
-    key: 'Houses',
-    value: '2', // Mapping Houses to TownHouse (2) or similar backend enum
-    count: '12 Listings',
-    image: '/assists/categoriesHome/home.png',
-  },
-  {
-    key: 'Vails',
-    value: '1', // Mapping Vails to Villa (1)
-    count: '9 Listings',
+    key: 'villas',
+    value: '1',
     image: '/assists/categoriesHome/vails.png',
   },
   {
-    key: 'Studio',
-    value: '3', // Mapping Studio to Studio (3)
-    count: '7 Listings',
+    key: 'houses',
+    value: '2',
+    image: '/assists/categoriesHome/home.png',
+  },
+  {
+    key: 'studio',
+    value: '3',
     image: '/assists/categoriesHome/studio.png',
   },
 ];
@@ -37,6 +34,32 @@ const categories = [
 const Categories = () => {
   const { t } = useLanguage();
   const router = useRouter();
+  const [counts, setCounts] = React.useState<Record<string, number>>({});
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const results = await Promise.all(
+          categoryConfig.map(async (cat) => {
+            const data = await getUnitsFiltered({ PropertyType: cat.value, PageSize: 1 });
+            return { value: cat.value, count: data.totalCount || 0 };
+          })
+        );
+        const newCounts: Record<string, number> = {};
+        results.forEach(res => {
+          newCounts[res.value] = res.count;
+        });
+        setCounts(newCounts);
+      } catch (error) {
+        console.error('[Categories] Failed to fetch category counts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCounts();
+  }, []);
 
   const handleCategoryClick = (value: string) => {
     router.push(`/properties?propertyType=${value}`);
@@ -75,7 +98,7 @@ const Categories = () => {
           }}
           className="categories-grid"
         >
-          {categories.map((category, index) => (
+          {categoryConfig.map((category, index) => (
             <motion.div 
               key={index} 
               variants={{
@@ -104,7 +127,12 @@ const Categories = () => {
               </div>
               <div className="category-content">
                 <h3 className="category-name">{t(`categories.types.${category.key}`) as string}</h3>
-                <p className="category-count">{category.count.replace('Listings', t('categories.listings') as string)}</p>
+                <p className="category-count">
+                  {loading 
+                    ? '...' 
+                    : `${counts[category.value] || 0} ${t('categories.listings') as string}`
+                  }
+                </p>
               </div>
             </motion.div>
           ))}

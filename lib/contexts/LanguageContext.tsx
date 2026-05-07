@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import enTranslations from '../../public/locales/en.json';
 
 type Language = 'en' | 'de' | 'pl';
 
@@ -26,16 +27,25 @@ export const useLanguage = () => useContext(LanguageContext);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('en');
-  const [translations, setTranslations] = useState<Record<string, TranslationValue>>({});
+  const [translations, setTranslations] = useState<Record<string, TranslationValue>>(enTranslations as Record<string, TranslationValue>);
+  const [isReady, setIsReady] = useState(false);
 
+  // Sync with localStorage on mount
   useEffect(() => {
     const savedLang = localStorage.getItem('language') as Language;
     if (savedLang && ['en', 'de', 'pl'].includes(savedLang)) {
       setLanguageState(savedLang);
+      if (savedLang === 'en') {
+        setIsReady(true); // English is already bundled
+      }
+    } else {
+      setIsReady(true); // Default to English
     }
   }, []);
 
   useEffect(() => {
+    // If it's English and we haven't fetched anything yet, we are already "ready" 
+    // because we bundled it. But we fetch anyway to ensure we have the latest if updated.
     const fetchTranslations = async () => {
       try {
         const res = await fetch(`/locales/${language}.json`);
@@ -45,8 +55,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         }
       } catch {
         console.error('Failed to load translations for', language);
+      } finally {
+        setIsReady(true);
       }
     };
+    
+    // Only skip fetch if we already have English and language is English
+    // but usually, it's safer to fetch to be sure.
     fetchTranslations();
   }, [language]);
 
@@ -97,6 +112,42 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
     return '';
   };
+
+  if (!isReady) {
+    return (
+      <div style={{ 
+        height: '100vh', 
+        width: '100%', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        backgroundColor: '#fff',
+        fontFamily: 'sans-serif',
+        color: '#1B2134'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ 
+            width: '40px', 
+            height: '40px', 
+            border: '3px solid #f3f3f3', 
+            borderTop: '3px solid #1B2134', 
+            borderRadius: '50%', 
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 20px'
+          }} />
+          <style>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
+          <p style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '1px', textTransform: 'uppercase' }}>
+            The Gate Estates
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t, tRaw, getLocalized }}>

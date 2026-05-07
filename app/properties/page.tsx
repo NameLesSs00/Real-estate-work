@@ -5,13 +5,13 @@ import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
-import PropertyCategories from './components/PropertyCategories';
 import PropertyCard from '@/components/PropertyCard';
 import { getUnitsFiltered } from '@/lib/api/units';
 import { getUnitOutsides } from '@/lib/api/unitOutsides';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
 import { useCurrency } from '@/lib/contexts/CurrencyContext';
-import { ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
+import { getLocations, Location } from '@/lib/api/locations';
+import { ChevronLeft, ChevronRight, Filter, X, MapPin, ChevronDown } from 'lucide-react';
 import './properties.css';
 
 export interface FilterState {
@@ -47,6 +47,13 @@ function PropertiesPageContent() {
   const [filters, setFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '', locationId: '' });
   const [draftFilters, setDraftFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: 'EGP', unitType: '', status: '', locationId: '' });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [locations, setLocations] = useState<Location[]>([]);
+
+  useEffect(() => {
+    getLocations(1).then(data => {
+      setLocations(data.items || []);
+    }).catch(err => console.error('[Properties] Failed to load locations:', err));
+  }, []);
 
   const openSidebar = () => {
     setDraftFilters(filters);
@@ -175,10 +182,6 @@ function PropertiesPageContent() {
 
 
 
-      <PropertyCategories 
-        selectedType={filters.propertyType}
-        onCategorySelect={(type) => handleSearch({ ...filters, propertyType: type })} 
-      />
 
       <section className="properties-grid-section">
         <div className="properties-container">
@@ -275,6 +278,37 @@ function PropertiesPageContent() {
                   className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px]"
                 />
               </div>
+              
+              {/* Location */}
+              {draftFilters.status?.toLowerCase() !== 'resale' && (
+                <div className="space-y-3">
+                  <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.location') || 'Location'}</label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                      <MapPin size={18} />
+                    </div>
+                    <select 
+                      value={draftFilters.locationId}
+                      onChange={(e) => {
+                        const locId = e.target.value;
+                        const locName = locations.find(l => l.id.toString() === locId)?.city || '';
+                        setDraftFilters({ ...draftFilters, locationId: locId, location: locName });
+                      }}
+                      className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px] bg-white appearance-none cursor-pointer"
+                    >
+                      <option value="">{t('propertiesPage.sidebar.any') as string}</option>
+                      {locations.map(loc => (
+                        <option key={loc.id} value={loc.id}>
+                          {loc.city}{loc.district && loc.district !== '-' ? ` - ${loc.district}` : ''}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                      <ChevronDown size={16} />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Property Type */}
               <div className="space-y-3">
@@ -314,6 +348,26 @@ function PropertiesPageContent() {
                       className={`flex-1 py-3 px-3 rounded-xl border text-[13px] font-bold transition-all ${draftFilters.unitType === cat.value ? 'bg-[#1B2134] text-white border-[#1B2134] shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
                     >
                       {cat.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Status (Primary/Resale) */}
+              <div className="space-y-3">
+                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.status') || 'Property Status'}</label>
+                <div className="flex items-center gap-3">
+                  {[
+                    { value: '', label: t('propertiesPage.sidebar.any') as string },
+                    { value: 'primary', label: t('header.primary') || 'Primary' },
+                    { value: 'resale', label: t('header.resale') || 'Resale' },
+                  ].map(status => (
+                    <button 
+                      key={status.value}
+                      onClick={() => setDraftFilters({ ...draftFilters, status: status.value })}
+                      className={`flex-1 py-3 px-3 rounded-xl border text-[13px] font-bold transition-all ${draftFilters.status === status.value ? 'bg-[#1B2134] text-white border-[#1B2134] shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
+                    >
+                      {status.label}
                     </button>
                   ))}
                 </div>
