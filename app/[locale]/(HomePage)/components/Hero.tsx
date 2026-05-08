@@ -78,7 +78,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 40 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }} 
-          className="text-[40px] md:text-[80px] font-work-sans font-bold text-white leading-[1.1] tracking-[-1.4px] max-w-5xl mx-auto"
+          className="text-[28px] sm:text-[40px] md:text-[80px] font-work-sans font-bold text-white leading-[1.1] tracking-[-1.4px] max-w-5xl mx-auto"
           dangerouslySetInnerHTML={{ __html: t('hero.title') as string }}
         />
       </div>

@@ -150,3 +150,42 @@
     font-size: 32px;
   }
 }
+
+@media (max-width: 425px) {
+  .explore-units-section {
+    padding: 50px 0;
+  }
+
+  .explore-units-container {
+    padding: 0 16px;
+  }
+
+  .explore-units-title {
+    font-size: 26px;
+  }
+
+  .explore-units-subtitle {
+    font-size: 13px;
+  }
+
+  .explore-tabs {
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .explore-tab {
+    padding: 10px 14px;
+    font-size: 13px;
+    gap: 6px;
+  }
+
+  .explore-tab-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .show-more-button {
+    font-size: 15px;
+    padding: 14px 0;
+  }
+}

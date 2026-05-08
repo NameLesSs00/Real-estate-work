@@ -65,7 +65,7 @@ export default function LeadForm({ unitId }: LeadFormProps) {
   }
 
   return (
-    <div className="bg-white border border-[#ECECEC] rounded-[14px] p-8 lg:p-10 shadow-sm">
+    <div className="bg-white border border-[#ECECEC] rounded-[14px] p-6 lg:p-10 shadow-sm">
       <h3 className="text-[18px] font-bold text-gray-900 text-center mb-5 font-poppins">
         {t('projectDetails.getInTouch') as string}
       </h3>

@@ -181,3 +181,39 @@
     font-size: 16px;
   }
 }
+
+@media (max-width: 425px) {
+  .who-we-are-section {
+    padding: 50px 0;
+  }
+
+  .who-we-are-title {
+    font-size: 26px;
+  }
+
+  .who-we-are-subtitle {
+    font-size: 14px;
+  }
+
+  .who-we-are-images {
+    min-height: 240px;
+  }
+
+  .who-we-are-info-box {
+    padding: 24px;
+    gap: 28px;
+  }
+
+  .info-item-title {
+    font-size: 30px;
+  }
+
+  .info-item-text {
+    font-size: 14px;
+  }
+
+  .view-more-btn {
+    font-size: 15px;
+    padding: 12px 28px;
+  }
+}

@@ -114,12 +114,12 @@ export default function ProjectDetailsPage({
 
   return (
     <>
-      <div className="min-h-screen bg-white pt-36 pb-24 font-poppins">
+      <div className="min-h-screen bg-white pt-32 md:pt-36 pb-24 font-poppins">
         <motion.div 
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="max-w-[1200px] mx-auto px-6 md:px-10 flex flex-col gap-10"
+          className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-10 flex flex-col gap-6 md:gap-10"
         >
 
           {/* Breadcrumb */}
@@ -129,124 +129,51 @@ export default function ProjectDetailsPage({
             <span className="text-[#1B2134] font-semibold">{localizedName}</span>
           </motion.nav>
 
-          {/* ── Top: Gallery (left) + Form (right) ── */}
-          <div className="flex flex-col lg:flex-row gap-8 items-start">
+          {/* ── Project Header (Meta) ── */}
+          <motion.div variants={itemVariants} className="flex flex-col gap-6">
+            <div className="flex flex-col gap-3">
+              <h1 className="text-[28px] md:text-[36px] font-bold text-[#1B2134] leading-tight">
+                {localizedName}
+              </h1>
 
-            {/* Left: Gallery + Meta */}
-            <motion.div variants={itemVariants} className="flex flex-col gap-8 flex-1 min-w-0">
-
-              <ImageGallery images={images} projectName={localizedName} />
-
-              {/* Project Meta */}
-              <div className="flex flex-col gap-3">
-                <h1 className="text-[28px] md:text-[36px] font-bold text-[#1B2134] leading-tight">
-                  {localizedName}
-                </h1>
-
-                <div className="flex flex-wrap items-center gap-6 mt-2">
-                  <div className="flex items-center gap-2 text-[15px] text-[#666]">
-                    <MapPin size={18} className="text-[#C7B7A1] flex-shrink-0" />
-                    <span>{project.locationName || t('projects.noLocation') as string}</span>
-                  </div>
-
-                  {project.developerName && (
-                    <div className="flex items-center gap-8 mt-4 group">
-                      {project.logoImage && (
-                        <div className="relative w-24 h-24 flex-shrink-0 transition-all duration-700 ease-in-out">
-                          <Image 
-                            src={resolveProjectImageUrl(project.logoImage) || DEFAULT_IMAGE} 
-                            alt={project.developerName} 
-                            fill 
-                            className="object-contain"
-                          />
-                        </div>
-                      )}
-                      <div className="h-12 w-px bg-[#E5E2DE]" />
-                      <div className="flex flex-col">
-                        <span className="text-[12px] text-[#C7B7A1] font-bold uppercase tracking-[0.2em] mb-1">Developed By</span>
-                        <span className="text-[24px] font-bold text-[#1B2134] tracking-tight">{project.developerName}</span>
-                      </div>
-                    </div>
-                  )}
+              <div className="flex flex-wrap items-center gap-6 mt-2">
+                <div className="flex items-center gap-2 text-[15px] text-[#666]">
+                  <MapPin size={18} className="text-[#C7B7A1] flex-shrink-0" />
+                  <span>{project.locationName || t('projects.noLocation') as string}</span>
                 </div>
-              </div>
-            </motion.div>
 
-            {/* Right: Get in Touch Form (static) */}
-            <motion.div variants={itemVariants} className="w-full lg:w-[420px] flex-shrink-0">
-              <div className="bg-[#F8F5F080] border border-[#F0EDE8] rounded-[20px] p-8 shadow-[0_8px_40px_rgba(0,0,0,0.06)] sticky top-28">
-                <h2 className="text-[20px] font-bold text-[#1B2134] text-center mb-6">
-                  {t('projectDetails.getInTouch') as string}
-                </h2>
-                <form className="flex flex-col gap-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[13px] font-medium text-[#1B2134]">
-                      {t('projectDetails.fullName') as string} <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder={t('projectDetails.fullName') as string}
-                      required
-                      className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors"
-                    />
+                {project.developerName && (
+                  <div className="flex items-center gap-8 mt-2 group">
+                    {project.logoImage && (
+                      <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 transition-all duration-700 ease-in-out">
+                        <Image 
+                          src={resolveProjectImageUrl(project.logoImage) || DEFAULT_IMAGE} 
+                          alt={project.developerName} 
+                          fill 
+                          className="object-contain"
+                        />
+                      </div>
+                    )}
+                    <div className="h-10 w-px bg-[#E5E2DE]" />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] md:text-[11px] text-[#C7B7A1] font-bold uppercase tracking-[0.2em] mb-0.5">Developed By</span>
+                      <span className="text-[18px] md:text-[22px] font-bold text-[#1B2134] tracking-tight">{project.developerName}</span>
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[13px] font-medium text-[#1B2134]">
-                      {t('projectDetails.phoneNumber') as string} <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder={t('projectDetails.phoneNumber') as string}
-                      required
-                      className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[13px] font-medium text-[#1B2134]">{t('projectDetails.email') as string}</label>
-                    <input
-                      type="email"
-                      placeholder={t('projectDetails.email') as string}
-                      required
-                      className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[13px] font-medium text-[#1B2134]">{t('projectDetails.message') as string}</label>
-                    <textarea
-                      placeholder={t('projectDetails.message') as string}
-                      rows={4}
-                      required
-                      className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors resize-none"
-                    />
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      id="terms"
-                      required
-                      className="mt-0.5 w-4 h-4 accent-[#1B2134] cursor-pointer flex-shrink-0"
-                    />
-                    <label htmlFor="terms" className="text-[13px] text-[#666] leading-snug cursor-pointer">
-                      {t('projectDetails.agreeTerms') as string}
-                    </label>
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full bg-[#1B2134] text-white rounded-full py-4 text-[15px] font-semibold flex items-center justify-center gap-3 hover:bg-[#252d46] transition-all mt-1"
-                  >
-                    {t('projectDetails.bookVisit') as string}
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </form>
+                )}
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
+
+          {/* ── Image Gallery ── */}
+          <motion.div variants={itemVariants} className="w-full">
+            <ImageGallery images={images} projectName={localizedName} />
+          </motion.div>
+
 
           {/* ── Facilities Grid (Replaces Stats) ── */}
           {((project.facilityIds && project.facilityIds.length > 0) || (project.facilities && project.facilities.length > 0)) && (
-            <motion.div variants={itemVariants} className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm">
+            <motion.div variants={itemVariants} className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm">
               <h2 className="text-[20px] font-bold text-[#1B2134] mb-6 flex items-center gap-3">
                 {t('projectDetails.facilities') || 'Facilities'}
                 <span className="h-px flex-1 bg-gray-100"></span>
@@ -285,7 +212,7 @@ export default function ProjectDetailsPage({
           )}
 
           {/* ── Description ── */}
-          <motion.div variants={itemVariants} className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm">
+          <motion.div variants={itemVariants} className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm">
             <h2 className="text-[20px] font-bold text-[#1B2134] mb-4">{t('projectDetails.description') as string}</h2>
             <hr className="border-[#F0EDE8] mb-6" />
             <div className="flex flex-col gap-4">

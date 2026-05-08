@@ -159,22 +159,27 @@ export default function ImageGallery({ images, projectName = 'Project Image' }: 
         />
       )}
 
-      <div className="relative group select-none flex flex-col w-full">
-        {/* Main Image Container */}
+      <section className="relative group select-none w-full flex flex-col gap-4">
+        {/* ── Main Featured Image ── */}
         <div
-          className="relative w-full aspect-[16/10] rounded-[24px] overflow-hidden shadow-lg cursor-zoom-in"
+          className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-[32px] overflow-hidden shadow-lg cursor-zoom-in group/main"
+          style={{ backgroundColor: '#0A0A0B' }}
           onClick={() => setLightbox({ open: true, index: lightbox.index })}
         >
-          <Image
+          {/* Using standard img for maximum compatibility and to ensure visibility */}
+          <img
             src={images[lightbox.index]}
             alt={projectName}
-            fill
-            className="object-cover pointer-events-none"
-            priority
-            draggable={false}
+            className="w-full h-full object-contain transition-all duration-500"
+            loading="eager"
           />
+          
+          {/* Image Counter Overlay */}
+          <div className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full text-[13px] font-semibold border border-white/20">
+            {lightbox.index + 1} / {images.length}
+          </div>
 
-          {/* Navigation Arrows (Desktop) */}
+          {/* Navigation Arrows — always visible on mobile, hover-visible on desktop */}
           {images.length > 1 && (
             <>
               <button
@@ -185,7 +190,7 @@ export default function ImageGallery({ images, projectName = 'Project Image' }: 
                     index: (prev.index - 1 + images.length) % images.length,
                   }));
                 }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/40 pointer-events-auto"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center md:opacity-0 md:group-hover/main:opacity-100 transition-all hover:bg-white/40 active:scale-95"
               >
                 <ChevronLeft size={20} />
               </button>
@@ -194,44 +199,15 @@ export default function ImageGallery({ images, projectName = 'Project Image' }: 
                   e.stopPropagation();
                   setLightbox((prev) => ({ ...prev, index: (prev.index + 1) % images.length }));
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/40 pointer-events-auto"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 md:w-12 md:h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center md:opacity-0 md:group-hover/main:opacity-100 transition-all hover:bg-white/40 active:scale-95"
               >
                 <ChevronRightIcon size={20} />
               </button>
             </>
           )}
-
-          {/* Zoom Hint (Static UI overlay) */}
-          <div
-            className="absolute top-6 left-6 bg-black/40 backdrop-blur-sm text-white p-2 rounded-full cursor-pointer hover:bg-black/60 transition-all pointer-events-auto"
-            onClick={(e) => {
-              e.stopPropagation();
-              setLightbox({ open: true, index: lightbox.index });
-            }}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              <line x1="11" y1="8" x2="11" y2="14" />
-              <line x1="8" y1="11" x2="14" y2="11" />
-            </svg>
-          </div>
-
-          {/* Image Counter Badge */}
-          <div className="absolute bottom-6 right-6 bg-[#1B2134]/60 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-[13px] font-medium border border-white/10">
-            {lightbox.index + 1} / {images.length}
-          </div>
         </div>
 
+        {/* ── Thumbnails Row — show ALL images, scrollable ── */}
         {images.length > 1 && (
           <div 
             ref={scrollRef}
@@ -239,25 +215,26 @@ export default function ImageGallery({ images, projectName = 'Project Image' }: 
             onMouseLeave={onThumbMouseLeave}
             onMouseUp={onThumbMouseUp}
             onMouseMove={onThumbMouseMove}
-            className={`flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide w-full ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`} 
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            className={`flex gap-2 md:gap-3 overflow-x-auto py-2 w-full ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`} 
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
           >
             {images.map((img, i) => (
               <button
                 key={i}
                 onClick={() => setLightbox((prev) => ({ ...prev, index: i }))}
-                className={`relative w-24 h-16 rounded-[12px] overflow-hidden flex-shrink-0 transition-all duration-300 border-2 ${
+                className={`relative flex-shrink-0 w-16 h-12 sm:w-20 sm:h-14 md:w-28 md:h-18 rounded-lg overflow-hidden transition-all duration-300 border-2 ${
                   i === lightbox.index
-                    ? 'border-[#1B2134] scale-105 shadow-md'
-                    : 'border-transparent opacity-60 hover:opacity-100'
+                    ? 'border-[#1B2134] ring-1 ring-[#1B2134]/30 shadow-md'
+                    : 'border-transparent opacity-50 hover:opacity-90'
                 }`}
               >
-                <Image src={img} alt={`Thumb ${i}`} fill className="object-cover" draggable={false} />
+                <Image src={img} alt={`Image ${i + 1}`} fill className="object-cover" draggable={false} />
               </button>
             ))}
           </div>
         )}
-      </div>
+      </section>
+
     </>
   );
 }

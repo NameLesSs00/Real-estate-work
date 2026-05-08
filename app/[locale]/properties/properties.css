@@ -142,3 +142,33 @@
     gap: 12px;
   }
 }
+
+@media (max-width: 425px) {
+  .properties-hero {
+    padding: 100px 0 40px;
+  }
+
+  .properties-container {
+    padding: 0 20px;
+  }
+
+  .properties-hero-title {
+    font-size: 28px;
+  }
+
+  .properties-hero-subtitle {
+    font-size: 14px;
+  }
+
+  .properties-grid-title {
+    font-size: 24px;
+  }
+
+  .properties-grid-subtitle {
+    font-size: 14px;
+  }
+
+  .properties-grid-section {
+    padding: 30px 0 60px;
+  }
+}

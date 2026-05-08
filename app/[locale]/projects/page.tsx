@@ -150,8 +150,8 @@ export default function ProjectsPage() {
                       <div className="flex-1 p-7 md:p-10 flex flex-col justify-between relative">
 
                         {/* Developer Logo — top right */}
-                        <div className="absolute top-7 right-7">
-                          <div className="relative w-[100px] h-[50px]">
+                        <div className="absolute top-5 right-5">
+                          <div className="relative w-[60px] h-[30px] sm:w-[100px] sm:h-[50px]">
                             <Image
                               src={resolveProjectImageUrl(project.logoImage) || DEFAULT_DEVELOPER_LOGO}
                               alt={project.developerName}
@@ -163,7 +163,7 @@ export default function ProjectsPage() {
                         </div>
 
                         {/* Top Content */}
-                        <div className="flex flex-col gap-3 pr-28">
+                        <div className="flex flex-col gap-3 pr-20 sm:pr-28">
                           {/* Project Name */}
                           <h2 className="text-[22px] md:text-[28px] font-bold text-[#1B2134] leading-tight">
                             {localizedName}

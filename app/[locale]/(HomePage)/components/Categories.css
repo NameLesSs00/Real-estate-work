@@ -186,3 +186,33 @@
     padding: 20px;
   }
 }
+
+@media (max-width: 425px) {
+  .categories-section {
+    padding: 50px 0;
+  }
+
+  .categories-title {
+    font-size: 26px;
+  }
+
+  .categories-subtitle {
+    font-size: 14px;
+  }
+
+  .categories-grid {
+    gap: 14px;
+  }
+
+  .category-image-wrapper {
+    height: 140px;
+  }
+
+  .category-name {
+    font-size: 18px;
+  }
+
+  .category-count {
+    font-size: 13px;
+  }
+}

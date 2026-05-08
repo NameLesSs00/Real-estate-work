@@ -182,3 +182,43 @@
     max-width: 55%;
   }
 }
+
+@media (max-width: 425px) {
+  .articles-section {
+    padding: 50px 0;
+  }
+
+  .articles-title {
+    font-size: 26px;
+  }
+
+  .articles-subtitle {
+    font-size: 14px;
+  }
+
+  .article-overlay {
+    padding: 18px;
+    gap: 12px;
+  }
+
+  .article-card-title {
+    font-size: 15px;
+    max-width: 60%;
+  }
+
+  .read-more-btn {
+    padding: 10px 14px;
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .read-more-arrow {
+    width: 14px;
+    height: 14px;
+  }
+
+  .show-more-blogs-button {
+    font-size: 15px;
+    padding: 14px;
+  }
+}

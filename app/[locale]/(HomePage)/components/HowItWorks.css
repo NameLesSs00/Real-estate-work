@@ -123,9 +123,29 @@
 @media (max-width: 768px) {
   .how-it-works-section {
     padding: 60px 0;
+    /* Fix iOS background-attachment: fixed rendering bug */
+    background-attachment: scroll;
   }
   
   .how-it-works-title {
     font-size: 32px;
+  }
+}
+
+@media (max-width: 425px) {
+  .how-it-works-section {
+    padding: 50px 0;
+  }
+
+  .how-it-works-title {
+    font-size: 26px;
+  }
+
+  .how-it-works-card {
+    padding: 28px 20px;
+  }
+
+  .how-it-works-text {
+    font-size: 14px;
   }
 }

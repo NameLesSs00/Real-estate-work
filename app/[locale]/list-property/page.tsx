@@ -7,12 +7,12 @@ export default function ListPropertyPage() {
   return (
     <div className="min-h-screen bg-white font-inter pt-32 pb-20">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
-        <h1 className="text-[40px] font-bold text-[#16273B] mb-12">Add Property</h1>
+        <h1 className="text-[28px] sm:text-[40px] font-bold text-[#16273B] mb-8 sm:mb-12">Add Property</h1>
 
         <form className="space-y-12">
           
           {/* Basic Information Section */}
-          <div className="bg-[#F8F5F080] rounded-[24px] p-8 md:p-12 shadow-sm space-y-8">
+          <div className="bg-[#F8F5F080] rounded-[24px] p-6 sm:p-8 md:p-12 shadow-sm space-y-8">
             <h2 className="text-[24px] font-bold text-[#16273B]">Basic Information</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -138,7 +138,7 @@ export default function ListPropertyPage() {
           </div>
 
           {/* Property Media Section */}
-          <div className="bg-[#F8F5F080] rounded-[24px] p-8 md:p-12 shadow-sm space-y-8">
+          <div className="bg-[#F8F5F080] rounded-[24px] p-6 sm:p-8 md:p-12 shadow-sm space-y-8">
             <h2 className="text-[24px] font-bold text-[#16273B]">Property media</h2>
             <div className="space-y-4">
               <p className="text-[#16273B] font-semibold text-[15px]">Property images</p>
@@ -158,7 +158,7 @@ export default function ListPropertyPage() {
           </div>
 
           {/* Client Details Section */}
-          <div className="bg-[#F8F5F080] rounded-[24px] p-8 md:p-12 shadow-sm space-y-10">
+          <div className="bg-[#F8F5F080] rounded-[24px] p-6 sm:p-8 md:p-12 shadow-sm space-y-10">
             <h2 className="text-[24px] font-bold text-[#16273B]">Client Details</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
@@ -201,7 +201,7 @@ export default function ListPropertyPage() {
             </div>
 
             <div className="flex justify-end pt-4">
-              <button className="bg-[#16273B] text-white px-20 py-4 rounded-xl text-[18px] font-bold hover:bg-[#1a304a] transition-all shadow-lg hover:shadow-xl active:scale-95 cursor-pointer">
+              <button className="w-full sm:w-auto bg-[#16273B] text-white px-12 sm:px-20 py-4 rounded-xl text-[16px] sm:text-[18px] font-bold hover:bg-[#1a304a] transition-all shadow-lg hover:shadow-xl active:scale-95 cursor-pointer">
                 Submit
               </button>
             </div>

@@ -346,13 +346,25 @@ function PropertiesPageContent() {
 
           {/* Pagination */}
           {!loading && !error && totalPages > 1 && (
-            <div className="flex items-center justify-center gap-4 mt-12 pb-4">
-              <button onClick={() => handlePage(currentPage - 1)} disabled={currentPage === 1} className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 text-[14px] font-medium text-[#1B2134] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors">
-                <ChevronLeft size={16} /> {t('propertiesPage.pagination.prev') as string}
+            <div className="flex items-center justify-center gap-2 sm:gap-4 mt-12 pb-4">
+              <button 
+                onClick={() => handlePage(currentPage - 1)} 
+                disabled={currentPage === 1} 
+                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-gray-200 text-[13px] sm:text-[14px] font-medium text-[#1B2134] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+              >
+                <ChevronLeft size={16} /> 
+                <span className="hidden sm:inline">{t('propertiesPage.pagination.prev') as string}</span>
               </button>
-              <span className="text-[14px] text-[#666]">{t('propertiesPage.pagination.page') as string} {currentPage} {t('propertiesPage.pagination.of') as string} {totalPages}</span>
-              <button onClick={() => handlePage(currentPage + 1)} disabled={currentPage === totalPages} className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-200 text-[14px] font-medium text-[#1B2134] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors">
-                {t('propertiesPage.pagination.next') as string} <ChevronRight size={16} />
+              <span className="text-[13px] sm:text-[14px] text-[#666] whitespace-nowrap">
+                {t('propertiesPage.pagination.page') as string} {currentPage} {t('propertiesPage.pagination.of') as string} {totalPages}
+              </span>
+              <button 
+                onClick={() => handlePage(currentPage + 1)} 
+                disabled={currentPage === totalPages} 
+                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-gray-200 text-[13px] sm:text-[14px] font-medium text-[#1B2134] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+              >
+                <span className="hidden sm:inline">{t('propertiesPage.pagination.next') as string}</span>
+                <ChevronRight size={16} />
               </button>
             </div>
           )}
@@ -363,7 +375,7 @@ function PropertiesPageContent() {
       {isSidebarOpen && (
         <div className="fixed inset-0 z-50 flex justify-start font-poppins">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={() => setIsSidebarOpen(false)} />
-          <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col transform transition-transform duration-300 animate-in slide-in-from-left">
+          <div className="relative w-full sm:max-w-md bg-white h-full shadow-2xl flex flex-col transform transition-transform duration-300 animate-in slide-in-from-left">
             <div className="flex items-center justify-between p-6 border-b border-gray-100 shrink-0">
               <h2 className="text-[22px] font-bold text-[#1B2134]">{t('propertiesPage.sidebar.title') as string}</h2>
               <button onClick={() => setIsSidebarOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer text-gray-500 hover:text-[#1B2134]">

@@ -61,9 +61,9 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen font-poppins overflow-hidden">
       {/* Hero + Info Cards */}
-      <section className="bg-white pt-36 pb-20 px-6">
+      <section className="bg-white pt-24 md:pt-36 pb-20 px-4 sm:px-6">
         <div className="max-w-[1200px] mx-auto">
-          <motion.h1 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-[36px] md:text-[48px] font-bold text-[#1B2134] mb-4 leading-tight">
+          <motion.h1 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-[28px] sm:text-[36px] md:text-[48px] font-bold text-[#1B2134] mb-4 leading-tight">
             {t('contactPage.title') as string}
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="text-[16px] text-gray-500 max-w-2xl leading-relaxed mb-14">
@@ -109,8 +109,8 @@ export default function ContactPage() {
             <div className="mb-6 p-5 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-[14px]">{error}</div>
           )}
 
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1 }} className="bg-[#F0EBE3] rounded-[20px] p-8 md:p-12 shadow-sm">
-            <h2 className="text-[32px] md:text-[40px] font-bold text-[#1B2134] mb-2">{t('contactPage.form.title') as string}</h2>
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1 }} className="bg-[#F0EBE3] rounded-[20px] p-6 sm:p-8 md:p-12 shadow-sm">
+            <h2 className="text-[24px] sm:text-[32px] md:text-[40px] font-bold text-[#1B2134] mb-2">{t('contactPage.form.title') as string}</h2>
             <p className="text-[15px] text-gray-500 mb-8">{t('contactPage.form.subtitle') as string}</p>
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -180,7 +180,7 @@ export default function ContactPage() {
           <Image src={`${BASE}/bgImage.png`} alt="background pattern" fill className="object-cover" />
         </motion.div>
         <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} className="relative z-10 max-w-[1200px] mx-auto pt-16 px-4">
-          <h2 className="text-[36px] md:text-[52px] font-bold text-[#1B2134] leading-tight mb-6">
+          <h2 className="text-[26px] sm:text-[36px] md:text-[52px] font-bold text-[#1B2134] leading-tight mb-6">
             {t('contactPage.cta.title') as string}
           </h2>
           <p className="text-[16px] text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">

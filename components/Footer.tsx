@@ -14,7 +14,7 @@ const Footer = () => {
   if (pathname?.startsWith('/admin')) return null;
 
   return (
-    <footer className="bg-[#1B2134] text-white py-16 px-6 md:px-20 font-poppins">
+    <footer className="bg-[#1B2134] text-white py-12 md:py-16 px-6 md:px-20 font-poppins">
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
         
         {/* Column 1: Logo & About */}
@@ -66,17 +66,17 @@ const Footer = () => {
         <div className="flex flex-col gap-6">
           <h3 className="text-[20px] font-semibold">{t('footer.contactTitle')}</h3>
           <ul className="flex flex-col gap-6 text-[#D9D9D9]">
-            <li className="flex items-center gap-4">
-              <Phone size={20} />
-              <a href="tel:+2001220512555" className="hover:text-white transition-colors">+2001220512555</a>
+            <li className="flex items-start gap-4">
+              <Phone size={20} className="flex-shrink-0 mt-0.5" />
+              <a href="tel:+2001220512555" className="hover:text-white transition-colors break-all">+2001220512555</a>
             </li>
-            <li className="flex items-center gap-4">
-              <Earth size={20} />
-              <a href="mailto:info@thegateestates.com" className="hover:text-white transition-colors">info@thegateestates.com</a>
+            <li className="flex items-start gap-4">
+              <Earth size={20} className="flex-shrink-0 mt-0.5" />
+              <a href="mailto:info@thegateestates.com" className="hover:text-white transition-colors break-all">info@thegateestates.com</a>
             </li>
-            <li className="flex items-center gap-4">
-              <MapPin size={20} />
-              <span>Al-Kawsar, Hurghada — above El Khedawy Restaurant</span>
+            <li className="flex items-start gap-4">
+              <MapPin size={20} className="flex-shrink-0 mt-0.5" />
+              <span className="break-words">Al-Kawsar, Hurghada — above El Khedawy Restaurant</span>
             </li>
           </ul>
         </div>

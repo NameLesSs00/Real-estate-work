@@ -147,8 +147,8 @@ export default async function PropertyDetailsPage({ params }: Props) {
   ].filter(stat => stat.value !== null && stat.value !== undefined && stat.value !== 0 && stat.value !== "");
 
   return (
-    <div className="min-h-screen bg-[#F8F8F8] pt-36 pb-20">
-      <div className="w-full max-w-7xl xl:max-w-[1440px] mx-auto px-6 lg:px-12">
+    <div className="min-h-screen bg-[#F8F8F8] pt-32 md:pt-36 pb-20">
+      <div className="w-full max-w-7xl xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-1 text-[13px] text-gray-400 mb-5 font-poppins">
@@ -164,7 +164,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
           <div>
             {projName && <p className="text-[#E8A33E] font-bold text-[14px] mb-1 uppercase tracking-wider">{projName}</p>}
-            <h1 className="text-[32px] font-bold text-gray-900 mb-2 font-poppins leading-tight">
+            <h1 className="text-[24px] sm:text-[32px] font-bold text-gray-900 mb-2 font-poppins leading-tight break-words">
               {propertyName}
             </h1>
             <div className="flex flex-wrap items-center gap-4 text-[13px] text-gray-500 font-poppins">
@@ -187,10 +187,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
+          <div className="flex items-start sm:items-center gap-3 sm:gap-4">
+            <div className="text-left sm:text-right">
               <p className="text-[12px] text-gray-400 font-medium uppercase tracking-wider">{t.projectDetails.price || "Price"}</p>
-              <p className="text-[28px] font-bold text-[#16273B] leading-none">{propertyCurrency} {propertyPrice.toLocaleString()}</p>
+              <p className="text-[22px] sm:text-[28px] font-bold text-[#16273B] leading-none">{propertyCurrency} {propertyPrice.toLocaleString()}</p>
             </div>
             <CopyLinkButton />
           </div>
@@ -211,12 +211,12 @@ export default async function PropertyDetailsPage({ params }: Props) {
         </div>
 
         {/* ── Overview Card (full width) ── */}
-        <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm mb-8">
+        <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
           <div className="flex items-center gap-3 mb-6">
             <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">{t.projectDetails.overview || "Overview"}</h2>
             <div className="h-px flex-1 bg-gray-100"></div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-8">
             {overviewStats.map((stat, i) => (
               <div key={i} className="flex flex-col items-center text-center group">
                 <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 group-hover:bg-[#1B2134] group-hover:text-white transition-all">
@@ -238,7 +238,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
           if (combinedIds.length === 0) return null;
 
           return (
-            <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm mb-8">
+            <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
               <div className="flex items-center gap-3 mb-8">
                 <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
                   {t.projectDetails.featuresServices || "Features & Services"}
@@ -279,7 +279,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
         })()}
 
         {/* ── Description ── */}
-        <div className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm mb-8">
+        <div className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
           <div className="flex items-center gap-3 mb-6">
             <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
               {t.projectDetails.description || "Description"}
@@ -300,7 +300,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
         
         {/* ── Payment Plans ── */}
         {paymentPlans.length > 0 && (
-          <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm mb-8">
+          <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
             <div className="flex items-center gap-3 mb-8">
               <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
                 {t.projectDetails.paymentPlans || "Payment Plans"}

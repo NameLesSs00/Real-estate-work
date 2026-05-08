@@ -336,3 +336,44 @@
     height: 350px;
   }
 }
+
+@media (max-width: 425px) {
+  .feature-project-section {
+    padding: 60px 0;
+  }
+
+  .feature-project-title {
+    font-size: 26px;
+  }
+
+  .feature-project-subtitle {
+    font-size: 14px;
+  }
+
+  .project-main-img {
+    height: 240px;
+  }
+
+  .project-name {
+    font-size: 20px;
+  }
+
+  .project-desc {
+    font-size: 14px;
+  }
+
+  .project-location {
+    font-size: 14px;
+  }
+
+  .get-in-touch-btn {
+    padding: 14px 32px;
+    font-size: 15px;
+    width: 100%;
+  }
+
+  .show-more-projects-btn {
+    font-size: 15px;
+    padding: 14px;
+  }
+}

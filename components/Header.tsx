@@ -329,6 +329,26 @@ const Header = () => {
                 <a href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" target="_blank" rel="noopener noreferrer" className="text-[#1B2134] hover:text-[#E4405F] transition-colors"><InstagramIcon size={28} /></a>
                 <a href="https://wa.me/message/2CFJ7MIUOG3AM1" target="_blank" rel="noopener noreferrer" className="text-[#1B2134] hover:text-[#25D366] transition-colors"><WhatsAppIcon size={28} /></a>
               </div>
+
+              {/* Language Switcher */}
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <p className="text-[12px] font-semibold text-[#C7B7A1] uppercase tracking-[0.2em] mb-3">Language</p>
+                <div className="flex gap-3">
+                  {(['en', 'de', 'pl'] as const).map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => { setLanguage(lang); setIsMenuOpen(false); }}
+                      className={`flex-1 py-2.5 rounded-full text-[14px] font-bold border transition-all ${
+                        language === lang
+                          ? 'bg-[#1B2134] text-white border-[#1B2134]'
+                          : 'bg-transparent text-[#1B2134] border-gray-200 hover:border-[#1B2134]'
+                      }`}
+                    >
+                      {lang === 'en' ? 'EN' : lang === 'de' ? 'DE' : 'PL'}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

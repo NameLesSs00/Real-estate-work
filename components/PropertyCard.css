@@ -102,3 +102,27 @@
   background-color: #1b2134;
   color: #ffffff;
 }
+
+@media (max-width: 425px) {
+  .unit-image-wrapper {
+    height: 180px;
+  }
+
+  .unit-title {
+    font-size: 17px;
+  }
+
+  .unit-price-tag {
+    font-size: 13px;
+    padding: 6px 14px;
+  }
+
+  .unit-detail {
+    font-size: 13px;
+  }
+
+  .unit-button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}

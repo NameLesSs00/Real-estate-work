@@ -200,3 +200,45 @@
     padding-bottom: 24px;
   }
 }
+
+@media (max-width: 425px) {
+  .faq-section {
+    padding: 50px 0;
+  }
+
+  .faq-title {
+    font-size: 26px;
+  }
+
+  .faq-subtitle {
+    font-size: 14px;
+  }
+
+  .faq-question {
+    font-size: 14px;
+    padding: 16px 18px;
+  }
+
+  .faq-chevron {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .faq-answer {
+    padding: 0 18px;
+  }
+
+  .faq-item.open .faq-answer {
+    padding-bottom: 18px;
+  }
+
+  .faq-answer p {
+    font-size: 13px;
+  }
+
+  .faq-view-all-link {
+    padding: 12px 32px;
+    font-size: 14px;
+  }
+}

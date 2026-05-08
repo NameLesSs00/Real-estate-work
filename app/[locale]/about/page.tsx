@@ -10,9 +10,9 @@ export default function AboutPage() {
   const { t, language } = useLanguage();
 
   return (
-    <div className="flex flex-col min-h-screen bg-white pt-32 overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-white pt-24 md:pt-32 overflow-hidden">
       {/* Vision & Mission Section */}
-      <section className="max-w-[1280px] mx-auto px-6 md:px-20 py-20 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-20 py-12 md:py-20 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
         <motion.div 
           initial={{ opacity: 0, x: -60 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -149,7 +149,7 @@ export default function AboutPage() {
         {/* Background Image with Parallax Effect */}
         <div className="absolute inset-0 z-0">
           <div 
-            className="absolute inset-0 bg-cover bg-center bg-fixed"
+            className="absolute inset-0 bg-cover bg-center bg-scroll md:bg-fixed"
             style={{ 
               backgroundImage: 'url("/assists/aboutUs/image.jpg")',
             }}
@@ -165,7 +165,7 @@ export default function AboutPage() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative z-10 max-w-[1000px] mx-auto px-6 text-center text-white flex flex-col items-center gap-6"
         >
-          <h2 className="text-[36px] md:text-[60px] font-bold font-poppins leading-tight">
+          <h2 className="text-[28px] sm:text-[36px] md:text-[60px] font-bold font-poppins leading-tight">
             {t('aboutPage.ctaTitle')}
           </h2>
           <p className="text-[16px] md:text-[22px] font-poppins opacity-90 max-w-[750px]">
