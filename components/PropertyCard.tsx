@@ -94,7 +94,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           {paymentPlan && (
             <div className="unit-detail">
               <Banknote size={24} className="unit-detail-icon" />
-              <span>{paymentPlan === 'Instalment' ? t('propertyCard.details.instalment') : t('propertyCard.details.cash')}</span>
+              <span>{paymentPlan === 'Installment' ? t('propertyCard.details.instalment') : t('propertyCard.details.cash')}</span>
             </div>
           )}
         </div>

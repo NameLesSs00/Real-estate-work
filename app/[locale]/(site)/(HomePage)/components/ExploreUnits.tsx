@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import PropertyCard from '@/components/PropertyCard';
+import { getPaymentPlanType } from '@/lib/utils';
 import { getUnitsFiltered, UnitListItem } from '@/lib/api/units';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
@@ -93,7 +94,7 @@ const ExploreUnits = () => {
                 status={!unit.isActive ? 'Sold' : (unit.unitStatus || 'For Sale')}
                 unitType={unit.unitType}
                 isDefaultImage={!unit.imageUrls || unit.imageUrls.length === 0}
-                paymentPlan={(unit.paymentPlans && unit.paymentPlans.length > 1) ? 'Instalment' : (unit.paymentPlans?.length === 1 ? 'Cash' : undefined)}
+                paymentPlan={getPaymentPlanType(unit.paymentPlans)}
               />
             ))}
           </div>

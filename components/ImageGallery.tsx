@@ -167,11 +167,12 @@ export default function ImageGallery({ images, projectName = 'Project Image' }: 
           onClick={() => setLightbox({ open: true, index: lightbox.index })}
         >
           {/* Using standard img for maximum compatibility and to ensure visibility */}
-          <img
+          <Image
             src={images[lightbox.index]}
             alt={projectName}
-            className="w-full h-full object-contain transition-all duration-500"
-            loading="eager"
+            fill
+            className="object-contain transition-all duration-500"
+            priority
           />
           
           {/* Image Counter Overlay */}

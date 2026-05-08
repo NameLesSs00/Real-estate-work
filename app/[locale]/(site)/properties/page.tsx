@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
+import { getPaymentPlanType } from '@/lib/utils';
 
 import PropertyCard from '@/components/PropertyCard';
 import { getUnitsFiltered } from '@/lib/api/units';
@@ -338,7 +339,7 @@ function PropertiesPageContent() {
                   status={!unit.isActive ? 'Sold' : (unit.unitStatus || 'For Sale')}
                   unitType={unit.unitType}
                   isDefaultImage={!unit.imageUrls || unit.imageUrls.length === 0}
-                  paymentPlan={(unit.paymentPlans && unit.paymentPlans.length > 1) ? 'Instalment' : (unit.paymentPlans?.length === 1 ? 'Cash' : undefined)}
+                  paymentPlan={getPaymentPlanType(unit.paymentPlans)}
                 />
               ))}
             </div>
