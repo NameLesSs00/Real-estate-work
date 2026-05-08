@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Work_Sans, Radley, Allura, Inter } from "next/font/google";
 import "../globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import { LanguageProvider } from "@/lib/contexts/LanguageContext";
 import TokenRefresher from "@/lib/auth/TokenRefresher";
 
@@ -90,12 +87,9 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col font-poppins">
         <LanguageProvider>
           <TokenRefresher />
-          <Header />
           <main className="flex-grow">
             {children}
           </main>
-          <Footer />
-          <WhatsAppButton />
         </LanguageProvider>
       </body>
     </html>
