@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import CopyLinkButton from "@/components/CopyLinkButton";
 import LeadForm from "./components/LeadForm";
 import ImageGallery from "@/components/ImageGallery";
+import UnitReviews from "./components/UnitReviews";
 
 async function getTranslations(locale: string) {
   try {
@@ -363,18 +364,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
           </div>
         )}
 
-        {/* ── Reviews Placeholder ── */}
-        <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-8 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
-              {t.projectDetails.reviews || "Reviews"}
-            </h2>
-            <div className="h-px flex-1 bg-gray-100"></div>
-          </div>
-          <p className="text-[14px] text-gray-400 italic font-poppins text-center py-8">
-            {t.projectDetails.commentsLater || "Comment section will be added later"}
-          </p>
-        </div>
+        <UnitReviews unitId={unitId} />
 
       </div>
     </div>

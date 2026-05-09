@@ -4,8 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { handleLogout } from '@/lib/auth/logout';
+import { BarChart2 } from 'lucide-react';
 
-const menuItems = [
+const menuItems: { name: string; path: string; icon?: string; lucideIcon?: string }[] = [
   { name: 'Dashboard',     path: '/admin/dashboard',   icon: '/admin/sidebar/home-2.png' },
   { name: 'Units',         path: '/admin/units',        icon: '/admin/sidebar/buildings-2.png' },
   { name: 'Sold Units',    path: '/admin/sold-units',   icon: '/admin/sidebar/receipt-search.png' },
@@ -20,6 +21,7 @@ const menuItems = [
   { name: 'Spots',         path: '/admin/spots',        icon: '/admin/sidebar/location.png' },
   { name: 'Blogs',         path: '/admin/blogs',        icon: '/admin/sidebar/blogger.png' },
   { name: 'FAQ',           path: '/admin/faq',          icon: '/admin/sidebar/setting-2.png' },
+  { name: 'Reviews',       path: '/admin/reviews',      lucideIcon: 'BarChart2' },
   { name: 'Setting',       path: '/admin/settings',     icon: '/admin/sidebar/setting-2.png' },
 ];
 
@@ -60,14 +62,21 @@ export default function Sidebar() {
                 }
               `}
             >
-              {/* Icon using CSS mask to easily invert color on hover/active */}
-              <div 
-                className={`w-6 h-6 transition-colors duration-300 ${isActive ? 'bg-[#16273B]' : 'bg-white group-hover:bg-[#16273B]'}`}
-                style={{
-                  WebkitMask: `url('${item.icon}') center/contain no-repeat`,
-                  mask: `url('${item.icon}') center/contain no-repeat`
-                }}
-              />
+              {/* Icon: Lucide component or CSS mask image */}
+              {item.lucideIcon === 'BarChart2' ? (
+                <BarChart2
+                  size={22}
+                  className={`transition-colors duration-300 ${isActive ? 'text-[#16273B]' : 'text-white group-hover:text-[#16273B]'}`}
+                />
+              ) : (
+                <div
+                  className={`w-6 h-6 transition-colors duration-300 ${isActive ? 'bg-[#16273B]' : 'bg-white group-hover:bg-[#16273B]'}`}
+                  style={{
+                    WebkitMask: `url('${item.icon}') center/contain no-repeat`,
+                    mask: `url('${item.icon}') center/contain no-repeat`
+                  }}
+                />
+              )}
               <span className="text-[17px]">{item.name}</span>
             </Link>
           );
