@@ -217,6 +217,7 @@ export default function UnitOutsideDetailsModal({
               {/* ── Info Grid ── */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {[
+                  { label: 'Marker ID', value: unit.markerId || '—' },
                   { label: 'Price', value: `${unit.currencyCode} ${unit.price.toLocaleString()}` },
                   { label: 'Area', value: `${unit.area} m²` },
                   { label: 'Bedrooms', value: unit.noBedRoom },

@@ -107,6 +107,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const unitView = isOutside ? "" : (extractString(d.view) || extractString(d.View) || "");
   const unitBuyRent = extractString(d.type) || extractString(d.Type) || "";
   const propertyType = extractString(d.propertyType) || extractString(d.PropertyType) || "Property";
+  const unitMarkerId = extractString(d.markerId) || extractString(d.MarkerId) || "";
   const projName = extractString(d.projectName) || extractString(d.ProjectName) || "";
   const locName = extractString(d.location?.name) ||
     extractString(d.locationName) ||
@@ -183,6 +184,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
                     {unitTypeName && <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitTypeName}</span>}
                     {unitStatusName && <span className="bg-amber-50 text-amber-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitStatusName}</span>}
                     {unitView && <span className="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">View: {unitView}</span>}
+                    {unitMarkerId && <span className="bg-purple-50 text-purple-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">ID: {unitMarkerId}</span>}
                   </div>
                 </div>
               )}

@@ -208,23 +208,24 @@ export default function UnitsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto scrollbar-hide">
-            <table className="w-full min-w-[800px] text-left border-collapse">
+            <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="border-b border-gray-50 text-[15px] font-bold text-[#16273B]">
-                  <th className="py-7 px-10">Name</th>
+                  <th className="py-7 px-6 w-[20%] max-w-[250px]">Name</th>
+                  <th className="py-7 px-4">Marker ID</th>
                   <th className="py-7 px-4">Price</th>
                    <th className="py-7 px-4 text-center">Beds</th>
                   <th className="py-7 px-4 text-center">Baths</th>
                   <th className="py-7 px-4 text-center">Area</th>
                   <th className="py-7 px-4 text-center">Plans</th>
                   <th className="py-7 px-4 text-center">Featured</th>
-                  <th className="py-7 px-10 text-right">Actions</th>
+                  <th className="py-7 px-6 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {filteredUnits.map((unit) => (
                   <tr key={unit.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="py-6 px-10">
+                    <td className="py-6 px-6 max-w-[250px]">
                       <span
                         className="text-[16px] font-bold text-[#16273B] cursor-pointer hover:text-blue-600 transition-colors"
                         onClick={() => handleView(unit)}
@@ -234,6 +235,9 @@ export default function UnitsPage() {
                       {unit.description && (
                         <p className="text-[13px] text-[#94A3B8] mt-0.5 line-clamp-1">{getLocalized(unit.description)}</p>
                       )}
+                    </td>
+                    <td className="py-6 px-4">
+                      <span className="text-[14px] text-[#64748B] font-medium">{unit.markerId || '—'}</span>
                     </td>
                     <td className="py-6 px-4">
                       <span className="text-[15px] font-bold text-[#16273B]">{unit.currencyCode || 'EGP'} {unit.price.toLocaleString()}</span>
@@ -257,7 +261,7 @@ export default function UnitsPage() {
                         ? <span className="inline-flex px-4 py-1.5 rounded-full bg-[#FEF9C3] text-[#A16207] text-[13px] font-bold">Yes</span>
                         : <span className="text-gray-300 text-[13px]">—</span>}
                     </td>
-                    <td className="py-6 px-10">
+                    <td className="py-6 px-6">
                       <div className="flex items-center justify-end gap-2">
                         {unit.isActive && (
                           <button 
@@ -386,10 +390,11 @@ export default function UnitsPage() {
               </div>
             ) : (
               <div className="overflow-x-auto scrollbar-hide">
-                <table className="w-full min-w-[900px] text-left border-collapse">
+                <table className="w-full min-w-[1100px] text-left border-collapse">
                   <thead>
                     <tr className="border-b border-gray-50 text-[15px] font-bold text-[#16273B]">
-                      <th className="py-7 px-10">Name</th>
+                      <th className="py-7 px-6 w-[20%] max-w-[250px]">Name</th>
+                      <th className="py-7 px-4">Marker ID</th>
                       <th className="py-7 px-4">Price</th>
                       <th className="py-7 px-4">Location</th>
                       <th className="py-7 px-4 text-center">Beds</th>
@@ -397,7 +402,7 @@ export default function UnitsPage() {
                       <th className="py-7 px-4 text-center">Area</th>
                       <th className="py-7 px-4 text-center">Plans</th>
                       <th className="py-7 px-4 text-center">Featured</th>
-                      <th className="py-7 px-10 text-right">Actions</th>
+                      <th className="py-7 px-6 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-50">
@@ -405,12 +410,15 @@ export default function UnitsPage() {
                       .filter(u => u.name.toLowerCase().includes(outsideSearch.toLowerCase()))
                       .map((unit) => (
                         <tr key={unit.id} className="hover:bg-gray-50/50 transition-colors">
-                          <td className="py-6 px-10">
+                          <td className="py-6 px-6 max-w-[250px]">
                             <span
                               className="text-[16px] font-bold text-[#16273B] cursor-pointer hover:text-blue-600 transition-colors"
                               onClick={() => setViewingOutsideId(unit.id)}
                             >{getLocalized(unit.name)}</span>
                             {unit.description && <p className="text-[13px] text-[#94A3B8] mt-0.5 line-clamp-1">{getLocalized(unit.description)}</p>}
+                          </td>
+                          <td className="py-6 px-4">
+                            <span className="text-[14px] text-[#64748B] font-medium">{unit.markerId || '—'}</span>
                           </td>
                           <td className="py-6 px-4">
                             <span className="text-[15px] font-bold text-[#16273B]">{unit.currencyCode} {unit.price.toLocaleString()}</span>
@@ -437,7 +445,7 @@ export default function UnitsPage() {
                               ? <span className="inline-flex px-4 py-1.5 rounded-full bg-[#FEF9C3] text-[#A16207] text-[13px] font-bold">Yes</span>
                               : <span className="text-gray-300 text-[13px]">—</span>}
                           </td>
-                          <td className="py-6 px-10">
+                          <td className="py-6 px-4">
                             <div className="flex items-center justify-end gap-2">
                               {unit.isActive && (
                                 <button

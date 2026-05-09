@@ -19,6 +19,7 @@ export interface UnitFilters {
 
 export interface UnitListItem {
   id: number;
+  markerId?: string;
   name: string;
   description: string;
   price: number;

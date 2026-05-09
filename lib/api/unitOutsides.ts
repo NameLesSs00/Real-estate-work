@@ -21,6 +21,7 @@ export interface UnitOutsidePaymentPlan {
 
 export interface UnitOutside {
   id: number;
+  markerId?: string;
   name: string;
   description: string;
   price: number;

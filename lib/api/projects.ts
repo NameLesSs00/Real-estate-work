@@ -8,6 +8,7 @@ import { Service } from './services';
 
 export interface ApiUnit {
   id: number;
+  markerId?: string;
   name: string | LocalizedString;
   description: string | LocalizedString;
   price: number;
@@ -163,6 +164,8 @@ export interface UpdateUnitPayload {
 // Rich unit from GET /api/Units/{id}
 export interface UnitDetail {
   Id: number;
+  markerId?: string;
+  MarkerId?: string;
   Name: string | LocalizedString;
   Description: string | LocalizedString;
   Price: number;

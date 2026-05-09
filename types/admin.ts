@@ -1,5 +1,6 @@
 export interface Unit {
   id: number;
+  markerId?: string;
   title: string;
   subtitle?: string;
   price: string;

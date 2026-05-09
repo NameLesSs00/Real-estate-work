@@ -43,6 +43,10 @@ export default function UnitInfo({ unit }: UnitInfoProps) {
       {/* Info Cards */}
       <div className="grid grid-cols-2 gap-4">
         <InfoCard 
+          label="Marker ID" 
+          value={unit.MarkerId || unit.markerId || '—'} 
+        />
+        <InfoCard 
           label="Price" 
           value={`${unit.CurrencyCode || unit.currencyCode || 'EGP'} ${(unit.Price ?? unit.price ?? 0).toLocaleString()}`} 
         />
