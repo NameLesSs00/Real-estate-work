@@ -11,7 +11,7 @@ const BASE = "/assists/contactUs";
 const STARS_BASE = "/assists/Properties";
 
 const infoCards = [
-  { icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: "info@thegateestates.com", href: "mailto:info@thegateestates.com" },
+  { icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: "info@thegate-estates.com", href: "mailto:info@thegate-estates.com" },
   { icon: `${BASE}/phone.png`, titleKey: 'contactPage.info.phone', content: "+20 102 111 1666", href: "tel:+201021111666" },
   { icon: `${BASE}/locatoin.png`, titleKey: 'contactPage.info.address', content: "Al-Kawsar, Hurghada — above El Khedawy Restaurant", href: "https://maps.google.com" },
   { icon: `${BASE}/fire.png`, titleKey: 'contactPage.info.follow', socials: [

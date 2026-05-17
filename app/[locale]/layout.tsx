@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "The Gate Estates",
     description: "Find your dream home with our premium real estate services. Redefining luxury living.",
-    url: "https://thegateestates.com",
+    url: "https://thegate-estates.com",
     siteName: "The Gate Estates",
     images: [
       {
