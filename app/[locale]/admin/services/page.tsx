@@ -6,7 +6,8 @@ import {
   Plus, X, Edit2, Trash2, Loader2, 
   Search, CheckCircle2 
 } from 'lucide-react';
-import { getServices, createService, updateService, deleteService, Service } from '@/lib/api/services';
+import { getServices, getServiceById, createService, updateService, deleteService, Service } from '@/lib/api/services';
+import ConfirmDialog from '@/components/admin/ConfirmDialog';
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
@@ -23,6 +24,11 @@ export default function ServicesPage() {
   // Edit Service state
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState({ en: '', de: '', pl: '' });
+  const [isFetchingDetails, setIsFetchingDetails] = useState<number | null>(null);
+
+  // Delete state
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchServices = useCallback(async () => {
     setLoading(true);
@@ -76,17 +82,57 @@ export default function ServicesPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this service?')) return;
-    setLoading(true);
+  const handleEditClick = async (service: Service) => {
+    setEditingId(service.id);
+    
+    // Fallback based on list data
+    const nameObjRaw = typeof service.name === 'object' ? service.name : { en: service.name, de: service.name, pl: service.name };
+    const nameObj = nameObjRaw as Record<string, string>;
+    setEditingName({
+      en: nameObj.en || nameObj.En || '',
+      de: nameObj.de || nameObj.De || '',
+      pl: nameObj.pl || nameObj.Pl || ''
+    });
+
     try {
-      await deleteService(id);
+      setIsFetchingDetails(service.id);
+      
+      // Fetch full details for all languages
+      const [enRes, deRes, plRes] = await Promise.all([
+        getServiceById(service.id, 'en'),
+        getServiceById(service.id, 'de'),
+        getServiceById(service.id, 'pl')
+      ]);
+
+      const enName = enRes.name as Record<string, string>;
+      const deName = deRes.name as Record<string, string>;
+      const plName = plRes.name as Record<string, string>;
+
+      setEditingName({
+        en: typeof enRes.name === 'string' ? enRes.name : enName?.en || enName?.En || '',
+        de: typeof deRes.name === 'string' ? deRes.name : deName?.de || deName?.De || '',
+        pl: typeof plRes.name === 'string' ? plRes.name : plName?.pl || plName?.Pl || ''
+      });
+    } catch (e) {
+      console.error('Failed to fetch full service details:', e);
+    } finally {
+      setIsFetchingDetails(null);
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (deleteId === null) return;
+    setIsDeleting(true);
+    try {
+      await deleteService(deleteId);
       notify('success', 'Service deleted successfully!');
       fetchServices();
-    } catch {
-      notify('error', 'Failed to delete service.');
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'Failed to delete service.';
+      notify('error', msg);
     } finally {
-      setLoading(false);
+      setIsDeleting(false);
+      setDeleteId(null);
     }
   };
 
@@ -262,21 +308,13 @@ export default function ServicesPage() {
                       ) : (
                         <>
                           <button 
-                            onClick={() => {
-                              setEditingId(service.id);
-                              const nameObjRaw = typeof service.name === 'object' ? service.name : { en: service.name, de: service.name, pl: service.name };
-                              const nameObj = nameObjRaw as Record<string, string>;
-                              setEditingName({
-                                en: nameObj.en || '',
-                                de: nameObj.de || '',
-                                pl: nameObj.pl || ''
-                              });
-                            }}
-                            className="p-2.5 text-[#16273B]/70 hover:text-[#16273B] hover:bg-gray-100 rounded-xl transition-all"
+                            onClick={() => handleEditClick(service)}
+                            disabled={isFetchingDetails === service.id}
+                            className="p-2.5 text-[#16273B]/70 hover:text-[#16273B] hover:bg-gray-100 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center"
                           >
-                            <Edit2 size={18} />
+                            {isFetchingDetails === service.id ? <Loader2 size={18} className="animate-spin" /> : <Edit2 size={18} />}
                           </button>
-                          <button onClick={() => handleDelete(service.id)} className="p-2.5 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><Trash2 size={18} /></button>
+                          <button onClick={() => setDeleteId(service.id)} className="p-2.5 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><Trash2 size={18} /></button>
                         </>
                       )}
                     </div>
@@ -293,6 +331,16 @@ export default function ServicesPage() {
             </tbody>
           </table>
         </div>
+
+        <ConfirmDialog
+          isOpen={deleteId !== null}
+          title="Delete Service"
+          message="Are you sure you want to delete this service? This action cannot be undone."
+          confirmLabel="Delete"
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteId(null)}
+          isLoading={isDeleting}
+        />
       </div>
     </div>
   );

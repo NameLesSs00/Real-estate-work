@@ -13,7 +13,7 @@ export function getHeaders(langOverride?: string, skipLanguage = false): Record<
     const lang = langOverride || (typeof document !== 'undefined' ? 
       document.cookie.match(/(?:^|; )NEXT_LOCALE=([^;]*)/)?.[1] : 'en') || 'en';
     
-    headers['Accept-Language'] = lang.toLowerCase();// en, de, pl
+    headers['Accept-Language'] = lang.toUpperCase(); // EN, DE, PL
   }
 
   return headers;

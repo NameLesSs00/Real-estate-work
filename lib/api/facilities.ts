@@ -16,6 +16,7 @@ export interface Facility {
 export async function getFacilities(): Promise<Facility[]> {
   const res = await fetch(`${API_BASE_URL}/api/Facilities`, {
     headers: { ...authHeader() },
+    cache: 'no-store'
   });
   if (!res.ok) throw new Error('Failed to fetch facilities.');
   const json = await res.json();
@@ -24,9 +25,10 @@ export async function getFacilities(): Promise<Facility[]> {
 }
 
 /** GET /api/Facilities/{id} */
-export async function getFacilityById(id: number): Promise<Facility> {
+export async function getFacilityById(id: number, lang: string = 'en'): Promise<Facility> {
   const res = await fetch(`${API_BASE_URL}/api/Facilities/${id}`, {
-    headers: { ...authHeader() },
+    headers: { ...authHeader(), 'Accept-Language': lang.toUpperCase() },
+    cache: 'no-store'
   });
   if (!res.ok) throw new Error('Failed to fetch facility.');
   const json = await res.json();
@@ -35,35 +37,70 @@ export async function getFacilityById(id: number): Promise<Facility> {
 
 /** POST /api/Facilities */
 export async function createFacility(name: { en: string; de: string; pl: string }): Promise<number> {
-  const mappedName = { En: name.en, De: name.de, Pl: name.pl };
   const res = await fetch(`${API_BASE_URL}/api/Facilities`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...authHeader() },
-    body: JSON.stringify({ name: mappedName }),
+    body: JSON.stringify({ name }),
   });
   if (!res.ok) throw new Error('Failed to create facility.');
-  const json = await res.json();
-  return json.data ?? json;
+  const text = await res.text();
+  try {
+    const json = JSON.parse(text);
+    return json.data ?? json;
+  } catch {
+    return parseInt(text, 10);
+  }
 }
 
 /** PUT /api/Facilities */
 export async function updateFacility(id: number, name: { en: string; de: string; pl: string }): Promise<number> {
-  const mappedName = { En: name.en, De: name.de, Pl: name.pl };
   const res = await fetch(`${API_BASE_URL}/api/Facilities`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...authHeader() },
-    body: JSON.stringify({ id, name: mappedName }),
+    body: JSON.stringify({ id, name }),
   });
   if (!res.ok) throw new Error('Failed to update facility.');
-  const json = await res.json();
-  return json.data ?? json;
+  const text = await res.text();
+  try {
+    const json = JSON.parse(text);
+    return json.data ?? json;
+  } catch {
+    return parseInt(text, 10);
+  }
 }
 
 /** DELETE /api/Facilities/{id} */
-export async function deleteFacility(id: number): Promise<void> {
+export async function deleteFacility(id: number): Promise<boolean> {
+  console.log(`[Facilities] Deleting facility ID: ${id}`);
   const res = await fetch(`${API_BASE_URL}/api/Facilities/${id}`, {
     method: 'DELETE',
-    headers: { ...authHeader() },
+    headers: { 'accept': 'application/json, text/plain, */*', ...authHeader() },
   });
-  if (!res.ok) throw new Error('Failed to delete facility.');
+  const text = await res.text();
+  console.log(`[Facilities] Delete response status: ${res.status}, body:`, text);
+
+  if (!res.ok) {
+    let errorMsg = `Failed to delete facility (Status: ${res.status}).`;
+    try {
+      const json = JSON.parse(text);
+      if (json.message) errorMsg = json.message;
+    } catch {}
+    throw new Error(errorMsg);
+  }
+  if (text.toLowerCase() === 'false') {
+    throw new Error('Failed to delete facility (server returned false).');
+  }
+  try {
+    const json = JSON.parse(text);
+    if (json.success === false) {
+      throw new Error(json.message || 'Failed to delete facility.');
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      if (!e.message.includes('JSON') && !e.message.includes('Unexpected token') && !e.message.includes('Unexpected end')) {
+        throw e;
+      }
+    }
+  }
+  return text.toLowerCase() === 'true' || res.status === 200 || res.status === 204;
 }

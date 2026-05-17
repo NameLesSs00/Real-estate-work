@@ -6,7 +6,8 @@ import {
   Plus, X, Edit2, Trash2, Loader2, 
   Search, CheckCircle2 
 } from 'lucide-react';
-import { getFacilities, createFacility, updateFacility, deleteFacility, Facility } from '@/lib/api/facilities';
+import { getFacilities, getFacilityById, createFacility, updateFacility, deleteFacility, Facility } from '@/lib/api/facilities';
+import ConfirmDialog from '@/components/admin/ConfirmDialog';
 
 export default function FacilitiesPage() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -23,6 +24,11 @@ export default function FacilitiesPage() {
   // Edit Facility state
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingName, setEditingName] = useState({ en: '', de: '', pl: '' });
+  const [isFetchingDetails, setIsFetchingDetails] = useState<number | null>(null);
+
+  // Delete state
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchFacilities = useCallback(async () => {
     setLoading(true);
@@ -76,17 +82,57 @@ export default function FacilitiesPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this facility?')) return;
-    setLoading(true);
+  const handleEditClick = async (facility: Facility) => {
+    setEditingId(facility.id);
+    
+    // Fallback based on list data
+    const nameObjRaw = typeof facility.name === 'object' ? facility.name : { en: facility.name, de: facility.name, pl: facility.name };
+    const nameObj = nameObjRaw as Record<string, string>;
+    setEditingName({
+      en: nameObj.en || nameObj.En || '',
+      de: nameObj.de || nameObj.De || '',
+      pl: nameObj.pl || nameObj.Pl || ''
+    });
+
     try {
-      await deleteFacility(id);
+      setIsFetchingDetails(facility.id);
+      
+      // Fetch full details for all languages
+      const [enRes, deRes, plRes] = await Promise.all([
+        getFacilityById(facility.id, 'en'),
+        getFacilityById(facility.id, 'de'),
+        getFacilityById(facility.id, 'pl')
+      ]);
+
+      const enName = enRes.name as Record<string, string>;
+      const deName = deRes.name as Record<string, string>;
+      const plName = plRes.name as Record<string, string>;
+
+      setEditingName({
+        en: typeof enRes.name === 'string' ? enRes.name : enName?.en || enName?.En || '',
+        de: typeof deRes.name === 'string' ? deRes.name : deName?.de || deName?.De || '',
+        pl: typeof plRes.name === 'string' ? plRes.name : plName?.pl || plName?.Pl || ''
+      });
+    } catch (e) {
+      console.error('Failed to fetch full facility details:', e);
+    } finally {
+      setIsFetchingDetails(null);
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (deleteId === null) return;
+    setIsDeleting(true);
+    try {
+      await deleteFacility(deleteId);
       notify('success', 'Facility deleted successfully!');
       fetchFacilities();
-    } catch {
-      notify('error', 'Failed to delete facility.');
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'Failed to delete facility.';
+      notify('error', msg);
     } finally {
-      setLoading(false);
+      setIsDeleting(false);
+      setDeleteId(null);
     }
   };
 
@@ -262,21 +308,13 @@ export default function FacilitiesPage() {
                       ) : (
                         <>
                           <button 
-                            onClick={() => {
-                              setEditingId(facility.id);
-                              const nameObjRaw = typeof facility.name === 'object' ? facility.name : { en: facility.name, de: facility.name, pl: facility.name };
-                              const nameObj = nameObjRaw as Record<string, string>;
-                              setEditingName({
-                                en: nameObj.en || '',
-                                de: nameObj.de || '',
-                                pl: nameObj.pl || ''
-                              });
-                            }}
-                            className="p-2.5 text-[#16273B]/70 hover:text-[#16273B] hover:bg-gray-100 rounded-xl transition-all"
+                            onClick={() => handleEditClick(facility)}
+                            disabled={isFetchingDetails === facility.id}
+                            className="p-2.5 text-[#16273B]/70 hover:text-[#16273B] hover:bg-gray-100 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center"
                           >
-                            <Edit2 size={18} />
+                            {isFetchingDetails === facility.id ? <Loader2 size={18} className="animate-spin" /> : <Edit2 size={18} />}
                           </button>
-                          <button onClick={() => handleDelete(facility.id)} className="p-2.5 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><Trash2 size={18} /></button>
+                          <button onClick={() => setDeleteId(facility.id)} className="p-2.5 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"><Trash2 size={18} /></button>
                         </>
                       )}
                     </div>
@@ -293,6 +331,16 @@ export default function FacilitiesPage() {
             </tbody>
           </table>
         </div>
+
+        <ConfirmDialog
+          isOpen={deleteId !== null}
+          title="Delete Facility"
+          message="Are you sure you want to delete this facility? This action cannot be undone."
+          confirmLabel="Delete"
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteId(null)}
+          isLoading={isDeleting}
+        />
       </div>
     </div>
   );
