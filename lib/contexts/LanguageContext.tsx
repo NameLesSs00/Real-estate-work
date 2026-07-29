@@ -139,7 +139,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             }
           `}</style>
           <p style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '1px', textTransform: 'uppercase' }}>
-            The Gate Estates
+            Winners Realty
           </p>
         </div>
       </div>

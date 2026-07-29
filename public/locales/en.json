@@ -21,7 +21,7 @@
     ]
   },
   "footer": {
-    "about": "The Gate Estates was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
+    "about": "Winners Realty was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
     "usefulLinks": "Quick action",
     "stayConnected": "Follow Us",
     "newsletter": "Join our newsletter to stay up to date on features and releases.",
@@ -220,8 +220,8 @@
     "commission": "Commission"
   },
   "contactPage": {
-    "title": "Get in Touch with The Gate Estates",
-    "subtitle": "Welcome to The Gate Estates' Contact page. We're here to assist you with any inquiries, requests, or feedback you may have.",
+    "title": "Get in Touch with Winners Realty",
+    "subtitle": "Welcome to Winners Realty' Contact page. We're here to assist you with any inquiries, requests, or feedback you may have.",
     "info": {
       "email": "Email",
       "phone": "Phone",
@@ -230,7 +230,7 @@
     },
     "form": {
       "title": "Let's Connect",
-      "subtitle": "Use the form below to get in touch with The Gate Estates.",
+      "subtitle": "Use the form below to get in touch with Winners Realty.",
       "firstName": "First Name",
       "lastName": "Last Name",
       "email": "Email",
@@ -337,7 +337,7 @@
   "faqPage": {
     "tag": "SUPPORT",
     "title": "Frequently Asked Questions",
-    "subtitle": "Everything you need to know about buying, selling, and renting with The Gate Estates.",
+    "subtitle": "Everything you need to know about buying, selling, and renting with Winners Realty.",
     "loading": "Loading questions...",
     "noQuestions": "No FAQs available at the moment. Check back soon!"
   }

@@ -42,7 +42,7 @@ export function middleware(request: NextRequest) {
 
   // 3. Admin Protection (Existing logic, adapted for locale prefix)
   // We check if the path (with or without locale) starts with /admin
-  const isAdminPath = pathnameHasLocale 
+  const isAdminPath = pathnameHasLocale
     ? locales.some(l => pathname.startsWith(`/${l}/admin`))
     : pathname.startsWith('/admin');
 

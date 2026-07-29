@@ -19,7 +19,7 @@ const AdminSplash = () => {
         <div className="relative w-[300px] h-[100px] md:w-[450px] md:h-[150px]">
           <Image
             src="/admin/splash/logo.png"
-            alt="The Gate Estates Logo"
+            alt="Winners Realty Logo"
             fill
             className="object-contain"
           />

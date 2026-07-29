@@ -22,9 +22,9 @@ const Footer = () => {
           <div className="flex flex-col items-center">
              <Image 
               src="/assists/footer/logoIcon.png" 
-              alt="THE GATE ESTATES" 
-              width={200} 
-              height={60}
+              alt="Winners Realty" 
+              width={120} 
+              height={120}
               className="mb-4"
               style={{ height: 'auto' }}
             />
@@ -72,7 +72,7 @@ const Footer = () => {
             </li>
             <li className="flex items-start gap-4">
               <Earth size={20} className="flex-shrink-0 mt-0.5" />
-              <a href="mailto:info@thegate-estates.com" className="hover:text-white transition-colors break-all">info@thegate-estates.com</a>
+              <a href="mailto:info@winners-realty.com" className="hover:text-white transition-colors break-all">info@winners-realty.com</a>
             </li>
             <li className="flex items-start gap-4">
               <MapPin size={20} className="flex-shrink-0 mt-0.5" />

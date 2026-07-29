@@ -132,11 +132,11 @@ const Header = () => {
             <Link href={`/${language}`}>
               <Image 
                 src="/assists/header/headerLogo.png" 
-                alt="THE GATE ESTATES" 
-                width={190} 
-                height={55} 
+                alt="Winners Realty" 
+                width={100} 
+                height={100} 
                 priority
-                className="h-[35px] md:h-auto w-auto"
+                className="h-[60px] w-[60px] md:h-[80px] md:w-[80px]"
               />
             </Link>
           </div>
@@ -244,10 +244,10 @@ const Header = () => {
             <div className="flex items-center justify-between py-8 px-8">
               <Image 
                 src="/assists/header/headerLogo.png" 
-                alt="THE GATE ESTATES" 
-                width={160} 
-                height={45} 
-                className="h-auto w-auto"
+                alt="Winners Realty" 
+                width={100} 
+                height={100} 
+                className="h-[80px] w-[80px]"
               />
               <button 
                 onClick={() => setIsMenuOpen(false)} 

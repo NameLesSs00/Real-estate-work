@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { handleLogout } from '@/lib/auth/logout';
 import { BarChart2 } from 'lucide-react';
@@ -37,12 +38,12 @@ export default function Sidebar() {
     <aside className="w-[280px] h-screen bg-[#16273B] text-white flex flex-col fixed left-0 top-0 z-50 font-inter">
       {/* Logo Area */}
       <div className="pt-12 pb-10 flex justify-center items-center">
-        <div 
-          className="w-48 h-20 bg-white"
-          style={{
-            WebkitMask: `url('/admin/sidebar/Group 3.png') center/contain no-repeat`,
-            mask: `url('/admin/sidebar/Group 3.png') center/contain no-repeat`
-          }}
+        <Image
+          src="/admin/sidebar/Group 3.png"
+          alt="Winners Realty"
+          width={160}
+          height={160}
+          className="rounded-full"
         />
       </div>
 

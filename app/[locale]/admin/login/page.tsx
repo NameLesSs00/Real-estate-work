@@ -44,13 +44,13 @@ export default function LoginPage() {
       <div className="relative w-full max-w-[850px] mx-4 pt-10 pb-20">
         
         {/* The Single White Circle Shape (260x260) */}
-        <div className="absolute top-[-125px] left-1/2 -translate-x-1/2 w-[260px] h-[260px] bg-white rounded-full z-20 flex items-end justify-center pb-10">
-           <div className="relative w-48 h-20 mb-2">
+        <div className="absolute top-[-125px] left-1/2 -translate-x-1/2 w-[260px] h-[260px] bg-white rounded-full z-20 flex items-center justify-center overflow-hidden shadow-sm">
+           <div className="relative w-full h-full">
               <Image 
-                src="/admin/login/logo.png" 
-                alt="The Gate Estates" 
+                src="/admin/login/logo.jpeg" 
+                alt="Winners Realty" 
                 fill 
-                className="object-contain"
+                className="object-cover rounded-full"
                 priority
               />
            </div>

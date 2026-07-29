@@ -35,24 +35,35 @@ const allura = Allura({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://thegate-estates.com"),
+  metadataBase: new URL("https://winners-realty.com"),
   title: {
-    default: "The Gate Estates | Premium Real Estate in Egypt",
-    template: "%s | The Gate Estates",
+    default: "Winners Realty | Premium Real Estate in Egypt",
+    template: "%s | Winners Realty",
   },
-  description: "Find your dream home with our premium real estate services. We offer a curated selection of properties in the most exclusive locations, redefining luxury living.",
-  keywords: ["Real Estate", "Egypt", "Property", "Luxury Homes", "Villas", "Apartments", "The Gate Estates"],
+  description: "Find your dream home with Winners Realty. We offer a curated selection of premium properties, luxury villas, and exclusive apartments in Egypt's most sought-after locations.",
+  keywords: ["Winners Realty", "Winners Real Estate", "Real Estate Egypt", "Property in Egypt", "Luxury Homes Egypt", "Buy Villas Egypt", "Apartments for Sale", "Premium Real Estate"],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
-    title: "The Gate Estates",
-    description: "Find your dream home with our premium real estate services. Redefining luxury living.",
-    url: "https://thegate-estates.com",
-    siteName: "The Gate Estates",
+    title: "Winners Realty | Premium Real Estate",
+    description: "Find your dream home with our premium real estate services. Redefining luxury living in Egypt.",
+    url: "https://winners-realty.com",
+    siteName: "Winners Realty",
     images: [
       {
-        url: "/assists/header/headerLogo.png",
-        width: 800,
-        height: 600,
-        alt: "The Gate Estates Logo",
+        url: "/assists/defaultImage.png",
+        width: 1200,
+        height: 630,
+        alt: "Winners Realty Showcase",
       },
     ],
     locale: "en_US",
@@ -60,7 +71,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Gate Estates | Premium Real Estate",
+    title: "Winners Realty | Premium Real Estate",
     description: "Discover exclusive properties in top locations.",
     images: ["/assists/header/headerLogo.png"],
   },
