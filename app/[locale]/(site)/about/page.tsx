@@ -172,7 +172,7 @@ export default function AboutPage() {
             {t('aboutPage.ctaSubtitle')}
           </p>
           <Link 
-            href={`/${language}/#contact`} 
+            href={`/${language}/contact`} 
             className="mt-4 bg-white text-[#1B2134] px-14 py-4 rounded-full font-bold text-[18px] hover:bg-[#F8F5F0] transition-all transform hover:scale-105"
           >
             {t('aboutPage.contactBtn')}
