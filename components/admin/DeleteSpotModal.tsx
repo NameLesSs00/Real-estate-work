@@ -46,7 +46,7 @@ export default function DeleteSpotModal({ isOpen, locationId, onClose, onSuccess
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between">
+        <div className="bg-[#000000] px-8 py-5 flex items-center justify-between">
           <h2 className="text-white text-[20px] font-bold">Delete Location</h2>
           <button onClick={onClose} className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none">
             <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={24} height={24} />
@@ -64,14 +64,14 @@ export default function DeleteSpotModal({ isOpen, locationId, onClose, onSuccess
           <div className="flex gap-4">
             <button
               onClick={onClose}
-              className="flex-1 py-4 rounded-xl border border-gray-200 text-[#16273B] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
+              className="flex-1 py-4 rounded-xl border border-gray-200 text-[#000000] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleConfirm}
               disabled={isLoading}
-              className="flex-1 py-4 rounded-xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex-1 py-4 rounded-xl bg-[#000000] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Deleting...' : 'Delete'}
             </button>

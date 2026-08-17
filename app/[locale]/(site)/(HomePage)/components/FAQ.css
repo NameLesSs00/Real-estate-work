@@ -1,6 +1,6 @@
 .faq-section {
   padding: 100px 0;
-  background: linear-gradient(173.91deg, #43527E -21.27%, #1B2134 43.02%, #1B2134 103.74%, #1B2134 153.75%, #43527E 226.38%);
+  background: #fbf9f6;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,7 +23,7 @@
 
 .faq-tag {
   font-family: var(--font-poppins);
-  color: #c7b7a1;
+  color: #A88849;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 2.8px;
@@ -33,7 +33,7 @@
 
 .faq-title {
   font-family: var(--font-radley);
-  color: #ffffff;
+  color: #000000;
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
@@ -41,7 +41,7 @@
 
 .faq-subtitle {
   font-family: var(--font-poppins);
-  color: #aaaaaa;
+  color: #555555;
   font-size: 18px;
   max-width: 700px;
   line-height: 1.6;
@@ -51,7 +51,7 @@
 .faq-accent-line {
   width: 160px;
   height: 4px;
-  background-color: #c7b7a1;
+  background-color: #A88849;
   border-radius: 2px;
 }
 
@@ -64,8 +64,10 @@
 }
 
 .faq-item {
-  background-color: #fcfbf9; /* Slightly off-white for premium feel */
-  border-radius: 12px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
   overflow: hidden;
   transition: all 0.3s ease;
 }
@@ -83,7 +85,7 @@
   font-family: var(--font-poppins);
   font-size: 20px;
   font-weight: 600;
-  color: #1b2134;
+  color: #000000;
   transition: color 0.3s ease;
 }
 
@@ -94,7 +96,7 @@
 .faq-chevron {
   width: 24px;
   height: 24px;
-  color: #1b2134;
+  color: #000000;
   transition: transform 0.3s ease;
 }
 
@@ -116,7 +118,7 @@
 
 .faq-answer p {
   font-family: var(--font-poppins);
-  color: #aaaaaa;
+  color: #666666;
   font-size: 16px;
   line-height: 1.6;
   margin: 0;
@@ -132,7 +134,7 @@
 .faq-spinner {
   width: 40px;
   height: 40px;
-  color: #c7b7a1;
+  color: #A88849;
   animation: spin 1s linear infinite;
 }
 
@@ -151,20 +153,23 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 44px;
+  padding: 16px 48px;
   border-radius: 50px;
-  border: 1.5px solid #c7b7a1;
-  color: #c7b7a1;
+  background-color: #000000;
+  color: #ffffff;
   font-family: var(--font-poppins);
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .faq-view-all-link:hover {
-  background-color: #c7b7a1;
-  color: #1b2134;
+  background-color: #A88849;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(168, 136, 73, 0.3);
 }
 
 .faq-view-all-icon {

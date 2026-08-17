@@ -87,7 +87,7 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
       <div className="bg-white rounded-[32px] w-full max-w-[820px] max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between shrink-0">
+        <div className="bg-[#000000] px-8 py-5 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[20px] font-bold">Project Details</h2>
           <button onClick={onClose} className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none">
             <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={26} height={26} />
@@ -98,7 +98,7 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
         <div className="flex-1 overflow-y-auto scrollbar-hide p-8 space-y-8">
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="w-10 h-10 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : error ? (
             <p className="text-red-500 text-center py-20">{error}</p>
@@ -106,7 +106,7 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
             <>
               {/* Name + meta */}
               <div>
-                <h3 className="text-[26px] font-bold text-[#16273B]">{project.name}</h3>
+                <h3 className="text-[26px] font-bold text-[#000000]">{project.name}</h3>
                 <p className="text-[13px] text-gray-400 mt-1">
                   Created {formatDate(project.createdAt)} by <span className="font-medium text-gray-500">{project.createdBy}</span>
                 </p>
@@ -120,7 +120,7 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
                 ].map(({ label, value }) => (
                   <div key={label} className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
                     <p className="text-[13px] text-gray-500 font-medium mb-1">{label}</p>
-                    <p className="text-[#16273B] text-[16px] font-bold">{value}</p>
+                    <p className="text-[#000000] text-[16px] font-bold">{value}</p>
                   </div>
                 ))}
               </div>
@@ -129,14 +129,14 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
               {project.description && (
                 <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
                   <p className="text-[13px] text-gray-500 font-medium mb-1">Description</p>
-                  <p className="text-[#16273B] text-[15px] leading-relaxed">{project.description}</p>
+                  <p className="text-[#000000] text-[15px] leading-relaxed">{project.description}</p>
                 </div>
               )}
 
               {/* Images */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-[18px] font-bold text-[#16273B]">
+                  <h4 className="text-[18px] font-bold text-[#000000]">
                     Images <span className="text-[14px] font-normal text-gray-400">({project.imageUrls.length})</span>
                   </h4>
                   <div className="flex gap-3 items-center">
@@ -147,7 +147,7 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
                       </button>
                     )}
                     <label htmlFor="proj-detail-upload"
-                      className={`flex items-center gap-2 bg-[#16273B] text-white px-5 py-2.5 rounded-full text-[14px] font-semibold cursor-pointer hover:bg-[#1a304a] transition-colors ${isUploading ? 'opacity-60 pointer-events-none' : ''}`}>
+                      className={`flex items-center gap-2 bg-[#000000] text-white px-5 py-2.5 rounded-full text-[14px] font-semibold cursor-pointer hover:bg-[#1a304a] transition-colors ${isUploading ? 'opacity-60 pointer-events-none' : ''}`}>
                       {isUploading ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Uploading...</> : <><span className="text-lg leading-none">+</span> Add Images</>}
                     </label>
                     <input type="file" id="proj-detail-upload" className="hidden" accept="image/*" multiple onChange={handleImageUpload} />
@@ -185,7 +185,7 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
               
               {/* Units List */}
               <div>
-                <h4 className="text-[18px] font-bold text-[#16273B] mb-4">
+                <h4 className="text-[18px] font-bold text-[#000000] mb-4">
                   Units <span className="text-[14px] font-normal text-gray-400">({project.units?.length || 0})</span>
                 </h4>
                 {(!project.units || project.units.length === 0) ? (
@@ -211,7 +211,7 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h5 className="font-bold text-[#16273B] text-[15px] truncate">
+                          <h5 className="font-bold text-[#000000] text-[15px] truncate">
                             {typeof unit.name === 'string' ? unit.name : (unit.name?.en || 'Untitled')}
                           </h5>
                           <p className="text-[#1447E6] font-bold text-[13px] mt-0.5">
@@ -235,7 +235,7 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
 
         {/* Footer */}
         <div className="px-8 py-5 border-t border-gray-100 shrink-0 flex justify-end bg-white">
-          <button onClick={onClose} className="bg-[#16273B] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer">
+          <button onClick={onClose} className="bg-[#000000] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer">
             Close
           </button>
         </div>

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { getBlogs, BlogItem, getBlogImageUrl } from '@/lib/api/blogs';
+import { ArrowRight } from 'lucide-react';
 import './Articles.css';
 
 // Helper to convert title to slug
@@ -41,7 +42,7 @@ const Articles = () => {
     return (
       <section className="articles-section overflow-hidden">
         <div className="articles-container flex justify-center py-20">
-          <div className="w-8 h-8 border-4 border-[#1B2134] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-[#000000] border-t-transparent rounded-full animate-spin"></div>
         </div>
       </section>
     );
@@ -61,8 +62,8 @@ const Articles = () => {
           className="articles-header"
         >
           <span className="articles-tag">{t('articles.tag') as string}</span>
-          <h2 className="articles-title">{t('articles.title') as string}</h2>
-          <p className="articles-subtitle">
+          <h2 className="articles-title font-radley text-[#000000] text-[48px] leading-[1.2] mb-6">{t('articles.title') as string}</h2>
+          <p className="articles-subtitle text-[#666666]">
             {t('articles.subtitle') as string}
           </p>
           <div className="articles-accent-line"></div>
@@ -76,9 +77,7 @@ const Articles = () => {
             hidden: { opacity: 0 },
             visible: {
               opacity: 1,
-              transition: {
-                staggerChildren: 0.2
-              }
+              transition: { staggerChildren: 0.2 }
             }
           }}
           className="articles-grid"
@@ -97,28 +96,24 @@ const Articles = () => {
                   }
                 }}
               >
-                <Link href={blogUrl} className="article-card block">
-                  <div className="article-image-wrapper">
+                <Link href={blogUrl} className="group block bg-white rounded-[24px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                  <div className="relative w-full aspect-[4/5] overflow-hidden">
                     <Image 
                       src={getBlogImageUrl(blog.imageUrl) || '/placeholder-image.png'} 
                       alt={blog.title} 
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="article-image"
+                      className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
                       unoptimized
                     />
                   </div>
-                  <div className="article-overlay">
-                    <h3 className="article-card-title">{blog.title}</h3>
-                    <div className="read-more-btn">
+                  <div className="p-8 flex flex-col justify-between h-[180px]">
+                    <h3 className="font-radley text-[#000000] text-[22px] font-bold leading-snug line-clamp-2">
+                      {blog.title}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-4 text-[#c7b7a1] font-poppins font-semibold text-[15px] group-hover:text-[#A88849] transition-colors">
                       {t('articles.readMore') as string}
-                      <Image 
-                        src="/assists/articles/arrow-right.png" 
-                        alt="Arrow" 
-                        width={18} 
-                        height={18} 
-                        className="read-more-arrow"
-                      />
+                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </Link>

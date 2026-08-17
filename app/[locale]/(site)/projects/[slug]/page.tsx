@@ -101,7 +101,7 @@ export default function ProjectDetailsPage({
         <p className="text-red-500 text-[16px] font-poppins">{error ?? t('projectDetails.notFound') as string}</p>
         <Link
           href={`/${language}/projects`}
-          className="bg-[#1B2134] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#252d46] transition-all"
+          className="bg-[#000000] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#252d46] transition-all"
         >
           {t('projectDetails.backToProjects') as string}
         </Link>
@@ -124,15 +124,15 @@ export default function ProjectDetailsPage({
 
           {/* Breadcrumb */}
           <motion.nav variants={itemVariants} className="flex items-center gap-1.5 text-[14px] text-[#888]">
-            <Link href={`/${language}/projects`} className="hover:text-[#1B2134] transition-colors">{t('projects.title') as string}</Link>
+            <Link href={`/${language}/projects`} className="hover:text-[#000000] transition-colors">{t('projects.title') as string}</Link>
             <ChevronRight size={13} className="text-[#bbb]" />
-            <span className="text-[#1B2134] font-semibold">{localizedName}</span>
+            <span className="text-[#000000] font-semibold">{localizedName}</span>
           </motion.nav>
 
           {/* ── Project Header (Meta) ── */}
           <motion.div variants={itemVariants} className="flex flex-col gap-6">
             <div className="flex flex-col gap-3">
-              <h1 className="text-[28px] md:text-[36px] font-bold text-[#1B2134] leading-tight">
+              <h1 className="text-[28px] md:text-[36px] font-bold text-[#000000] leading-tight">
                 {localizedName}
               </h1>
 
@@ -157,7 +157,7 @@ export default function ProjectDetailsPage({
                     <div className="h-10 w-px bg-[#E5E2DE]" />
                     <div className="flex flex-col">
                       <span className="text-[10px] md:text-[11px] text-[#C7B7A1] font-bold uppercase tracking-[0.2em] mb-0.5">Developed By</span>
-                      <span className="text-[18px] md:text-[22px] font-bold text-[#1B2134] tracking-tight">{project.developerName}</span>
+                      <span className="text-[18px] md:text-[22px] font-bold text-[#000000] tracking-tight">{project.developerName}</span>
                     </div>
                   </div>
                 )}
@@ -174,7 +174,7 @@ export default function ProjectDetailsPage({
           {/* ── Facilities Grid (Replaces Stats) ── */}
           {((project.facilityIds && project.facilityIds.length > 0) || (project.facilities && project.facilities.length > 0)) && (
             <motion.div variants={itemVariants} className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm">
-              <h2 className="text-[20px] font-bold text-[#1B2134] mb-6 flex items-center gap-3">
+              <h2 className="text-[20px] font-bold text-[#000000] mb-6 flex items-center gap-3">
                 {t('projectDetails.facilities') || 'Facilities'}
                 <span className="h-px flex-1 bg-gray-100"></span>
               </h2>
@@ -185,10 +185,10 @@ export default function ProjectDetailsPage({
                     const localizedFacName = typeof facName === 'string' ? facName : (facName ? getLocalized(facName) : `Facility ${facId}`);
                     return (
                       <div key={facId} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                        <div className="w-8 h-8 rounded-full bg-[#1B2134]/5 flex items-center justify-center text-[#1B2134] group-hover:bg-[#1B2134] group-hover:text-white transition-all">
+                        <div className="w-8 h-8 rounded-full bg-[#000000]/5 flex items-center justify-center text-[#000000] group-hover:bg-[#000000] group-hover:text-white transition-all">
                           <Check size={16} strokeWidth={3} />
                         </div>
-                        <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#1B2134] transition-colors">{localizedFacName}</span>
+                        <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#000000] transition-colors">{localizedFacName}</span>
                       </div>
                     );
                   })
@@ -199,10 +199,10 @@ export default function ProjectDetailsPage({
                     const localizedFacName = typeof facName === 'string' ? facName : (facName ? getLocalized(facName) : `Facility ${facId}`);
                     return (
                       <div key={facId} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                        <div className="w-8 h-8 rounded-full bg-[#1B2134]/5 flex items-center justify-center text-[#1B2134] group-hover:bg-[#1B2134] group-hover:text-white transition-all">
+                        <div className="w-8 h-8 rounded-full bg-[#000000]/5 flex items-center justify-center text-[#000000] group-hover:bg-[#000000] group-hover:text-white transition-all">
                           <Check size={16} strokeWidth={3} />
                         </div>
-                        <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#1B2134] transition-colors">{localizedFacName}</span>
+                        <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#000000] transition-colors">{localizedFacName}</span>
                       </div>
                     );
                   })
@@ -213,7 +213,7 @@ export default function ProjectDetailsPage({
 
           {/* ── Description ── */}
           <motion.div variants={itemVariants} className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm">
-            <h2 className="text-[20px] font-bold text-[#1B2134] mb-4">{t('projectDetails.description') as string}</h2>
+            <h2 className="text-[20px] font-bold text-[#000000] mb-4">{t('projectDetails.description') as string}</h2>
             <hr className="border-[#F0EDE8] mb-6" />
             <div className="flex flex-col gap-4">
               {project.description

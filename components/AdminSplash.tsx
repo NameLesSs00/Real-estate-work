@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const AdminSplash = () => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-[#16273B] z-50 overflow-hidden">
+    <div className="fixed inset-0 flex items-center justify-center bg-[#000000] z-50 overflow-hidden">
       {/* Background Illustration */}
       <div className="absolute inset-0 z-0 opacity-40">
         <Image
@@ -19,7 +19,7 @@ const AdminSplash = () => {
         <div className="relative w-[300px] h-[100px] md:w-[450px] md:h-[150px]">
           <Image
             src="/admin/splash/logo.png"
-            alt="Winners Realty Logo"
+            alt="Luxe Estate Logo"
             fill
             className="object-contain"
           />

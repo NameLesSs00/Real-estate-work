@@ -21,7 +21,7 @@
     ]
   },
   "footer": {
-    "about": "Winners Realty was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
+    "about": "Luxe Estate was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
     "usefulLinks": "Quick action",
     "stayConnected": "Follow Us",
     "newsletter": "Join our newsletter to stay up to date on features and releases.",
@@ -147,29 +147,29 @@
   },
   "aboutPage": {
     "visionTitle": "Our Vision",
-    "visionText": "To redefine the real estate experience by making it more transparent, accessible, and tailored to modern lifestyles. We aim to connect people with spaces that truly inspire how they live, work, and grow.",
+    "visionText": "To redefine luxury real estate in Egypt by curating an exclusive portfolio of extraordinary properties. We strive to elevate the standard of living, offering unparalleled elegance and bespoke living experiences for our esteemed clientele.",
     "missionTitle": "Our Mission",
-    "missionText": "To guide our clients through every step of their property journey with honesty, expertise, and care. We are committed to delivering exceptional service, curated property selections, and a seamless experience that builds long-term trust.",
-    "journeyTitle": "Your Property Journey Starts With Us",
-    "journeyText": "We are a real estate company dedicated to helping you find the perfect property across Egypt. From modern apartments and luxury villas to smart investment opportunities, we make your journey to buying or renting seamless, reliable, and rewarding.",
-    "offerTitle": "What We Offer?",
+    "missionText": "We are dedicated to providing an elite, personalized service that transcends expectations. By blending deep market expertise with uncompromising integrity, we guide our clients toward exceptional investments and their ultimate dream homes.",
+    "journeyTitle": "Our Legacy",
+    "journeyText": "Born from a passion for architectural brilliance and refined living, Luxe Estate has evolved into the region's premier luxury real estate boutique. Our journey is defined by a commitment to excellence, matching discerning buyers with truly magnificent properties.",
+    "offerTitle": "Exclusive Services",
     "offers": {
       "sales": {
-        "title": "Property Sales",
-        "text": "Discover a wide range of carefully selected properties for sale, from ready-to-move homes to high-potential investment projects."
+        "title": "Luxury Acquisitions",
+        "text": "Discover a meticulously curated collection of Egypt's most prestigious estates, penthouses, and architectural masterpieces."
       },
       "rentals": {
-        "title": "Property Rentals",
-        "text": "Find flexible rental options that match your needs, whether you're looking for short-term stays or long-term living."
+        "title": "Premium Leasing",
+        "text": "Experience elite living with our portfolio of high-end rental properties, offering unmatched comfort and sophistication."
       },
       "investment": {
-        "title": "Investment Opportunities",
-        "text": "Get access to premium real estate opportunities with strong returns in the most promising locations across Egypt."
+        "title": "Strategic Wealth",
+        "text": "Unlock exceptional returns through exclusive investment opportunities, guided by our profound insight into the luxury market."
       }
     },
-    "ctaTitle": "Begin your real estate journey with us today",
-    "ctaSubtitle": "Discover exceptional properties and invest in a lifestyle defined by elegance and value",
-    "contactBtn": "Let's Contact"
+    "ctaTitle": "Experience the Extraordinary",
+    "ctaSubtitle": "Connect with our elite advisors to begin your journey toward unparalleled luxury living.",
+    "contactBtn": "Contact Us"
   },
   "projects": {
     "title": "Explore Projects",
@@ -220,8 +220,8 @@
     "commission": "Commission"
   },
   "contactPage": {
-    "title": "Get in Touch with Winners Realty",
-    "subtitle": "Welcome to Winners Realty' Contact page. We're here to assist you with any inquiries, requests, or feedback you may have.",
+    "title": "Get in Touch with Luxe Estate",
+    "subtitle": "Welcome to Luxe Estate' Contact page. We're here to assist you with any inquiries, requests, or feedback you may have.",
     "info": {
       "email": "Email",
       "phone": "Phone",
@@ -230,7 +230,7 @@
     },
     "form": {
       "title": "Let's Connect",
-      "subtitle": "Use the form below to get in touch with Winners Realty.",
+      "subtitle": "Use the form below to get in touch with Luxe Estate.",
       "firstName": "First Name",
       "lastName": "Last Name",
       "email": "Email",
@@ -337,7 +337,7 @@
   "faqPage": {
     "tag": "SUPPORT",
     "title": "Frequently Asked Questions",
-    "subtitle": "Everything you need to know about buying, selling, and renting with Winners Realty.",
+    "subtitle": "Everything you need to know about buying, selling, and renting with Luxe Estate.",
     "loading": "Loading questions...",
     "noQuestions": "No FAQs available at the moment. Check back soon!"
   }

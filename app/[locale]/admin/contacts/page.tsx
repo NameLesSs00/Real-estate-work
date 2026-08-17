@@ -110,16 +110,16 @@ export default function ContactsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <h1 className="text-[36px] font-bold text-[#1B2134] mb-2">Contact Inquiries</h1>
+            <h1 className="text-[36px] font-bold text-[#000000] mb-2">Contact Inquiries</h1>
             <p className="text-[#64748B] text-lg">Manage leads and general inquiries from the Contact Us form.</p>
           </div>
           <div className="bg-white px-6 py-4 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
             <div className="text-right">
               <p className="text-[13px] text-gray-400 font-medium uppercase tracking-wider">Total Leads</p>
-              <p className="text-2xl font-bold text-[#1B2134]">{totalCount}</p>
+              <p className="text-2xl font-bold text-[#000000]">{totalCount}</p>
             </div>
             <div className="w-12 h-12 bg-[#F0EBE3] rounded-xl flex items-center justify-center">
-              <Eye className="text-[#1B2134]" size={24} />
+              <Eye className="text-[#000000]" size={24} />
             </div>
           </div>
         </div>
@@ -152,7 +152,7 @@ export default function ContactsPage() {
               placeholder="Search by name, email, or phone..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-[16px] outline-none focus:ring-4 focus:ring-[#1B2134]/5 shadow-sm transition-all"
+              className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-[16px] outline-none focus:ring-4 focus:ring-[#000000]/5 shadow-sm transition-all"
             />
           </div>
           
@@ -163,8 +163,8 @@ export default function ContactsPage() {
                 onClick={() => setActiveFilter(filter)}
                 className={`px-6 py-2.5 rounded-xl text-[14px] font-semibold transition-all duration-200 cursor-pointer ${
                   activeFilter === filter 
-                    ? 'bg-[#1B2134] text-white shadow-md' 
-                    : 'text-[#1B2134] hover:bg-white/50'
+                    ? 'bg-[#000000] text-white shadow-md' 
+                    : 'text-[#000000] hover:bg-white/50'
                 }`}
               >
                 {filter}
@@ -177,14 +177,14 @@ export default function ContactsPage() {
         <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-32 gap-4">
-              <Loader2 className="animate-spin text-[#1B2134]" size={48} />
+              <Loader2 className="animate-spin text-[#000000]" size={48} />
               <p className="text-gray-400 font-medium">Loading inquiries...</p>
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-24 gap-4">
               <AlertCircle className="text-red-400" size={48} />
               <p className="text-red-500 font-medium">{error}</p>
-              <button onClick={() => fetchContacts(currentPage)} className="bg-[#1B2134] text-white px-8 py-3 rounded-xl font-bold cursor-pointer hover:bg-[#2d3555] transition-all">Retry</button>
+              <button onClick={() => fetchContacts(currentPage)} className="bg-[#000000] text-white px-8 py-3 rounded-xl font-bold cursor-pointer hover:bg-[#2d3555] transition-all">Retry</button>
             </div>
           ) : filteredContacts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-32 gap-4">
@@ -197,7 +197,7 @@ export default function ContactsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left min-w-[1000px]">
                 <thead className="bg-gray-50/50">
-                  <tr className="text-[#1B2134] text-[14px] font-bold uppercase tracking-wider">
+                  <tr className="text-[#000000] text-[14px] font-bold uppercase tracking-wider">
                     <th className="px-8 py-6">Name</th>
                     <th className="px-8 py-6">Contact Info</th>
                     <th className="px-8 py-6">Type</th>
@@ -211,17 +211,17 @@ export default function ContactsPage() {
                     <tr key={contact.id} className="hover:bg-gray-50/30 transition-colors group">
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-[#1B2134]/5 flex items-center justify-center text-[#1B2134] font-bold text-sm">
+                          <div className="w-10 h-10 rounded-full bg-[#000000]/5 flex items-center justify-center text-[#000000] font-bold text-sm">
                             {contact.firstName[0]}{contact.lastName[0]}
                           </div>
                           <div>
-                            <p className="font-bold text-[#1B2134]">{contact.firstName} {contact.lastName}</p>
+                            <p className="font-bold text-[#000000]">{contact.firstName} {contact.lastName}</p>
                             <p className="text-[12px] text-gray-400 font-medium uppercase tracking-tighter">#{contact.id}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-8 py-6">
-                        <p className="text-[14px] text-[#1B2134] font-medium">{contact.email}</p>
+                        <p className="text-[14px] text-[#000000] font-medium">{contact.email}</p>
                         <p className="text-[13px] text-gray-400">{contact.phone}</p>
                       </td>
                       <td className="px-8 py-6">
@@ -243,7 +243,7 @@ export default function ContactsPage() {
                         <div className="flex items-center justify-end gap-2">
                           <button 
                             onClick={() => setSelectedContact(contact)}
-                            className="p-2.5 text-[#1B2134] hover:bg-[#1B2134]/5 rounded-xl transition-all"
+                            className="p-2.5 text-[#000000] hover:bg-[#000000]/5 rounded-xl transition-all"
                             title="View Details"
                           >
                             <Eye size={18} />
@@ -284,14 +284,14 @@ export default function ContactsPage() {
                 <button
                   onClick={() => fetchContacts(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-[14px] font-bold text-[#1B2134] bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-[14px] font-bold text-[#000000] bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
                 >
                   Previous
                 </button>
                 <button
                   onClick={() => fetchContacts(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-[14px] font-bold text-[#1B2134] bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-[14px] font-bold text-[#000000] bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
                 >
                   Next
                 </button>
@@ -318,7 +318,7 @@ export default function ContactsPage() {
                 onClick={e => e.stopPropagation()}
               >
                 {/* Modal Header */}
-                <div className="bg-[#1B2134] p-10 text-white relative">
+                <div className="bg-[#000000] p-10 text-white relative">
                   <button 
                     onClick={() => setSelectedContact(null)}
                     className="absolute top-8 right-8 text-white/60 hover:text-white transition-colors"
@@ -346,28 +346,28 @@ export default function ContactsPage() {
                   <div className="grid grid-cols-2 gap-8">
                     <div>
                       <p className="text-[13px] text-gray-400 font-bold uppercase tracking-widest mb-2">Email Address</p>
-                      <p className="text-[16px] text-[#1B2134] font-semibold">{selectedContact.email}</p>
+                      <p className="text-[16px] text-[#000000] font-semibold">{selectedContact.email}</p>
                     </div>
                     <div>
                       <p className="text-[13px] text-gray-400 font-bold uppercase tracking-widest mb-2">Phone Number</p>
-                      <p className="text-[16px] text-[#1B2134] font-semibold">{selectedContact.phone}</p>
+                      <p className="text-[16px] text-[#000000] font-semibold">{selectedContact.phone}</p>
                     </div>
                     <div>
                       <p className="text-[13px] text-gray-400 font-bold uppercase tracking-widest mb-2">Inquiry Type</p>
-                      <span className="px-3 py-1 bg-[#1B2134]/5 text-[#1B2134] rounded-lg text-[14px] font-bold inline-block">
+                      <span className="px-3 py-1 bg-[#000000]/5 text-[#000000] rounded-lg text-[14px] font-bold inline-block">
                         {selectedContact.type}
                       </span>
                     </div>
                     <div>
                       <p className="text-[13px] text-gray-400 font-bold uppercase tracking-widest mb-2">Source</p>
-                      <p className="text-[16px] text-[#1B2134] font-semibold">{selectedContact.hearFrom}</p>
+                      <p className="text-[16px] text-[#000000] font-semibold">{selectedContact.hearFrom}</p>
                     </div>
                   </div>
 
                   <div>
                     <p className="text-[13px] text-gray-400 font-bold uppercase tracking-widest mb-2">Message / Notes</p>
                     <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                      <p className="text-[15px] text-[#1B2134] leading-relaxed whitespace-pre-wrap italic">
+                      <p className="text-[15px] text-[#000000] leading-relaxed whitespace-pre-wrap italic">
                         &quot;{selectedContact.notes || 'No message provided.'}&quot;
                       </p>
                     </div>

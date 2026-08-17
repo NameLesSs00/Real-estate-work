@@ -150,7 +150,7 @@ export default function EditBlogPage() {
   if (isLoading) {
     return (
       <div className="p-8 flex justify-center items-center h-full">
-        <div className="w-8 h-8 border-4 border-[#1B2134] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-[#000000] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -185,7 +185,7 @@ export default function EditBlogPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter the title of the blog"
-                className="w-full p-4 rounded-xl border border-gray-200 focus:border-[#1B2134] focus:ring-1 focus:ring-[#1B2134] outline-none transition-all"
+                className="w-full p-4 rounded-xl border border-gray-200 focus:border-[#000000] focus:ring-1 focus:ring-[#000000] outline-none transition-all"
                 required
               />
             </div>
@@ -202,7 +202,7 @@ export default function EditBlogPage() {
                 accept="image/*"
                 ref={mainImageInputRef}
                 onChange={(e) => setMainImageFile(e.target.files?.[0] || null)}
-                className="w-full p-4 rounded-xl border border-gray-200 focus:border-[#1B2134] focus:ring-1 focus:ring-[#1B2134] outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#F8F5F0] file:text-[#1B2134] hover:file:bg-[#EAE5DF]"
+                className="w-full p-4 rounded-xl border border-gray-200 focus:border-[#000000] focus:ring-1 focus:ring-[#000000] outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#F8F5F0] file:text-[#000000] hover:file:bg-[#EAE5DF]"
               />
               <p className="text-xs text-gray-500 mt-2">Upload a new image to replace the current one.</p>
             </div>
@@ -233,7 +233,7 @@ export default function EditBlogPage() {
             ) : (
               sections.map((section) => (
                 <div key={section.clientId} className="p-6 border border-gray-100 rounded-xl bg-gray-50 relative">
-                  <div className="absolute -top-3 -left-3 w-8 h-8 bg-[#1B2134] text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md">
+                  <div className="absolute -top-3 -left-3 w-8 h-8 bg-[#000000] text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md">
                     {section.sectionNumber}
                   </div>
                   <button 
@@ -255,7 +255,7 @@ export default function EditBlogPage() {
                         value={section.tittle}
                         onChange={(e) => handleUpdateSection(section.clientId, 'tittle', e.target.value)}
                         placeholder="e.g., Introduction"
-                        className="w-full p-3 rounded-lg border border-gray-200 outline-none focus:border-[#1B2134]"
+                        className="w-full p-3 rounded-lg border border-gray-200 outline-none focus:border-[#000000]"
                       />
                     </div>
                     <div>
@@ -265,7 +265,7 @@ export default function EditBlogPage() {
                         onChange={(e) => handleUpdateSection(section.clientId, 'content', e.target.value)}
                         placeholder="Write your section content here..."
                         rows={4}
-                        className="w-full p-3 rounded-lg border border-gray-200 outline-none focus:border-[#1B2134] resize-y"
+                        className="w-full p-3 rounded-lg border border-gray-200 outline-none focus:border-[#000000] resize-y"
                         required
                       />
                     </div>
@@ -280,7 +280,7 @@ export default function EditBlogPage() {
                         type="file" 
                         accept="image/*"
                         onChange={(e) => handleUpdateSection(section.clientId, 'imageFile', e.target.files?.[0] || null)}
-                        className="w-full p-3 rounded-lg border border-gray-200 outline-none focus:border-[#1B2134] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#F8F5F0] file:text-[#1B2134] hover:file:bg-[#EAE5DF]"
+                        className="w-full p-3 rounded-lg border border-gray-200 outline-none focus:border-[#000000] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#F8F5F0] file:text-[#000000] hover:file:bg-[#EAE5DF]"
                       />
                       <p className="text-xs text-gray-500 mt-1">Upload to replace existing image.</p>
                     </div>
@@ -303,7 +303,7 @@ export default function EditBlogPage() {
           <button 
             type="submit"
             disabled={isSubmitting}
-            className="bg-[#1B2134] text-white px-8 py-3 rounded-xl font-medium hover:bg-gray-800 transition-colors shadow-md disabled:opacity-50 flex items-center gap-2"
+            className="bg-[#000000] text-white px-8 py-3 rounded-xl font-medium hover:bg-gray-800 transition-colors shadow-md disabled:opacity-50 flex items-center gap-2"
           >
             {isSubmitting && (
               <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

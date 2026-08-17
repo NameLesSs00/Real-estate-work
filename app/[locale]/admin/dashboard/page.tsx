@@ -9,6 +9,7 @@ import { getProjects } from '@/lib/api/projects';
 import { getDevelopers } from '@/lib/api/developers';
 import { getRequests } from '@/lib/api/requests';
 import { getLatestDeals } from '@/lib/api/deals';
+import { API_DOMAIN } from '@/lib/api/config';
 
 interface StatCard {
   title: string;
@@ -97,7 +98,7 @@ export default function DashboardPage() {
       loading,
       icon: '/admin/dashbaord/units.png',
       bg: 'bg-white border border-gray-100',
-      textCol: 'text-[#16273B]',
+      textCol: 'text-[#000000]',
       subText: 'text-gray-500',
       iconBg: 'bg-[#EEF0F5]',
     },
@@ -106,9 +107,9 @@ export default function DashboardPage() {
       value: loading ? '...' : String(totalProjects ?? '—'),
       loading,
       icon: '/admin/dashbaord/activeProject.png',
-      bg: 'bg-[#1B2134]',
-      textCol: 'text-white',
-      subText: 'text-gray-400',
+      bg: 'bg-white border border-gray-100',
+      textCol: 'text-[#000000]',
+      subText: 'text-gray-500',
       iconBg: 'bg-[#F3E8FF]',
     },
     {
@@ -117,7 +118,7 @@ export default function DashboardPage() {
       loading,
       icon: '/admin/dashbaord/developers.png',
       bg: 'bg-white border border-gray-100',
-      textCol: 'text-[#16273B]',
+      textCol: 'text-[#000000]',
       subText: 'text-gray-500',
       iconBg: 'bg-[#EEF0F5]',
     },
@@ -126,9 +127,9 @@ export default function DashboardPage() {
       value: loading ? '...' : String(pendingCount ?? '—'),
       loading,
       icon: '/admin/dashbaord/revenue.png',
-      bg: 'bg-[#1B2134]',
-      textCol: 'text-white',
-      subText: 'text-gray-400',
+      bg: 'bg-white border border-gray-100',
+      textCol: 'text-[#000000]',
+      subText: 'text-gray-500',
       iconBg: 'bg-[#F3E8FF]',
     },
   ];
@@ -139,7 +140,7 @@ export default function DashboardPage() {
 
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-[32px] font-bold text-[#16273B] mb-2">Dashboard Overview</h1>
+          <h1 className="text-[32px] font-bold text-[#000000] mb-2">Dashboard Overview</h1>
           <p className="text-[#64748B] text-lg">Welcome back! Here&apos;s what&apos;s happening today.</p>
         </div>
 
@@ -164,8 +165,8 @@ export default function DashboardPage() {
           {/* Recent Units */}
           <div>
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-[22px] font-bold text-[#16273B]">Recent Units</h3>
-              <Link href="/admin/units" className="text-[14px] text-[#64748B] hover:text-[#16273B] font-medium transition-colors">View all →</Link>
+              <h3 className="text-[22px] font-bold text-[#000000]">Recent Units</h3>
+              <Link href="/admin/units" className="text-[14px] text-[#64748B] hover:text-[#000000] font-medium transition-colors">View all →</Link>
             </div>
             <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#F8F5F080' }}>
               {loading ? (
@@ -179,19 +180,19 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-4">
                     <div className="relative w-[90px] h-[65px] rounded-xl overflow-hidden bg-gray-100 shrink-0">
                       <Image
-                        src={unit.imageUrls?.[0] ? (unit.imageUrls[0].startsWith('http') ? unit.imageUrls[0] : `https://api.thegate-estates.com/${unit.imageUrls[0]}`) : '/assists/defaultImage.png'}
+                        src={unit.imageUrls?.[0] ? (unit.imageUrls[0].startsWith('http') ? unit.imageUrls[0] : `${API_DOMAIN}/${unit.imageUrls[0]}`) : '/assists/defaultImage.png'}
                         alt={unit.name}
                         fill
                         className="object-cover"
                       />
                     </div>
                     <div>
-                      <h4 className="text-[15px] font-bold text-[#16273B] line-clamp-1">{unit.name}</h4>
+                      <h4 className="text-[15px] font-bold text-[#000000] line-clamp-1">{unit.name}</h4>
                       <p className="text-[13px] text-gray-500 mt-0.5">{unit.locationName || '—'}</p>
                     </div>
                   </div>
                   <div className="text-right pr-1">
-                    <p className="text-[16px] font-bold text-[#16273B]">{unit.currencyCode || 'EGP'} {unit.price?.toLocaleString()}</p>
+                    <p className="text-[16px] font-bold text-[#000000]">{unit.currencyCode || 'EGP'} {unit.price?.toLocaleString()}</p>
                     <span className={`text-[12px] font-semibold ${unit.isActive ? 'text-green-500' : 'text-red-400'}`}>
                       {unit.isActive ? 'Active' : 'Sold'}
                     </span>
@@ -204,8 +205,8 @@ export default function DashboardPage() {
           {/* Pending Requests */}
           <div>
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-[22px] font-bold text-[#16273B]">Pending Requests</h3>
-              <Link href="/admin/requests" className="text-[14px] text-[#64748B] hover:text-[#16273B] font-medium transition-colors">View all →</Link>
+              <h3 className="text-[22px] font-bold text-[#000000]">Pending Requests</h3>
+              <Link href="/admin/requests" className="text-[14px] text-[#64748B] hover:text-[#000000] font-medium transition-colors">View all →</Link>
             </div>
             <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#F8F5F080' }}>
               {loading ? (
@@ -217,12 +218,12 @@ export default function DashboardPage() {
               ) : pendingRequests.map((req) => (
                 <div key={req.id} className="bg-white rounded-[20px] p-4 flex items-center justify-between shadow-sm">
                   <div>
-                    <h4 className="text-[15px] font-bold text-[#16273B]">{req.unitName}</h4>
+                    <h4 className="text-[15px] font-bold text-[#000000]">{req.unitName}</h4>
                     <p className="text-[13px] text-gray-500 mt-0.5">{req.applicantName}</p>
                   </div>
                   <Link
                     href="/admin/requests"
-                    className="text-[13px] font-semibold text-[#16273B] border border-[#16273B] px-4 py-1.5 rounded-full hover:bg-[#16273B] hover:text-white transition-all"
+                    className="text-[13px] font-semibold text-[#000000] border border-[#000000] px-4 py-1.5 rounded-full hover:bg-[#000000] hover:text-white transition-all"
                   >
                     Review
                   </Link>
@@ -236,7 +237,7 @@ export default function DashboardPage() {
         {recentDeals.length > 0 && (
           <div>
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-[22px] font-bold text-[#16273B]">Recent Deals</h3>
+              <h3 className="text-[22px] font-bold text-[#000000]">Recent Deals</h3>
             </div>
             <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 overflow-hidden">
               <table className="w-full text-left">
@@ -251,7 +252,7 @@ export default function DashboardPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {recentDeals.map((deal) => (
-                    <tr key={deal.id} className="text-[14px] text-[#16273B] hover:bg-gray-50/50 transition-colors">
+                    <tr key={deal.id} className="text-[14px] text-[#000000] hover:bg-gray-50/50 transition-colors">
                       <td className="py-4 px-6 font-semibold">{deal.unit?.unitName}</td>
                       <td className="py-4 px-6 text-gray-500">{deal.unit?.projectName}</td>
                       <td className="py-4 px-6">

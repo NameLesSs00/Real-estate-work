@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Work_Sans, Radley, Allura, Inter } from "next/font/google";
+import { Poppins, Work_Sans, Radley, Allura, Inter, Dancing_Script } from "next/font/google";
 import "../globals.css";
 import { LanguageProvider } from "@/lib/contexts/LanguageContext";
 import TokenRefresher from "@/lib/auth/TokenRefresher";
@@ -34,14 +34,20 @@ const allura = Allura({
   weight: ["400"],
 });
 
+const dancingScript = Dancing_Script({
+  variable: "--font-dancing-script",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://winners-realty.com"),
+  metadataBase: new URL("https://luxe-estate.com"),
   title: {
-    default: "Winners Realty | Premium Real Estate in Egypt",
-    template: "%s | Winners Realty",
+    default: "Luxe Estate | Premium Real Estate in Egypt",
+    template: "%s | Luxe Estate",
   },
-  description: "Find your dream home with Winners Realty. We offer a curated selection of premium properties, luxury villas, and exclusive apartments in Egypt's most sought-after locations.",
-  keywords: ["Winners Realty", "Winners Real Estate", "Real Estate Egypt", "Property in Egypt", "Luxury Homes Egypt", "Buy Villas Egypt", "Apartments for Sale", "Premium Real Estate"],
+  description: "Find your dream home with Luxe Estate. We offer a curated selection of premium properties, luxury villas, and exclusive apartments in Egypt's most sought-after locations.",
+  keywords: ["Luxe Estate", "Luxe Real Estate", "Real Estate Egypt", "Property in Egypt", "Luxury Homes Egypt", "Buy Villas Egypt", "Apartments for Sale", "Premium Real Estate"],
   robots: {
     index: true,
     follow: true,
@@ -54,16 +60,16 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Winners Realty | Premium Real Estate",
+    title: "Luxe Estate | Premium Real Estate",
     description: "Find your dream home with our premium real estate services. Redefining luxury living in Egypt.",
-    url: "https://winners-realty.com",
-    siteName: "Winners Realty",
+    url: "https://luxe-estate.com",
+    siteName: "Luxe Estate",
     images: [
       {
         url: "/assists/defaultImage.png",
         width: 1200,
         height: 630,
-        alt: "Winners Realty Showcase",
+        alt: "Luxe Estate Showcase",
       },
     ],
     locale: "en_US",
@@ -71,12 +77,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Winners Realty | Premium Real Estate",
+    title: "Luxe Estate | Premium Real Estate",
     description: "Discover exclusive properties in top locations.",
     images: ["/assists/header/headerLogo.png"],
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icon.svg",
     apple: "/apple-touch-icon.png",
   },
 };
@@ -93,9 +99,9 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${poppins.variable} ${workSans.variable} ${inter.variable} ${radley.variable} ${allura.variable} h-full antialiased`}
+      className={`${poppins.variable} ${workSans.variable} ${inter.variable} ${radley.variable} ${allura.variable} ${dancingScript.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-poppins">
+      <body className="min-h-full flex flex-col font-poppins bg-[#fbf9f6]">
         <LanguageProvider>
           <TokenRefresher />
           <main className="flex-grow">

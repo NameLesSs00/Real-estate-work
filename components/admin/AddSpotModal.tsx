@@ -95,7 +95,7 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#16273B] rounded-t-[24px] px-8 py-5 flex items-center justify-between">
+        <div className="bg-[#000000] rounded-t-[24px] px-8 py-5 flex items-center justify-between">
           <h2 className="text-white text-[22px] font-bold">
             {isEditMode ? 'Edit Location' : 'Add New Location'}
           </h2>
@@ -109,51 +109,51 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
 
           {/* City */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">City *</label>
+            <label className="text-[#000000] font-semibold text-[15px]">City *</label>
             <input
               type="text"
               value={form.city}
               onChange={handleChange('city')}
               placeholder="e.g. Cairo"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#000000]/20 text-[#000000] placeholder-gray-400"
               required
             />
           </div>
 
           {/* District */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">District *</label>
+            <label className="text-[#000000] font-semibold text-[15px]">District *</label>
             <input
               type="text"
               value={form.district}
               onChange={handleChange('district')}
               placeholder="e.g. New Cairo"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#000000]/20 text-[#000000] placeholder-gray-400"
               required
             />
           </div>
 
           {/* Street */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Street</label>
+            <label className="text-[#000000] font-semibold text-[15px]">Street</label>
             <input
               type="text"
               value={form.street}
               onChange={handleChange('street')}
               placeholder="e.g. 90th Street (optional)"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#000000]/20 text-[#000000] placeholder-gray-400"
             />
           </div>
 
           {/* Country */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">Country</label>
+            <label className="text-[#000000] font-semibold text-[15px]">Country</label>
             <input
               type="text"
               value={form.country}
               onChange={handleChange('country')}
               placeholder="e.g. Egypt (optional)"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#000000]/20 text-[#000000] placeholder-gray-400"
             />
           </div>
 
@@ -164,14 +164,14 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
         <div className="p-8 pt-0 flex gap-4">
           <button
             onClick={onClose}
-            className="flex-1 py-4 rounded-xl border border-gray-200 text-[#16273B] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
+            className="flex-1 py-4 rounded-xl border border-gray-200 text-[#000000] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="flex-1 py-4 rounded-xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex-1 py-4 rounded-xl bg-[#000000] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isLoading ? 'Saving...' : isEditMode ? 'Save Changes' : 'Add Location'}
           </button>

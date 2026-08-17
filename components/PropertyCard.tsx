@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, Banknote } from 'lucide-react';
+import { MapPin, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { slugify } from '@/lib/utils';
 import './PropertyCard.css';
@@ -33,30 +35,33 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   area,
   image,
   status = 'For Sale',
-  isDefaultImage = false,
-  unitType,
-  paymentPlan
+  unitType
 }) => {
   const { t, language } = useLanguage();
   
   const propertySlug = `${id}-${slugify(title)}`;
 
   return (
-    <div className="unit-card">
-      <Link 
-        href={`/${language}/properties/${propertySlug}`}
-        className="unit-image-wrapper block"
-        title={isDefaultImage ? "Default Image" : undefined}
-      >
+    <Link 
+      href={`/${language}/properties/${propertySlug}`}
+      className="group block bg-white rounded-[24px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500"
+    >
+      {/* Image Section */}
+      <div className="relative w-full aspect-[4/3] overflow-hidden">
         <Image
           src={image}
           alt={title}
           fill
           draggable={false}
-          className="unit-image"
+          className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
         />
-        <div className="unit-price-tag">{price}</div>
-        <div className="unit-status-tag">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        
+        {/* Tags */}
+        <div className="absolute top-5 left-5 bg-white/95 backdrop-blur-sm text-[#000000] px-5 py-2 rounded-full font-poppins font-bold text-[15px] shadow-lg">
+          {price}
+        </div>
+        <div className="absolute top-5 right-5 bg-[#A88849] text-white px-4 py-2 rounded-full font-poppins font-bold text-[12px] shadow-lg uppercase tracking-wider">
           {status === 'Sold' 
             ? t('propertyCard.status.sold') 
             : unitType === 'Rent' 
@@ -67,45 +72,50 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
                   ? t('propertyCard.status.resale') 
                   : t('propertyCard.status.sale')}
         </div>
-      </Link>
-      <div className="unit-content">
-        <h3 className="unit-title">{title}</h3>
-        <div className="unit-details-grid">
-          <div className="unit-detail">
-            <Image src="/assists/card/buildings-2.png" alt="Type" width={24} height={24} draggable={false} className="unit-detail-icon" />
-            <span>{type}</span>
-          </div>
-          <div className="unit-detail">
-            <MapPin size={24} className="unit-detail-icon" />
-            <span>{location}</span>
-          </div>
-          <div className="unit-detail">
-            <Image src="/assists/card/lucide_bed.png" alt="Beds" width={24} height={24} draggable={false} className="unit-detail-icon" />
-            <span>{beds} {t('propertyCard.details.bedroom')}</span>
-          </div>
-          <div className="unit-detail">
-            <Image src="/assists/card/cil_bath.png" alt="Baths" width={24} height={24} draggable={false} className="unit-detail-icon" />
-            <span>{baths} {t('propertyCard.details.bathroom')}</span>
-          </div>
-          <div className="unit-detail">
-            <Image src="/assists/card/fluent_slide-size-24-regular.png" alt="Area" width={24} height={24} draggable={false} className="unit-detail-icon" />
-            <span>{t('propertyCard.details.area')}: {area}</span>
-          </div>
-          {paymentPlan && (
-            <div className="unit-detail">
-              <Banknote size={24} className="unit-detail-icon" />
-              <span>{paymentPlan === 'Installment' ? t('propertyCard.details.instalment') : t('propertyCard.details.cash')}</span>
-            </div>
-          )}
-        </div>
-        <Link 
-          href={`/${language}/properties/${propertySlug}`}
-          className="unit-button text-center inline-block"
-        >
-          {t('propertyCard.details.viewDetails')}
-        </Link>
       </div>
-    </div>
+
+      {/* Content Section */}
+      <div className="p-6 md:p-8 flex flex-col justify-between h-[220px]">
+        <div>
+          <h3 className="font-radley text-[24px] font-bold text-[#000000] leading-tight mb-2 line-clamp-2 group-hover:text-[#A88849] transition-colors">
+            {title}
+          </h3>
+          <div className="flex items-center gap-1.5 text-gray-500 font-poppins text-[14px] mb-2">
+            <MapPin size={16} className="text-[#A88849] shrink-0" />
+            <span className="truncate">{location}</span>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-100 pt-5 mt-auto">
+          <div className="flex items-center justify-between text-[#000000] font-poppins text-[14px] mb-5">
+            <div className="flex items-center gap-2">
+              <Image src="/assists/card/lucide_bed.png" alt="Beds" width={18} height={18} className="brightness-0 opacity-60" />
+              <span className="font-semibold">{beds} <span className="font-normal text-gray-400 text-[12px] uppercase">Beds</span></span>
+            </div>
+            <div className="w-[1px] h-4 bg-gray-200"></div>
+            <div className="flex items-center gap-2">
+              <Image src="/assists/card/cil_bath.png" alt="Baths" width={18} height={18} className="brightness-0 opacity-60" />
+              <span className="font-semibold">{baths} <span className="font-normal text-gray-400 text-[12px] uppercase">Baths</span></span>
+            </div>
+            <div className="w-[1px] h-4 bg-gray-200"></div>
+            <div className="flex items-center gap-2">
+              <Image src="/assists/card/fluent_slide-size-24-regular.png" alt="Area" width={18} height={18} className="brightness-0 opacity-60" />
+              <span className="font-semibold">{area}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-[13px] font-bold text-gray-400 uppercase tracking-widest">
+              {type}
+            </span>
+            <div className="flex items-center gap-2 text-[#A88849] font-poppins font-bold text-[14px]">
+              {t('propertyCard.details.viewDetails')}
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
 

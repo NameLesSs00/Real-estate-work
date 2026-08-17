@@ -68,7 +68,7 @@ export default function BlogsPage() {
           
           {isLoading && blogs.length === 0 ? (
             <div className="py-16 flex justify-center items-center">
-              <div className="w-8 h-8 border-4 border-[#1B2134] border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-8 h-8 border-4 border-[#000000] border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : blogs.length === 0 ? (
             <div className="text-center py-16 text-gray-500 font-poppins">

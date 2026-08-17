@@ -147,7 +147,7 @@ export default function SettingsPage() {
         
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-[32px] font-bold text-[#1B2134] font-radley mb-2">Settings</h1>
+          <h1 className="text-[32px] font-bold text-[#000000] font-radley mb-2">Settings</h1>
           <p className="text-[#666] font-poppins">Manage your profile, security, and team members.</p>
         </div>
 
@@ -182,8 +182,8 @@ export default function SettingsPage() {
               onClick={() => setActiveTab(tab.id as Tab)}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[15px] font-semibold transition-all duration-300 ${
                 activeTab === tab.id 
-                  ? 'bg-[#1B2134] text-white shadow-md' 
-                  : 'text-[#1B2134] hover:bg-white/50'
+                  ? 'bg-[#000000] text-white shadow-md' 
+                  : 'text-[#000000] hover:bg-white/50'
               }`}
             >
               <tab.icon size={18} />
@@ -203,46 +203,46 @@ export default function SettingsPage() {
           {/* Profile Tab */}
           {activeTab === 'profile' && (
             <div className="max-w-xl">
-              <h2 className="text-2xl font-bold text-[#1B2134] mb-6 font-radley">Personal Information</h2>
+              <h2 className="text-2xl font-bold text-[#000000] mb-6 font-radley">Personal Information</h2>
               <form onSubmit={handleProfileUpdate} className="space-y-6">
                 <div className="grid gap-6">
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#1B2134] ml-1">Full Name</label>
+                    <label className="text-[14px] font-bold text-[#000000] ml-1">Full Name</label>
                     <input 
                       type="text" 
                       value={profileData.userName}
                       onChange={(e) => setProfileData({...profileData, userName: e.target.value})}
                       placeholder="Your Name"
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 transition-all font-medium text-[#1B2134]"
+                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#1B2134] ml-1">Email Address</label>
+                    <label className="text-[14px] font-bold text-[#000000] ml-1">Email Address</label>
                     <input 
                       type="email" 
                       value={profileData.email}
                       onChange={(e) => setProfileData({...profileData, email: e.target.value})}
                       placeholder="email@example.com"
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 transition-all font-medium text-[#1B2134]"
+                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#1B2134] ml-1">Phone Number</label>
+                    <label className="text-[14px] font-bold text-[#000000] ml-1">Phone Number</label>
                     <input 
                       type="tel" 
                       value={profileData.phoneNumber}
                       onChange={(e) => setProfileData({...profileData, phoneNumber: e.target.value})}
                       placeholder="+20 123 456 7890"
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 transition-all font-medium text-[#1B2134]"
+                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
                 </div>
                 <button 
                   disabled={loading}
-                  className="bg-[#1B2134] text-white px-10 py-4 rounded-full font-bold text-[16px] shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                  className="bg-[#000000] text-white px-10 py-4 rounded-full font-bold text-[16px] shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
                 >
                   {loading && <Loader2 className="animate-spin" size={20} />}
                   Save Changes
@@ -254,43 +254,43 @@ export default function SettingsPage() {
           {/* Security Tab */}
           {activeTab === 'security' && (
             <div className="max-w-xl">
-              <h2 className="text-2xl font-bold text-[#1B2134] mb-6 font-radley">Security Settings</h2>
+              <h2 className="text-2xl font-bold text-[#000000] mb-6 font-radley">Security Settings</h2>
               <form onSubmit={handlePasswordUpdate} className="space-y-6">
                 <div className="grid gap-6">
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#1B2134] ml-1">Current Password</label>
+                    <label className="text-[14px] font-bold text-[#000000] ml-1">Current Password</label>
                     <input 
                       type="password" 
                       value={passwordData.oldPassword}
                       onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 transition-all font-medium text-[#1B2134]"
+                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#1B2134] ml-1">New Password</label>
+                    <label className="text-[14px] font-bold text-[#000000] ml-1">New Password</label>
                     <input 
                       type="password" 
                       value={passwordData.newPassword}
                       onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 transition-all font-medium text-[#1B2134]"
+                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#1B2134] ml-1">Confirm New Password</label>
+                    <label className="text-[14px] font-bold text-[#000000] ml-1">Confirm New Password</label>
                     <input 
                       type="password" 
                       value={passwordData.confirmPassword}
                       onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#1B2134]/10 transition-all font-medium text-[#1B2134]"
+                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
                 </div>
                 <button 
                   disabled={loading}
-                  className="bg-[#1B2134] text-white px-10 py-4 rounded-full font-bold text-[16px] shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                  className="bg-[#000000] text-white px-10 py-4 rounded-full font-bold text-[16px] shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
                 >
                   {loading && <Loader2 className="animate-spin" size={20} />}
                   Update Password
@@ -303,10 +303,10 @@ export default function SettingsPage() {
           {activeTab === 'admins' && (
             <div className="space-y-8">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-[#1B2134] font-radley">Team Management</h2>
+                <h2 className="text-2xl font-bold text-[#000000] font-radley">Team Management</h2>
                 <button 
                   onClick={() => setShowAddAdmin(!showAddAdmin)}
-                  className="bg-[#1B2134] text-white px-6 py-2.5 rounded-full font-semibold text-[14px] shadow-md hover:scale-105 transition-all"
+                  className="bg-[#000000] text-white px-6 py-2.5 rounded-full font-semibold text-[14px] shadow-md hover:scale-105 transition-all"
                 >
                   {showAddAdmin ? 'Cancel' : 'Add New Admin'}
                 </button>
@@ -322,52 +322,52 @@ export default function SettingsPage() {
                     className="overflow-hidden"
                   >
                     <div className="bg-[#F8F5F0] p-8 rounded-[24px] mb-8">
-                      <h3 className="font-bold text-[#1B2134] mb-6">New Administrator</h3>
+                      <h3 className="font-bold text-[#000000] mb-6">New Administrator</h3>
                       <form onSubmit={handleAddAdmin} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <label className="text-[13px] font-bold text-[#1B2134] ml-1">First Name</label>
+                          <label className="text-[13px] font-bold text-[#000000] ml-1">First Name</label>
                           <input 
                             type="text" 
                             value={newAdmin.firstName}
                             onChange={(e) => setNewAdmin({...newAdmin, firstName: e.target.value})}
-                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#1B2134]/10"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10"
                             required
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[13px] font-bold text-[#1B2134] ml-1">Last Name</label>
+                          <label className="text-[13px] font-bold text-[#000000] ml-1">Last Name</label>
                           <input 
                             type="text" 
                             value={newAdmin.lastName}
                             onChange={(e) => setNewAdmin({...newAdmin, lastName: e.target.value})}
-                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#1B2134]/10"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10"
                             required
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[13px] font-bold text-[#1B2134] ml-1">Email</label>
+                          <label className="text-[13px] font-bold text-[#000000] ml-1">Email</label>
                           <input 
                             type="email" 
                             value={newAdmin.email}
                             onChange={(e) => setNewAdmin({...newAdmin, email: e.target.value})}
-                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#1B2134]/10"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10"
                             required
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[13px] font-bold text-[#1B2134] ml-1">Password</label>
+                          <label className="text-[13px] font-bold text-[#000000] ml-1">Password</label>
                           <input 
                             type="password" 
                             value={newAdmin.password}
                             onChange={(e) => setNewAdmin({...newAdmin, password: e.target.value})}
-                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#1B2134]/10"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10"
                             required
                           />
                         </div>
                         <div className="md:col-span-2 pt-2">
                           <button 
                             disabled={loading}
-                            className="bg-[#1B2134] text-white px-8 py-3 rounded-full font-bold text-[15px] shadow-md hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2"
+                            className="bg-[#000000] text-white px-8 py-3 rounded-full font-bold text-[15px] shadow-md hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2"
                           >
                             {loading && <Loader2 className="animate-spin" size={18} />}
                             Create Account
@@ -383,7 +383,7 @@ export default function SettingsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-[#F0EDE8] text-[#1B2134]/50 text-[13px] font-bold uppercase tracking-wider">
+                    <tr className="border-b border-[#F0EDE8] text-[#000000]/50 text-[13px] font-bold uppercase tracking-wider">
                       <th className="px-4 py-4">Username</th>
                       <th className="px-4 py-4">Email</th>
                       <th className="px-4 py-4">Created At</th>
@@ -391,7 +391,7 @@ export default function SettingsPage() {
                   </thead>
                   <tbody className="divide-y divide-[#F0EDE8]">
                     {adminsData?.items?.map((admin) => (
-                      <tr key={admin.id} className="text-[#1B2134] hover:bg-[#FDFCFB] transition-colors">
+                      <tr key={admin.id} className="text-[#000000] hover:bg-[#FDFCFB] transition-colors">
                         <td className="px-4 py-5 font-semibold">{admin.username}</td>
                         <td className="px-4 py-5 font-medium">{admin.email}</td>
                         <td className="px-4 py-5 text-[#666]">{new Date(admin.createdAt).toLocaleDateString()}</td>
@@ -399,7 +399,7 @@ export default function SettingsPage() {
                     ))}
                     {adminsData && (!adminsData.items || adminsData.items.length === 0) && (
                       <tr>
-                        <td colSpan={3} className="px-4 py-10 text-center text-[#1B2134]/40 font-medium">
+                        <td colSpan={3} className="px-4 py-10 text-center text-[#000000]/40 font-medium">
                           No administrators found.
                         </td>
                       </tr>
@@ -414,17 +414,17 @@ export default function SettingsPage() {
                   <button 
                     disabled={!adminsData.hasPreviousPage || loading}
                     onClick={() => fetchAdmins(currentPage - 1)}
-                    className="p-2 rounded-full border border-[#F0EDE8] text-[#1B2134] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
+                    className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
                   >
                     <ChevronLeft size={20} />
                   </button>
-                  <span className="font-semibold text-[15px] text-[#1B2134]">
+                  <span className="font-semibold text-[15px] text-[#000000]">
                     Page {adminsData.pageNumber} of {adminsData.totalPages}
                   </span>
                   <button 
                     disabled={!adminsData.hasNextPage || loading}
                     onClick={() => fetchAdmins(currentPage + 1)}
-                    className="p-2 rounded-full border border-[#F0EDE8] text-[#1B2134] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
+                    className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
                   >
                     <ChevronRight size={20} />
                   </button>

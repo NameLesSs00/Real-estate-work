@@ -11,7 +11,7 @@ import { getUnitsFiltered } from '@/lib/api/units';
 import { getUnitOutsides } from '@/lib/api/unitOutsides';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
 import { getLocations, Location } from '@/lib/api/locations';
-import { ChevronLeft, ChevronRight, Filter, X, MapPin, ChevronDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Filter, X, ChevronDown } from 'lucide-react';
 import './properties.css';
 
 // Maps the numeric propertyType button value to the string name the UnitOutsides API expects
@@ -295,7 +295,7 @@ function PropertiesPageContent() {
             <div className="flex items-center gap-4">
               <button 
                 onClick={openSidebar}
-                className="flex items-center gap-2 bg-[#1B2134] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-opacity-90 transition-all cursor-pointer shadow-md"
+                className="flex items-center gap-2 bg-[#000000] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-opacity-90 transition-all cursor-pointer shadow-md"
               >
                 <Filter size={16} />
                 {t('propertiesPage.grid.filter') as string}
@@ -309,7 +309,7 @@ function PropertiesPageContent() {
           {error && (
             <div className="flex flex-col items-center py-16 gap-4">
               <p className="text-red-500">{error}</p>
-              <button onClick={() => fetchUnits(1, filters)} className="bg-[#1B2134] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
+              <button onClick={() => fetchUnits(1, filters)} className="bg-[#000000] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
             </div>
           )}
 
@@ -319,7 +319,7 @@ function PropertiesPageContent() {
             </div>
           ) : !error && units.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-[18px] font-bold text-[#1B2134] mb-2">{t('propertiesPage.grid.noResults') as string}</p>
+              <p className="text-[18px] font-bold text-[#000000] mb-2">{t('propertiesPage.grid.noResults') as string}</p>
               <p className="text-gray-500">{t('propertiesPage.grid.adjustFilters') as string}</p>
             </div>
           ) : !error && (
@@ -351,7 +351,7 @@ function PropertiesPageContent() {
               <button 
                 onClick={() => handlePage(currentPage - 1)} 
                 disabled={currentPage === 1} 
-                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-gray-200 text-[13px] sm:text-[14px] font-medium text-[#1B2134] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-gray-200 text-[13px] sm:text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
               >
                 <ChevronLeft size={16} /> 
                 <span className="hidden sm:inline">{t('propertiesPage.pagination.prev') as string}</span>
@@ -362,7 +362,7 @@ function PropertiesPageContent() {
               <button 
                 onClick={() => handlePage(currentPage + 1)} 
                 disabled={currentPage === totalPages} 
-                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-gray-200 text-[13px] sm:text-[14px] font-medium text-[#1B2134] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-gray-200 text-[13px] sm:text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
               >
                 <span className="hidden sm:inline">{t('propertiesPage.pagination.next') as string}</span>
                 <ChevronRight size={16} />
@@ -374,52 +374,53 @@ function PropertiesPageContent() {
 
       {/* Filters Sidebar */}
       {isSidebarOpen && (
-        <div className="fixed inset-0 z-50 flex justify-start font-poppins">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={() => setIsSidebarOpen(false)} />
-          <div className="relative w-full sm:max-w-md bg-white h-full shadow-2xl flex flex-col transform transition-transform duration-300 animate-in slide-in-from-left">
-            <div className="flex items-center justify-between p-6 border-b border-gray-100 shrink-0">
-              <h2 className="text-[22px] font-bold text-[#1B2134]">{t('propertiesPage.sidebar.title') as string}</h2>
-              <button onClick={() => setIsSidebarOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer text-gray-500 hover:text-[#1B2134]">
-                <X size={24} />
+        <div className="fixed inset-0 z-50 flex justify-end font-poppins">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity" onClick={() => setIsSidebarOpen(false)} />
+          <div className="relative w-full sm:max-w-[480px] bg-[#fbf9f6] h-full shadow-2xl flex flex-col transform transition-transform duration-500 animate-in slide-in-from-right">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between p-8 border-b border-gray-200 shrink-0 bg-white">
+              <h2 className="text-[28px] font-radley text-[#000000]">{t('propertiesPage.sidebar.title') as string}</h2>
+              <button onClick={() => setIsSidebarOpen(false)} className="p-2.5 bg-gray-50 rounded-full hover:bg-gray-200 transition-colors cursor-pointer text-[#000000]">
+                <X size={20} />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-8">
+            
+            <div className="flex-1 overflow-y-auto p-8 space-y-10">
+              
               {/* Search Term */}
-              <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.searchKeywords') as string}</label>
+              <div className="space-y-4">
+                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.searchKeywords') as string}</label>
                 <input 
                   type="text" 
                   placeholder={t('propertiesPage.sidebar.placeholderSearch') as string} 
                   value={draftFilters.searchTerm}
                   onChange={(e) => setDraftFilters({ ...draftFilters, searchTerm: e.target.value })}
                   onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px]"
+                  className="w-full bg-transparent border-b-2 border-gray-200 py-3 text-[16px] text-[#000000] placeholder:text-gray-400 focus:outline-none focus:border-[#A88849] transition-colors"
                 />
               </div>
 
               {/* Country (Resale Only) */}
               {draftFilters.status?.toLowerCase() === 'resale' && (
-                <div className="space-y-3">
-                  <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.country') as string}</label>
+                <div className="space-y-4">
+                  <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.country') as string}</label>
                   <input 
                     type="text" 
                     placeholder={t('propertiesPage.sidebar.placeholderCountry') as string} 
                     value={draftFilters.country}
                     onChange={(e) => setDraftFilters({ ...draftFilters, country: e.target.value })}
                     onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px]"
+                    className="w-full bg-transparent border-b-2 border-gray-200 py-3 text-[16px] text-[#000000] placeholder:text-gray-400 focus:outline-none focus:border-[#A88849] transition-colors"
                   />
                 </div>
               )}
               
               {/* Location */}
               {draftFilters.status?.toLowerCase() !== 'resale' && (
-                <div className="space-y-3">
-                  <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.location') || 'Location'}</label>
+                <div className="space-y-4">
+                  <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.location') || 'Location'}</label>
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                      <MapPin size={18} />
-                    </div>
                     <select 
                       value={draftFilters.locationId}
                       onChange={(e) => {
@@ -427,26 +428,26 @@ function PropertiesPageContent() {
                         const locName = locations.find(l => l.id.toString() === locId)?.city || '';
                         setDraftFilters({ ...draftFilters, locationId: locId, location: locName });
                       }}
-                      className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px] bg-white appearance-none cursor-pointer"
+                      className="w-full bg-transparent border-b-2 border-gray-200 py-3 text-[16px] text-[#000000] focus:outline-none focus:border-[#A88849] transition-colors appearance-none cursor-pointer"
                     >
-                      <option value="">{t('propertiesPage.sidebar.any') as string}</option>
+                      <option value="" className="text-gray-500">{t('propertiesPage.sidebar.any') as string}</option>
                       {locations.map(loc => (
-                        <option key={loc.id} value={loc.id}>
+                        <option key={loc.id} value={loc.id} className="text-[#000000]">
                           {loc.city}{loc.district && loc.district !== '-' ? ` - ${loc.district}` : ''}
                         </option>
                       ))}
                     </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                      <ChevronDown size={16} />
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                      <ChevronDown size={18} />
                     </div>
                   </div>
                 </div>
               )}
 
               {/* Property Type */}
-              <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.propertyType') as string}</label>
-                <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-4">
+                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.propertyType') as string}</label>
+                <div className="flex flex-wrap gap-3">
                   {[
                     { value: '', label: t('propertiesPage.sidebar.any') as string },
                     { value: '0', label: t('propertiesPage.sidebar.apartment') as string },
@@ -458,7 +459,7 @@ function PropertiesPageContent() {
                     <button 
                       key={type.value}
                       onClick={() => setDraftFilters({ ...draftFilters, propertyType: type.value })}
-                      className={`py-3 px-3 rounded-xl border text-[13px] font-bold transition-all ${draftFilters.propertyType === type.value ? 'bg-[#1B2134] text-white border-[#1B2134] shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
+                      className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.propertyType === type.value ? 'bg-[#A88849] text-white border-[#A88849] shadow-md' : 'bg-white text-[#000000] border-gray-200 hover:border-[#A88849] hover:text-[#A88849]'}`}
                     >
                       {type.label}
                     </button>
@@ -467,9 +468,9 @@ function PropertiesPageContent() {
               </div>
 
               {/* Category */}
-              <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.category') as string}</label>
-                <div className="flex items-center gap-3">
+              <div className="space-y-4">
+                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.category') as string}</label>
+                <div className="flex flex-wrap gap-3">
                   {[
                     { value: '', label: t('propertiesPage.sidebar.any') as string },
                     { value: 'Buy', label: t('propertiesPage.sidebar.buy') as string },
@@ -485,7 +486,7 @@ function PropertiesPageContent() {
                           status: isRent ? '' : draftFilters.status 
                         });
                       }}
-                      className={`flex-1 py-3 px-3 rounded-xl border text-[13px] font-bold transition-all ${draftFilters.unitType === cat.value ? 'bg-[#1B2134] text-white border-[#1B2134] shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
+                      className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.unitType === cat.value ? 'bg-[#A88849] text-white border-[#A88849] shadow-md' : 'bg-white text-[#000000] border-gray-200 hover:border-[#A88849] hover:text-[#A88849]'}`}
                     >
                       {cat.label}
                     </button>
@@ -495,9 +496,9 @@ function PropertiesPageContent() {
 
               {/* Status (Primary/Resale) */}
               {draftFilters.unitType !== 'Rent' && (
-                <div className="space-y-3">
-                  <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.status') || 'Property Status'}</label>
-                  <div className="flex items-center gap-3">
+                <div className="space-y-4">
+                  <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.status') || 'Property Status'}</label>
+                  <div className="flex flex-wrap gap-3">
                     {[
                       { value: '', label: t('propertiesPage.sidebar.any') as string },
                       { value: 'primary', label: t('header.primary') || 'Primary' },
@@ -506,7 +507,7 @@ function PropertiesPageContent() {
                       <button 
                         key={status.value}
                         onClick={() => setDraftFilters({ ...draftFilters, status: status.value })}
-                        className={`flex-1 py-3 px-3 rounded-xl border text-[13px] font-bold transition-all ${draftFilters.status === status.value ? 'bg-[#1B2134] text-white border-[#1B2134] shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}`}
+                        className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.status === status.value ? 'bg-[#A88849] text-white border-[#A88849] shadow-md' : 'bg-white text-[#000000] border-gray-200 hover:border-[#A88849] hover:text-[#A88849]'}`}
                       >
                         {status.label}
                       </button>
@@ -516,66 +517,71 @@ function PropertiesPageContent() {
               )}
 
               {/* Price Range */}
-              <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.priceRange') as string}</label>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1">
+              <div className="space-y-4">
+                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.priceRange') as string}</label>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 relative">
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-[14px] font-semibold">{draftFilters.currency || '$'}</span>
                     <input 
                       type="number" 
                       placeholder={t('propertiesPage.sidebar.min') as string} 
                       value={draftFilters.minPrice}
                       onChange={(e) => setDraftFilters({ ...draftFilters, minPrice: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20"
+                      className="w-full bg-transparent border-b-2 border-gray-200 py-3 pl-6 text-[16px] text-[#000000] placeholder:text-gray-400 focus:outline-none focus:border-[#A88849] transition-colors"
                     />
                   </div>
-                  <div className="w-4 h-px bg-gray-300" />
-                  <div className="flex-1">
+                  <div className="w-4 h-[2px] bg-gray-300" />
+                  <div className="flex-1 relative">
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-[14px] font-semibold">{draftFilters.currency || '$'}</span>
                     <input 
                       type="number" 
                       placeholder={t('propertiesPage.sidebar.max') as string} 
                       value={draftFilters.maxPrice}
                       onChange={(e) => setDraftFilters({ ...draftFilters, maxPrice: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20"
+                      className="w-full bg-transparent border-b-2 border-gray-200 py-3 pl-6 text-[16px] text-[#000000] placeholder:text-gray-400 focus:outline-none focus:border-[#A88849] transition-colors"
                     />
                   </div>
                 </div>
-                <p className="text-[12px] text-gray-400 mt-1">Currency: <span className="font-semibold text-[#1B2134]">{draftFilters.currency || t('propertiesPage.sidebar.any')}</span></p>
               </div>
 
               {/* Currency */}
-              <div className="space-y-3">
-                <label className="text-[15px] font-semibold text-[#1B2134]">{t('propertiesPage.sidebar.currency') as string}</label>
+              <div className="space-y-4">
+                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.currency') as string}</label>
                 <div className="relative">
                   <select 
                     value={draftFilters.currency}
                     onChange={(e) => setDraftFilters({ ...draftFilters, currency: e.target.value })}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#1B2134]/20 text-[14px] bg-white appearance-none cursor-pointer"
+                    className="w-full bg-transparent border-b-2 border-gray-200 py-3 text-[16px] text-[#000000] focus:outline-none focus:border-[#A88849] transition-colors appearance-none cursor-pointer"
                   >
-                    <option value="">{t('propertiesPage.sidebar.any') as string}</option>
-                    <option value="EGP">EGP</option>
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
+                    <option value="" className="text-gray-500">{t('propertiesPage.sidebar.any') as string}</option>
+                    <option value="EGP" className="text-[#000000]">EGP</option>
+                    <option value="USD" className="text-[#000000]">USD</option>
+                    <option value="EUR" className="text-[#000000]">EUR</option>
                   </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                    <ChevronDown size={16} />
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                    <ChevronDown size={18} />
                   </div>
                 </div>
               </div>
+              
             </div>
-            <div className="p-6 border-t border-gray-100 bg-gray-50 flex items-center gap-4 shrink-0">
+
+            {/* Footer Buttons */}
+            <div className="p-8 bg-white border-t border-gray-200 flex items-center gap-6 shrink-0">
               <button 
                 onClick={clearFilters}
-                className="flex-1 py-4 text-[14px] font-bold text-gray-500 hover:text-[#1B2134] transition-colors cursor-pointer"
+                className="py-4 px-6 text-[15px] font-bold text-gray-500 hover:text-[#000000] transition-colors cursor-pointer whitespace-nowrap"
               >
                 {t('propertiesPage.sidebar.resetAll') as string}
               </button>
               <button 
                 onClick={applyFilters}
-                className="flex-[2] bg-[#1B2134] text-white py-4 rounded-xl text-[14px] font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all cursor-pointer"
+                className="flex-1 bg-[#000000] text-white py-4 rounded-full text-[15px] font-bold hover:bg-[#A88849] hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
               >
                 {t('propertiesPage.sidebar.apply') as string}
               </button>
             </div>
+            
           </div>
         </div>
       )}

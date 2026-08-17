@@ -11,6 +11,7 @@ import {
   deleteUnitOutsideImage,
   UnitOutside,
 } from '@/lib/api/unitOutsides';
+import { API_DOMAIN } from '@/lib/api/config';
 
 interface UnitOutsideDetailsModalProps {
   isOpen: boolean;
@@ -20,7 +21,7 @@ interface UnitOutsideDetailsModalProps {
   onMarkSold?: (unit: UnitOutside) => void;
 }
 
-const API_IMG_BASE = 'https://api.thegate-estates.com';
+const API_IMG_BASE = API_DOMAIN;
 
 function resolveImageUrl(url: string): string {
   if (!url) return '';
@@ -110,7 +111,7 @@ export default function UnitOutsideDetailsModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between shrink-0">
+        <div className="bg-[#000000] px-8 py-5 flex items-center justify-between shrink-0">
           <div>
             <h2 className="text-white text-[20px] font-bold">Resale Unit Details</h2>
             {unit && (
@@ -131,7 +132,7 @@ export default function UnitOutsideDetailsModal({
         <div className="overflow-y-auto scrollbar-hide flex-1 p-8 space-y-8">
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="w-10 h-10 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : error ? (
             <p className="text-red-500 text-center py-20">{error}</p>
@@ -140,8 +141,8 @@ export default function UnitOutsideDetailsModal({
               {/* ── Images ── */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-[16px] font-bold text-[#16273B]">Images</h3>
-                  <label className="flex items-center gap-2 bg-[#16273B] hover:bg-[#1e324d] text-white text-[13px] font-bold px-4 py-2 rounded-xl cursor-pointer transition-all">
+                  <h3 className="text-[16px] font-bold text-[#000000]">Images</h3>
+                  <label className="flex items-center gap-2 bg-[#000000] hover:bg-[#1e324d] text-white text-[13px] font-bold px-4 py-2 rounded-xl cursor-pointer transition-all">
                     {isUploadingImages ? (
                       <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
@@ -187,7 +188,7 @@ export default function UnitOutsideDetailsModal({
                             onClick={() => setActiveImageIdx(idx)}
                             className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
                               activeImageIdx === idx
-                                ? 'border-[#16273B] shadow-md'
+                                ? 'border-[#000000] shadow-md'
                                 : 'border-transparent'
                             }`}
                           >
@@ -238,7 +239,7 @@ export default function UnitOutsideDetailsModal({
                     <p className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-wider mb-1">
                       {label}
                     </p>
-                    <p className="text-[15px] font-bold text-[#16273B]">{value}</p>
+                    <p className="text-[15px] font-bold text-[#000000]">{value}</p>
                   </div>
                 ))}
               </div>
@@ -277,14 +278,14 @@ export default function UnitOutsideDetailsModal({
                   <p className="text-[12px] font-bold text-[#94A3B8] uppercase tracking-wider mb-2">
                     Description
                   </p>
-                  <p className="text-[15px] text-[#16273B] leading-relaxed">{getLocalized(unit.description)}</p>
+                  <p className="text-[15px] text-[#000000] leading-relaxed">{getLocalized(unit.description)}</p>
                 </div>
               )}
 
               {/* Payment Plans */}
               {unit.paymentPlans && unit.paymentPlans.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="text-[16px] font-bold text-[#16273B]">Payment Plans</h3>
+                  <h3 className="text-[16px] font-bold text-[#000000]">Payment Plans</h3>
                   <div className="overflow-x-auto scrollbar-hide">
                     <table className="w-full text-left">
                       <thead>
@@ -299,7 +300,7 @@ export default function UnitOutsideDetailsModal({
                       <tbody className="divide-y divide-gray-50">
                         {unit.paymentPlans.map((plan) => (
                           <tr key={plan.id} className="text-[14px]">
-                            <td className="py-3 pr-6 font-bold text-[#16273B]">{plan.paymentType}</td>
+                            <td className="py-3 pr-6 font-bold text-[#000000]">{plan.paymentType}</td>
                             <td className="py-3 pr-6 text-[#64748B]">{plan.commissionRate}%</td>
                             <td className="py-3 pr-6 text-[#64748B]">
                               {plan.installmentMothes > 0 ? `${plan.installmentMothes} mo` : '—'}
@@ -358,7 +359,7 @@ export default function UnitOutsideDetailsModal({
             </a>
             <button
               onClick={onClose}
-              className="bg-[#16273B] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer"
+              className="bg-[#000000] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer"
             >
               Close
             </button>

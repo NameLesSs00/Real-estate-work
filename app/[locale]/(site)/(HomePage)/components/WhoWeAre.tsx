@@ -13,7 +13,7 @@ const WhoWeAre = () => {
   return (
     <section id="about" className="who-we-are-section overflow-hidden">
       <Image 
-        src="/assists/whoWeAre/Ellipse 1.png" 
+        src="/assists/finestServices/Ellipse 1.png" 
         alt="Background Curve" 
         width={800} 
         height={800} 
@@ -22,7 +22,7 @@ const WhoWeAre = () => {
         className="bg-ellipse-1"
       />
       <Image 
-        src="/assists/whoWeAre/Ellipse 2.png" 
+        src="/assists/finestServices/Ellipse 2.png" 
         alt="Background Curve" 
         width={800} 
         height={800} 
@@ -56,7 +56,7 @@ const WhoWeAre = () => {
             className="who-we-are-images"
           >
             <Image 
-              src="/assists/whoWeAre/Group 4.png" 
+              src="/assists/finestServices/Group 4.png" 
               alt="Who We Are Images" 
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"

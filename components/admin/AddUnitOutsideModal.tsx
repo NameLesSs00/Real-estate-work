@@ -48,7 +48,7 @@ const EMPTY = {
 };
 
 const inputCls =
-  'w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400 bg-white text-[14px]';
+  'w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#000000]/20 text-[#000000] placeholder-gray-400 bg-white text-[14px]';
 
 export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editData }: Props) {
   useBodyScrollLock(isOpen);
@@ -316,7 +316,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#16273B] rounded-t-[32px] px-8 py-6 flex items-center justify-between shrink-0">
+        <div className="bg-[#000000] rounded-t-[32px] px-8 py-6 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[22px] font-bold">
             {isEdit ? 'Edit Resale Unit' : 'Add Resale Unit'}
           </h2>
@@ -328,7 +328,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
         <div className="p-8 overflow-y-auto space-y-8 scrollbar-hide">
           {isLoading && isEdit ? (
             <div className="flex justify-center py-20">
-              <div className="w-10 h-10 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
             <>
@@ -341,7 +341,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                       type="button"
                       onClick={() => setLangTab(t.key)}
                       className={`px-5 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer ${
-                        langTab === t.key ? `${t.color} shadow-sm` : 'text-gray-500 hover:text-[#16273B]'
+                        langTab === t.key ? `${t.color} shadow-sm` : 'text-gray-500 hover:text-[#000000]'
                       }`}
                     >
                       {t.label}
@@ -351,7 +351,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
 
                 <div className="bg-white border border-gray-100 rounded-[24px] p-6 shadow-sm space-y-5">
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#16273B]">
+                    <label className="text-[14px] font-bold text-[#000000]">
                       Unit Name ({langTab.toUpperCase()}) {langTab === 'en' && '*'}
                     </label>
                     <input
@@ -363,7 +363,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#16273B]">
+                    <label className="text-[14px] font-bold text-[#000000]">
                       Description ({langTab.toUpperCase()}) {langTab === 'en' && '*'}
                     </label>
                     <textarea
@@ -379,20 +379,20 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
 
               {/* ── Location ── */}
               <div className="space-y-3">
-                <h3 className="text-[15px] font-bold text-[#16273B] flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#16273B]" /> Location
+                <h3 className="text-[15px] font-bold text-[#000000] flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#000000]" /> Location
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[13px] font-semibold text-[#16273B]">Country *</label>
+                    <label className="text-[13px] font-semibold text-[#000000]">Country *</label>
                     <input type="text" value={form.country} onChange={setField('country')} placeholder="e.g. Egypt" className={inputCls} />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[13px] font-semibold text-[#16273B]">City *</label>
+                    <label className="text-[13px] font-semibold text-[#000000]">City *</label>
                     <input type="text" value={form.city} onChange={setField('city')} placeholder="e.g. Cairo" className={inputCls} />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[13px] font-semibold text-[#16273B]">Street *</label>
+                    <label className="text-[13px] font-semibold text-[#000000]">Street *</label>
                     <input type="text" value={form.street} onChange={setField('street')} placeholder="e.g. 10 Nile St" className={inputCls} />
                   </div>
                 </div>
@@ -401,7 +401,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
               {/* ── Price & Currency ── */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2 col-span-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">Price *</label>
+                  <label className="text-[13px] font-semibold text-[#000000]">Price *</label>
                   <div className="flex gap-2">
                     <input
                       type="number"
@@ -413,7 +413,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                     <select
                       value={form.currencyCode}
                       onChange={(e) => setForm((p) => ({ ...p, currencyCode: e.target.value }))}
-                      className="w-24 border border-gray-200 rounded-xl px-3 py-3 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] bg-white font-bold text-[13px]"
+                      className="w-24 border border-gray-200 rounded-xl px-3 py-3 focus:outline-none focus:ring-2 focus:ring-[#000000]/20 text-[#000000] bg-white font-bold text-[13px]"
                     >
                       {['USD', 'EUR', 'EGP'].map((c) => (
                         <option key={c} value={c}>{c}</option>
@@ -422,11 +422,11 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">Area (m²) *</label>
+                  <label className="text-[13px] font-semibold text-[#000000]">Area (m²) *</label>
                   <input type="number" value={form.area} onChange={(e) => setForm((p) => ({ ...p, area: e.target.value ? Number(e.target.value) : '' }))} min={0} className={inputCls} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">Property Type *</label>
+                  <label className="text-[13px] font-semibold text-[#000000]">Property Type *</label>
                   <select value={form.propertyType} onChange={setField('propertyType')} className={inputCls}>
                     {[
                       { label: 'Apartment', value: 'Apartment' },
@@ -450,7 +450,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                   { label: 'Floor Number', field: 'floorNumber' },
                 ] .map(({ label, field }) => (
                   <div key={field} className="space-y-2">
-                    <label className="text-[13px] font-semibold text-[#16273B]">{label} *</label>
+                    <label className="text-[13px] font-semibold text-[#000000]">{label} *</label>
                     <input
                       type="number"
                       min={0}
@@ -461,11 +461,11 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                   </div>
                 ))}
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">Floor Name</label>
+                  <label className="text-[13px] font-semibold text-[#000000]">Floor Name</label>
                   <input type="text" value={form.floorName} onChange={setField('floorName')} placeholder="e.g. Ground" className={inputCls} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">View *</label>
+                  <label className="text-[13px] font-semibold text-[#000000]">View *</label>
                   <input 
                     type="text" 
                     value={form.view} 
@@ -475,7 +475,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-[#16273B]">Listing Type *</label>
+                  <label className="text-[13px] font-semibold text-[#000000]">Listing Type *</label>
                   <select value={form.type} onChange={setField('type')} className={inputCls}>
                     <option value="Buy">Buy</option>
                     <option value="Rent">Rent</option>
@@ -487,9 +487,9 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                       type="checkbox"
                       checked={form.isFeatured}
                       onChange={(e) => setForm((p) => ({ ...p, isFeatured: e.target.checked }))}
-                      className="w-4 h-4 accent-[#16273B] cursor-pointer"
+                      className="w-4 h-4 accent-[#000000] cursor-pointer"
                     />
-                    <span className="text-[13px] font-semibold text-[#16273B]">Featured</span>
+                    <span className="text-[13px] font-semibold text-[#000000]">Featured</span>
                   </label>
                 </div>
               </div>
@@ -497,7 +497,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
               {/* ── Payment Plans ── */}
               <div className="space-y-4 pt-2 border-t border-gray-100">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-[15px] font-bold text-[#16273B]">Payment Plans</h3>
+                  <h3 className="text-[15px] font-bold text-[#000000]">Payment Plans</h3>
                   <button
                     type="button"
                     onClick={() =>
@@ -509,7 +509,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                         ],
                       }))
                     }
-                    className="text-sm bg-gray-100 hover:bg-gray-200 text-[#16273B] px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer"
+                    className="text-sm bg-gray-100 hover:bg-gray-200 text-[#000000] px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer"
                   >
                     + Add Plan
                   </button>
@@ -522,7 +522,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                         <select
                           value={plan.paymentType}
                           onChange={(e) => updatePlan(i, 'paymentType', e.target.value)}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 bg-white"
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/20 bg-white"
                         >
                           <option value="Installment">Installment</option>
                           <option value="Cash">Cash</option>
@@ -534,7 +534,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                           type="number" min={0} max={100}
                           value={plan.commissionRate}
                           onChange={(e) => updatePlan(i, 'commissionRate', e.target.value ? Number(e.target.value) : 0)}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/20"
                         />
                       </div>
                       {plan.paymentType === 'Installment' ? (
@@ -545,7 +545,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                               type="number" min={0}
                               value={plan.installmentMothes}
                               onChange={(e) => updatePlan(i, 'installmentMothes', e.target.value ? Number(e.target.value) : 0)}
-                              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/20"
                             />
                           </div>
                           <div className="space-y-1.5">
@@ -554,14 +554,14 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
                               type="number" min={0} max={100}
                               value={plan.installmentDownPayment}
                               onChange={(e) => updatePlan(i, 'installmentDownPayment', e.target.value ? Number(e.target.value) : 0)}
-                              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/20"
                             />
                           </div>
                         </>
                       ) : (
                         <div className="space-y-1.5 col-span-2 flex flex-col justify-center">
                            <label className="text-[12px] font-semibold text-gray-600">Cash Amount</label>
-                           <p className="text-[14px] font-bold text-[#16273B]">{form.currencyCode} {form.price.toLocaleString()}</p>
+                           <p className="text-[14px] font-bold text-[#000000]">{form.currencyCode} {form.price.toLocaleString()}</p>
                         </div>
                       )}
                     </div>
@@ -577,8 +577,8 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
               {/* ── Image Upload (create only) ── */}
               {!isEdit && (
                 <div className="space-y-3 pt-2 border-t border-gray-100">
-                  <h3 className="text-[15px] font-bold text-[#16273B]">Images</h3>
-                  <label className="border-2 border-dashed border-gray-200 hover:border-[#16273B]/30 bg-gray-50/50 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors">
+                  <h3 className="text-[15px] font-bold text-[#000000]">Images</h3>
+                  <label className="border-2 border-dashed border-gray-200 hover:border-[#000000]/30 bg-gray-50/50 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors">
                     <span className="text-2xl">🖼️</span>
                     <p className="text-gray-600 font-semibold text-sm">Click to upload images</p>
                     <p className="text-gray-400 text-xs">You can upload multiple files</p>
@@ -625,7 +625,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
             type="button"
             onClick={handleSubmit}
             disabled={isLoading}
-            className="px-10 py-3.5 rounded-2xl bg-[#16273B] text-white text-[15px] font-semibold hover:bg-[#1e324d] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2"
+            className="px-10 py-3.5 rounded-2xl bg-[#000000] text-white text-[15px] font-semibold hover:bg-[#1e324d] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2"
           >
             {isLoading ? (
               <>

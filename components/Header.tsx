@@ -16,10 +16,17 @@ const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
 
   const locations = (t('header.locations') as unknown as string[]) || [];
+
+  const isHomePage = pathname === `/${language}` || pathname === '/';
+  const headerBgClass = isHomePage 
+    ? (isScrolled ? 'bg-[#000000] shadow-md py-4' : 'bg-transparent py-6')
+    : 'bg-[#fbf9f6] shadow-sm py-4 border-b border-gray-100';
+  const textColorClass = isHomePage ? 'text-white' : 'text-[#000000]';
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -32,7 +39,15 @@ const Header = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const WhatsAppIcon = ({ size = 20 }: { size?: number }) => (
@@ -74,7 +89,7 @@ const Header = () => {
     <div className="relative">
       <button 
         onClick={() => handleDropdownClick(title)}
-        className="flex items-center gap-2 text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors py-2 outline-none cursor-pointer"
+        className={`flex items-center gap-2 text-[0.9375rem] font-medium ${textColorClass} hover:text-[#c7b7a1] transition-colors py-2 outline-none cursor-pointer`}
       >
         {title}
         <ChevronDown size={16} className={`transition-transform duration-300 ${activeDropdown === title ? 'rotate-180' : ''}`} />
@@ -96,7 +111,7 @@ const Header = () => {
                     key={item.label} 
                     href={`/${language}${item.href}`}
                     onClick={() => setActiveDropdown(null)}
-                    className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[0.9375rem] font-semibold transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
+                    className="text-[#000000] hover:text-[#c7b7a1] py-3 text-[0.9375rem] font-semibold transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
                   >
                     {item.label}
                   </Link>
@@ -107,7 +122,7 @@ const Header = () => {
                     key={loc} 
                     href={`/${language}/properties?type=${type}&location=${loc}`}
                     onClick={() => setActiveDropdown(null)}
-                    className="text-[#1B2134] hover:text-[#c7b7a1] py-3 text-[0.9375rem] font-medium transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
+                    className="text-[#000000] hover:text-[#c7b7a1] py-3 text-[0.9375rem] font-medium transition-colors border-b border-gray-50 last:border-0 hover:translate-x-1 transition-transform"
                   >
                     {loc}
                   </Link>
@@ -125,18 +140,18 @@ const Header = () => {
 
   return (
     <>
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-48px)] max-w-[1440px]">
-        <header className="w-full bg-white rounded-[100px] shadow-md py-6 px-6 md:px-12 flex items-center justify-between">
+      <div className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${headerBgClass}`}>
+        <header className="w-full max-w-[1440px] mx-auto px-6 md:px-12 flex items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href={`/${language}`}>
               <Image 
                 src="/assists/header/headerLogo.png" 
-                alt="Winners Realty" 
+                alt="Luxe Estate" 
                 width={100} 
                 height={100} 
                 priority
-                className="h-[60px] w-[60px] md:h-[80px] md:w-[80px]"
+                className={`h-[60px] w-[60px] md:h-[80px] md:w-[80px] transition-all duration-300 ${textColorClass === 'text-white' ? 'brightness-0 invert' : ''}`}
               />
             </Link>
           </div>
@@ -146,12 +161,9 @@ const Header = () => {
             <div className="flex items-center gap-6">
               <Link
                 href={`/${language}`}
-                className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors"
+                className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-[#c7b7a1] transition-colors`}
               >
                 {t('header.home')}
-              </Link>
-              <Link href={`/${language}/projects`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
-                {t('header.projects')}
               </Link>
               
               <NavDropdown 
@@ -161,33 +173,22 @@ const Header = () => {
                   { label: t('header.resale'), href: "/properties?unitType=Buy&status=resale" }
                 ]} 
               />
-              <Link href={`/${language}/properties?unitType=Rent`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">
+              <Link href={`/${language}/properties?unitType=Rent`} className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-[#c7b7a1] transition-colors`}>
                 {t('header.rent')}
               </Link>
-|
-              <Link href={`/${language}/about`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.about')}</Link>
-              <Link href={`/${language}/contact`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.contact')}</Link>
-              <Link href={`/${language}/blogs`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.blogs')}</Link>
-              <Link href={`/${language}/faq`} className="text-[0.9375rem] font-medium text-brand-primary hover:text-[#c7b7a1] transition-colors">{t('header.faq')}</Link>
+
+              <Link href={`/${language}/about`} className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-[#c7b7a1] transition-colors`}>{t('header.about')}</Link>
+              <Link href={`/${language}/contact`} className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-[#c7b7a1] transition-colors`}>{t('header.contact')}</Link>
+              <Link href={`/${language}/blogs`} className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-[#c7b7a1] transition-colors`}>{t('header.blogs')}</Link>
             </div>
 
-            {/* Social Links & Language */}
-            <div className="flex items-center gap-4 px-4 border-l border-gray-200">
-              <a href="https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-[#1877F2] transition-colors">
-                <FacebookIcon size={20} />
-              </a>
-              <a href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-[#E4405F] transition-colors">
-                <InstagramIcon size={20} />
-              </a>
-              <a href="https://wa.me/message/2CFJ7MIUOG3AM1" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-[#25D366] transition-colors">
-                <WhatsAppIcon size={20} />
-              </a>
-              
+            {/* Language & Action */}
+            <div className={`flex items-center gap-4 px-4 border-l ${isHomePage ? 'border-white/20' : 'border-black/20'}`}>
               {/* Language Switcher */}
               <div className="relative" ref={langRef}>
                 <button 
                   onClick={() => setShowLangMenu(!showLangMenu)}
-                  className="flex items-center gap-1 text-brand-primary hover:text-[#c7b7a1] transition-colors ml-2"
+                  className={`flex items-center gap-1 ${textColorClass} hover:text-[#c7b7a1] transition-colors ml-2`}
                 >
                   <Globe size={20} />
                   <span className="text-[14px] font-semibold uppercase">{language}</span>
@@ -200,9 +201,9 @@ const Header = () => {
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       className="absolute top-full right-0 mt-3 w-32 bg-white shadow-xl rounded-xl py-2 z-[110] border border-gray-100"
                     >
-                      <button onClick={() => { setLanguage('en'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${language === 'en' ? 'font-bold text-[#c7b7a1]' : 'text-[#1B2134]'}`}>English</button>
-                      <button onClick={() => { setLanguage('de'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${language === 'de' ? 'font-bold text-[#c7b7a1]' : 'text-[#1B2134]'}`}>Deutsch</button>
-                      <button onClick={() => { setLanguage('pl'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${language === 'pl' ? 'font-bold text-[#c7b7a1]' : 'text-[#1B2134]'}`}>Polski</button>
+                      <button onClick={() => { setLanguage('en'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${language === 'en' ? 'font-bold text-[#c7b7a1]' : 'text-[#000000]'}`}>English</button>
+                      <button onClick={() => { setLanguage('de'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${language === 'de' ? 'font-bold text-[#c7b7a1]' : 'text-[#000000]'}`}>Deutsch</button>
+                      <button onClick={() => { setLanguage('pl'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${language === 'pl' ? 'font-bold text-[#c7b7a1]' : 'text-[#000000]'}`}>Polski</button>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -212,7 +213,7 @@ const Header = () => {
             {/* List Your Property Button */}
             <Link 
               href={`/${language}/list-property`}
-              className="bg-[#1B2134] text-white px-6 py-3 rounded-full font-semibold text-[15px] hover:bg-[#c7b7a1] transition-all whitespace-nowrap shadow-sm"
+              className="bg-[#c7b7a1] text-[#000000] px-6 py-2.5 rounded-full font-bold text-[14px] hover:bg-white transition-all whitespace-nowrap shadow-sm"
             >
               {t('header.listProperty')}
             </Link>
@@ -221,11 +222,11 @@ const Header = () => {
           {/* Mobile Hamburger Menu */}
           <button 
             onClick={() => setIsMenuOpen(true)}
-            className="flex lg:hidden flex-col justify-center items-end gap-[6px] cursor-pointer outline-none bg-transparent border-none p-2"
+            className={`flex lg:hidden flex-col justify-center items-end gap-[6px] cursor-pointer outline-none bg-transparent border-none p-2 ${textColorClass}`}
           >
-            <span className="block w-8 h-[3px] bg-[#1b2134] rounded-full"></span>
-            <span className="block w-8 h-[3px] bg-[#1b2134] rounded-full"></span>
-            <span className="block w-8 h-[3px] bg-[#1b2134] rounded-full"></span>
+            <span className="block w-8 h-[3px] bg-current rounded-full"></span>
+            <span className="block w-8 h-[3px] bg-current rounded-full"></span>
+            <span className="block w-8 h-[3px] bg-current rounded-full"></span>
           </button>
         </header>
       </div>
@@ -244,14 +245,14 @@ const Header = () => {
             <div className="flex items-center justify-between py-8 px-8">
               <Image 
                 src="/assists/header/headerLogo.png" 
-                alt="Winners Realty" 
+                alt="Luxe Estate" 
                 width={100} 
                 height={100} 
                 className="h-[80px] w-[80px]"
               />
               <button 
                 onClick={() => setIsMenuOpen(false)} 
-                className="text-[#1b2134] p-2"
+                className="text-[#000000] p-2"
               >
                 <X size={28} />
               </button>
@@ -259,8 +260,7 @@ const Header = () => {
 
             {/* Menu Items */}
             <div className="flex-1 px-8 py-4 flex flex-col gap-6 pb-12">
-              <Link href={`/${language}`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.home')}</Link>
-              <Link href={`/${language}/projects`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.projects')}</Link>
+              <Link href={`/${language}`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#000000] border-b border-gray-100 pb-2">{t('header.home')}</Link>
               
               {/* Buy Mobile */}
               <div>
@@ -273,7 +273,7 @@ const Header = () => {
                       setMobileExpanded('buy');
                     }
                   }}
-                  className="w-full flex items-center justify-between text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2 cursor-pointer"
+                  className="w-full flex items-center justify-between text-[20px] font-semibold text-[#000000] border-b border-gray-100 pb-2 cursor-pointer"
                 >
                   {t('header.buy')}
                   {mobileExpanded === 'buy' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -294,7 +294,7 @@ const Header = () => {
                           key={item.label} 
                           href={item.href}
                           onClick={() => setIsMenuOpen(false)}
-                          className="block px-6 py-3 text-[#1b2134] font-medium border-b border-white last:border-0"
+                          className="block px-6 py-3 text-[#000000] font-medium border-b border-white last:border-0"
                         >
                           {item.label}
                         </Link>
@@ -305,29 +305,28 @@ const Header = () => {
               </div>
 
               {/* Rent Mobile */}
-              <Link href={`/${language}/properties?unitType=Rent`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">
+              <Link href={`/${language}/properties?unitType=Rent`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#000000] border-b border-gray-100 pb-2">
                 {t('header.rent')}
               </Link>
 
-              <Link href={`/${language}/about`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.about')}</Link>
-              <Link href={`/${language}/contact`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.contact')}</Link>
-              <Link href={`/${language}/blogs`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.blogs')}</Link>
-              <Link href={`/${language}/faq`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#1b2134] border-b border-gray-100 pb-2">{t('header.faq')}</Link>
+              <Link href={`/${language}/about`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#000000] border-b border-gray-100 pb-2">{t('header.about')}</Link>
+              <Link href={`/${language}/contact`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#000000] border-b border-gray-100 pb-2">{t('header.contact')}</Link>
+              <Link href={`/${language}/blogs`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#000000] border-b border-gray-100 pb-2">{t('header.blogs')}</Link>
 
               <div className="mt-6">
                 <Link 
                   href={`/${language}/list-property`} 
                   onClick={() => setIsMenuOpen(false)}
-                  className="block w-full bg-[#1B2134] text-white text-center py-4 rounded-full font-bold text-[18px] shadow-lg active:scale-95 transition-all"
+                  className="block w-full bg-[#000000] text-white text-center py-4 rounded-full font-bold text-[18px] shadow-lg active:scale-95 transition-all"
                 >
                   {t('header.listProperty')}
                 </Link>
               </div>
 
               <div className="flex items-center justify-center gap-8 mt-4">
-                <a href="https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-[#1B2134] hover:text-[#1877F2] transition-colors"><FacebookIcon size={28} /></a>
-                <a href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" target="_blank" rel="noopener noreferrer" className="text-[#1B2134] hover:text-[#E4405F] transition-colors"><InstagramIcon size={28} /></a>
-                <a href="https://wa.me/message/2CFJ7MIUOG3AM1" target="_blank" rel="noopener noreferrer" className="text-[#1B2134] hover:text-[#25D366] transition-colors"><WhatsAppIcon size={28} /></a>
+                <a href="https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-[#000000] hover:text-[#1877F2] transition-colors"><FacebookIcon size={28} /></a>
+                <a href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" target="_blank" rel="noopener noreferrer" className="text-[#000000] hover:text-[#E4405F] transition-colors"><InstagramIcon size={28} /></a>
+                <a href="https://wa.me/message/2CFJ7MIUOG3AM1" target="_blank" rel="noopener noreferrer" className="text-[#000000] hover:text-[#25D366] transition-colors"><WhatsAppIcon size={28} /></a>
               </div>
 
               {/* Language Switcher */}
@@ -340,8 +339,8 @@ const Header = () => {
                       onClick={() => { setLanguage(lang); setIsMenuOpen(false); }}
                       className={`flex-1 py-2.5 rounded-full text-[14px] font-bold border transition-all ${
                         language === lang
-                          ? 'bg-[#1B2134] text-white border-[#1B2134]'
-                          : 'bg-transparent text-[#1B2134] border-gray-200 hover:border-[#1B2134]'
+                          ? 'bg-[#000000] text-white border-[#000000]'
+                          : 'bg-transparent text-[#000000] border-gray-200 hover:border-[#000000]'
                       }`}
                     >
                       {lang === 'en' ? 'EN' : lang === 'de' ? 'DE' : 'PL'}

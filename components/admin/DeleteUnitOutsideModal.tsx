@@ -50,7 +50,7 @@ export default function DeleteUnitOutsideModal({
         className="bg-white rounded-[24px] w-full max-w-[500px] flex flex-col shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between shrink-0">
+        <div className="bg-[#000000] px-8 py-5 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[20px] font-bold">Delete Resale Unit</h2>
           <button
             onClick={onClose}
@@ -71,14 +71,14 @@ export default function DeleteUnitOutsideModal({
           </div>
           <p className="text-[#475467] text-[18px] leading-relaxed">
             Are you sure you want to delete{' '}
-            <span className="font-bold text-[#16273B]">{unitName || 'this unit'}</span>?{' '}
+            <span className="font-bold text-[#000000]">{unitName || 'this unit'}</span>?{' '}
             This action cannot be undone.
           </p>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <div className="flex gap-4">
             <button
               onClick={onClose}
-              className="flex-1 py-4 rounded-xl border border-gray-200 text-[#16273B] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
+              className="flex-1 py-4 rounded-xl border border-gray-200 text-[#000000] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
             >
               Cancel
             </button>

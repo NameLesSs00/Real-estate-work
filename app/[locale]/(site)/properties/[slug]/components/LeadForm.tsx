@@ -56,7 +56,7 @@ export default function LeadForm({ unitId }: LeadFormProps) {
         </p>
         <button 
           onClick={() => setSuccess(false)}
-          className="text-[#1B2134] font-semibold text-[14px] underline cursor-pointer"
+          className="text-[#000000] font-semibold text-[14px] underline cursor-pointer"
         >
           {t('projectDetails.sendAnother') as string}
         </button>
@@ -72,7 +72,7 @@ export default function LeadForm({ unitId }: LeadFormProps) {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-[13px] font-medium text-[#1B2134]">
+          <label className="text-[13px] font-medium text-[#000000]">
             {t('projectDetails.fullName') as string} <span className="text-red-500">*</span>
           </label>
           <input
@@ -81,12 +81,12 @@ export default function LeadForm({ unitId }: LeadFormProps) {
             placeholder={t('projectDetails.fullName') as string}
             value={formData.fullName}
             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors font-poppins"
+            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#000000] transition-colors font-poppins"
           />
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-[13px] font-medium text-[#1B2134]">
+          <label className="text-[13px] font-medium text-[#000000]">
             {t('projectDetails.phoneNumber') as string} <span className="text-red-500">*</span>
           </label>
           <input
@@ -95,12 +95,12 @@ export default function LeadForm({ unitId }: LeadFormProps) {
             placeholder={t('projectDetails.phoneNumber') as string}
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors font-poppins"
+            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#000000] transition-colors font-poppins"
           />
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-[13px] font-medium text-[#1B2134]">
+          <label className="text-[13px] font-medium text-[#000000]">
             {t('projectDetails.email') as string} <span className="text-red-500">*</span>
           </label>
           <input
@@ -109,12 +109,12 @@ export default function LeadForm({ unitId }: LeadFormProps) {
             placeholder={t('projectDetails.email') as string}
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors font-poppins"
+            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#000000] transition-colors font-poppins"
           />
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-[13px] font-medium text-[#1B2134]">
+          <label className="text-[13px] font-medium text-[#000000]">
             {t('projectDetails.message') as string} <span className="text-red-500">*</span>
           </label>
           <textarea
@@ -123,7 +123,7 @@ export default function LeadForm({ unitId }: LeadFormProps) {
             rows={4}
             value={formData.notes}
             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#1B2134] transition-colors resize-none font-poppins"
+            className="w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#000000] transition-colors resize-none font-poppins"
           />
         </div>
 
@@ -132,7 +132,7 @@ export default function LeadForm({ unitId }: LeadFormProps) {
             type="checkbox"
             id="terms"
             required
-            className="mt-0.5 w-4 h-4 accent-[#1B2134] cursor-pointer flex-shrink-0"
+            className="mt-0.5 w-4 h-4 accent-[#000000] cursor-pointer flex-shrink-0"
           />
           <label htmlFor="terms" className="text-[13px] text-[#666] leading-snug cursor-pointer font-poppins">
             {t('projectDetails.agreeTerms') as string}
@@ -144,7 +144,7 @@ export default function LeadForm({ unitId }: LeadFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#1B2134] text-white rounded-full py-4 text-[15px] font-semibold flex items-center justify-center gap-3 hover:bg-[#252d46] transition-all mt-1 disabled:opacity-50 cursor-pointer"
+          className="w-full bg-[#000000] text-white rounded-full py-4 text-[15px] font-semibold flex items-center justify-center gap-3 hover:bg-[#252d46] transition-all mt-1 disabled:opacity-50 cursor-pointer"
         >
           {loading ? (
             <>

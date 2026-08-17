@@ -79,7 +79,7 @@
 
 .properties-grid-title {
   font-family: var(--font-poppins);
-  color: #1b2134;
+  color: #000000;
   font-size: 32px;
   font-weight: 600;
 }
@@ -106,18 +106,18 @@
 .load-more-button {
   padding: 18px 40px;
   border-radius: 50px;
-  border: 1.5px solid #1b2134;
+  border: 1.5px solid #000000;
   background-color: transparent;
   font-family: var(--font-poppins);
   font-size: 18px;
   font-weight: 600;
-  color: #1b2134;
+  color: #000000;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .load-more-button:hover {
-  background-color: #1b2134;
+  background-color: #000000;
   color: #ffffff;
 }
 

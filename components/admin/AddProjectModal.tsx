@@ -270,7 +270,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       <div className="bg-white rounded-[32px] w-full max-w-[1100px] max-h-[92vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="bg-[#16273B] rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
+        <div className="bg-[#000000] rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[22px] font-bold">{isEditMode ? 'Edit Project' : 'Add New Project'}</h2>
           <button onClick={onClose} className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none">
             <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={24} height={24} />
@@ -281,32 +281,32 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         <div className="p-10 overflow-y-auto space-y-10 scrollbar-hide relative min-h-[400px]">
           {isLoading && !isEditMode === false && (
             <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-30 flex flex-col items-center justify-center gap-4">
-              <div className="w-12 h-12 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-[#16273B] font-bold text-sm animate-pulse">Fetching multilingual data...</p>
+              <div className="w-12 h-12 border-4 border-[#000000] border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-[#000000] font-bold text-sm animate-pulse">Fetching multilingual data...</p>
             </div>
           )}
           
           {/* Main Info Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50/50 p-6 rounded-[28px] border border-gray-100">
             <div className="space-y-3">
-              <label className="text-[#16273B] font-bold text-[16px] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#16273B]"></span>
+              <label className="text-[#000000] font-bold text-[16px] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#000000]"></span>
                 Developer
               </label>
               <select value={form.developerId ?? ''} onChange={handleChange('developerId')}
-                className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] bg-white cursor-pointer shadow-sm transition-all hover:border-[#16273B]/30">
+                className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] bg-white cursor-pointer shadow-sm transition-all hover:border-[#000000]/30">
                 <option value="">— None —</option>
                 {developers.map((d) => <option key={d.id} value={d.id}>{d.label}</option>)}
               </select>
             </div>
             {!isEditMode && (
               <div className="space-y-3">
-                <label className="text-[#16273B] font-bold text-[16px] flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#16273B]"></span>
+                <label className="text-[#000000] font-bold text-[16px] flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#000000]"></span>
                   Location *
                 </label>
                 <select value={form.locationId ?? ''} onChange={handleChange('locationId')}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] bg-white cursor-pointer shadow-sm transition-all hover:border-[#16273B]/30">
+                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] bg-white cursor-pointer shadow-sm transition-all hover:border-[#000000]/30">
                   <option value="">— None —</option>
                   {locations.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
                 </select>
@@ -331,14 +331,14 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-[#16273B] font-bold text-[15px]">Project Name *</label>
+                    <label className="text-[#000000] font-bold text-[15px]">Project Name *</label>
                     <input type="text" value={form.name.en || ''} onChange={handleChange('name', 'en')} placeholder="e.g. Skyline Residence"
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#16273B] font-bold text-[15px]">Detailed Description</label>
+                    <label className="text-[#000000] font-bold text-[15px]">Detailed Description</label>
                     <textarea value={form.description.en || ''} onChange={handleChange('description', 'en')} placeholder="Describe the project in English..." rows={5}
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
                   </div>
                 </div>
               </div>
@@ -351,14 +351,14 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-[#16273B] font-bold text-[15px]">Projektname</label>
+                    <label className="text-[#000000] font-bold text-[15px]">Projektname</label>
                     <input type="text" value={form.name.de || ''} onChange={handleChange('name', 'de')} placeholder="Name auf Deutsch"
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#16273B] font-bold text-[15px]">Ausführliche Beschreibung</label>
+                    <label className="text-[#000000] font-bold text-[15px]">Ausführliche Beschreibung</label>
                     <textarea value={form.description.de || ''} onChange={handleChange('description', 'de')} placeholder="Beschreibung auf Deutsch..." rows={5}
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
                   </div>
                 </div>
               </div>
@@ -371,14 +371,14 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-[#16273B] font-bold text-[15px]">Nazwa Projektu</label>
+                    <label className="text-[#000000] font-bold text-[15px]">Nazwa Projektu</label>
                     <input type="text" value={form.name.pl || ''} onChange={handleChange('name', 'pl')} placeholder="Nazwa po polsku"
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#16273B] font-bold text-[15px]">Szczegółowy Opis</label>
+                    <label className="text-[#000000] font-bold text-[15px]">Szczegółowy Opis</label>
                     <textarea value={form.description.pl || ''} onChange={handleChange('description', 'pl')} placeholder="Opis po polsku..." rows={5}
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 text-[#16273B] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#16273B]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
                   </div>
                 </div>
               </div>
@@ -388,11 +388,11 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           {/* Facilities Section */}
           <div className="space-y-4 pt-4 border-t border-gray-100">
             <div className="flex items-center justify-between">
-              <label className="text-[#16273B] font-semibold text-[15px]">Project Facilities</label>
+              <label className="text-[#000000] font-semibold text-[15px]">Project Facilities</label>
               <button 
                 type="button"
                 onClick={() => setIsAddingFacility(!isAddingFacility)}
-                className="text-[13px] font-bold text-[#16273B] hover:underline"
+                className="text-[13px] font-bold text-[#000000] hover:underline"
               >
                 {isAddingFacility ? 'Cancel' : '+ Add New Facility'}
               </button>
@@ -403,19 +403,19 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <input 
                     placeholder="EN Name" 
-                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#000000]/10"
                     value={newFacilityName.en}
                     onChange={e => setNewFacilityName({...newFacilityName, en: e.target.value})}
                   />
                   <input 
                     placeholder="DE Name" 
-                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#000000]/10"
                     value={newFacilityName.de}
                     onChange={e => setNewFacilityName({...newFacilityName, de: e.target.value})}
                   />
                   <input 
                     placeholder="PL Name" 
-                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#000000]/10"
                     value={newFacilityName.pl}
                     onChange={e => setNewFacilityName({...newFacilityName, pl: e.target.value})}
                   />
@@ -436,7 +436,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                       setIsSubmittingQuick(false);
                     }
                   }}
-                  className="bg-[#16273B] text-white px-6 py-2 rounded-xl text-sm font-bold disabled:opacity-50"
+                  className="bg-[#000000] text-white px-6 py-2 rounded-xl text-sm font-bold disabled:opacity-50"
                 >
                   {isSubmittingQuick ? 'Saving...' : 'Save & Refresh'}
                 </button>
@@ -446,7 +446,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[250px] overflow-y-auto pr-2 scrollbar-thin">
               {isEditMode ? (
                 facilityStrings.map((facStr, idx) => (
-                  <div key={idx} className="bg-gray-100 border border-gray-200 text-[#16273B] font-bold p-4 rounded-[18px] flex items-center justify-center text-center text-[14px]">
+                  <div key={idx} className="bg-gray-100 border border-gray-200 text-[#000000] font-bold p-4 rounded-[18px] flex items-center justify-center text-center text-[14px]">
                     {typeof facStr === 'string' ? facStr : (facStr as unknown as { name?: string })?.name || 'Unknown'}
                   </div>
                 ))
@@ -463,7 +463,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                     key={fac.id} 
                     className={`group flex items-center gap-3 cursor-pointer p-4 rounded-[18px] transition-all border-2 ${
                       isChecked 
-                        ? 'bg-[#16273B] border-[#16273B] shadow-md shadow-[#16273B]/10' 
+                        ? 'bg-[#000000] border-[#000000] shadow-md shadow-[#000000]/10' 
                         : 'bg-white border-gray-100 hover:border-gray-200 hover:bg-gray-50'
                     }`}
                   >
@@ -471,7 +471,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                       isChecked ? 'bg-white border-white' : 'bg-transparent border-gray-300'
                     }`}>
                       {isChecked && (
-                        <svg className="w-3.5 h-3.5 text-[#16273B] fill-current" viewBox="0 0 20 20">
+                        <svg className="w-3.5 h-3.5 text-[#000000] fill-current" viewBox="0 0 20 20">
                           <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" />
                         </svg>
                       )}
@@ -491,7 +491,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                       }}
                     />
                     <span className={`text-[14px] font-bold transition-colors ${
-                      isChecked ? 'text-white' : 'text-[#16273B]'
+                      isChecked ? 'text-white' : 'text-[#000000]'
                     }`}>
                       {facName as string}
                     </span>
@@ -505,7 +505,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           {/* Image Upload — Hero + Gallery */}
           <div className="space-y-6">
             <div>
-              <label className="text-[#16273B] font-bold text-[15px] flex items-center gap-2 mb-1">
+              <label className="text-[#000000] font-bold text-[15px] flex items-center gap-2 mb-1">
                 <span className="w-2 h-2 rounded-full bg-amber-400" />
                 Hero / Cover Image
               </label>
@@ -532,8 +532,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             </div>
 
             <div>
-              <label className="text-[#16273B] font-bold text-[15px] flex items-center gap-2 mb-1">
-                <span className="w-2 h-2 rounded-full bg-[#16273B]" />
+              <label className="text-[#000000] font-bold text-[15px] flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 rounded-full bg-[#000000]" />
                 Gallery Images
               </label>
               <p className="text-[12px] text-gray-400 mb-3">Additional images shown in the project gallery. You can add multiple.</p>
@@ -569,11 +569,11 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         {/* Footer */}
         <div className="p-10 pt-0 border-t border-gray-100 flex gap-6 shrink-0 bg-gray-50/30 rounded-b-[32px]">
           <button onClick={onClose} 
-            className="flex-1 py-5 rounded-2xl border border-gray-200 text-[#16273B] font-bold hover:bg-white hover:border-[#16273B]/20 transition-all cursor-pointer shadow-sm active:scale-[0.98]">
+            className="flex-1 py-5 rounded-2xl border border-gray-200 text-[#000000] font-bold hover:bg-white hover:border-[#000000]/20 transition-all cursor-pointer shadow-sm active:scale-[0.98]">
             Cancel
           </button>
           <button onClick={handleSubmit} disabled={isLoading}
-            className="flex-[2] py-5 rounded-2xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-all cursor-pointer shadow-lg shadow-[#16273B]/20 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]">
+            className="flex-[2] py-5 rounded-2xl bg-[#000000] hover:bg-[#1a304a] text-white font-bold transition-all cursor-pointer shadow-lg shadow-[#000000]/20 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]">
             {isLoading ? 'Processing...' : isEditMode ? 'Save Project Changes' : 'Create New Project'}
           </button>
         </div>

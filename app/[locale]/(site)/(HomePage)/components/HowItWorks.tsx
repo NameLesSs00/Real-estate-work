@@ -1,83 +1,98 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Home, Handshake, FileText } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
-import './HowItWorks.css';
 
 const steps = [
   {
-    icon: '/assists/HowItWorks/fluent_search-sparkle-16-filled.png',
-    key: 'step1',
-    direction: 'left',
+    icon: Home,
+    title: 'Sell Your Home',
+    desc: 'We do a free evaluation to be sure you want to start selling.',
+    link: '/contact',
   },
   {
-    icon: '/assists/HowItWorks/ri_chat-ai-line.png',
-    key: 'step2',
-    direction: 'bottom',
+    icon: Handshake,
+    title: 'Buy A Home',
+    desc: 'We do a free evaluation to be sure you want to start buying.',
+    link: '/properties?unitType=Buy',
   },
   {
-    icon: '/assists/HowItWorks/uil_calender.png',
-    key: 'step3',
-    direction: 'right',
+    icon: FileText,
+    title: 'Rent A Home',
+    desc: 'We do a free evaluation to be sure you want to start renting.',
+    link: '/properties?unitType=Rent',
   },
 ];
 
 const HowItWorks = () => {
-  const { t } = useLanguage();
+  const { language } = useLanguage();
 
   return (
-    <section className="how-it-works-section overflow-hidden">
-      <div className="how-it-works-overlay"></div>
-      
-      <div className="how-it-works-container">
-        <motion.div 
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="how-it-works-header"
-        >
-          <span className="how-it-works-tag">{t('howItWorks.tag')}</span>
-          <h2 className="how-it-works-title">{t('howItWorks.title')}</h2>
-          <div className="how-it-works-accent-line"></div>
-        </motion.div>
+    <section 
+      className="relative w-full py-24 bg-fixed bg-cover bg-center" 
+      style={{ backgroundImage: "url('/assists/HowItWorks/313198c8ba26169d67a012922bcfbbbcaf9f85c1.png')" }}
+    >
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/60 z-0 pointer-events-none" />
 
-        <div className="how-it-works-grid">
-          {steps.map((step, index) => {
-            const initialPos = 
-              step.direction === 'left' ? { x: -60, opacity: 0 } :
-              step.direction === 'right' ? { x: 60, opacity: 0 } :
-              { y: 60, opacity: 0 };
-
-            return (
-              <motion.div 
-                key={index}
-                initial={initialPos}
-                whileInView={{ x: 0, y: 0, opacity: 1 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ 
-                  duration: 0.8, 
-                  delay: 0.2 + (index * 0.3), // 0.2, 0.5, 0.8
-                  ease: "easeOut" 
-                }}
-                className="how-it-works-card"
-              >
-                <div className="how-it-works-icon-wrapper">
-                  <Image 
-                    src={step.icon} 
-                    alt="Step Icon" 
-                    width={64} 
-                    height={64} 
-                    className="how-it-works-icon"
-                  />
-                </div>
-                <p className="how-it-works-text">{t(`howItWorks.${step.key}`)}</p>
-              </motion.div>
-            );
-          })}
+      <div className="relative z-10 container mx-auto px-6 max-w-[1280px]">
+        
+        {/* Header */}
+        <div className="text-center mb-16 flex flex-col items-center">
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-[36px] md:text-[56px] font-serif text-white leading-tight"
+          >
+            Passionate About
+            <br />
+            Being Different
+          </motion.h2>
+          <motion.span 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-[#A88849] text-[40px] md:text-[56px] font-medium ml-32 md:ml-64 -mt-4 md:-mt-8"
+            style={{ fontFamily: 'var(--font-dancing-script)' }}
+          >
+            experience
+          </motion.span>
         </div>
+
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {steps.map((step, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+              className="bg-white rounded-[24px] p-8 flex flex-col items-center text-center shadow-2xl"
+            >
+              <div className="w-16 h-16 rounded-full bg-[#A88849] flex items-center justify-center text-white mb-6">
+                <step.icon size={28} />
+              </div>
+              <h3 className="text-[#000000] font-bold text-[22px] mb-4">{step.title}</h3>
+              <p className="text-gray-500 text-[15px] leading-relaxed mb-6">
+                {step.desc}
+              </p>
+              <Link 
+                href={`/${language}${step.link}`}
+                className="text-[#000000] font-semibold text-[14px] hover:text-[#A88849] transition-colors mt-auto flex items-center gap-2"
+              >
+                Read More &rarr;
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+
       </div>
     </section>
   );

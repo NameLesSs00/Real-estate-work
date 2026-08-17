@@ -33,7 +33,7 @@
 
 .feature-project-title {
   font-family: var(--font-radley);
-  color: #1b2134;
+  color: #000000;
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
@@ -110,7 +110,7 @@
 }
 
 .project-price-tag span {
-  color: #1b2134;
+  color: #000000;
   font-weight: 700;
 }
 
@@ -118,7 +118,7 @@
   font-family: var(--font-poppins);
   font-size: 32px;
   font-weight: 700;
-  color: #1b2134;
+  color: #000000;
   margin-bottom: 8px;
 }
 
@@ -174,7 +174,7 @@
   font-family: var(--font-poppins);
   font-size: 20px;
   font-weight: 600;
-  color: #1b2134;
+  color: #000000;
   margin-bottom: 20px;
 }
 
@@ -223,7 +223,7 @@
 
 .detail-info-value {
   font-family: var(--font-poppins);
-  color: #1b2134;
+  color: #000000;
   font-size: 14px;
   font-weight: 600;
 }
@@ -236,7 +236,7 @@
 }
 
 .get-in-touch-btn {
-  background-color: #1b2134;
+  background-color: #000000;
   color: #ffffff;
   padding: 16px 48px;
   border-radius: 50px;
@@ -274,7 +274,7 @@
 }
 
 .dot.active {
-  background-color: #1b2134;
+  background-color: #000000;
 }
 
 
@@ -294,18 +294,18 @@
   width: 100%;
   padding: 16px;
   border-radius: 50px;
-  border: 1px solid #1b2134;
+  border: 1px solid #000000;
   background: transparent;
   font-family: var(--font-poppins);
   font-size: 18px;
   font-weight: 600;
-  color: #1b2134;
+  color: #000000;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .show-more-projects-btn:hover {
-  background-color: #1b2134;
+  background-color: #000000;
   color: #ffffff;
 }
 

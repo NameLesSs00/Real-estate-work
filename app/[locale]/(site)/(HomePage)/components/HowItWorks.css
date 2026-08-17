@@ -15,7 +15,7 @@
 .how-it-works-overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(27, 33, 52, 0.9); /* #1B2134E5 is ~90% opacity */
+  background-color: rgba(27, 33, 52, 0.9); /* #000000E5 is ~90% opacity */
   z-index: 1;
 }
 

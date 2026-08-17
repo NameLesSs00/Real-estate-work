@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { getSoldUnitById, SoldUnit } from '@/lib/api/units';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
+import { API_DOMAIN } from '@/lib/api/config';
 
 interface SoldUnitDetailModalProps {
   isOpen: boolean;
@@ -36,7 +37,7 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
     new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
   const resolveImage = (url: string) =>
-    url.startsWith('http') ? url : `https://api.thegate-estates.com/${url}`;
+    url.startsWith('http') ? url : `${API_DOMAIN}/${url}`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -46,7 +47,7 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
         {/* Header */}
         <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-8 py-5 flex items-center justify-between rounded-t-[28px]">
           <div>
-            <h2 className="text-[20px] font-bold text-[#16273B]">Sold Unit Detail</h2>
+            <h2 className="text-[20px] font-bold text-[#000000]">Sold Unit Detail</h2>
             <p className="text-[13px] text-[#64748B]">ID #{soldUnitId}</p>
           </div>
           <button
@@ -62,7 +63,7 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
         <div className="p-8">
           {isLoading ? (
             <div className="flex items-center justify-center py-16">
-              <div className="w-10 h-10 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
             </div>
           ) : error ? (
             <div className="text-center py-12 text-red-500">{error}</div>
@@ -92,7 +93,7 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
                           key={i}
                           onClick={() => setActiveImg(i)}
                           className={`relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
-                            i === activeImg ? 'border-[#16273B]' : 'border-transparent opacity-60 hover:opacity-80'
+                            i === activeImg ? 'border-[#000000]' : 'border-transparent opacity-60 hover:opacity-80'
                           }`}
                         >
                           <Image src={resolveImage(img)} alt="" fill className="object-cover" />
@@ -123,7 +124,7 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
               {unit.notes && (
                 <div className="bg-[#F8F9FA] rounded-2xl p-4">
                   <p className="text-[12px] font-semibold text-[#94A3B8] uppercase tracking-wider mb-2">Notes</p>
-                  <p className="text-[14px] text-[#16273B] leading-relaxed">{unit.notes}</p>
+                  <p className="text-[14px] text-[#000000] leading-relaxed">{unit.notes}</p>
                 </div>
               )}
             </div>
@@ -138,7 +139,7 @@ function InfoCard({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="bg-[#F8F9FA] rounded-2xl p-4">
       <p className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider mb-1">{label}</p>
-      <div className="text-[14px] font-semibold text-[#16273B]">{value || '—'}</div>
+      <div className="text-[14px] font-semibold text-[#000000]">{value || '—'}</div>
     </div>
   );
 }

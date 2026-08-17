@@ -87,13 +87,13 @@ export default function AdminHeader() {
   };
 
   return (
-    <header className="h-[100px] px-10 flex items-center justify-between bg-[#16273B] font-inter w-full text-white scrollbar-hide">
+    <header className="h-[100px] px-10 flex items-center justify-between bg-white border-b border-gray-100 font-inter w-full text-[#000000] scrollbar-hide">
       {/* Left Side: Page Title and Greeting */}
       <div className="flex flex-col min-w-[200px]">
         <h1 className="text-[24px] font-bold tracking-tight">
           {getPageName()}
         </h1>
-        <p className="text-[14px] text-gray-300 mt-0.5">
+        <p className="text-[14px] text-gray-500 mt-0.5">
           Welcome back, {adminName}
         </p>
       </div>
@@ -110,7 +110,7 @@ export default function AdminHeader() {
           <input 
             type="text" 
             placeholder="Search properties, projects..." 
-            className="w-full bg-white rounded-full py-3.5 pl-12 pr-6 text-[#16273B] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-inter text-[15px]"
+            className="w-full bg-gray-50 border border-gray-200 rounded-full py-3.5 pl-12 pr-6 text-[#000000] placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-[#A88849] transition-all font-inter text-[15px]"
           />
         </div>
       </div>
@@ -119,12 +119,12 @@ export default function AdminHeader() {
       <div className="relative min-w-[50px] flex justify-end">
         <button 
           onClick={() => setShowNotifications(!showNotifications)}
-          className="p-2 relative text-white hover:text-gray-300 transition-colors cursor-pointer"
+          className="p-2 relative text-gray-600 hover:text-[#000000] transition-colors cursor-pointer"
         >
           <Bell size={26} />
           {/* Notification Dot */}
           {unreadCount > 0 && (
-            <span className="absolute top-1.5 right-1.5 w-3 h-3 bg-[#EF4444] rounded-full border-2 border-[#16273B] animate-pulse"></span>
+            <span className="absolute top-1.5 right-1.5 w-3 h-3 bg-[#EF4444] rounded-full border-2 border-[#000000] animate-pulse"></span>
           )}
         </button>
 
@@ -137,7 +137,7 @@ export default function AdminHeader() {
             />
             <div className="absolute right-0 mt-4 w-96 bg-white rounded-[24px] shadow-2xl border border-gray-100 z-50 p-6 animate-in fade-in slide-in-from-top-4 duration-200">
                <div className="flex items-center justify-between mb-4">
-                 <h3 className="text-xl font-bold text-[#16273B]">Notifications</h3>
+                 <h3 className="text-xl font-bold text-[#000000]">Notifications</h3>
                  {unreadCount > 0 && (
                    <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full">
                      {unreadCount} New
@@ -155,7 +155,7 @@ export default function AdminHeader() {
                          {n.type === 'lead' ? <User size={20} /> : <FileText size={20} />}
                        </div>
                        <div className="flex-1 min-w-0">
-                         <p className="text-[14px] font-bold text-[#16273B] truncate flex items-center gap-2">
+                         <p className="text-[14px] font-bold text-[#000000] truncate flex items-center gap-2">
                            {n.title}
                            {n.isNew && <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />}
                          </p>
@@ -171,7 +171,7 @@ export default function AdminHeader() {
 
                <button 
                  onClick={() => setShowNotifications(false)}
-                 className="mt-4 w-full py-3 bg-[#F8F9FA] hover:bg-gray-100 text-[#16273B] font-semibold rounded-xl transition-colors cursor-pointer"
+                 className="mt-4 w-full py-3 bg-[#F8F9FA] hover:bg-gray-100 text-[#000000] font-semibold rounded-xl transition-colors cursor-pointer"
                >
                  Close
                </button>

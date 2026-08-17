@@ -54,15 +54,15 @@ export default function LeadsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <h1 className="text-[36px] font-bold text-[#1B2134] mb-2">Property Leads</h1>
+            <h1 className="text-[36px] font-bold text-[#000000] mb-2">Property Leads</h1>
             <p className="text-[#64748B] text-lg">Manage inquiries received for specific properties and projects.</p>
           </div>
           <div className="bg-white px-6 py-4 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
             <div className="text-right">
               <p className="text-[13px] text-gray-400 font-medium uppercase tracking-wider">Total Leads</p>
-              <p className="text-2xl font-bold text-[#1B2134]">{totalCount}</p>
+              <p className="text-2xl font-bold text-[#000000]">{totalCount}</p>
             </div>
-            <div className="w-12 h-12 bg-[#F0EBE3] rounded-xl flex items-center justify-center text-[#1B2134]">
+            <div className="w-12 h-12 bg-[#F0EBE3] rounded-xl flex items-center justify-center text-[#000000]">
               <Eye size={24} />
             </div>
           </div>
@@ -76,7 +76,7 @@ export default function LeadsPage() {
             placeholder="Search by name, email, phone or project..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-[16px] outline-none focus:ring-4 focus:ring-[#1B2134]/5 shadow-sm transition-all"
+            className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-[16px] outline-none focus:ring-4 focus:ring-[#000000]/5 shadow-sm transition-all"
           />
         </div>
 
@@ -84,14 +84,14 @@ export default function LeadsPage() {
         <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-32 gap-4">
-              <Loader2 className="animate-spin text-[#1B2134]" size={48} />
+              <Loader2 className="animate-spin text-[#000000]" size={48} />
               <p className="text-gray-400 font-medium">Loading leads...</p>
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-24 gap-4">
               <AlertCircle className="text-red-400" size={48} />
               <p className="text-red-500 font-medium">{error}</p>
-              <button onClick={() => fetchLeads(currentPage)} className="bg-[#1B2134] text-white px-8 py-3 rounded-xl font-bold cursor-pointer hover:bg-[#2d3555] transition-all">Retry</button>
+              <button onClick={() => fetchLeads(currentPage)} className="bg-[#000000] text-white px-8 py-3 rounded-xl font-bold cursor-pointer hover:bg-[#2d3555] transition-all">Retry</button>
             </div>
           ) : filteredLeads.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-32 gap-4 text-gray-300">
@@ -102,7 +102,7 @@ export default function LeadsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-left min-w-[1000px]">
                 <thead className="bg-gray-50/50">
-                  <tr className="text-[#1B2134] text-[14px] font-bold uppercase tracking-wider">
+                  <tr className="text-[#000000] text-[14px] font-bold uppercase tracking-wider">
                     <th className="px-8 py-6">Applicant</th>
                     <th className="px-8 py-6">Property / Project</th>
                     <th className="px-8 py-6">Status</th>
@@ -114,11 +114,11 @@ export default function LeadsPage() {
                   {filteredLeads.map((lead) => (
                     <tr key={lead.id} className="hover:bg-gray-50/30 transition-colors">
                       <td className="px-8 py-6">
-                        <div className="font-bold text-[#1B2134]">{lead.fullName}</div>
+                        <div className="font-bold text-[#000000]">{lead.fullName}</div>
                         <div className="text-[13px] text-gray-400">{lead.email}</div>
                       </td>
                       <td className="px-8 py-6">
-                        <div className="text-[14px] font-semibold text-[#1B2134]">{lead.propertyName || 'General Inquiry'}</div>
+                        <div className="text-[14px] font-semibold text-[#000000]">{lead.propertyName || 'General Inquiry'}</div>
                         {lead.projectName && <div className="text-[12px] text-gray-400">{lead.projectName}</div>}
                       </td>
                       <td className="px-8 py-6">
@@ -134,7 +134,7 @@ export default function LeadsPage() {
                       <td className="px-8 py-6 text-right">
                         <button 
                           onClick={() => setSelectedLead(lead)}
-                          className="p-2.5 text-[#1B2134] hover:bg-[#1B2134]/5 rounded-xl transition-all"
+                          className="p-2.5 text-[#000000] hover:bg-[#000000]/5 rounded-xl transition-all"
                         >
                           <Eye size={18} />
                         </button>
@@ -154,12 +154,12 @@ export default function LeadsPage() {
                 <button
                   onClick={() => fetchLeads(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-[14px] font-bold text-[#1B2134] bg-white hover:bg-gray-50 disabled:opacity-40 transition-all shadow-sm cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-[14px] font-bold text-[#000000] bg-white hover:bg-gray-50 disabled:opacity-40 transition-all shadow-sm cursor-pointer"
                 >Previous</button>
                 <button
                   onClick={() => fetchLeads(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-[14px] font-bold text-[#1B2134] bg-white hover:bg-gray-50 disabled:opacity-40 transition-all shadow-sm cursor-pointer"
+                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-[14px] font-bold text-[#000000] bg-white hover:bg-gray-50 disabled:opacity-40 transition-all shadow-sm cursor-pointer"
                 >Next</button>
               </div>
             </div>
@@ -183,33 +183,33 @@ export default function LeadsPage() {
                 className="bg-white rounded-[40px] w-full max-w-xl shadow-2xl overflow-hidden" 
                 onClick={e => e.stopPropagation()}
               >
-                <div className="bg-[#1B2134] p-10 text-white relative">
+                <div className="bg-[#000000] p-10 text-white relative">
                   <h2 className="text-[32px] font-bold leading-tight">{selectedLead.fullName}</h2>
                   <p className="text-white/60 mt-2 flex items-center gap-2"><Calendar size={16} /> Submitted on {new Date(selectedLead.createdAt).toLocaleDateString()}</p>
                 </div>
                 <div className="p-10 space-y-6">
-                  <div className="flex items-center gap-4 text-[#1B2134]">
+                  <div className="flex items-center gap-4 text-[#000000]">
                     <div className="w-12 h-12 bg-[#F0EBE3] rounded-2xl flex items-center justify-center shrink-0"><Mail size={20} /></div>
                     <div><p className="text-[13px] text-gray-400 font-bold uppercase tracking-widest">Email</p><p className="font-semibold">{selectedLead.email}</p></div>
                   </div>
-                  <div className="flex items-center gap-4 text-[#1B2134]">
+                  <div className="flex items-center gap-4 text-[#000000]">
                     <div className="w-12 h-12 bg-[#F0EBE3] rounded-2xl flex items-center justify-center shrink-0"><Phone size={20} /></div>
                     <div><p className="text-[13px] text-gray-400 font-bold uppercase tracking-widest">Phone</p><p className="font-semibold">{selectedLead.phone}</p></div>
                   </div>
                   <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
                     <p className="text-[13px] text-gray-400 font-bold uppercase tracking-widest mb-3">Property Interest</p>
-                    <p className="text-[#1B2134] font-bold text-lg">{selectedLead.propertyName || 'N/A'}</p>
+                    <p className="text-[#000000] font-bold text-lg">{selectedLead.propertyName || 'N/A'}</p>
                     {selectedLead.projectName && <p className="text-gray-500 font-medium mt-1">{selectedLead.projectName}</p>}
                   </div>
                   {selectedLead.notes && (
                     <div className="space-y-2">
                       <p className="text-[13px] text-gray-400 font-bold uppercase tracking-widest">Message</p>
-                      <p className="text-[#1B2134] leading-relaxed italic">&quot;{selectedLead.notes}&quot;</p>
+                      <p className="text-[#000000] leading-relaxed italic">&quot;{selectedLead.notes}&quot;</p>
                     </div>
                   )}
                   <button 
                     onClick={() => setSelectedLead(null)}
-                    className="w-full bg-[#1B2134] text-white py-4 rounded-2xl font-bold mt-4 hover:bg-[#2d3555] transition-all"
+                    className="w-full bg-[#000000] text-white py-4 rounded-2xl font-bold mt-4 hover:bg-[#2d3555] transition-all"
                   >Close</button>
                 </div>
               </motion.div>

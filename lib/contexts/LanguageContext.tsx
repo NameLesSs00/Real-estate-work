@@ -120,14 +120,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         justifyContent: 'center', 
         backgroundColor: '#fff',
         fontFamily: 'sans-serif',
-        color: '#1B2134'
+        color: '#000000'
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ 
             width: '40px', 
             height: '40px', 
             border: '3px solid #f3f3f3', 
-            borderTop: '3px solid #1B2134', 
+            borderTop: '3px solid #000000', 
             borderRadius: '50%', 
             animation: 'spin 1s linear infinite',
             margin: '0 auto 20px'
@@ -139,7 +139,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             }
           `}</style>
           <p style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '1px', textTransform: 'uppercase' }}>
-            Winners Realty
+            Luxe Estate
           </p>
         </div>
       </div>

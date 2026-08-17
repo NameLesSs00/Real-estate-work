@@ -111,7 +111,7 @@ export default function AddDeveloperModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#16273B] rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
+        <div className="bg-[#000000] rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[22px] font-bold">
             {isEditMode ? 'Edit Developer' : 'Add New Developer'}
           </h2>
@@ -132,7 +132,7 @@ export default function AddDeveloperModal({
         <div className="p-8 overflow-y-auto space-y-6 scrollbar-hide">
           {/* Name */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">
+            <label className="text-[#000000] font-semibold text-[15px]">
               Developer Name *
             </label>
             <input
@@ -140,13 +140,13 @@ export default function AddDeveloperModal({
               value={form.name}
               onChange={handleChange('name')}
               placeholder="Enter developer name"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#000000]/20 text-[#000000] placeholder-gray-400"
             />
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">
+            <label className="text-[#000000] font-semibold text-[15px]">
               Description
             </label>
             <textarea
@@ -154,13 +154,13 @@ export default function AddDeveloperModal({
               onChange={handleChange('description')}
               placeholder="Enter developer description"
               rows={4}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 text-[#16273B] placeholder-gray-400 resize-none"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#000000]/20 text-[#000000] placeholder-gray-400 resize-none"
             />
           </div>
 
           {/* Logo Upload */}
           <div className="space-y-2">
-            <label className="text-[#16273B] font-semibold text-[15px]">
+            <label className="text-[#000000] font-semibold text-[15px]">
               Logo {isEditMode ? '(upload to replace)' : '(optional)'}
             </label>
 
@@ -208,14 +208,14 @@ export default function AddDeveloperModal({
         <div className="p-8 pt-0 border-t border-gray-100 flex gap-4 shrink-0">
           <button
             onClick={onClose}
-            className="flex-1 py-4 rounded-xl border border-gray-200 text-[#16273B] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
+            className="flex-1 py-4 rounded-xl border border-gray-200 text-[#000000] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="flex-1 py-4 rounded-xl bg-[#16273B] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex-1 py-4 rounded-xl bg-[#000000] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isLoading
               ? 'Saving...'

@@ -69,9 +69,9 @@ export default function MarkAsSoldModal({
               <line x1="7" y1="7" x2="7.01" y2="7" />
             </svg>
           </div>
-          <h2 className="text-[22px] font-bold text-[#16273B] mb-1">Mark as Sold</h2>
+          <h2 className="text-[22px] font-bold text-[#000000] mb-1">Mark as Sold</h2>
           <p className="text-[14px] text-[#64748B] leading-relaxed">
-            You are marking <span className="font-semibold text-[#16273B]">&ldquo;{unitName}&rdquo;</span> as sold.
+            You are marking <span className="font-semibold text-[#000000]">&ldquo;{unitName}&rdquo;</span> as sold.
             <br />This action will deactivate the unit.
           </p>
         </div>
@@ -79,7 +79,7 @@ export default function MarkAsSoldModal({
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Notes */}
           <div>
-            <label className="block text-[13px] font-semibold text-[#16273B] mb-2">
+            <label className="block text-[13px] font-semibold text-[#000000] mb-2">
               Notes
             </label>
             <textarea
@@ -88,7 +88,7 @@ export default function MarkAsSoldModal({
               placeholder="Add relevant notes about this sale (required)…"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#16273B] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A16207]/30 focus:border-[#A16207] transition-all resize-none bg-[#FAFAFA]"
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#000000] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#A16207]/30 focus:border-[#A16207] transition-all resize-none bg-[#FAFAFA]"
             />
           </div>
 

@@ -63,10 +63,10 @@ export default function UnitPaymentPlans({ unit, extraPlans, fetchUnit, setError
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-[17px] font-bold text-[#16273B]">Payment Plans</h4>
+        <h4 className="text-[17px] font-bold text-[#000000]">Payment Plans</h4>
         <button 
           onClick={() => setIsAddingPlan(!isAddingPlan)}
-          className="text-[13px] font-semibold text-[#16273B] bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+          className="text-[13px] font-semibold text-[#000000] bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
         >
           {isAddingPlan ? 'Cancel' : '+ Add Plan'}
         </button>
@@ -80,7 +80,7 @@ export default function UnitPaymentPlans({ unit, extraPlans, fetchUnit, setError
               <select 
                 value={newPlan.paymentType}
                 onChange={(e) => setNewPlan({...newPlan, paymentType: e.target.value})}
-                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-[14px] outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-[14px] outline-none focus:ring-2 focus:ring-[#000000]/10"
               >
                 <option value="Installment">Installment</option>
                 <option value="Cash">Cash</option>
@@ -92,7 +92,7 @@ export default function UnitPaymentPlans({ unit, extraPlans, fetchUnit, setError
                 type="number" 
                 value={newPlan.installmentMonths}
                 onChange={(e) => setNewPlan({...newPlan, installmentMonths: Number(e.target.value)})}
-                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-[14px] outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-[14px] outline-none focus:ring-2 focus:ring-[#000000]/10"
               />
             </div>
             <div className="space-y-1">
@@ -101,14 +101,14 @@ export default function UnitPaymentPlans({ unit, extraPlans, fetchUnit, setError
                 type="number" 
                 value={newPlan.installmentDownPayment}
                 onChange={(e) => setNewPlan({...newPlan, installmentDownPayment: Number(e.target.value)})}
-                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-[14px] outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-[14px] outline-none focus:ring-2 focus:ring-[#000000]/10"
               />
             </div>
           </div>
           <button 
             onClick={handleAddPlan}
             disabled={isSubmittingPlan}
-            className="w-full bg-[#16273B] text-white font-bold py-2.5 rounded-xl text-[14px] hover:bg-[#1a304a] transition-all disabled:opacity-50 cursor-pointer"
+            className="w-full bg-[#000000] text-white font-bold py-2.5 rounded-xl text-[14px] hover:bg-[#1a304a] transition-all disabled:opacity-50 cursor-pointer"
           >
             {isSubmittingPlan ? 'Adding...' : 'Confirm Add Plan'}
           </button>
@@ -131,19 +131,19 @@ export default function UnitPaymentPlans({ unit, extraPlans, fetchUnit, setError
                 <div className="flex flex-wrap gap-6">
                   <div>
                     <p className="text-[12px] text-gray-400">Type</p>
-                    <p className="text-[#16273B] font-bold">{type}</p>
+                    <p className="text-[#000000] font-bold">{type}</p>
                   </div>
                   <div>
                     <p className="text-[12px] text-gray-400">Months</p>
-                    <p className="text-[#16273B] font-bold">{months}</p>
+                    <p className="text-[#000000] font-bold">{months}</p>
                   </div>
                   <div>
                     <p className="text-[12px] text-gray-400">Down Payment</p>
-                    <p className="text-[#16273B] font-bold">{unit.currencyCode || unit.CurrencyCode || 'EGP'} {downPayment.toLocaleString()}</p>
+                    <p className="text-[#000000] font-bold">{unit.currencyCode || unit.CurrencyCode || 'EGP'} {downPayment.toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-[12px] text-gray-400">Status</p>
-                    <p className="text-[#16273B] font-bold">{status}</p>
+                    <p className="text-[#000000] font-bold">{status}</p>
                   </div>
                 </div>
                 {planId && (

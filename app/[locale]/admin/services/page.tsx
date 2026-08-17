@@ -156,12 +156,12 @@ export default function ServicesPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <h1 className="text-[36px] font-bold text-[#16273B] mb-2">Unit Services</h1>
+            <h1 className="text-[36px] font-bold text-[#000000] mb-2">Unit Services</h1>
             <p className="text-[#64748B] text-lg">Manage specialized services for units.</p>
           </div>
           <button 
             onClick={() => setShowAdd(!showAdd)}
-            className="bg-[#16273B] text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-lg active:scale-95"
+            className="bg-[#000000] text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-lg active:scale-95"
           >
             {showAdd ? <X size={20} /> : <Plus size={20} />}
             {showAdd ? 'Cancel' : 'Add New Service'}
@@ -199,35 +199,35 @@ export default function ServicesPage() {
               <form onSubmit={handleAdd} className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#16273B] ml-1">English Name</label>
+                    <label className="text-[14px] font-bold text-[#000000] ml-1">English Name</label>
                     <input 
                       type="text" 
                       value={newName.en}
                       onChange={(e) => setNewName({...newName, en: e.target.value})}
                       placeholder="e.g. Concierge"
-                      className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#16273B]/10 transition-all"
+                      className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#16273B] ml-1">German Name</label>
+                    <label className="text-[14px] font-bold text-[#000000] ml-1">German Name</label>
                     <input 
                       type="text" 
                       value={newName.de}
                       onChange={(e) => setNewName({...newName, de: e.target.value})}
                       placeholder="e.g. Hausmeisterservice"
-                      className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#16273B]/10 transition-all"
+                      className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#16273B] ml-1">Polish Name</label>
+                    <label className="text-[14px] font-bold text-[#000000] ml-1">Polish Name</label>
                     <input 
                       type="text" 
                       value={newName.pl}
                       onChange={(e) => setNewName({...newName, pl: e.target.value})}
                       placeholder="e.g. Konsjerż"
-                      className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#16273B]/10 transition-all"
+                      className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all"
                       required
                     />
                   </div>
@@ -235,7 +235,7 @@ export default function ServicesPage() {
                 <div className="flex justify-end pt-2">
                   <button 
                     disabled={loading}
-                    className="bg-[#16273B] text-white px-10 py-4 rounded-xl font-bold shadow-md hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2"
+                    className="bg-[#000000] text-white px-10 py-4 rounded-xl font-bold shadow-md hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2"
                   >
                     {loading && <Loader2 className="animate-spin" size={20} />}
                     Create Service
@@ -254,7 +254,7 @@ export default function ServicesPage() {
             placeholder="Search services..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-[16px] outline-none focus:ring-4 focus:ring-[#16273B]/5 shadow-sm transition-all"
+            className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-[16px] outline-none focus:ring-4 focus:ring-[#000000]/5 shadow-sm transition-all"
           />
         </div>
 
@@ -262,7 +262,7 @@ export default function ServicesPage() {
         <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
           <table className="w-full text-left">
             <thead className="bg-gray-50/50">
-              <tr className="text-[#16273B] text-[14px] font-bold uppercase tracking-wider">
+              <tr className="text-[#000000] text-[14px] font-bold uppercase tracking-wider">
                 <th className="px-8 py-6 w-24">ID</th>
                 <th className="px-8 py-6">Name</th>
                 <th className="px-8 py-6 text-right">Actions</th>
@@ -278,24 +278,24 @@ export default function ServicesPage() {
                         <input 
                           value={editingName.en}
                           onChange={e => setEditingName({...editingName, en: e.target.value})}
-                          className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                          className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#000000]/10"
                           placeholder="EN"
                         />
                         <input 
                           value={editingName.de}
                           onChange={e => setEditingName({...editingName, de: e.target.value})}
-                          className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                          className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#000000]/10"
                           placeholder="DE"
                         />
                         <input 
                           value={editingName.pl}
                           onChange={e => setEditingName({...editingName, pl: e.target.value})}
-                          className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#16273B]/10"
+                          className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#000000]/10"
                           placeholder="PL"
                         />
                       </div>
                     ) : (
-                      <span className="font-bold text-[#16273B] text-[16px]">{getDisplayName(service)}</span>
+                      <span className="font-bold text-[#000000] text-[16px]">{getDisplayName(service)}</span>
                     )}
                   </td>
                   <td className="px-8 py-6 text-right">
@@ -310,7 +310,7 @@ export default function ServicesPage() {
                           <button 
                             onClick={() => handleEditClick(service)}
                             disabled={isFetchingDetails === service.id}
-                            className="p-2.5 text-[#16273B]/70 hover:text-[#16273B] hover:bg-gray-100 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center"
+                            className="p-2.5 text-[#000000]/70 hover:text-[#000000] hover:bg-gray-100 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center"
                           >
                             {isFetchingDetails === service.id ? <Loader2 size={18} className="animate-spin" /> : <Edit2 size={18} />}
                           </button>

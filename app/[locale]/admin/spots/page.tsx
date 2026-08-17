@@ -88,14 +88,14 @@ export default function SpotsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-[28px] font-bold text-[#1B2134] font-poppins mb-1">Locations</h1>
+          <h1 className="text-[28px] font-bold text-[#000000] font-poppins mb-1">Locations</h1>
           <p className="text-[15px] text-[#666] font-poppins">
             {totalCount} location{totalCount !== 1 ? 's' : ''} total
           </p>
         </div>
         <button
           onClick={handleAddNew}
-          className="bg-[#1B2134] text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-[#252d46] transition-colors font-poppins font-medium cursor-pointer"
+          className="bg-[#000000] text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-[#252d46] transition-colors font-poppins font-medium cursor-pointer"
         >
           <Image src="/admin/spots/add.png" alt="Add" width={20} height={20} className="object-contain" />
           Add New Location
@@ -116,7 +116,7 @@ export default function SpotsPage() {
             placeholder="Search by city, district or country..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-[#E2E8F0] rounded-[20px] py-4 pl-12 pr-4 text-[#4A5568] placeholder-[#A0AEC0] focus:outline-none focus:border-[#1B2134] focus:ring-1 focus:ring-[#1B2134] transition-all font-poppins shadow-sm"
+            className="w-full bg-white border border-[#E2E8F0] rounded-[20px] py-4 pl-12 pr-4 text-[#4A5568] placeholder-[#A0AEC0] focus:outline-none focus:border-[#000000] focus:ring-1 focus:ring-[#000000] transition-all font-poppins shadow-sm"
           />
         </div>
       </div>
@@ -125,14 +125,14 @@ export default function SpotsPage() {
       <div className="bg-white rounded-[20px] shadow-sm border border-[#F0EDE8] overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-24">
-            <div className="w-10 h-10 border-4 border-[#1B2134] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <p className="text-red-500 font-poppins">{error}</p>
             <button
               onClick={() => fetchLocations(currentPage)}
-              className="bg-[#1B2134] text-white px-6 py-2 rounded-full font-poppins text-sm cursor-pointer"
+              className="bg-[#000000] text-white px-6 py-2 rounded-full font-poppins text-sm cursor-pointer"
             >
               Retry
             </button>
@@ -165,10 +165,10 @@ export default function SpotsPage() {
                       {(currentPage - 1) * 10 + idx + 1}
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-[15px] font-semibold text-[#1B2134]">{loc.city}</span>
+                      <span className="text-[15px] font-semibold text-[#000000]">{loc.city}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium bg-[#F0EDE8] text-[#1B2134]">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium bg-[#F0EDE8] text-[#000000]">
                         {loc.district}
                       </span>
                     </td>
@@ -218,14 +218,14 @@ export default function SpotsPage() {
               <button
                 onClick={() => fetchLocations(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 rounded-lg border border-[#E2E8F0] text-[14px] font-medium text-[#1B2134] hover:bg-[#F8F9FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
+                className="px-4 py-2 rounded-lg border border-[#E2E8F0] text-[14px] font-medium text-[#000000] hover:bg-[#F8F9FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
               >
                 Previous
               </button>
               <button
                 onClick={() => fetchLocations(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 rounded-lg border border-[#E2E8F0] text-[14px] font-medium text-[#1B2134] hover:bg-[#F8F9FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
+                className="px-4 py-2 rounded-lg border border-[#E2E8F0] text-[14px] font-medium text-[#000000] hover:bg-[#F8F9FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
               >
                 Next
               </button>

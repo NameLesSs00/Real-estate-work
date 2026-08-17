@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { getSoldUnits, SoldUnit } from '@/lib/api/units';
 import { getUnitOutsideSoldouts } from '@/lib/api/unitOutsideSoldouts';
+import { API_DOMAIN } from '@/lib/api/config';
 import SoldUnitDetailModal from '@/components/admin/SoldUnitDetailModal';
 
 export default function SoldUnitsPage() {
@@ -128,7 +129,7 @@ export default function SoldUnitsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
         <div>
-          <h1 className="text-[36px] font-bold text-[#16273B] mb-1">Sold Units</h1>
+          <h1 className="text-[36px] font-bold text-[#000000] mb-1">Sold Units</h1>
           <p className="text-[#64748B] text-[17px]">
             {totalCount} sold unit{totalCount !== 1 ? 's' : ''} total
           </p>
@@ -143,7 +144,7 @@ export default function SoldUnitsPage() {
           </div>
           <div>
             <p className="text-[11px] text-[#A16207] font-semibold uppercase tracking-wider">Total Sold</p>
-            <p className="text-[20px] font-bold text-[#16273B] leading-none">{totalCount}</p>
+            <p className="text-[20px] font-bold text-[#000000] leading-none">{totalCount}</p>
           </div>
         </div>
       </div>
@@ -161,7 +162,7 @@ export default function SoldUnitsPage() {
           <input
             type="text"
             placeholder="Search by unit name…"
-            className="w-full bg-white border border-gray-100 rounded-[20px] py-4 pl-12 pr-4 text-[15px] text-[#16273B] focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 shadow-sm placeholder:text-[#94A3B8]"
+            className="w-full bg-white border border-gray-100 rounded-[20px] py-4 pl-12 pr-4 text-[15px] text-[#000000] focus:outline-none focus:ring-4 focus:ring-[#000000]/5 shadow-sm placeholder:text-[#94A3B8]"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -173,7 +174,7 @@ export default function SoldUnitsPage() {
             setSoldTypeFilter(e.target.value);
             fetchSoldUnits(1, searchQuery, e.target.value);
           }}
-          className="bg-white border border-gray-100 rounded-[20px] py-4 px-5 text-[15px] text-[#16273B] focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 shadow-sm cursor-pointer min-w-[160px]"
+          className="bg-white border border-gray-100 rounded-[20px] py-4 px-5 text-[15px] text-[#000000] focus:outline-none focus:ring-4 focus:ring-[#000000]/5 shadow-sm cursor-pointer min-w-[160px]"
         >
           <option value="">All Types</option>
           <option value="Primary">Primary</option>
@@ -181,7 +182,7 @@ export default function SoldUnitsPage() {
         </select>
         <button
           onClick={handleSearch}
-          className="bg-[#16273B] text-white px-8 py-4 rounded-[20px] text-[15px] font-semibold hover:bg-[#1e324d] transition-all shadow-sm cursor-pointer whitespace-nowrap"
+          className="bg-[#000000] text-white px-8 py-4 rounded-[20px] text-[15px] font-semibold hover:bg-[#1e324d] transition-all shadow-sm cursor-pointer whitespace-nowrap"
         >
           Search
         </button>
@@ -199,12 +200,12 @@ export default function SoldUnitsPage() {
       <div className="bg-white rounded-[32px] shadow-sm border border-gray-50 overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-24">
-            <div className="w-10 h-10 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <p className="text-red-500">{error}</p>
-            <button onClick={() => fetchSoldUnits(currentPage)} className="bg-[#16273B] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
+            <button onClick={() => fetchSoldUnits(currentPage)} className="bg-[#000000] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
           </div>
         ) : soldUnits.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
@@ -216,7 +217,7 @@ export default function SoldUnitsPage() {
             </div>
             <p className="text-[#64748B] text-[17px] font-medium">No sold units found.</p>
             {(searchQuery || soldTypeFilter) && (
-              <button onClick={handleClearFilters} className="text-[#16273B] underline text-sm cursor-pointer">Clear filters</button>
+              <button onClick={handleClearFilters} className="text-[#000000] underline text-sm cursor-pointer">Clear filters</button>
             )}
           </div>
         ) : (
@@ -243,7 +244,7 @@ export default function SoldUnitsPage() {
                         {unit.unitImages?.[0] ? (
                           <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100 shrink-0">
                             <Image
-                              src={unit.unitImages[0].startsWith('http') ? unit.unitImages[0] : `https://api.thegate-estates.com/${unit.unitImages[0]}`}
+                              src={unit.unitImages[0].startsWith('http') ? unit.unitImages[0] : `${API_DOMAIN}/${unit.unitImages[0]}`}
                               alt={unit.unitName}
                               fill
                               className="object-cover"
@@ -255,7 +256,7 @@ export default function SoldUnitsPage() {
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
                           </div>
                         )}
-                        <span className="text-[15px] font-bold text-[#16273B]">{unit.unitName}</span>
+                        <span className="text-[15px] font-bold text-[#000000]">{unit.unitName}</span>
                       </div>
                     </td>
                     {/* Project */}
@@ -293,7 +294,7 @@ export default function SoldUnitsPage() {
                         <button
                           onClick={() => setViewingId(unit.id)}
                           title="View Detail"
-                          className="p-2.5 bg-gray-50 hover:bg-[#16273B] text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
+                          className="p-2.5 bg-gray-50 hover:bg-[#000000] text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
                         >
                           <div
                             className="w-[18px] h-[18px] bg-current"
@@ -318,14 +319,14 @@ export default function SoldUnitsPage() {
               <button
                 onClick={() => fetchSoldUnits(currentPage - 1, searchQuery, soldTypeFilter)}
                 disabled={currentPage === 1}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#16273B] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Previous
               </button>
               <button
                 onClick={() => fetchSoldUnits(currentPage + 1, searchQuery, soldTypeFilter)}
                 disabled={currentPage === totalPages}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#16273B] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Next
               </button>

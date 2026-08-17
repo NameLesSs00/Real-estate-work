@@ -21,7 +21,7 @@
     ]
   },
   "footer": {
-    "about": "Winners Realty wurde aus der Leidenschaft heraus gegründet, Menschen mit ihrem Traumhaus und idealen Investitionen zu verbinden. Wir verstehen, dass es bei Immobilien nicht nur um Transaktionen geht; es geht um lebensverändernde Entscheidungen.",
+    "about": "Luxe Estate wurde aus der Leidenschaft heraus gegründet, Menschen mit ihrem Traumhaus und idealen Investitionen zu verbinden. Wir verstehen, dass es bei Immobilien nicht nur um Transaktionen geht; es geht um lebensverändernde Entscheidungen.",
     "usefulLinks": "Schnellzugriff",
     "stayConnected": "Folgen Sie uns",
     "newsletter": "Abonnieren Sie unseren Newsletter, um über Funktionen und Veröffentlichungen auf dem Laufenden zu bleiben.",
@@ -220,8 +220,8 @@
     "commission": "Provision"
   },
   "contactPage": {
-    "title": "Kontaktieren Sie Winners Realty",
-    "subtitle": "Willkommen auf der Kontaktseite von Winners Realty. Wir sind hier, um Ihnen bei Anfragen, Wünschen oder Feedback behilflich zu sein.",
+    "title": "Kontaktieren Sie Luxe Estate",
+    "subtitle": "Willkommen auf der Kontaktseite von Luxe Estate. Wir sind hier, um Ihnen bei Anfragen, Wünschen oder Feedback behilflich zu sein.",
     "info": {
       "email": "E-Mail",
       "phone": "Telefon",
@@ -230,7 +230,7 @@
     },
     "form": {
       "title": "Lassen Sie uns vernetzen",
-      "subtitle": "Nutzen Sie das untenstehende Formular, um mit Winners Realty in Kontakt zu treten.",
+      "subtitle": "Nutzen Sie das untenstehende Formular, um mit Luxe Estate in Kontakt zu treten.",
       "firstName": "Vorname",
       "lastName": "Nachname",
       "email": "E-Mail",
@@ -337,7 +337,7 @@
   "faqPage": {
     "tag": "UNTERSTÜTZUNG",
     "title": "Häufig gestellte Fragen",
-    "subtitle": "Alles, was Sie über das Kaufen, Verkaufen und Mieten bei Winners Realty wissen müssen.",
+    "subtitle": "Alles, was Sie über das Kaufen, Verkaufen und Mieten bei Luxe Estate wissen müssen.",
     "loading": "Fragen werden geladen...",
     "noQuestions": "Zur Zeit sind keine FAQs verfügbar. Schauen Sie bald wieder vorbei!"
   }

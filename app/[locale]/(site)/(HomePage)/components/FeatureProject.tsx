@@ -60,7 +60,7 @@ const FeatureProject = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-10 h-10 animate-spin text-[#16273B]" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#000000]" />
       </div>
     );
   }
@@ -139,7 +139,7 @@ const FeatureProject = () => {
                 <h3 className="project-name">{activeProject.name}</h3>
                 <div className="project-location-row">
                   <div className="project-location">
-                    <MapPin size={20} className="text-[#16273B]" />
+                    <MapPin size={20} className="text-[#000000]" />
                     <span>{activeProject.locationName || 'Location TBD'}</span>
                   </div>
                   <div className="developer-logo-inline">
@@ -174,7 +174,7 @@ const FeatureProject = () => {
                           className="detail-info-card"
                         >
                           <div className="detail-info-icon-wrapper">
-                            <Check size={20} className="text-[#16273B]" />
+                            <Check size={20} className="text-[#000000]" />
                           </div>
                           <span className="detail-info-value">{facName}</span>
                         </motion.div>

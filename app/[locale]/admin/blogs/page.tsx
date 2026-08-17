@@ -68,7 +68,7 @@ export default function BlogsPage() {
   if (isLoading && blogs.length === 0) {
     return (
       <div className="p-8 flex justify-center items-center h-full">
-        <div className="w-8 h-8 border-4 border-[#1B2134] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-[#000000] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -82,7 +82,7 @@ export default function BlogsPage() {
         </div>
         <Link 
           href="/admin/blogs/create" 
-          className="bg-[#1B2134] text-white px-6 py-3 rounded-xl font-poppins font-medium hover:bg-gray-800 transition-colors"
+          className="bg-[#000000] text-white px-6 py-3 rounded-xl font-poppins font-medium hover:bg-gray-800 transition-colors"
         >
           Create New Blog
         </Link>

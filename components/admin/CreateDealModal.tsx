@@ -119,7 +119,7 @@ export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDe
         {/* Header */}
         <div className="border-b border-gray-100 px-8 py-5 flex items-center justify-between">
           <div>
-            <h2 className="text-[20px] font-bold text-[#16273B]">Create Deal</h2>
+            <h2 className="text-[20px] font-bold text-[#000000]">Create Deal</h2>
             <p className="text-[13px] text-[#64748B]">Register a new unit sale deal</p>
           </div>
           <button onClick={onClose} className="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors cursor-pointer">
@@ -131,11 +131,11 @@ export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDe
           
           {/* Project Dropdown */}
           <div>
-            <label className="block text-[13px] font-semibold text-[#16273B] mb-2">Project</label>
+            <label className="block text-[13px] font-semibold text-[#000000] mb-2">Project</label>
             <select
               value={selectedProjectId}
               onChange={(e) => setSelectedProjectId(e.target.value)}
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#16273B] focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 focus:border-[#16273B] transition-all bg-[#FAFAFA] cursor-pointer"
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#000000] focus:outline-none focus:ring-2 focus:ring-[#000000]/20 focus:border-[#000000] transition-all bg-[#FAFAFA] cursor-pointer"
             >
               <option value="">Select Project</option>
               {projects.map(p => (
@@ -146,12 +146,12 @@ export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDe
 
           {/* Unit Dropdown */}
           <div>
-            <label className="block text-[13px] font-semibold text-[#16273B] mb-2">Unit</label>
+            <label className="block text-[13px] font-semibold text-[#000000] mb-2">Unit</label>
             <select
               value={selectedUnitId}
               onChange={(e) => setSelectedUnitId(e.target.value)}
               disabled={!selectedProjectId}
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#16273B] focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 focus:border-[#16273B] transition-all bg-[#FAFAFA] cursor-pointer disabled:opacity-50"
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#000000] focus:outline-none focus:ring-2 focus:ring-[#000000]/20 focus:border-[#000000] transition-all bg-[#FAFAFA] cursor-pointer disabled:opacity-50"
             >
               <option value="">Select Unit</option>
               {units.map(u => (
@@ -162,12 +162,12 @@ export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDe
 
           {/* Payment Plan Dropdown */}
           <div>
-            <label className="block text-[13px] font-semibold text-[#16273B] mb-2">Payment Plan</label>
+            <label className="block text-[13px] font-semibold text-[#000000] mb-2">Payment Plan</label>
             <select
               value={form.unitPlanId || ''}
               onChange={(e) => setField('unitPlanId', Number(e.target.value))}
               disabled={!selectedUnitId || paymentPlans.length === 0}
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#16273B] focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 focus:border-[#16273B] transition-all bg-[#FAFAFA] cursor-pointer disabled:opacity-50"
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#000000] focus:outline-none focus:ring-2 focus:ring-[#000000]/20 focus:border-[#000000] transition-all bg-[#FAFAFA] cursor-pointer disabled:opacity-50"
             >
               <option value="">Select Payment Plan</option>
               {paymentPlans.map((plan, i) => {
@@ -188,7 +188,7 @@ export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDe
 
           {/* Buyer Full Name */}
           <div>
-            <label className="block text-[13px] font-semibold text-[#16273B] mb-2">
+            <label className="block text-[13px] font-semibold text-[#000000] mb-2">
               Buyer Full Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -196,31 +196,31 @@ export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDe
               value={form.fullName}
               onChange={(e) => setField('fullName', e.target.value)}
               placeholder="Enter buyer full name"
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#16273B] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 focus:border-[#16273B] transition-all bg-[#FAFAFA]"
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#000000] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#000000]/20 focus:border-[#000000] transition-all bg-[#FAFAFA]"
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-[13px] font-semibold text-[#16273B] mb-2">Email</label>
+            <label className="block text-[13px] font-semibold text-[#000000] mb-2">Email</label>
             <input
               type="email"
               value={form.email}
               onChange={(e) => setField('email', e.target.value)}
               placeholder="buyer@email.com"
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#16273B] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 focus:border-[#16273B] transition-all bg-[#FAFAFA]"
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#000000] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#000000]/20 focus:border-[#000000] transition-all bg-[#FAFAFA]"
             />
           </div>
 
           {/* Phone */}
           <div>
-            <label className="block text-[13px] font-semibold text-[#16273B] mb-2">Phone</label>
+            <label className="block text-[13px] font-semibold text-[#000000] mb-2">Phone</label>
             <input
               type="tel"
               value={form.phone}
               onChange={(e) => setField('phone', e.target.value)}
               placeholder="+20 xxx xxx xxxx"
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#16273B] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#16273B]/20 focus:border-[#16273B] transition-all bg-[#FAFAFA]"
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#000000] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#000000]/20 focus:border-[#000000] transition-all bg-[#FAFAFA]"
             />
           </div>
 
@@ -232,7 +232,7 @@ export default function CreateDealModal({ isOpen, onClose, onSuccess }: CreateDe
             <button type="button" onClick={onClose} disabled={isLoading} className="flex-1 py-3.5 rounded-2xl border border-gray-200 text-[15px] font-semibold text-[#64748B] hover:bg-gray-50 transition-all disabled:opacity-50 cursor-pointer">
               Cancel
             </button>
-            <button type="submit" disabled={isLoading} className="flex-1 py-3.5 rounded-2xl bg-[#16273B] text-white text-[15px] font-semibold hover:bg-[#1e324d] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2">
+            <button type="submit" disabled={isLoading} className="flex-1 py-3.5 rounded-2xl bg-[#000000] text-white text-[15px] font-semibold hover:bg-[#1e324d] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2">
               {isLoading ? (
                 <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Creating…</>
               ) : 'Create Deal'}

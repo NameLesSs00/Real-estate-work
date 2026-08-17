@@ -71,7 +71,7 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
         <div className="bg-white rounded-[32px] w-full max-w-[860px] max-h-[92vh] flex flex-col shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
 
           {/* Header */}
-          <div className="bg-[#16273B] px-8 py-5 flex items-center justify-between shrink-0">
+          <div className="bg-[#000000] px-8 py-5 flex items-center justify-between shrink-0">
             <div>
               <h2 className="text-white text-[20px] font-bold">Unit Details</h2>
               {unit?.projectName && <p className="text-white/60 text-[13px]">{unit.projectName}</p>}
@@ -85,7 +85,7 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
           <div className="overflow-y-auto scrollbar-hide flex-1 p-8 space-y-6">
             {isLoading ? (
               <div className="flex items-center justify-center py-20">
-                <div className="w-10 h-10 border-4 border-[#16273B] border-t-transparent rounded-full animate-spin" />
+                <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
               </div>
             ) : error ? (
               <p className="text-red-500 text-center py-20">{error}</p>
@@ -126,7 +126,7 @@ export default function UnitDetailsModal({ isOpen, onClose, unitId, onUpdate }: 
               </a>
               <button
                 onClick={onClose}
-                className="bg-[#16273B] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer"
+                className="bg-[#000000] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer"
               >
                 Close
               </button>

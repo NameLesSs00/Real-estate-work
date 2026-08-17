@@ -79,7 +79,7 @@ export default function ProjectsPage() {
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <h1 className="text-[36px] md:text-[48px] font-bold text-[#1B2134] leading-tight">
+          <h1 className="text-[36px] md:text-[48px] font-bold text-[#000000] leading-tight">
             {t('projects.title') as string}
           </h1>
         </motion.div>
@@ -98,7 +98,7 @@ export default function ProjectsPage() {
             <p className="text-red-500 text-[16px]">{error}</p>
             <button
               onClick={() => fetchPage(1)}
-              className="bg-[#1B2134] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#252d46] transition-all"
+              className="bg-[#000000] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#252d46] transition-all"
             >
               {t('projects.tryAgain') as string}
             </button>
@@ -165,7 +165,7 @@ export default function ProjectsPage() {
                         {/* Top Content */}
                         <div className="flex flex-col gap-3 pr-20 sm:pr-28">
                           {/* Project Name */}
-                          <h2 className="text-[22px] md:text-[28px] font-bold text-[#1B2134] leading-tight">
+                          <h2 className="text-[22px] md:text-[28px] font-bold text-[#000000] leading-tight">
                             {localizedName}
                           </h2>
 
@@ -185,7 +185,7 @@ export default function ProjectsPage() {
                         <div className="flex justify-end mt-8">
                           <Link
                             href={`/${language}/projects/${project.id}-${slugify(localizedName)}`}
-                            className="bg-[#1B2134] text-white px-10 py-3.5 rounded-full text-[15px] font-semibold hover:bg-[#252d46] hover:-translate-y-0.5 transition-all"
+                            className="bg-[#000000] text-white px-10 py-3.5 rounded-full text-[15px] font-semibold hover:bg-[#252d46] hover:-translate-y-0.5 transition-all"
                           >
                             {t('projects.viewDetails') as string}
                           </Link>
@@ -203,7 +203,7 @@ export default function ProjectsPage() {
                 <button
                   onClick={handleShowMore}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-3 border border-[#1B2134] text-[#1B2134] rounded-full py-5 text-[17px] font-semibold hover:bg-[#1B2134] hover:text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-3 border border-[#000000] text-[#000000] rounded-full py-5 text-[17px] font-semibold hover:bg-[#000000] hover:text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <>

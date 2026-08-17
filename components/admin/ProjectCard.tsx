@@ -30,7 +30,7 @@ export default function ProjectCard({ project, onEdit, onDelete, onView }: Proje
       {/* Content */}
       <div className="flex flex-col gap-3 px-2">
         <h3 
-          className="text-[20px] font-bold text-[#16273B] line-clamp-1 cursor-pointer hover:text-blue-600 transition-colors"
+          className="text-[20px] font-bold text-[#000000] line-clamp-1 cursor-pointer hover:text-blue-600 transition-colors"
           onClick={() => onView(project)}
         >
           {project.title}
@@ -64,7 +64,7 @@ export default function ProjectCard({ project, onEdit, onDelete, onView }: Proje
           </div>
         </div>
 
-        <div className="text-[17px] font-semibold text-[#16273B] mt-1">
+        <div className="text-[17px] font-semibold text-[#000000] mt-1">
           {project.unitCount} Units
         </div>
 

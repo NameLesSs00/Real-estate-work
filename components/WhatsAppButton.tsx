@@ -19,14 +19,14 @@ const WhatsAppButton = () => {
       {/* Tooltip */}
       <div 
         className={`
-          absolute bottom-full right-0 mb-4 px-3 py-1.5 bg-[#1B2134] text-white text-[12px] font-medium rounded-md shadow-lg whitespace-nowrap
+          absolute bottom-full right-0 mb-4 px-3 py-1.5 bg-[#000000] text-white text-[12px] font-medium rounded-md shadow-lg whitespace-nowrap
           transition-all duration-200 transform origin-bottom
           ${isHovered ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2 pointer-events-none'}
         `}
       >
         +20 10 95422940
         {/* Tooltip Arrow */}
-        <div className="absolute top-full right-[22px] md:right-[26px] -translate-y-px border-[6px] border-transparent border-t-[#1B2134]"></div>
+        <div className="absolute top-full right-[22px] md:right-[26px] -translate-y-px border-[6px] border-transparent border-t-[#000000]"></div>
       </div>
 
       {/* WhatsApp Icon */}

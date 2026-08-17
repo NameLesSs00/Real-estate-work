@@ -36,7 +36,7 @@
 
 .who-we-are-title {
   font-family: var(--font-radley);
-  color: #1b2134;
+  color: #000000;
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
@@ -76,7 +76,7 @@
 
 .who-we-are-info-box {
   flex: 1;
-  background-color: #1b2134;
+  background-color: #000000;
   padding: 60px;
   border-radius: 20px;
   color: #ffffff;
@@ -112,7 +112,7 @@
 
 .view-more-btn {
   background-color: #ffffff;
-  color: #1b2134;
+  color: #000000;
   padding: 14px 40px;
   border-radius: 50px;
   font-family: var(--font-poppins);

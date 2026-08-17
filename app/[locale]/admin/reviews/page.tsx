@@ -105,7 +105,7 @@ export default function AdminReviewsPage() {
         {/* Header */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-[32px] font-bold text-[#1B2134] font-radley mb-1">
+            <h1 className="text-[32px] font-bold text-[#000000] font-radley mb-1">
               Reviews Management
             </h1>
             <p className="text-[#666] font-poppins text-sm">
@@ -118,11 +118,11 @@ export default function AdminReviewsPage() {
         {!loading && reviews.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-7">
             <div className="bg-white border border-[#F0EDE8] rounded-2xl p-5 flex items-center gap-4">
-              <div className="w-10 h-10 bg-[#1B2134]/5 rounded-xl flex items-center justify-center">
-                <BarChart2 size={20} className="text-[#1B2134]" />
+              <div className="w-10 h-10 bg-[#000000]/5 rounded-xl flex items-center justify-center">
+                <BarChart2 size={20} className="text-[#000000]" />
               </div>
               <div>
-                <p className="text-[24px] font-bold text-[#1B2134] leading-none">{reviews.length}</p>
+                <p className="text-[24px] font-bold text-[#000000] leading-none">{reviews.length}</p>
                 <p className="text-[12px] text-gray-400 mt-0.5 uppercase tracking-wider">Total Reviews</p>
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function AdminReviewsPage() {
                 <Star size={20} className="text-amber-400" fill="#FBBF24" />
               </div>
               <div>
-                <p className="text-[24px] font-bold text-[#1B2134] leading-none">
+                <p className="text-[24px] font-bold text-[#000000] leading-none">
                   {avgRating.toFixed(1)}
                 </p>
                 <p className="text-[12px] text-gray-400 mt-0.5 uppercase tracking-wider">Avg Rating</p>
@@ -145,7 +145,7 @@ export default function AdminReviewsPage() {
                   placeholder="Search by name, unit, or comment…"
                   value={search}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 bg-[#F8F5F0] rounded-xl text-[13px] font-poppins text-[#1B2134] outline-none focus:ring-2 focus:ring-[#1B2134]/10 placeholder:text-gray-400"
+                  className="w-full pl-9 pr-4 py-2.5 bg-[#F8F5F0] rounded-xl text-[13px] font-poppins text-[#000000] outline-none focus:ring-2 focus:ring-[#000000]/10 placeholder:text-gray-400"
                 />
               </div>
             </div>
@@ -179,10 +179,10 @@ export default function AdminReviewsPage() {
         <div className="bg-white rounded-[32px] border border-[#F0EDE8] shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center p-16">
-              <Loader2 className="animate-spin text-[#1B2134]" size={36} />
+              <Loader2 className="animate-spin text-[#000000]" size={36} />
             </div>
           ) : filtered.length === 0 ? (
-            <div className="text-center p-16 text-[#1B2134]/40 font-medium">
+            <div className="text-center p-16 text-[#000000]/40 font-medium">
               {search ? 'No reviews match your search.' : 'No reviews yet.'}
             </div>
           ) : (
@@ -190,7 +190,7 @@ export default function AdminReviewsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-[#F0EDE8] text-[#1B2134]/50 text-[11px] font-bold uppercase tracking-wider">
+                    <tr className="border-b border-[#F0EDE8] text-[#000000]/50 text-[11px] font-bold uppercase tracking-wider">
                       <th className="px-6 py-5 w-10">#</th>
                       <th className="px-6 py-5">Reviewer</th>
                       <th className="px-6 py-5">Unit</th>
@@ -203,8 +203,8 @@ export default function AdminReviewsPage() {
                   <tbody className="divide-y divide-[#F0EDE8]">
                     {paginated.map((review, idx) => (
                       <React.Fragment key={review.id}>
-                        <tr className="text-[#1B2134] hover:bg-[#FDFCFB] transition-colors">
-                          <td className="px-6 py-5 text-[#1B2134]/40 font-semibold text-sm">
+                        <tr className="text-[#000000] hover:bg-[#FDFCFB] transition-colors">
+                          <td className="px-6 py-5 text-[#000000]/40 font-semibold text-sm">
                             {(page - 1) * PAGE_SIZE + idx + 1}
                           </td>
                           <td className="px-6 py-5">
@@ -296,17 +296,17 @@ export default function AdminReviewsPage() {
                   <button
                     disabled={page === 1}
                     onClick={() => setPage(page - 1)}
-                    className="p-2 rounded-full border border-[#F0EDE8] text-[#1B2134] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
+                    className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
                   >
                     <ChevronLeft size={20} />
                   </button>
-                  <span className="font-semibold text-[15px] text-[#1B2134]">
+                  <span className="font-semibold text-[15px] text-[#000000]">
                     Page {page} of {totalPages}
                   </span>
                   <button
                     disabled={page === totalPages}
                     onClick={() => setPage(page + 1)}
-                    className="p-2 rounded-full border border-[#F0EDE8] text-[#1B2134] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
+                    className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
                   >
                     <ChevronRight size={20} />
                   </button>

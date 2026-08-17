@@ -59,7 +59,7 @@ export default function UnitImages({ unit, fetchUnit, onUpdate }: UnitImagesProp
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h4 className="text-[18px] font-bold text-[#16273B]">
+        <h4 className="text-[18px] font-bold text-[#000000]">
           Images <span className="text-[14px] font-normal text-gray-400">({(unit.ImageUrls?.length || (unit as unknown as { imageUrls?: string[] }).imageUrls?.length || 0)})</span>
         </h4>
         <div className="flex gap-3 items-center">
@@ -70,7 +70,7 @@ export default function UnitImages({ unit, fetchUnit, onUpdate }: UnitImagesProp
             </button>
           )}
           <label htmlFor="unit-detail-upload"
-            className={`flex items-center gap-2 bg-[#16273B] text-white px-5 py-2.5 rounded-full text-[14px] font-semibold cursor-pointer hover:bg-[#1a304a] transition-colors ${isUploading ? 'opacity-60 pointer-events-none' : ''}`}>
+            className={`flex items-center gap-2 bg-[#000000] text-white px-5 py-2.5 rounded-full text-[14px] font-semibold cursor-pointer hover:bg-[#1a304a] transition-colors ${isUploading ? 'opacity-60 pointer-events-none' : ''}`}>
             {isUploading ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />Uploading...</> : <><span className="text-lg leading-none">+</span> Add Images</>}
           </label>
           <input type="file" id="unit-detail-upload" className="hidden" accept="image/*" multiple onChange={handleImageUpload} />
@@ -85,7 +85,7 @@ export default function UnitImages({ unit, fetchUnit, onUpdate }: UnitImagesProp
       )}
 
       {(!unit.ImageUrls || unit.ImageUrls.length === 0) && (!(unit as unknown as { imageUrls?: string[] }).imageUrls || ((unit as unknown as { imageUrls?: string[] }).imageUrls?.length ?? 0) === 0) ? (
-        <label htmlFor="unit-detail-upload" className="block border-2 border-dashed border-gray-200 hover:border-[#16273B] hover:bg-gray-50 transition-colors rounded-2xl p-10 text-center text-gray-400 cursor-pointer">
+        <label htmlFor="unit-detail-upload" className="block border-2 border-dashed border-gray-200 hover:border-[#000000] hover:bg-gray-50 transition-colors rounded-2xl p-10 text-center text-gray-400 cursor-pointer">
           <p className="text-sm">No images yet. Click here to upload.</p>
         </label>
       ) : (

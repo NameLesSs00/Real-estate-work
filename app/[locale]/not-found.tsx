@@ -10,7 +10,7 @@ export default function NotFound() {
       <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 font-inter">
         <div className="text-center space-y-6 max-w-2xl mx-auto">
           {/* 404 Header */}
-          <h1 className="text-9xl font-bold text-[#1B2134]">
+          <h1 className="text-9xl font-bold text-[#000000]">
             4<span className="text-[#C7B7A1]">0</span>4
           </h1>
           
@@ -28,7 +28,7 @@ export default function NotFound() {
           <div className="pt-8">
             <Link 
               href="/"
-              className="inline-flex items-center justify-center px-8 py-3.5 text-base font-medium text-white bg-[#1B2134] rounded-full hover:bg-[#16273B] transition-colors duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center px-8 py-3.5 text-base font-medium text-white bg-[#000000] rounded-full hover:bg-[#000000] transition-colors duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
               Return Home
             </Link>

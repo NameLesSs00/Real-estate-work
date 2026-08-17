@@ -121,7 +121,7 @@ const PropertyFilters = ({ onSearch }: Props) => {
               placeholder="Min Price"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="w-full bg-transparent outline-none text-[14px] text-[#1b2134] placeholder:text-[#949494]"
+              className="w-full bg-transparent outline-none text-[14px] text-[#000000] placeholder:text-[#949494]"
             />
           </div>
         </div>
@@ -134,7 +134,7 @@ const PropertyFilters = ({ onSearch }: Props) => {
               placeholder="Max Price"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-full bg-transparent outline-none text-[14px] text-[#1b2134] placeholder:text-[#949494]"
+              className="w-full bg-transparent outline-none text-[14px] text-[#000000] placeholder:text-[#949494]"
             />
           </div>
         </div>

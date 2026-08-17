@@ -100,7 +100,7 @@ export default function ApplicantsPage() {
     <div className="p-10 lg:p-14 font-inter bg-[#F8F9FA] min-h-full">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div>
-          <h1 className="text-[36px] font-bold text-[#16273B] mb-1">Applicants</h1>
+          <h1 className="text-[36px] font-bold text-[#000000] mb-1">Applicants</h1>
           <p className="text-[#64748B] text-[17px]">{totalCount} applicant{totalCount !== 1 ? 's' : ''} total</p>
         </div>
         <button
@@ -111,7 +111,7 @@ export default function ApplicantsPage() {
               setFormData({ fullName: '', email: '', phone: '', notes: '' });
             }
           }}
-          className="bg-[#16273B] text-white px-8 py-4 rounded-full flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-md cursor-pointer"
+          className="bg-[#000000] text-white px-8 py-4 rounded-full flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-md cursor-pointer"
         >
           {showAddForm ? <X size={20} /> : <Plus size={20} />}
           <span className="text-[16px] font-semibold">{showAddForm ? 'Cancel' : 'Add Applicant'}</span>
@@ -128,42 +128,42 @@ export default function ApplicantsPage() {
           >
             <form onSubmit={editingId ? handleUpdate : handleAdd} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[14px] font-bold text-[#16273B]">Full Name</label>
+                <label className="text-[14px] font-bold text-[#000000]">Full Name</label>
                 <input 
                   type="text" 
                   value={formData.fullName}
                   onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                  className="w-full bg-[#F8F9FA] border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                  className="w-full bg-[#F8F9FA] border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/20"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[14px] font-bold text-[#16273B]">Email</label>
+                <label className="text-[14px] font-bold text-[#000000]">Email</label>
                 <input 
                   type="email" 
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full bg-[#F8F9FA] border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                  className="w-full bg-[#F8F9FA] border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/20"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[14px] font-bold text-[#16273B]">Phone</label>
+                <label className="text-[14px] font-bold text-[#000000]">Phone</label>
                 <input 
                   type="text" 
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full bg-[#F8F9FA] border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                  className="w-full bg-[#F8F9FA] border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/20"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[14px] font-bold text-[#16273B]">Notes</label>
+                <label className="text-[14px] font-bold text-[#000000]">Notes</label>
                 <input 
                   type="text" 
                   value={formData.notes}
                   onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                  className="w-full bg-[#F8F9FA] border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#16273B]/20"
+                  className="w-full bg-[#F8F9FA] border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/20"
                 />
               </div>
               <div className="md:col-span-2 flex justify-end gap-3 mt-2">
@@ -172,7 +172,7 @@ export default function ApplicantsPage() {
                     Cancel
                   </button>
                 )}
-                <button type="submit" className="bg-[#16273B] text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-[#1e324d] transition-colors">
+                <button type="submit" className="bg-[#000000] text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-[#1e324d] transition-colors">
                   {editingId ? 'Save Changes' : 'Create Applicant'}
                 </button>
               </div>
@@ -188,7 +188,7 @@ export default function ApplicantsPage() {
         <input
           type="text"
           placeholder="Search applicants..."
-          className="w-full bg-white border border-gray-100 rounded-[28px] py-5 pl-16 pr-10 text-[17px] text-[#16273B] focus:outline-none focus:ring-4 focus:ring-[#16273B]/5 transition-all shadow-sm placeholder:text-[#94A3B8]"
+          className="w-full bg-white border border-gray-100 rounded-[28px] py-5 pl-16 pr-10 text-[17px] text-[#000000] focus:outline-none focus:ring-4 focus:ring-[#000000]/5 transition-all shadow-sm placeholder:text-[#94A3B8]"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -197,12 +197,12 @@ export default function ApplicantsPage() {
       <div className="bg-white rounded-[32px] shadow-sm border border-gray-50 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-24">
-             <Loader2 className="w-8 h-8 animate-spin text-[#16273B]" />
+             <Loader2 className="w-8 h-8 animate-spin text-[#000000]" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <p className="text-red-500">{error}</p>
-            <button onClick={() => fetchApplicants(currentPage)} className="bg-[#16273B] text-white px-6 py-2 rounded-full text-sm">Retry</button>
+            <button onClick={() => fetchApplicants(currentPage)} className="bg-[#000000] text-white px-6 py-2 rounded-full text-sm">Retry</button>
           </div>
         ) : filteredApplicants.length === 0 ? (
           <div className="flex items-center justify-center py-20 text-[#64748B]">
@@ -212,7 +212,7 @@ export default function ApplicantsPage() {
           <div className="overflow-x-auto scrollbar-hide">
             <table className="w-full min-w-[800px] text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-50 text-[14px] font-bold text-[#16273B]">
+                <tr className="border-b border-gray-50 text-[14px] font-bold text-[#000000]">
                   <th className="py-6 px-8">Name</th>
                   <th className="py-6 px-4">Email</th>
                   <th className="py-6 px-4">Phone</th>
@@ -222,12 +222,12 @@ export default function ApplicantsPage() {
               <tbody className="divide-y divide-gray-50">
                 {filteredApplicants.map(applicant => (
                   <tr key={applicant.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="py-5 px-8 font-semibold text-[#16273B]">{applicant.fullName}</td>
+                    <td className="py-5 px-8 font-semibold text-[#000000]">{applicant.fullName}</td>
                     <td className="py-5 px-4 text-gray-500">{applicant.email}</td>
                     <td className="py-5 px-4 text-gray-500">{applicant.phone}</td>
                     <td className="py-5 px-8 text-right">
                       <div className="flex items-center justify-end gap-3">
-                        <button onClick={() => startEdit(applicant)} className="p-2 text-gray-500 hover:text-[#16273B] hover:bg-gray-100 rounded-lg transition-colors">
+                        <button onClick={() => startEdit(applicant)} className="p-2 text-gray-500 hover:text-[#000000] hover:bg-gray-100 rounded-lg transition-colors">
                           <Edit2 size={18} />
                         </button>
                         <button onClick={() => handleDelete(applicant.id)} className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">

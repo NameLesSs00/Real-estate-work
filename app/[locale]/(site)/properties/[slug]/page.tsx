@@ -193,7 +193,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
           <div className="flex items-start sm:items-center gap-3 sm:gap-4">
             <div className="text-left sm:text-right">
               <p className="text-[12px] text-gray-400 font-medium uppercase tracking-wider">{t.projectDetails.price || "Price"}</p>
-              <p className="text-[22px] sm:text-[28px] font-bold text-[#16273B] leading-none">{propertyCurrency} {propertyPrice.toLocaleString()}</p>
+              <p className="text-[22px] sm:text-[28px] font-bold text-[#000000] leading-none">{propertyCurrency} {propertyPrice.toLocaleString()}</p>
             </div>
             <CopyLinkButton />
           </div>
@@ -216,16 +216,16 @@ export default async function PropertyDetailsPage({ params }: Props) {
         {/* ── Overview Card (full width) ── */}
         <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
           <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">{t.projectDetails.overview || "Overview"}</h2>
+            <h2 className="text-[20px] font-bold text-[#000000] font-poppins">{t.projectDetails.overview || "Overview"}</h2>
             <div className="h-px flex-1 bg-gray-100"></div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-8">
             {overviewStats.map((stat, i) => (
               <div key={i} className="flex flex-col items-center text-center group">
-                <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 group-hover:bg-[#1B2134] group-hover:text-white transition-all">
+                <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3 group-hover:bg-[#000000] group-hover:text-white transition-all">
                   {stat.icon}
                 </div>
-                <span className="text-[16px] font-bold text-[#1B2134] font-poppins mb-1">{stat.value}</span>
+                <span className="text-[16px] font-bold text-[#000000] font-poppins mb-1">{stat.value}</span>
                 <span className="text-[12px] text-gray-400 font-poppins uppercase tracking-wider">{stat.label}</span>
               </div>
             ))}
@@ -243,7 +243,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
           return (
             <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
               <div className="flex items-center gap-3 mb-8">
-                <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
+                <h2 className="text-[20px] font-bold text-[#000000] font-poppins">
                   {t.projectDetails.featuresServices || "Features & Services"}
                 </h2>
                 <div className="h-px flex-1 bg-gray-100"></div>
@@ -267,10 +267,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
                   return (
                     <div key={i} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                      <div className="w-8 h-8 rounded-full bg-[#1B2134]/5 flex items-center justify-center text-[#1B2134] group-hover:bg-[#1B2134] group-hover:text-white transition-all">
+                      <div className="w-8 h-8 rounded-full bg-[#000000]/5 flex items-center justify-center text-[#000000] group-hover:bg-[#000000] group-hover:text-white transition-all">
                         <Check size={16} strokeWidth={3} />
                       </div>
-                      <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#1B2134] transition-colors">
+                      <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#000000] transition-colors">
                         {localizedName}
                       </span>
                     </div>
@@ -284,7 +284,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
         {/* ── Description ── */}
         <div className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
           <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
+            <h2 className="text-[20px] font-bold text-[#000000] font-poppins">
               {t.projectDetails.description || "Description"}
             </h2>
             <div className="h-px flex-1 bg-[#E5E2DE]"></div>
@@ -305,7 +305,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
         {paymentPlans.length > 0 && (
           <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
             <div className="flex items-center gap-3 mb-8">
-              <h2 className="text-[20px] font-bold text-[#1B2134] font-poppins">
+              <h2 className="text-[20px] font-bold text-[#000000] font-poppins">
                 {t.projectDetails.paymentPlans || "Payment Plans"}
               </h2>
               <div className="h-px flex-1 bg-gray-100"></div>
@@ -321,10 +321,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   <div key={i} className="flex flex-col p-6 rounded-2xl bg-[#F8F9FA] border border-gray-100 hover:shadow-md transition-all">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <div className="p-2 rounded-lg bg-[#1B2134] text-white">
+                        <div className="p-2 rounded-lg bg-[#000000] text-white">
                           {isCash ? <Banknote size={18} /> : <CreditCard size={18} />}
                         </div>
-                        <span className="font-bold text-[#1B2134]">
+                        <span className="font-bold text-[#000000]">
                           {isCash ? (t.projectDetails.cash || "Cash") : (t.projectDetails.installment || "Installment")}
                         </span>
                       </div>
@@ -334,27 +334,27 @@ export default async function PropertyDetailsPage({ params }: Props) {
                       {isCash && (
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-500">{t.projectDetails.price || "Price"}</span>
-                          <span className="font-bold text-[#1B2134]">{propertyCurrency} {propertyPrice.toLocaleString()}</span>
+                          <span className="font-bold text-[#000000]">{propertyCurrency} {propertyPrice.toLocaleString()}</span>
                         </div>
                       )}
                       {commission > 0 ? (
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-500">{t.projectDetails.commission || "Commission"}</span>
-                          <span className="font-semibold text-[#1B2134]">{commission}%</span>
+                          <span className="font-semibold text-[#000000]">{commission}%</span>
                         </div>
                       ) : null}
                       {!isCash && (
                         <>
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-500">{t.projectDetails.months || "Months"}</span>
-                            <div className="flex items-center gap-1.5 font-semibold text-[#1B2134]">
+                            <div className="flex items-center gap-1.5 font-semibold text-[#000000]">
                               <Calendar size={14} className="text-gray-400" />
                               {plan.installmentMothes || plan.InstallmentMothes || plan.installmentMonths || plan.InstallmentMonths || 0}
                             </div>
                           </div>
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-500">{t.projectDetails.downPayment || "Down Payment"}</span>
-                            <span className="font-semibold text-[#1B2134]">{plan.installmentDownPayment || plan.InstallmentDownPayment || 0}%</span>
+                            <span className="font-semibold text-[#000000]">{plan.installmentDownPayment || plan.InstallmentDownPayment || 0}%</span>
                           </div>
                         </>
                       )}

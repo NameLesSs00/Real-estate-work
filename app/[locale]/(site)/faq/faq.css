@@ -1,6 +1,6 @@
 /* ─── Hero ─────────────────────────────────────────────────────────────────── */
 .faqp-hero {
-  background: linear-gradient(173.91deg, #43527E -21.27%, #1B2134 43.02%, #1B2134 103.74%, #43527E 226.38%);
+  background: linear-gradient(173.91deg, #43527E -21.27%, #000000 43.02%, #000000 103.74%, #43527E 226.38%);
   padding: 180px 24px 80px;
   display: flex;
   justify-content: center;
@@ -154,13 +154,13 @@
   font-family: var(--font-poppins);
   font-size: 18px;
   font-weight: 600;
-  color: #1b2134;
+  color: #000000;
   flex: 1;
   transition: color 0.3s ease;
 }
 
 .faqp-item.open .faqp-question-text {
-  color: #1b2134;
+  color: #000000;
 }
 
 .faqp-chevron {
