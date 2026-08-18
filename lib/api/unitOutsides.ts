@@ -129,23 +129,32 @@ export interface PaginatedUnitOutsideSoldouts {
 export async function getUnitOutsides(
   filters: UnitOutsideFilters = {}
 ): Promise<PaginatedUnitOutsides> {
-  const params = new URLSearchParams();
-  if (filters.SearchTerm) params.set('SearchTerm', filters.SearchTerm);
-  if (filters.MinPrice !== undefined) params.set('MinPrice', String(filters.MinPrice));
-  if (filters.MaxPrice !== undefined) params.set('MaxPrice', String(filters.MaxPrice));
-  if (filters.City) params.set('City', filters.City);
-  if (filters.Country) params.set('Country', filters.Country);
-  if (filters.PropertyType !== undefined) params.set('PropertyType', String(filters.PropertyType));
-  if (filters.Currency) params.set('Currency', filters.Currency);
-  params.set('PageNumber', String(filters.PageNumber ?? 1));
-  params.set('PageSize', String(filters.PageSize ?? 10));
+  const dummy: PaginatedUnitOutsides = { items: [], pageNumber: filters.PageNumber || 1, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+  try {
+    const params = new URLSearchParams();
+    if (filters.SearchTerm) params.set('SearchTerm', filters.SearchTerm);
+    if (filters.MinPrice !== undefined) params.set('MinPrice', String(filters.MinPrice));
+    if (filters.MaxPrice !== undefined) params.set('MaxPrice', String(filters.MaxPrice));
+    if (filters.City) params.set('City', filters.City);
+    if (filters.Country) params.set('Country', filters.Country);
+    if (filters.PropertyType !== undefined) params.set('PropertyType', String(filters.PropertyType));
+    if (filters.Currency) params.set('Currency', filters.Currency);
+    params.set('PageNumber', String(filters.PageNumber ?? 1));
+    params.set('PageSize', String(filters.PageSize ?? 10));
 
-  const res = await fetch(`${API_BASE_URL}/api/UnitOutsides?${params}`, {
-    headers: { ...getHeaders() },
-  });
-  if (!res.ok) throw new Error('Failed to fetch outside units.');
-  const json = await res.json();
-  return json.data ?? json;
+    const res = await fetch(`${API_BASE_URL}/api/UnitOutsides?${params}`, {
+      headers: { ...getHeaders() },
+    });
+    if (!res.ok) {
+      console.warn('[UnitOutsides] Fetch failed:', res.status);
+      return dummy;
+    }
+    const json = await res.json();
+    return json.data ?? json;
+  } catch (error) {
+    console.warn('Network error when fetching outside units:', error);
+    return dummy;
+  }
 }
 
 /** GET /api/UnitOutsides/{id} */

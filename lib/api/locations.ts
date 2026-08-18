@@ -61,21 +61,48 @@ export interface UpdateLocationPayload {
 
 /** GET /api/Locations?pageNumber=N */
 export async function getLocations(pageNumber = 1): Promise<LocationsPage> {
-  const res = await fetch(
-    `${API_BASE_URL}/api/Locations?pageNumber=${pageNumber}`,
-    { headers: { ...getHeaders() } }
-  );
-  if (!res.ok) {
-    const text = await res.text();
-    console.error('[Locations] Fetch failed:', res.status, text);
-    throw new Error('Failed to fetch locations.');
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/api/Locations?pageNumber=${pageNumber}`,
+      { headers: { ...getHeaders() } }
+    );
+    if (!res.ok) {
+      const text = await res.text();
+      console.warn('[Locations] Fetch failed:', res.status, text);
+      return { items: [], pageNumber, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+    }
+    const json: ApiResponse<LocationsPage> = await res.json();
+    if (!json.success || !json.data) {
+      console.warn('[Locations] Fetch error:', json.message, json.errors);
+      return { items: [], pageNumber, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+    }
+    return json.data;
+  } catch (error) {
+    console.warn('Network error when fetching locations:', error);
+    return { items: [], pageNumber, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
   }
-  const json: ApiResponse<LocationsPage> = await res.json();
-  if (!json.success || !json.data) {
-    console.error('[Locations] Fetch error:', json.message, json.errors);
-    throw new Error(json.message || 'Failed to fetch locations.');
+}
+
+/** GET /api/Locations/{id} */
+export async function getLocationById(id: number, lang = 'en'): Promise<Location> {
+  const dummy: Location = { id, country: '', city: '', district: '', street: null, latitude: null, longitude: null, createdBy: '', createdAt: '', updatedBy: '', updatedAt: null };
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/Locations/${id}`, {
+      headers: { ...getHeaders(lang) }
+    });
+    if (!res.ok) {
+      console.warn('[Locations] Fetch by ID failed:', res.status);
+      return dummy;
+    }
+    const json: ApiResponse<Location> = await res.json();
+    if (!json.success || !json.data) {
+      return dummy;
+    }
+    return json.data;
+  } catch (error) {
+    console.warn('Network error when fetching location by ID:', error);
+    return dummy;
   }
-  return json.data;
 }
 
 /** POST /api/Locations */

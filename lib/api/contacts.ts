@@ -44,58 +44,65 @@ export interface PaginatedContacts {
 
 /** GET /api/Contacts */
 export async function getContacts(pageNumber = 1, pageSize = 10): Promise<PaginatedContacts> {
-  const params = new URLSearchParams({
-    PageNumber: pageNumber.toString(),
-    PageSize: pageSize.toString(),
-  });
+  const dummy: PaginatedContacts = { items: [], pageNumber, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+  try {
+    const params = new URLSearchParams({
+      PageNumber: pageNumber.toString(),
+      PageSize: pageSize.toString(),
+    });
 
-  const res = await fetch(`${API_BASE_URL}/api/Contacts?${params}`, {
-    headers: { ...getHeaders() },
-  });
+    const res = await fetch(`${API_BASE_URL}/api/Contacts?${params}`, {
+      headers: { ...getHeaders() },
+    });
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch contacts.');
-  }
+    if (!res.ok) {
+      console.warn('[Contacts] Fetch failed:', res.status);
+      return dummy;
+    }
 
-  const json = await res.json();
-  console.log('[API] GET /api/Contacts response:', json);
-  
-  // 1. Raw Array fallback
-  if (Array.isArray(json)) {
-    return {
-      items: json,
-      pageNumber: 1,
-      totalPages: 1,
-      totalCount: json.length,
-      hasPreviousPage: false,
-      hasNextPage: false
-    };
-  }
-
-  // 2. Wrapped response (either paginated object or array)
-  const isSuccess = json.success || json.succeeded;
-  const data = json.data;
-
-  if (isSuccess && data) {
-    if (Array.isArray(data)) {
+    const json = await res.json();
+    console.log('[API] GET /api/Contacts response:', json);
+    
+    // 1. Raw Array fallback
+    if (Array.isArray(json)) {
       return {
-        items: data,
+        items: json,
         pageNumber: 1,
         totalPages: 1,
-        totalCount: data.length,
+        totalCount: json.length,
         hasPreviousPage: false,
         hasNextPage: false
       };
     }
-    return data;
-  }
 
-  // 3. Fallback for objects with direct items
-  if (json.items) {
+    // 2. Wrapped response (either paginated object or array)
+    const isSuccess = json.success || json.succeeded;
+    const data = json.data;
+
+    if (isSuccess && data) {
+      if (Array.isArray(data)) {
+        return {
+          items: data,
+          pageNumber: 1,
+          totalPages: 1,
+          totalCount: data.length,
+          hasPreviousPage: false,
+          hasNextPage: false
+        };
+      }
+      return data;
+    }
+    
+    // 3. Fallback structure if neither
+    if (json.items && Array.isArray(json.items)) {
       return json;
-  }
+    }
 
-  throw new Error(json.message || 'Failed to fetch contacts.');
+    return dummy;
+  } catch (error) {
+    console.warn('Network error when fetching contacts:', error);
+    return dummy;
+  }
 }
 
 /** POST /api/Contacts */

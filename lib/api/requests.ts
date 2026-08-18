@@ -55,14 +55,23 @@ export interface ApproveRequestPayload {
 
 /** GET /api/Requests — status: 0=Pending, 1=Approved, 2=Rejected */
 export async function getRequests(page = 1, size = 10, status?: number): Promise<PaginatedRequests> {
-  const params = new URLSearchParams({ PageNumber: String(page), PageSize: String(size) });
-  if (status !== undefined) params.set('Status', String(status));
-  const res = await fetch(`${API_BASE_URL}/api/Requests?${params}`, {
-    headers: { ...authHeader() },
-  });
-  if (!res.ok) throw new Error('Failed to fetch requests.');
-  const json = await res.json();
-  return json.data || json;
+  const dummy: PaginatedRequests = { items: [], pageNumber: page, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+  try {
+    const params = new URLSearchParams({ PageNumber: String(page), PageSize: String(size) });
+    if (status !== undefined) params.set('Status', String(status));
+    const res = await fetch(`${API_BASE_URL}/api/Requests?${params}`, {
+      headers: { ...authHeader() },
+    });
+    if (!res.ok) {
+      console.warn('[Requests] Fetch failed:', res.status);
+      return dummy;
+    }
+    const json = await res.json();
+    return json.data || json;
+  } catch (error) {
+    console.warn('Network error when fetching requests:', error);
+    return dummy;
+  }
 }
 
 /** GET /api/Requests/{id} */

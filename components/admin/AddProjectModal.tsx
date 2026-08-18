@@ -57,8 +57,9 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       let page = 1;
       let all: DropdownOption[] = [];
       try {
-        while (true) {
+        while (page <= 3) {
           const res = await getDevelopers(page);
+          if (!res || !res.items || res.items.length === 0) break;
           all = [...all, ...res.items.map(item => ({ id: item.id, label: item.name }))];
           if (!res.hasNextPage) break;
           page++;
@@ -73,8 +74,9 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       let page = 1;
       let all: DropdownOption[] = [];
       try {
-        while (true) {
+        while (page <= 3) {
           const res = await getLocations(page);
+          if (!res || !res.items || res.items.length === 0) break;
           all = [...all, ...res.items.map(item => ({ 
             id: item.id, 
             label: [item.city, item.district, item.street, item.country].filter(Boolean).join(' - ') 
@@ -229,8 +231,9 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           id: editData.id,
           name: form.name,
           description: form.description,
-          developerId: form.developerId || 0,
-          locationId: form.locationId || 0,
+          developerId: form.developerId || null,
+          locationId: form.locationId || null,
+          facilityIds: form.facilityIds,
         });
         projectId = typeof res === 'number' ? res : res.id;
 

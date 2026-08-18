@@ -68,8 +68,9 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
       let page = 1;
       let all: { id: number; name: string; locationName?: string }[] = [];
       try {
-        while (true) {
+        while (page <= 3) {
           const res = await getProjects(page);
+          if (!res || !res.items || res.items.length === 0) break;
           all = [...all, ...res.items.map((p) => ({ id: p.id, name: p.name, locationName: p.locationName }))];
           if (!res.hasNextPage) break;
           page++;

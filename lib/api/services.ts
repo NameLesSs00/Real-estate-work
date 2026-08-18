@@ -21,15 +21,16 @@ export interface UpdateServicePayload {
 
 /** GET /api/Services */
 export async function getServices(): Promise<Service[]> {
-  const res = await fetch(`${API_BASE_URL}/api/Services`, {
-    headers: { ...getHeaders() },
-    cache: 'no-store'
-  });
-  if (!res.ok) {
-    throw new Error('Failed to fetch services.');
-  }
-  const text = await res.text();
   try {
+    const res = await fetch(`${API_BASE_URL}/api/Services`, {
+      headers: { ...getHeaders() },
+      cache: 'no-store'
+    });
+    if (!res.ok) {
+      console.warn('[Services] Fetch failed:', res.status);
+      return [];
+    }
+    const text = await res.text();
     const json = JSON.parse(text);
     let items = [];
     if (json.data && Array.isArray(json.data)) items = json.data;
@@ -41,7 +42,8 @@ export async function getServices(): Promise<Service[]> {
       id: item.id !== undefined ? item.id : (item.Id ?? 0),
       name: item.name !== undefined ? item.name : (item.Name ?? ''),
     }));
-  } catch {
+  } catch (error) {
+    console.warn('Network error when fetching services:', error);
     return [];
   }
 }

@@ -78,8 +78,8 @@ export interface UpdateProjectPayload {
   id: number;
   name: LocalizedString;
   description: LocalizedString;
-  developerId: number;
-  locationId: number;
+  developerId: number | null;
+  locationId: number | null;
   facilityIds?: number[];
   Facilities?: { id: number }[];
 }
@@ -243,39 +243,48 @@ export function resolveProjectImageUrl(path: string | null): string | null {
 
 /** GET /api/Projects?pageNumber=N&pageSize=M */
 export async function getProjects(pageNumber = 1, pageSize = 10, lang?: string): Promise<ProjectsPage> {
-  const res = await fetch(
-    `${API_BASE_URL}/api/Projects?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-    { headers: { ...getHeaders(lang) } }
-  );
-  if (!res.ok) {
-    const text = await res.text();
-    console.warn('[Projects] Fetch failed:', res.status, text);
-    throw new Error('Failed to fetch projects.');
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/api/Projects?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      { headers: { ...getHeaders(lang) } }
+    );
+    if (!res.ok) {
+      const text = await res.text();
+      console.warn('[Projects] Fetch failed:', res.status, text);
+      return { items: [], pageNumber, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+    }
+    const json: ApiResponse<ProjectsPage> = await res.json();
+    if (!json.success || !json.data) {
+      console.warn('[Projects] Fetch error:', json.message, json.errors);
+      return { items: [], pageNumber, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+    }
+    return json.data;
+  } catch (error) {
+    console.warn('Network error when fetching projects:', error);
+    return { items: [], pageNumber, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
   }
-  const json: ApiResponse<ProjectsPage> = await res.json();
-  if (!json.success || !json.data) {
-    console.warn('[Projects] Fetch error:', json.message, json.errors);
-    throw new Error(json.message || 'Failed to fetch projects.');
-  }
-  return json.data;
 }
 
-/** GET /api/Projects/{id} */
 export async function getProjectById(id: number, lang?: string): Promise<Project> {
-  const res = await fetch(`${API_BASE_URL}/api/Projects/${id}`, {
-    headers: { ...getHeaders(lang) },
-  });
- if (!res.ok) {
-    const text = await res.text();
-    console.error('[Projects] Fetch by ID failed:', res.status, text);
-    throw new Error('Failed to fetch project.');
+  const dummyProject: Project = { id, name: '', description: '', developerId: null, developerName: '', logoImage: '', locationId: null, locationName: '', imageUrls: [], createdBy: '', createdAt: '', updatedBy: '', updatedAt: null };
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/Projects/${id}`, {
+      headers: { ...getHeaders(lang) },
+    });
+    if (!res.ok) {
+      console.warn('[Projects] Fetch by ID failed:', res.status);
+      return dummyProject;
+    }
+    const json: ApiResponse<Project> = await res.json();
+    if (!json.success || !json.data) {
+      console.warn('[Projects] Fetch by ID error:', json.message, json.errors);
+      return dummyProject;
+    }
+    return json.data;
+  } catch (error) {
+    console.warn('Network error when fetching project by ID:', error);
+    return dummyProject;
   }
-  const json: ApiResponse<Project> = await res.json();
-  if (!json.success || !json.data) {
-    console.error('[Projects] Fetch by ID error:', json.message, json.errors);
-    throw new Error(json.message || 'Failed to fetch project.');
-  }
-  return json.data;
 }
 
 /** POST /api/Projects */

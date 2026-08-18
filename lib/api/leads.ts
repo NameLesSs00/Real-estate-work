@@ -35,16 +35,25 @@ export interface PaginatedLeads {
 }
 
 export async function getLeads(page = 1, size = 10, unitId?: number): Promise<PaginatedLeads> {
-  const params = new URLSearchParams({ PageNumber: String(page), PageSize: String(size) });
-  if (unitId) params.set('UnitId', String(unitId));
+  const dummy: PaginatedLeads = { items: [], pageNumber: page, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+  try {
+    const params = new URLSearchParams({ PageNumber: String(page), PageSize: String(size) });
+    if (unitId) params.set('UnitId', String(unitId));
 
-  const res = await fetch(`${API_BASE_URL}/api/Leads?${params}`, {
-    headers: { ...getHeaders() },
-  });
+    const res = await fetch(`${API_BASE_URL}/api/Leads?${params}`, {
+      headers: { ...getHeaders() },
+    });
 
-  if (!res.ok) throw new Error('Failed to fetch leads.');
-  const json = await res.json();
-  return json.data || json;
+    if (!res.ok) {
+      console.warn('[Leads] Fetch failed:', res.status);
+      return dummy;
+    }
+    const json = await res.json();
+    return json.data || json;
+  } catch (error) {
+    console.warn('Network error when fetching leads:', error);
+    return dummy;
+  }
 }
 
 export async function createLead(lead: LeadRequest): Promise<void> {

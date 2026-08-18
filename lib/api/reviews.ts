@@ -46,17 +46,25 @@ export async function getReviews(
   pageNumber = 1,
   pageSize = 100
 ): Promise<PaginatedReviews> {
-  const params = new URLSearchParams({
-    pageNumber: String(pageNumber),
-    pageSize: String(pageSize),
-  });
-  const res = await fetch(`${API_BASE_URL}/api/Review?${params}`, {
-    headers: { ...getHeaders(undefined, true) },
-  });
-  if (!res.ok) throw new Error('Failed to fetch reviews.');
-  const json = await res.json();
-  // Backend returns { reviews, totalCount, pageNumber, pageSize } directly
-  return json.data ?? json;
+  const dummy: PaginatedReviews = { reviews: [], pageNumber, pageSize, totalCount: 0 };
+  try {
+    const params = new URLSearchParams({
+      pageNumber: String(pageNumber),
+      pageSize: String(pageSize),
+    });
+    const res = await fetch(`${API_BASE_URL}/api/Review?${params}`, {
+      headers: { ...getHeaders(undefined, true) },
+    });
+    if (!res.ok) {
+      console.warn('[Reviews] Fetch failed:', res.status);
+      return dummy;
+    }
+    const json = await res.json();
+    return json.data ?? json;
+  } catch (error) {
+    console.warn('Network error when fetching reviews:', error);
+    return dummy;
+  }
 }
 
 /** GET /api/Review/unit/{unitId} — all reviews for a specific unit */

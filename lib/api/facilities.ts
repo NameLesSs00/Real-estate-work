@@ -14,14 +14,22 @@ export interface Facility {
 
 /** GET /api/Facilities */
 export async function getFacilities(): Promise<Facility[]> {
-  const res = await fetch(`${API_BASE_URL}/api/Facilities`, {
-    headers: { ...authHeader() },
-    cache: 'no-store'
-  });
-  if (!res.ok) throw new Error('Failed to fetch facilities.');
-  const json = await res.json();
-  if (Array.isArray(json)) return json;
-  return json.data ?? [];
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/Facilities`, {
+      headers: { ...authHeader() },
+      cache: 'no-store'
+    });
+    if (!res.ok) {
+      console.warn('[Facilities] Fetch failed:', res.status);
+      return [];
+    }
+    const json = await res.json();
+    if (Array.isArray(json)) return json;
+    return json.data ?? [];
+  } catch (error) {
+    console.warn('Network error when fetching facilities:', error);
+    return [];
+  }
 }
 
 /** GET /api/Facilities/{id} */
