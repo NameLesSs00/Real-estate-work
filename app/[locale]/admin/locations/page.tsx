@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, X, Edit2, Trash2, Loader2, 
-  Search, CheckCircle2 
+  Search 
 } from 'lucide-react';
 import { 
   getLocations, 
