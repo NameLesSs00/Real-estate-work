@@ -20,7 +20,6 @@ const menuItems: { name: string; path: string; icon?: string; lucideIcon?: strin
   { name: 'Locations', path: '/admin/locations', icon: '/admin/sidebar/location.png' },
   { name: 'Facilities', path: '/admin/facilities', icon: '/admin/sidebar/location.png' },
   { name: 'Services', path: '/admin/services', icon: '/admin/sidebar/setting-2.png' },
-  { name: 'Spots', path: '/admin/spots', icon: '/admin/sidebar/location.png' },
   { name: 'Blogs', path: '/admin/blogs', icon: '/admin/sidebar/blogger.png' },
   { name: 'FAQ', path: '/admin/faq', icon: '/admin/sidebar/setting-2.png' },
   { name: 'Reviews', path: '/admin/reviews', lucideIcon: 'BarChart2' },
