@@ -10,7 +10,7 @@ export default function AboutPage() {
   const { t, language } = useLanguage();
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#fbf9f6] overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-[#E3F2FD] overflow-hidden">
       {/* Hero Banner */}
       <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -42,7 +42,7 @@ export default function AboutPage() {
         >
           <div className="flex flex-col gap-3">
             <h2 className="text-[32px] md:text-[40px] font-radley text-[#000000] leading-tight">{t('aboutPage.visionTitle')}</h2>
-            <div className="w-12 h-[3px] bg-[#A88849] rounded-full mb-2"></div>
+            <div className="w-12 h-[3px] bg-[#2196F3] rounded-full mb-2"></div>
             <p className="text-[16px] md:text-[18px] text-[#555555] leading-relaxed font-poppins">
               {t('aboutPage.visionText')}
             </p>
@@ -50,7 +50,7 @@ export default function AboutPage() {
 
           <div className="flex flex-col gap-3">
             <h2 className="text-[32px] md:text-[40px] font-radley text-[#000000] leading-tight">{t('aboutPage.missionTitle')}</h2>
-            <div className="w-12 h-[3px] bg-[#A88849] rounded-full mb-2"></div>
+            <div className="w-12 h-[3px] bg-[#2196F3] rounded-full mb-2"></div>
             <p className="text-[16px] md:text-[18px] text-[#555555] leading-relaxed font-poppins">
               {t('aboutPage.missionText')}
             </p>
@@ -58,7 +58,7 @@ export default function AboutPage() {
 
           <div className="flex flex-col gap-3">
             <h2 className="text-[32px] md:text-[40px] font-radley text-[#000000] leading-tight">{t('aboutPage.journeyTitle')}</h2>
-            <div className="w-12 h-[3px] bg-[#A88849] rounded-full mb-2"></div>
+            <div className="w-12 h-[3px] bg-[#2196F3] rounded-full mb-2"></div>
             <p className="text-[16px] md:text-[18px] text-[#555555] leading-relaxed font-poppins">
               {t('aboutPage.journeyText')}
             </p>
@@ -120,7 +120,7 @@ export default function AboutPage() {
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             className="bg-white border border-gray-100 rounded-[32px] px-8 py-12 flex flex-col items-center text-center gap-6 shadow-sm hover:shadow-xl transition-shadow"
           >
-            <div className="w-24 h-24 bg-[#fbf9f6] rounded-full flex items-center justify-center">
+            <div className="w-24 h-24 bg-[#E3F2FD] rounded-full flex items-center justify-center">
               <Image src="/assists/aboutUs/money.png" alt={t('aboutPage.offers.sales.title') as string} width={48} height={48} className="brightness-0" />
             </div>
             <h3 className="text-[22px] md:text-[26px] font-bold text-[#000000] font-radley">{t('aboutPage.offers.sales.title')}</h3>
@@ -138,7 +138,7 @@ export default function AboutPage() {
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             className="bg-white border border-gray-100 rounded-[32px] px-8 py-12 flex flex-col items-center text-center gap-6 shadow-sm hover:shadow-xl transition-shadow"
           >
-            <div className="w-24 h-24 bg-[#fbf9f6] rounded-full flex items-center justify-center">
+            <div className="w-24 h-24 bg-[#E3F2FD] rounded-full flex items-center justify-center">
               <Image src="/assists/aboutUs/home.png" alt={t('aboutPage.offers.rentals.title') as string} width={48} height={48} className="brightness-0" />
             </div>
             <h3 className="text-[22px] md:text-[26px] font-bold text-[#000000] font-radley">{t('aboutPage.offers.rentals.title')}</h3>
@@ -156,7 +156,7 @@ export default function AboutPage() {
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             className="bg-white border border-gray-100 rounded-[32px] px-8 py-12 flex flex-col items-center text-center gap-6 shadow-sm hover:shadow-xl transition-shadow"
           >
-            <div className="w-24 h-24 bg-[#fbf9f6] rounded-full flex items-center justify-center">
+            <div className="w-24 h-24 bg-[#E3F2FD] rounded-full flex items-center justify-center">
               <Image src="/assists/aboutUs/sun.png" alt={t('aboutPage.offers.investment.title') as string} width={48} height={48} className="brightness-0" />
             </div>
             <h3 className="text-[22px] md:text-[26px] font-bold text-[#000000] font-radley">{t('aboutPage.offers.investment.title')}</h3>
@@ -196,7 +196,7 @@ export default function AboutPage() {
           </p>
           <Link 
             href={`/${language}/contact`} 
-            className="mt-4 bg-white text-[#000000] px-14 py-4 rounded-full font-bold text-[18px] hover:bg-[#F8F5F0] transition-all transform hover:scale-105"
+            className="mt-4 bg-white text-[#000000] px-14 py-4 rounded-full font-bold text-[18px] hover:bg-[#E3F2FD] transition-all transform hover:scale-105"
           >
             {t('aboutPage.contactBtn')}
           </Link>

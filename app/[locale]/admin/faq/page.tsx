@@ -90,7 +90,7 @@ export default function AdminFAQPage() {
     } finally { setSaving(false); }
   };
 
-  const inputCls = 'w-full bg-[#F8F5F0] border-none rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]';
+  const inputCls = 'w-full bg-[#E3F2FD] border-none rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]';
   const inlineInputCls = 'w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10 font-medium text-[#000000]';
 
   return (
@@ -131,7 +131,7 @@ export default function AdminFAQPage() {
         <AnimatePresence>
           {showAdd && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mb-6">
-              <div className="bg-white rounded-[24px] border border-[#F0EDE8] shadow-sm p-8">
+              <div className="bg-white rounded-[24px] border border-[#BBDEFB] shadow-sm p-8">
                 <h2 className="text-xl font-bold text-[#000000] mb-6 font-radley">New FAQ</h2>
                 <form onSubmit={handleAdd} className="space-y-5">
                   <div className="space-y-2">
@@ -153,7 +153,7 @@ export default function AdminFAQPage() {
         </AnimatePresence>
 
         {/* Table */}
-        <div className="bg-white rounded-[32px] border border-[#F0EDE8] shadow-sm overflow-hidden">
+        <div className="bg-white rounded-[32px] border border-[#BBDEFB] shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center p-16"><Loader2 className="animate-spin text-[#000000]" size={36} /></div>
           ) : questions.length === 0 ? (
@@ -163,14 +163,14 @@ export default function AdminFAQPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-[#F0EDE8] text-[#000000]/50 text-[12px] font-bold uppercase tracking-wider">
+                    <tr className="border-b border-[#BBDEFB] text-[#000000]/50 text-[12px] font-bold uppercase tracking-wider">
                       <th className="px-6 py-5 w-10">#</th>
                       <th className="px-6 py-5">Question</th>
                       <th className="px-6 py-5 w-40">Added</th>
                       <th className="px-6 py-5 w-32 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#F0EDE8]">
+                  <tbody className="divide-y divide-[#BBDEFB]">
                     {paginated.map((q, idx) => (
                       <React.Fragment key={q.id}>
                         <tr className="text-[#000000] hover:bg-[#FDFCFB] transition-colors">
@@ -182,7 +182,7 @@ export default function AdminFAQPage() {
                           <td className="px-6 py-5 text-[#888] text-sm">{new Date(q.createdAt).toLocaleDateString()}</td>
                           <td className="px-6 py-5">
                             <div className="flex items-center justify-end gap-2">
-                              <button onClick={() => startEdit(q)} title="Edit" className="p-2 rounded-lg hover:bg-[#F0EDE8] text-[#000000] transition-colors"><Pencil size={16} /></button>
+                              <button onClick={() => startEdit(q)} title="Edit" className="p-2 rounded-lg hover:bg-[#BBDEFB] text-[#000000] transition-colors"><Pencil size={16} /></button>
                               <button onClick={() => setDeletingId(deletingId === q.id ? null : q.id)} title="Delete" className="p-2 rounded-lg hover:bg-red-50 text-red-500 transition-colors"><Trash2 size={16} /></button>
                             </div>
                           </td>
@@ -193,14 +193,14 @@ export default function AdminFAQPage() {
                           {editingId === q.id && (
                             <tr><td colSpan={4} className="px-6 pb-6">
                               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                                <div className="bg-[#F8F5F0] rounded-2xl p-6 mt-2">
+                                <div className="bg-[#E3F2FD] rounded-2xl p-6 mt-2">
                                   <h3 className="font-bold text-[#000000] mb-4 text-[15px]">Edit FAQ</h3>
                                   <form onSubmit={handleEdit} className="space-y-4">
                                     <div className="space-y-1"><label className="text-[12px] font-bold text-[#000000] ml-1">Question</label><input type="text" value={editForm.title} onChange={(e) => setEditForm({ ...editForm, title: e.target.value })} className={inlineInputCls} required /></div>
                                     <div className="space-y-1"><label className="text-[12px] font-bold text-[#000000] ml-1">Answer</label><textarea value={editForm.description} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })} rows={3} className={`${inlineInputCls} resize-none`} required /></div>
                                     <div className="flex gap-3">
                                       <button type="submit" disabled={saving} className="bg-[#000000] text-white px-8 py-3 rounded-full font-bold text-[14px] hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2">{saving && <Loader2 className="animate-spin" size={16} />}Save Changes</button>
-                                      <button type="button" onClick={() => setEditingId(null)} className="px-8 py-3 rounded-full font-bold text-[14px] border border-[#E0DBD4] text-[#000000] hover:bg-[#F0EDE8] transition-all">Cancel</button>
+                                      <button type="button" onClick={() => setEditingId(null)} className="px-8 py-3 rounded-full font-bold text-[14px] border border-[#E0DBD4] text-[#000000] hover:bg-[#BBDEFB] transition-all">Cancel</button>
                                     </div>
                                   </form>
                                 </div>
@@ -233,10 +233,10 @@ export default function AdminFAQPage() {
               </div>
 
               {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-4 p-6 border-t border-[#F0EDE8]">
-                  <button disabled={page === 1} onClick={() => setPage(page - 1)} className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"><ChevronLeft size={20} /></button>
+                <div className="flex items-center justify-center gap-4 p-6 border-t border-[#BBDEFB]">
+                  <button disabled={page === 1} onClick={() => setPage(page - 1)} className="p-2 rounded-full border border-[#BBDEFB] text-[#000000] disabled:opacity-30 hover:bg-[#E3F2FD] transition-colors"><ChevronLeft size={20} /></button>
                   <span className="font-semibold text-[15px] text-[#000000]">Page {page} of {totalPages}</span>
-                  <button disabled={page === totalPages} onClick={() => setPage(page + 1)} className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"><ChevronRight size={20} /></button>
+                  <button disabled={page === totalPages} onClick={() => setPage(page + 1)} className="p-2 rounded-full border border-[#BBDEFB] text-[#000000] disabled:opacity-30 hover:bg-[#E3F2FD] transition-colors"><ChevronRight size={20} /></button>
                 </div>
               )}
             </>

@@ -37,7 +37,7 @@ const BestListings = () => {
             Best Listings Available
           </h2>
           <span 
-            className="text-[#A88849] text-[40px] md:text-[56px] font-medium"
+            className="text-[#2196F3] text-[40px] md:text-[56px] font-medium"
             style={{ fontFamily: 'var(--font-dancing-script)' }}
           >
             finest
@@ -79,7 +79,7 @@ const BestListings = () => {
         <div className="mt-16 flex justify-center">
           <Link 
             href={`/${language}/properties`}
-            className="bg-[#A88849] hover:bg-[#8F7239] text-white px-8 py-3 rounded-[8px] font-bold text-[14px] transition-colors"
+            className="bg-[#2196F3] hover:bg-[#8F7239] text-white px-8 py-3 rounded-[8px] font-bold text-[14px] transition-colors"
           >
             Load More Listings
           </Link>

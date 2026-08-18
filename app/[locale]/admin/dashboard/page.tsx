@@ -168,7 +168,7 @@ export default function DashboardPage() {
               <h3 className="text-[22px] font-bold text-[#000000]">Recent Units</h3>
               <Link href="/admin/units" className="text-[14px] text-[#64748B] hover:text-[#000000] font-medium transition-colors">View all →</Link>
             </div>
-            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#F8F5F080' }}>
+            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#E3F2FD80' }}>
               {loading ? (
                 Array(3).fill(0).map((_, i) => (
                   <div key={i} className="bg-white rounded-[20px] p-5 animate-pulse h-[88px]" />
@@ -208,7 +208,7 @@ export default function DashboardPage() {
               <h3 className="text-[22px] font-bold text-[#000000]">Pending Requests</h3>
               <Link href="/admin/requests" className="text-[14px] text-[#64748B] hover:text-[#000000] font-medium transition-colors">View all →</Link>
             </div>
-            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#F8F5F080' }}>
+            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#E3F2FD80' }}>
               {loading ? (
                 Array(3).fill(0).map((_, i) => (
                   <div key={i} className="bg-white rounded-[20px] p-5 animate-pulse h-[78px]" />

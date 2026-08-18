@@ -111,7 +111,7 @@ const Articles = () => {
                     <h3 className="font-radley text-[#000000] text-[22px] font-bold leading-snug line-clamp-2">
                       {blog.title}
                     </h3>
-                    <div className="flex items-center gap-2 mt-4 text-[#c7b7a1] font-poppins font-semibold text-[15px] group-hover:text-[#A88849] transition-colors">
+                    <div className="flex items-center gap-2 mt-4 text-[#42A5F5] font-poppins font-semibold text-[15px] group-hover:text-[#2196F3] transition-colors">
                       {t('articles.readMore') as string}
                       <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </div>

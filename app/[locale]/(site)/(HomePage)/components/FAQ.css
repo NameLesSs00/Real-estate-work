@@ -1,6 +1,6 @@
 .faq-section {
   padding: 100px 0;
-  background: #fbf9f6;
+  background: #E3F2FD;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,7 +23,7 @@
 
 .faq-tag {
   font-family: var(--font-poppins);
-  color: #A88849;
+  color: #2196F3;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 2.8px;
@@ -51,7 +51,7 @@
 .faq-accent-line {
   width: 160px;
   height: 4px;
-  background-color: #A88849;
+  background-color: #2196F3;
   border-radius: 2px;
 }
 
@@ -134,7 +134,7 @@
 .faq-spinner {
   width: 40px;
   height: 40px;
-  color: #A88849;
+  color: #2196F3;
   animation: spin 1s linear infinite;
 }
 
@@ -166,7 +166,7 @@
 }
 
 .faq-view-all-link:hover {
-  background-color: #A88849;
+  background-color: #2196F3;
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(168, 136, 73, 0.3);

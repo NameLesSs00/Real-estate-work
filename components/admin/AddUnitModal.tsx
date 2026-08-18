@@ -534,12 +534,12 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 <input type="number" value={form.price}
                   onChange={(e) => setForm((prev) => ({ ...prev, price: e.target.value ? Number(e.target.value) : '' }))}
                   placeholder="e.g. 5000000"
-                  className="flex-1 bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]" 
+                  className="flex-1 bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]" 
                   required />
                 <select 
                   value={form.currencyCode}
                   onChange={(e) => setForm((prev) => ({ ...prev, currencyCode: e.target.value }))}
-                  className="w-[100px] bg-[#F8F5F0] border-none rounded-2xl px-3 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-bold text-[#000000] appearance-none text-center"
+                  className="w-[100px] bg-[#E3F2FD] border-none rounded-2xl px-3 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-bold text-[#000000] appearance-none text-center"
                 >
                   <option value="EGP">EGP</option>
                   <option value="USD">USD</option>

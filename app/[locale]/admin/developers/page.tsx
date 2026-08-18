@@ -205,7 +205,7 @@ export default function DevelopersPage() {
 
                       {/* Gallery */}
                       <td className="py-6 px-4 text-center">
-                        <span className="inline-flex px-5 py-2 rounded-full bg-[#F0EDE8] text-[#000000] text-[14px] font-bold">
+                        <span className="inline-flex px-5 py-2 rounded-full bg-[#BBDEFB] text-[#000000] text-[14px] font-bold">
                           {dev.gallery.length} imgs
                         </span>
                       </td>

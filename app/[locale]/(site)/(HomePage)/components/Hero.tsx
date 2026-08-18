@@ -72,7 +72,7 @@ const Hero = () => {
           <div className="flex items-center gap-1 mb-3 px-2 pt-1">
             <button 
               onClick={() => setUnitType('Buy')} 
-              className={`px-6 py-2 rounded-full font-bold text-[14px] transition-all duration-300 ${unitType === 'Buy' ? 'bg-[#000000] text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-gray-100 hover:text-[#000000]'}`}
+              className={`px-6 py-2 rounded-full font-bold text-[14px] transition-all duration-300 ${unitType === 'Buy' ? 'bg-[#1565C0] text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-[#E3F2FD] hover:text-[#1565C0]'}`}
             >
               Buy
             </button>
@@ -86,24 +86,24 @@ const Hero = () => {
 
           <form onSubmit={handleSearch} className="flex flex-col lg:flex-row items-center gap-2">
             {/* Search Input */}
-            <div className="flex-1 w-full bg-[#fbf9f6] rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-[#A88849] focus-within:bg-white transition-all shadow-inner">
-              <Search className="text-[#A88849] mr-3 shrink-0" size={20} />
+            <div className="flex-1 w-full bg-[#E3F2FD] rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-[#2196F3] focus-within:bg-white transition-all shadow-inner">
+              <Search className="text-[#2196F3] mr-3 shrink-0" size={20} />
               <input 
                 type="text" 
                 placeholder="Search locations, projects..." 
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="bg-transparent w-full outline-none text-[#000000] placeholder-gray-400 font-semibold text-[14px]"
+                className="bg-transparent w-full outline-none text-[#0D47A1] placeholder-gray-400 font-semibold text-[14px]"
               />
             </div>
 
             {/* Location Dropdown */}
-            <div className="w-full lg:w-[200px] bg-[#fbf9f6] rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-[#A88849] focus-within:bg-white transition-all shadow-inner relative shrink-0">
-              <MapPin className="text-[#A88849] mr-3 shrink-0" size={20} />
+            <div className="w-full lg:w-[200px] bg-[#E3F2FD] rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-[#2196F3] focus-within:bg-white transition-all shadow-inner relative shrink-0">
+              <MapPin className="text-[#2196F3] mr-3 shrink-0" size={20} />
               <select 
                 value={locationId} 
                 onChange={e => setLocationId(e.target.value)} 
-                className="bg-transparent w-full outline-none text-[#000000] font-semibold text-[14px] appearance-none cursor-pointer pr-4"
+                className="bg-transparent w-full outline-none text-[#0D47A1] font-semibold text-[14px] appearance-none cursor-pointer pr-4"
               >
                 <option value="">All Locations</option>
                 {locations.map(loc => (
@@ -116,11 +116,11 @@ const Hero = () => {
             </div>
 
             {/* Type Dropdown */}
-            <div className="w-full lg:w-[180px] bg-[#fbf9f6] rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-[#A88849] focus-within:bg-white transition-all shadow-inner relative shrink-0">
+            <div className="w-full lg:w-[180px] bg-[#E3F2FD] rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-[#2196F3] focus-within:bg-white transition-all shadow-inner relative shrink-0">
               <select 
                 value={propertyType} 
                 onChange={e => setPropertyType(e.target.value)} 
-                className="bg-transparent w-full outline-none text-[#000000] font-semibold text-[14px] appearance-none cursor-pointer pr-4"
+                className="bg-transparent w-full outline-none text-[#0D47A1] font-semibold text-[14px] appearance-none cursor-pointer pr-4"
               >
                 <option value="">All Types</option>
                 {PROPERTY_TYPES.map(type => (
@@ -133,7 +133,7 @@ const Hero = () => {
             </div>
 
             {/* Search Button */}
-            <button type="submit" className="w-full lg:w-auto bg-[#A88849] text-white px-8 py-3.5 rounded-[20px] font-bold text-[15px] hover:bg-[#8f7239] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-[#A88849]/30 hover:-translate-y-0.5 whitespace-nowrap shrink-0">
+            <button type="submit" className="w-full lg:w-auto bg-[#2196F3] text-white px-8 py-3.5 rounded-[20px] font-bold text-[15px] hover:bg-[#1565C0] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-[#2196F3]/30 hover:-translate-y-0.5 whitespace-nowrap shrink-0">
               <span>Search</span>
             </button>
           </form>

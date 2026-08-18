@@ -117,7 +117,7 @@ export default function AdminReviewsPage() {
         {/* Stats Strip */}
         {!loading && reviews.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-7">
-            <div className="bg-white border border-[#F0EDE8] rounded-2xl p-5 flex items-center gap-4">
+            <div className="bg-white border border-[#BBDEFB] rounded-2xl p-5 flex items-center gap-4">
               <div className="w-10 h-10 bg-[#000000]/5 rounded-xl flex items-center justify-center">
                 <BarChart2 size={20} className="text-[#000000]" />
               </div>
@@ -126,7 +126,7 @@ export default function AdminReviewsPage() {
                 <p className="text-[12px] text-gray-400 mt-0.5 uppercase tracking-wider">Total Reviews</p>
               </div>
             </div>
-            <div className="bg-white border border-[#F0EDE8] rounded-2xl p-5 flex items-center gap-4">
+            <div className="bg-white border border-[#BBDEFB] rounded-2xl p-5 flex items-center gap-4">
               <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
                 <Star size={20} className="text-amber-400" fill="#FBBF24" />
               </div>
@@ -137,7 +137,7 @@ export default function AdminReviewsPage() {
                 <p className="text-[12px] text-gray-400 mt-0.5 uppercase tracking-wider">Avg Rating</p>
               </div>
             </div>
-            <div className="bg-white border border-[#F0EDE8] rounded-2xl p-5 flex items-center gap-4 col-span-2 sm:col-span-1">
+            <div className="bg-white border border-[#BBDEFB] rounded-2xl p-5 flex items-center gap-4 col-span-2 sm:col-span-1">
               <div className="relative flex-1">
                 <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
@@ -145,7 +145,7 @@ export default function AdminReviewsPage() {
                   placeholder="Search by name, unit, or comment…"
                   value={search}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 bg-[#F8F5F0] rounded-xl text-[13px] font-poppins text-[#000000] outline-none focus:ring-2 focus:ring-[#000000]/10 placeholder:text-gray-400"
+                  className="w-full pl-9 pr-4 py-2.5 bg-[#E3F2FD] rounded-xl text-[13px] font-poppins text-[#000000] outline-none focus:ring-2 focus:ring-[#000000]/10 placeholder:text-gray-400"
                 />
               </div>
             </div>
@@ -176,7 +176,7 @@ export default function AdminReviewsPage() {
         </AnimatePresence>
 
         {/* Table */}
-        <div className="bg-white rounded-[32px] border border-[#F0EDE8] shadow-sm overflow-hidden">
+        <div className="bg-white rounded-[32px] border border-[#BBDEFB] shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center p-16">
               <Loader2 className="animate-spin text-[#000000]" size={36} />
@@ -190,7 +190,7 @@ export default function AdminReviewsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-[#F0EDE8] text-[#000000]/50 text-[11px] font-bold uppercase tracking-wider">
+                    <tr className="border-b border-[#BBDEFB] text-[#000000]/50 text-[11px] font-bold uppercase tracking-wider">
                       <th className="px-6 py-5 w-10">#</th>
                       <th className="px-6 py-5">Reviewer</th>
                       <th className="px-6 py-5">Unit</th>
@@ -200,7 +200,7 @@ export default function AdminReviewsPage() {
                       <th className="px-6 py-5 w-20 text-right">Delete</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#F0EDE8]">
+                  <tbody className="divide-y divide-[#BBDEFB]">
                     {paginated.map((review, idx) => (
                       <React.Fragment key={review.id}>
                         <tr className="text-[#000000] hover:bg-[#FDFCFB] transition-colors">
@@ -292,11 +292,11 @@ export default function AdminReviewsPage() {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-4 p-6 border-t border-[#F0EDE8]">
+                <div className="flex items-center justify-center gap-4 p-6 border-t border-[#BBDEFB]">
                   <button
                     disabled={page === 1}
                     onClick={() => setPage(page - 1)}
-                    className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
+                    className="p-2 rounded-full border border-[#BBDEFB] text-[#000000] disabled:opacity-30 hover:bg-[#E3F2FD] transition-colors"
                   >
                     <ChevronLeft size={20} />
                   </button>
@@ -306,7 +306,7 @@ export default function AdminReviewsPage() {
                   <button
                     disabled={page === totalPages}
                     onClick={() => setPage(page + 1)}
-                    className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
+                    className="p-2 rounded-full border border-[#BBDEFB] text-[#000000] disabled:opacity-30 hover:bg-[#E3F2FD] transition-colors"
                   >
                     <ChevronRight size={20} />
                   </button>

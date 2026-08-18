@@ -78,7 +78,7 @@ const PopularSpots = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[#A88849] text-[40px] md:text-[56px] font-medium"
+            className="text-[#2196F3] text-[40px] md:text-[56px] font-medium"
             style={{ fontFamily: 'var(--font-dancing-script)' }}
           >
             Destinations
@@ -129,7 +129,7 @@ const PopularSpots = () => {
                       <h3 className="text-white font-serif text-[28px] md:text-[36px] font-bold leading-tight mb-1 shadow-sm">
                         {spot.name}
                       </h3>
-                      <p className="text-[#A88849] font-semibold text-[15px] uppercase tracking-wider">
+                      <p className="text-[#2196F3] font-semibold text-[15px] uppercase tracking-wider">
                         {spot.count > 0 
                           ? `${spot.count} ${spot.count === 1 ? t('popularSpots.property') : t('popularSpots.properties')}` 
                           : t('popularSpots.exploreArea')}

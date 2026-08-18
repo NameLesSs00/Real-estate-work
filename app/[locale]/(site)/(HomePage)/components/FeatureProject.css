@@ -23,7 +23,7 @@
 
 .feature-project-tag {
   font-family: var(--font-poppins);
-  color: #c7b7a1;
+  color: #42A5F5;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 2.8px;
@@ -33,7 +33,7 @@
 
 .feature-project-title {
   font-family: var(--font-radley);
-  color: #000000;
+  color: #0D47A1;
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
@@ -51,7 +51,7 @@
 .feature-project-accent-line {
   width: 160px;
   height: 4px;
-  background-color: #c7b7a1;
+  background-color: #42A5F5;
   border-radius: 2px;
 }
 
@@ -106,11 +106,11 @@
   font-family: var(--font-poppins);
   font-size: 24px;
   margin-bottom: 20px;
-  color: #c7b7a1;
+  color: #42A5F5;
 }
 
 .project-price-tag span {
-  color: #000000;
+  color: #0D47A1;
   font-weight: 700;
 }
 
@@ -118,7 +118,7 @@
   font-family: var(--font-poppins);
   font-size: 32px;
   font-weight: 700;
-  color: #000000;
+  color: #0D47A1;
   margin-bottom: 8px;
 }
 
@@ -174,7 +174,7 @@
   font-family: var(--font-poppins);
   font-size: 20px;
   font-weight: 600;
-  color: #000000;
+  color: #0D47A1;
   margin-bottom: 20px;
 }
 
@@ -216,14 +216,14 @@
 
 .detail-info-label {
   font-family: var(--font-poppins);
-  color: #c7b7a1;
+  color: #42A5F5;
   font-size: 14px;
   font-weight: 500;
 }
 
 .detail-info-value {
   font-family: var(--font-poppins);
-  color: #000000;
+  color: #0D47A1;
   font-size: 14px;
   font-weight: 600;
 }
@@ -236,7 +236,7 @@
 }
 
 .get-in-touch-btn {
-  background-color: #000000;
+  background-color: #1565C0;
   color: #ffffff;
   padding: 16px 48px;
   border-radius: 50px;
@@ -249,7 +249,7 @@
 }
 
 .get-in-touch-btn:hover {
-  background-color: #c7b7a1;
+  background-color: #2196F3;
 }
 
 .stationary-dots-container {
@@ -268,7 +268,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: #f0f0f0;
+  background-color: #BBDEFB;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -294,18 +294,18 @@
   width: 100%;
   padding: 16px;
   border-radius: 50px;
-  border: 1px solid #000000;
+  border: 1px solid #1565C0;
   background: transparent;
   font-family: var(--font-poppins);
   font-size: 18px;
   font-weight: 600;
-  color: #000000;
+  color: #1565C0;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .show-more-projects-btn:hover {
-  background-color: #000000;
+  background-color: #1565C0;
   color: #ffffff;
 }
 

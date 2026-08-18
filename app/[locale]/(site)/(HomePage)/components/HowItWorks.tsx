@@ -58,7 +58,7 @@ const HowItWorks = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-[#A88849] text-[40px] md:text-[56px] font-medium ml-32 md:ml-64 -mt-4 md:-mt-8"
+            className="text-[#2196F3] text-[40px] md:text-[56px] font-medium ml-32 md:ml-64 -mt-4 md:-mt-8"
             style={{ fontFamily: 'var(--font-dancing-script)' }}
           >
             experience
@@ -76,16 +76,16 @@ const HowItWorks = () => {
               transition={{ duration: 0.6, delay: index * 0.2 }}
               className="bg-white rounded-[24px] p-8 flex flex-col items-center text-center shadow-2xl"
             >
-              <div className="w-16 h-16 rounded-full bg-[#A88849] flex items-center justify-center text-white mb-6">
+              <div className="w-16 h-16 rounded-full bg-[#2196F3] flex items-center justify-center text-white mb-6">
                 <step.icon size={28} />
               </div>
-              <h3 className="text-[#000000] font-bold text-[22px] mb-4">{step.title}</h3>
+              <h3 className="text-[#0D47A1] font-bold text-[22px] mb-4">{step.title}</h3>
               <p className="text-gray-500 text-[15px] leading-relaxed mb-6">
                 {step.desc}
               </p>
               <Link 
                 href={`/${language}${step.link}`}
-                className="text-[#000000] font-semibold text-[14px] hover:text-[#A88849] transition-colors mt-auto flex items-center gap-2"
+                className="text-[#0D47A1] font-semibold text-[14px] hover:text-[#2196F3] transition-colors mt-auto flex items-center gap-2"
               >
                 Read More &rarr;
               </Link>

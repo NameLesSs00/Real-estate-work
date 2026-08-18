@@ -198,7 +198,7 @@ export default function SettingsPage() {
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
-          className="bg-white rounded-[32px] border border-[#F0EDE8] shadow-sm p-8 md:p-10"
+          className="bg-white rounded-[32px] border border-[#BBDEFB] shadow-sm p-8 md:p-10"
         >
           {/* Profile Tab */}
           {activeTab === 'profile' && (
@@ -213,7 +213,7 @@ export default function SettingsPage() {
                       value={profileData.userName}
                       onChange={(e) => setProfileData({...profileData, userName: e.target.value})}
                       placeholder="Your Name"
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
@@ -224,7 +224,7 @@ export default function SettingsPage() {
                       value={profileData.email}
                       onChange={(e) => setProfileData({...profileData, email: e.target.value})}
                       placeholder="email@example.com"
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
@@ -235,7 +235,7 @@ export default function SettingsPage() {
                       value={profileData.phoneNumber}
                       onChange={(e) => setProfileData({...profileData, phoneNumber: e.target.value})}
                       placeholder="+20 123 456 7890"
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
@@ -263,7 +263,7 @@ export default function SettingsPage() {
                       type="password" 
                       value={passwordData.oldPassword}
                       onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
@@ -273,7 +273,7 @@ export default function SettingsPage() {
                       type="password" 
                       value={passwordData.newPassword}
                       onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
@@ -283,7 +283,7 @@ export default function SettingsPage() {
                       type="password" 
                       value={passwordData.confirmPassword}
                       onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
-                      className="w-full bg-[#F8F5F0] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
                       required
                     />
                   </div>
@@ -321,7 +321,7 @@ export default function SettingsPage() {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="bg-[#F8F5F0] p-8 rounded-[24px] mb-8">
+                    <div className="bg-[#E3F2FD] p-8 rounded-[24px] mb-8">
                       <h3 className="font-bold text-[#000000] mb-6">New Administrator</h3>
                       <form onSubmit={handleAddAdmin} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
@@ -383,13 +383,13 @@ export default function SettingsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-[#F0EDE8] text-[#000000]/50 text-[13px] font-bold uppercase tracking-wider">
+                    <tr className="border-b border-[#BBDEFB] text-[#000000]/50 text-[13px] font-bold uppercase tracking-wider">
                       <th className="px-4 py-4">Username</th>
                       <th className="px-4 py-4">Email</th>
                       <th className="px-4 py-4">Created At</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#F0EDE8]">
+                  <tbody className="divide-y divide-[#BBDEFB]">
                     {adminsData?.items?.map((admin) => (
                       <tr key={admin.id} className="text-[#000000] hover:bg-[#FDFCFB] transition-colors">
                         <td className="px-4 py-5 font-semibold">{admin.username}</td>
@@ -414,7 +414,7 @@ export default function SettingsPage() {
                   <button 
                     disabled={!adminsData.hasPreviousPage || loading}
                     onClick={() => fetchAdmins(currentPage - 1)}
-                    className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
+                    className="p-2 rounded-full border border-[#BBDEFB] text-[#000000] disabled:opacity-30 hover:bg-[#E3F2FD] transition-colors"
                   >
                     <ChevronLeft size={20} />
                   </button>
@@ -424,7 +424,7 @@ export default function SettingsPage() {
                   <button 
                     disabled={!adminsData.hasNextPage || loading}
                     onClick={() => fetchAdmins(currentPage + 1)}
-                    className="p-2 rounded-full border border-[#F0EDE8] text-[#000000] disabled:opacity-30 hover:bg-[#F8F5F0] transition-colors"
+                    className="p-2 rounded-full border border-[#BBDEFB] text-[#000000] disabled:opacity-30 hover:bg-[#E3F2FD] transition-colors"
                   >
                     <ChevronRight size={20} />
                   </button>

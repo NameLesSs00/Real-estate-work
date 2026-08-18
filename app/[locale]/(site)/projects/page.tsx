@@ -98,7 +98,7 @@ export default function ProjectsPage() {
             <p className="text-red-500 text-[16px]">{error}</p>
             <button
               onClick={() => fetchPage(1)}
-              className="bg-[#000000] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#252d46] transition-all"
+              className="bg-[#000000] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#0D47A1] transition-all"
             >
               {t('projects.tryAgain') as string}
             </button>
@@ -133,7 +133,7 @@ export default function ProjectsPage() {
                       key={project.id}
                       variants={itemVariants}
                       layout
-                      className="bg-white rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.05)] overflow-hidden border border-[#F0EDE8] hover:shadow-[0_16px_48px_rgba(0,0,0,0.09)] hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row"
+                      className="bg-white rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.05)] overflow-hidden border border-[#BBDEFB] hover:shadow-[0_16px_48px_rgba(0,0,0,0.09)] hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row"
                     >
                       {/* Left: Hero Image */}
                       <Link href={`/${language}/projects/${project.id}-${slugify(localizedName)}`} className="relative w-full md:w-[400px] h-[240px] md:h-auto flex-shrink-0 overflow-hidden block">
@@ -171,7 +171,7 @@ export default function ProjectsPage() {
 
                           {/* Location */}
                           <div className="flex items-center gap-2 text-[14px] text-[#888]">
-                            <MapPin size={16} className="text-[#C7B7A1] flex-shrink-0" />
+                            <MapPin size={16} className="text-[#42A5F5] flex-shrink-0" />
                             <span>{project.locationName || t('projects.noLocation') as string}</span>
                           </div>
 
@@ -185,7 +185,7 @@ export default function ProjectsPage() {
                         <div className="flex justify-end mt-8">
                           <Link
                             href={`/${language}/projects/${project.id}-${slugify(localizedName)}`}
-                            className="bg-[#000000] text-white px-10 py-3.5 rounded-full text-[15px] font-semibold hover:bg-[#252d46] hover:-translate-y-0.5 transition-all"
+                            className="bg-[#000000] text-white px-10 py-3.5 rounded-full text-[15px] font-semibold hover:bg-[#0D47A1] hover:-translate-y-0.5 transition-all"
                           >
                             {t('projects.viewDetails') as string}
                           </Link>

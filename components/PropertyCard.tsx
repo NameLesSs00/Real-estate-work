@@ -61,7 +61,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         <div className="absolute top-5 left-5 bg-white/95 backdrop-blur-sm text-[#000000] px-5 py-2 rounded-full font-poppins font-bold text-[15px] shadow-lg">
           {price}
         </div>
-        <div className="absolute top-5 right-5 bg-[#A88849] text-white px-4 py-2 rounded-full font-poppins font-bold text-[12px] shadow-lg uppercase tracking-wider">
+        <div className="absolute top-5 right-5 bg-[#2196F3] text-white px-4 py-2 rounded-full font-poppins font-bold text-[12px] shadow-lg uppercase tracking-wider">
           {status === 'Sold' 
             ? t('propertyCard.status.sold') 
             : unitType === 'Rent' 
@@ -77,17 +77,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
       {/* Content Section */}
       <div className="p-6 md:p-8 flex flex-col justify-between h-[220px]">
         <div>
-          <h3 className="font-radley text-[24px] font-bold text-[#000000] leading-tight mb-2 line-clamp-2 group-hover:text-[#A88849] transition-colors">
+          <h3 className="font-radley text-[24px] font-bold text-[#0D47A1] leading-tight mb-2 line-clamp-2 group-hover:text-[#2196F3] transition-colors">
             {title}
           </h3>
           <div className="flex items-center gap-1.5 text-gray-500 font-poppins text-[14px] mb-2">
-            <MapPin size={16} className="text-[#A88849] shrink-0" />
+            <MapPin size={16} className="text-[#2196F3] shrink-0" />
             <span className="truncate">{location}</span>
           </div>
         </div>
 
         <div className="border-t border-gray-100 pt-5 mt-auto">
-          <div className="flex items-center justify-between text-[#000000] font-poppins text-[14px] mb-5">
+          <div className="flex items-center justify-between text-[#0D47A1] font-poppins text-[14px] mb-5">
             <div className="flex items-center gap-2">
               <Image src="/assists/card/lucide_bed.png" alt="Beds" width={18} height={18} className="brightness-0 opacity-60" />
               <span className="font-semibold">{beds} <span className="font-normal text-gray-400 text-[12px] uppercase">Beds</span></span>
@@ -108,7 +108,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             <span className="text-[13px] font-bold text-gray-400 uppercase tracking-widest">
               {type}
             </span>
-            <div className="flex items-center gap-2 text-[#A88849] font-poppins font-bold text-[14px]">
+            <div className="flex items-center gap-2 text-[#2196F3] font-poppins font-bold text-[14px]">
               {t('propertyCard.details.viewDetails')}
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </div>

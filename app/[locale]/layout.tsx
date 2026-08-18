@@ -101,7 +101,7 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${poppins.variable} ${workSans.variable} ${inter.variable} ${radley.variable} ${allura.variable} ${dancingScript.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-poppins bg-[#fbf9f6]">
+      <body className="min-h-full flex flex-col font-poppins bg-[#E3F2FD]">
         <LanguageProvider>
           <TokenRefresher />
           <main className="flex-grow">

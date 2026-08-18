@@ -25,7 +25,7 @@
 
 .popular-spots-tag {
   font-family: var(--font-poppins);
-  color: #c7b7a1;
+  color: #42A5F5;
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 3.5px;
@@ -35,7 +35,7 @@
 
 .popular-spots-title {
   font-family: var(--font-radley);
-  color: #000000;
+  color: #0D47A1;
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 20px;
@@ -43,7 +43,7 @@
 }
 
 .popular-spots-title span {
-  color: #c7b7a1;
+  color: #2196F3;
 }
 
 .popular-spots-subtitle {
@@ -58,7 +58,7 @@
 .popular-spots-accent-line {
   width: 160px;
   height: 4px;
-  background-color: #c7b7a1;
+  background-color: #42A5F5;
   border-radius: 2px;
 }
 

@@ -101,7 +101,7 @@ export default function ProjectDetailsPage({
         <p className="text-red-500 text-[16px] font-poppins">{error ?? t('projectDetails.notFound') as string}</p>
         <Link
           href={`/${language}/projects`}
-          className="bg-[#000000] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#252d46] transition-all"
+          className="bg-[#000000] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#0D47A1] transition-all"
         >
           {t('projectDetails.backToProjects') as string}
         </Link>
@@ -138,7 +138,7 @@ export default function ProjectDetailsPage({
 
               <div className="flex flex-wrap items-center gap-6 mt-2">
                 <div className="flex items-center gap-2 text-[15px] text-[#666]">
-                  <MapPin size={18} className="text-[#C7B7A1] flex-shrink-0" />
+                  <MapPin size={18} className="text-[#42A5F5] flex-shrink-0" />
                   <span>{project.locationName || t('projects.noLocation') as string}</span>
                 </div>
 
@@ -156,7 +156,7 @@ export default function ProjectDetailsPage({
                     )}
                     <div className="h-10 w-px bg-[#E5E2DE]" />
                     <div className="flex flex-col">
-                      <span className="text-[10px] md:text-[11px] text-[#C7B7A1] font-bold uppercase tracking-[0.2em] mb-0.5">Developed By</span>
+                      <span className="text-[10px] md:text-[11px] text-[#42A5F5] font-bold uppercase tracking-[0.2em] mb-0.5">Developed By</span>
                       <span className="text-[18px] md:text-[22px] font-bold text-[#000000] tracking-tight">{project.developerName}</span>
                     </div>
                   </div>
@@ -173,7 +173,7 @@ export default function ProjectDetailsPage({
 
           {/* ── Facilities Grid (Replaces Stats) ── */}
           {((project.facilityIds && project.facilityIds.length > 0) || (project.facilities && project.facilities.length > 0)) && (
-            <motion.div variants={itemVariants} className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm">
+            <motion.div variants={itemVariants} className="bg-white border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm">
               <h2 className="text-[20px] font-bold text-[#000000] mb-6 flex items-center gap-3">
                 {t('projectDetails.facilities') || 'Facilities'}
                 <span className="h-px flex-1 bg-gray-100"></span>
@@ -212,9 +212,9 @@ export default function ProjectDetailsPage({
           )}
 
           {/* ── Description ── */}
-          <motion.div variants={itemVariants} className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm">
+          <motion.div variants={itemVariants} className="bg-[#E3F2FD] border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm">
             <h2 className="text-[20px] font-bold text-[#000000] mb-4">{t('projectDetails.description') as string}</h2>
-            <hr className="border-[#F0EDE8] mb-6" />
+            <hr className="border-[#BBDEFB] mb-6" />
             <div className="flex flex-col gap-4">
               {project.description
                 ? localizedDesc.split('\n\n').map((para, i) => (

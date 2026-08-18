@@ -177,7 +177,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
     'w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#000000] transition-colors font-poppins bg-white';
 
   return (
-    <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm">
+    <div className="bg-white border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm">
       {/* Section heading */}
       <div className="flex items-center gap-3 mb-6">
         <h2 className="text-[20px] font-bold text-[#000000] font-poppins">Reviews</h2>
@@ -212,7 +212,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-center sm:items-start gap-4 bg-[#F8F5F0] rounded-2xl p-5 mb-7"
+          className="flex flex-col sm:flex-row items-center sm:items-start gap-4 bg-[#E3F2FD] rounded-2xl p-5 mb-7"
         >
           <div className="flex flex-col items-center">
             <span className="text-[48px] font-bold text-[#000000] leading-none font-poppins">
@@ -234,7 +234,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
       {loading ? (
         <div className="space-y-4 mb-7">
           {[1, 2].map((i) => (
-            <div key={i} className="animate-pulse bg-[#F8F5F0] rounded-2xl h-24" />
+            <div key={i} className="animate-pulse bg-[#E3F2FD] rounded-2xl h-24" />
           ))}
         </div>
       ) : reviews.length === 0 ? (
@@ -324,7 +324,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
               key={review.id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#FDFCFB] border border-[#F0EDE8] rounded-2xl p-5"
+              className="bg-[#FDFCFB] border border-[#BBDEFB] rounded-2xl p-5"
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
@@ -349,7 +349,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
 
       {/* ── Add Review Form (hidden if visitor already submitted this session) ── */}
       {!myReviewId && (
-        <div className="border-t border-[#F0EDE8] pt-6">
+        <div className="border-t border-[#BBDEFB] pt-6">
           <h3 className="text-[16px] font-bold text-[#000000] font-poppins mb-4">
             Write a Review
           </h3>
@@ -402,7 +402,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#000000] text-white px-10 py-4 rounded-full text-[15px] font-semibold hover:bg-[#252d46] transition-all disabled:opacity-50"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#000000] text-white px-10 py-4 rounded-full text-[15px] font-semibold hover:bg-[#0D47A1] transition-all disabled:opacity-50"
             >
               {submitting && <Loader2 size={18} className="animate-spin" />}
               Submit Review

@@ -110,7 +110,7 @@ export default function AdminHeader() {
           <input 
             type="text" 
             placeholder="Search properties, projects..." 
-            className="w-full bg-gray-50 border border-gray-200 rounded-full py-3.5 pl-12 pr-6 text-[#000000] placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-[#A88849] transition-all font-inter text-[15px]"
+            className="w-full bg-gray-50 border border-gray-200 rounded-full py-3.5 pl-12 pr-6 text-[#000000] placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-[#2196F3] transition-all font-inter text-[15px]"
           />
         </div>
       </div>

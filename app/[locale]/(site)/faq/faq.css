@@ -24,13 +24,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #c7b7a1;
+  color: #42A5F5;
   margin-bottom: 28px;
 }
 
 .faqp-tag {
   font-family: var(--font-poppins);
-  color: #c7b7a1;
+  color: #42A5F5;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 3px;
@@ -58,7 +58,7 @@
 .faqp-accent-line {
   width: 120px;
   height: 3px;
-  background-color: #c7b7a1;
+  background-color: #42A5F5;
   border-radius: 2px;
 }
 
@@ -88,7 +88,7 @@
 .faqp-spinner {
   width: 40px;
   height: 40px;
-  color: #c7b7a1;
+  color: #42A5F5;
   animation: faqp-spin 1s linear infinite;
 }
 
@@ -106,7 +106,7 @@
 }
 
 .faqp-empty-icon {
-  color: #c7b7a1;
+  color: #42A5F5;
   margin: 0 auto 20px;
   display: block;
 }
@@ -146,7 +146,7 @@
   font-family: var(--font-poppins);
   font-size: 14px;
   font-weight: 700;
-  color: #c7b7a1;
+  color: #42A5F5;
   min-width: 28px;
 }
 

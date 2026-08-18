@@ -40,7 +40,7 @@
 
 .how-it-works-tag {
   font-family: var(--font-poppins);
-  color: #c7b7a1;
+  color: #42A5F5;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 2.8px;
@@ -59,7 +59,7 @@
 .how-it-works-accent-line {
   width: 160px;
   height: 4px;
-  background-color: #c7b7a1;
+  background-color: #42A5F5;
   border-radius: 2px;
 }
 
@@ -97,7 +97,7 @@
   width: 64px;
   height: 64px;
   object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(86%) sepia(8%) saturate(711%) hue-rotate(351deg) brightness(88%) contrast(85%); /* #c7b7a1 color filter */
+  filter: brightness(0) saturate(100%) invert(64%) sepia(62%) saturate(562%) hue-rotate(182deg) brightness(103%) contrast(97%); /* #42A5F5 color filter */
 }
 
 .how-it-works-text {

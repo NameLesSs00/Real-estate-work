@@ -202,7 +202,7 @@ export default function EditBlogPage() {
                 accept="image/*"
                 ref={mainImageInputRef}
                 onChange={(e) => setMainImageFile(e.target.files?.[0] || null)}
-                className="w-full p-4 rounded-xl border border-gray-200 focus:border-[#000000] focus:ring-1 focus:ring-[#000000] outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#F8F5F0] file:text-[#000000] hover:file:bg-[#EAE5DF]"
+                className="w-full p-4 rounded-xl border border-gray-200 focus:border-[#000000] focus:ring-1 focus:ring-[#000000] outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#E3F2FD] file:text-[#000000] hover:file:bg-[#EAE5DF]"
               />
               <p className="text-xs text-gray-500 mt-2">Upload a new image to replace the current one.</p>
             </div>
@@ -215,7 +215,7 @@ export default function EditBlogPage() {
             <button 
               type="button"
               onClick={handleAddSection}
-              className="text-[#C7B7A1] font-medium hover:text-[#b09e86] transition-colors flex items-center gap-2"
+              className="text-[#42A5F5] font-medium hover:text-[#b09e86] transition-colors flex items-center gap-2"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -280,7 +280,7 @@ export default function EditBlogPage() {
                         type="file" 
                         accept="image/*"
                         onChange={(e) => handleUpdateSection(section.clientId, 'imageFile', e.target.files?.[0] || null)}
-                        className="w-full p-3 rounded-lg border border-gray-200 outline-none focus:border-[#000000] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#F8F5F0] file:text-[#000000] hover:file:bg-[#EAE5DF]"
+                        className="w-full p-3 rounded-lg border border-gray-200 outline-none focus:border-[#000000] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#E3F2FD] file:text-[#000000] hover:file:bg-[#EAE5DF]"
                       />
                       <p className="text-xs text-gray-500 mt-1">Upload to replace existing image.</p>
                     </div>

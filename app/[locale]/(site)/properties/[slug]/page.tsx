@@ -214,7 +214,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
         </div>
 
         {/* ── Overview Card (full width) ── */}
-        <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
+        <div className="bg-white border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
           <div className="flex items-center gap-3 mb-6">
             <h2 className="text-[20px] font-bold text-[#000000] font-poppins">{t.projectDetails.overview || "Overview"}</h2>
             <div className="h-px flex-1 bg-gray-100"></div>
@@ -241,7 +241,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
           if (combinedIds.length === 0) return null;
 
           return (
-            <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
+            <div className="bg-white border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
               <div className="flex items-center gap-3 mb-8">
                 <h2 className="text-[20px] font-bold text-[#000000] font-poppins">
                   {t.projectDetails.featuresServices || "Features & Services"}
@@ -282,9 +282,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
         })()}
 
         {/* ── Description ── */}
-        <div className="bg-[#F8F5F0] border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
+        <div className="bg-[#E3F2FD] border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
           <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-[20px] font-bold text-[#000000] font-poppins">
+            <h2 className="text-[20px] font-bold text-[#0D47A1] font-poppins">
               {t.projectDetails.description || "Description"}
             </h2>
             <div className="h-px flex-1 bg-[#E5E2DE]"></div>
@@ -303,9 +303,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
         
         {/* ── Payment Plans ── */}
         {paymentPlans.length > 0 && (
-          <div className="bg-white border border-[#F0EDE8] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
+          <div className="bg-white border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
             <div className="flex items-center gap-3 mb-8">
-              <h2 className="text-[20px] font-bold text-[#000000] font-poppins">
+              <h2 className="text-[20px] font-bold text-[#0D47A1] font-poppins">
                 {t.projectDetails.paymentPlans || "Payment Plans"}
               </h2>
               <div className="h-px flex-1 bg-gray-100"></div>
@@ -321,10 +321,10 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   <div key={i} className="flex flex-col p-6 rounded-2xl bg-[#F8F9FA] border border-gray-100 hover:shadow-md transition-all">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <div className="p-2 rounded-lg bg-[#000000] text-white">
+                        <div className="p-2 rounded-lg bg-[#1565C0] text-white">
                           {isCash ? <Banknote size={18} /> : <CreditCard size={18} />}
                         </div>
-                        <span className="font-bold text-[#000000]">
+                        <span className="font-bold text-[#0D47A1]">
                           {isCash ? (t.projectDetails.cash || "Cash") : (t.projectDetails.installment || "Installment")}
                         </span>
                       </div>
@@ -334,27 +334,27 @@ export default async function PropertyDetailsPage({ params }: Props) {
                       {isCash && (
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-500">{t.projectDetails.price || "Price"}</span>
-                          <span className="font-bold text-[#000000]">{propertyCurrency} {propertyPrice.toLocaleString()}</span>
+                          <span className="font-bold text-[#0D47A1]">{propertyCurrency} {propertyPrice.toLocaleString()}</span>
                         </div>
                       )}
                       {commission > 0 ? (
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-500">{t.projectDetails.commission || "Commission"}</span>
-                          <span className="font-semibold text-[#000000]">{commission}%</span>
+                          <span className="font-semibold text-[#0D47A1]">{commission}%</span>
                         </div>
                       ) : null}
                       {!isCash && (
                         <>
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-500">{t.projectDetails.months || "Months"}</span>
-                            <div className="flex items-center gap-1.5 font-semibold text-[#000000]">
+                            <div className="flex items-center gap-1.5 font-semibold text-[#0D47A1]">
                               <Calendar size={14} className="text-gray-400" />
                               {plan.installmentMothes || plan.InstallmentMothes || plan.installmentMonths || plan.InstallmentMonths || 0}
                             </div>
                           </div>
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-500">{t.projectDetails.downPayment || "Down Payment"}</span>
-                            <span className="font-semibold text-[#000000]">{plan.installmentDownPayment || plan.InstallmentDownPayment || 0}%</span>
+                            <span className="font-semibold text-[#0D47A1]">{plan.installmentDownPayment || plan.InstallmentDownPayment || 0}%</span>
                           </div>
                         </>
                       )}

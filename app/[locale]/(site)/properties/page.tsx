@@ -50,7 +50,7 @@ export interface FilterState {
 
 export default function PropertiesPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F8F5F0] animate-pulse" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#E3F2FD] animate-pulse" />}>
       <PropertiesPageContent />
     </Suspense>
   );
@@ -295,7 +295,7 @@ function PropertiesPageContent() {
             <div className="flex items-center gap-4">
               <button 
                 onClick={openSidebar}
-                className="flex items-center gap-2 bg-[#000000] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-opacity-90 transition-all cursor-pointer shadow-md"
+                className="flex items-center gap-2 bg-[#1565C0] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[#0D47A1] transition-all cursor-pointer shadow-md"
               >
                 <Filter size={16} />
                 {t('propertiesPage.grid.filter') as string}
@@ -309,7 +309,7 @@ function PropertiesPageContent() {
           {error && (
             <div className="flex flex-col items-center py-16 gap-4">
               <p className="text-red-500">{error}</p>
-              <button onClick={() => fetchUnits(1, filters)} className="bg-[#000000] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
+              <button onClick={() => fetchUnits(1, filters)} className="bg-[#1565C0] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
             </div>
           )}
 
@@ -319,7 +319,7 @@ function PropertiesPageContent() {
             </div>
           ) : !error && units.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-[18px] font-bold text-[#000000] mb-2">{t('propertiesPage.grid.noResults') as string}</p>
+              <p className="text-[18px] font-bold text-[#0D47A1] mb-2">{t('propertiesPage.grid.noResults') as string}</p>
               <p className="text-gray-500">{t('propertiesPage.grid.adjustFilters') as string}</p>
             </div>
           ) : !error && (
@@ -351,7 +351,7 @@ function PropertiesPageContent() {
               <button 
                 onClick={() => handlePage(currentPage - 1)} 
                 disabled={currentPage === 1} 
-                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-gray-200 text-[13px] sm:text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-[#BBDEFB] text-[13px] sm:text-[14px] font-medium text-[#0D47A1] hover:bg-[#E3F2FD] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
               >
                 <ChevronLeft size={16} /> 
                 <span className="hidden sm:inline">{t('propertiesPage.pagination.prev') as string}</span>
@@ -362,7 +362,7 @@ function PropertiesPageContent() {
               <button 
                 onClick={() => handlePage(currentPage + 1)} 
                 disabled={currentPage === totalPages} 
-                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-gray-200 text-[13px] sm:text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+                className="flex items-center gap-2 px-3 sm:px-5 py-2.5 rounded-full border border-[#BBDEFB] text-[13px] sm:text-[14px] font-medium text-[#0D47A1] hover:bg-[#E3F2FD] disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
               >
                 <span className="hidden sm:inline">{t('propertiesPage.pagination.next') as string}</span>
                 <ChevronRight size={16} />
@@ -376,12 +376,12 @@ function PropertiesPageContent() {
       {isSidebarOpen && (
         <div className="fixed inset-0 z-50 flex justify-end font-poppins">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity" onClick={() => setIsSidebarOpen(false)} />
-          <div className="relative w-full sm:max-w-[480px] bg-[#fbf9f6] h-full shadow-2xl flex flex-col transform transition-transform duration-500 animate-in slide-in-from-right">
+          <div className="relative w-full sm:max-w-[480px] bg-[#E3F2FD] h-full shadow-2xl flex flex-col transform transition-transform duration-500 animate-in slide-in-from-right">
             
             {/* Header */}
             <div className="flex items-center justify-between p-8 border-b border-gray-200 shrink-0 bg-white">
-              <h2 className="text-[28px] font-radley text-[#000000]">{t('propertiesPage.sidebar.title') as string}</h2>
-              <button onClick={() => setIsSidebarOpen(false)} className="p-2.5 bg-gray-50 rounded-full hover:bg-gray-200 transition-colors cursor-pointer text-[#000000]">
+              <h2 className="text-[28px] font-radley text-[#0D47A1]">{t('propertiesPage.sidebar.title') as string}</h2>
+              <button onClick={() => setIsSidebarOpen(false)} className="p-2.5 bg-[#E3F2FD] rounded-full hover:bg-[#BBDEFB] transition-colors cursor-pointer text-[#0D47A1]">
                 <X size={20} />
               </button>
             </div>
@@ -397,7 +397,7 @@ function PropertiesPageContent() {
                   value={draftFilters.searchTerm}
                   onChange={(e) => setDraftFilters({ ...draftFilters, searchTerm: e.target.value })}
                   onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-                  className="w-full bg-transparent border-b-2 border-gray-200 py-3 text-[16px] text-[#000000] placeholder:text-gray-400 focus:outline-none focus:border-[#A88849] transition-colors"
+                  className="w-full bg-transparent border-b-2 border-[#BBDEFB] py-3 text-[16px] text-[#0D47A1] placeholder:text-[#90CAF9] focus:outline-none focus:border-[#2196F3] transition-colors"
                 />
               </div>
 
@@ -411,7 +411,7 @@ function PropertiesPageContent() {
                     value={draftFilters.country}
                     onChange={(e) => setDraftFilters({ ...draftFilters, country: e.target.value })}
                     onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-                    className="w-full bg-transparent border-b-2 border-gray-200 py-3 text-[16px] text-[#000000] placeholder:text-gray-400 focus:outline-none focus:border-[#A88849] transition-colors"
+                    className="w-full bg-transparent border-b-2 border-[#BBDEFB] py-3 text-[16px] text-[#0D47A1] placeholder:text-[#90CAF9] focus:outline-none focus:border-[#2196F3] transition-colors"
                   />
                 </div>
               )}
@@ -428,11 +428,11 @@ function PropertiesPageContent() {
                         const locName = locations.find(l => l.id.toString() === locId)?.city || '';
                         setDraftFilters({ ...draftFilters, locationId: locId, location: locName });
                       }}
-                      className="w-full bg-transparent border-b-2 border-gray-200 py-3 text-[16px] text-[#000000] focus:outline-none focus:border-[#A88849] transition-colors appearance-none cursor-pointer"
+                      className="w-full bg-transparent border-b-2 border-[#BBDEFB] py-3 text-[16px] text-[#0D47A1] focus:outline-none focus:border-[#2196F3] transition-colors appearance-none cursor-pointer"
                     >
                       <option value="" className="text-gray-500">{t('propertiesPage.sidebar.any') as string}</option>
                       {locations.map(loc => (
-                        <option key={loc.id} value={loc.id} className="text-[#000000]">
+                    <option key={loc.id} value={loc.id} className="text-[#0D47A1]">
                           {loc.city}{loc.district && loc.district !== '-' ? ` - ${loc.district}` : ''}
                         </option>
                       ))}
@@ -459,7 +459,7 @@ function PropertiesPageContent() {
                     <button 
                       key={type.value}
                       onClick={() => setDraftFilters({ ...draftFilters, propertyType: type.value })}
-                      className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.propertyType === type.value ? 'bg-[#A88849] text-white border-[#A88849] shadow-md' : 'bg-white text-[#000000] border-gray-200 hover:border-[#A88849] hover:text-[#A88849]'}`}
+                      className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.propertyType === type.value ? 'bg-[#2196F3] text-white border-[#2196F3] shadow-md' : 'bg-white text-[#0D47A1] border-[#BBDEFB] hover:border-[#2196F3] hover:text-[#2196F3]'}`}
                     >
                       {type.label}
                     </button>
@@ -486,7 +486,7 @@ function PropertiesPageContent() {
                           status: isRent ? '' : draftFilters.status 
                         });
                       }}
-                      className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.unitType === cat.value ? 'bg-[#A88849] text-white border-[#A88849] shadow-md' : 'bg-white text-[#000000] border-gray-200 hover:border-[#A88849] hover:text-[#A88849]'}`}
+                      className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.unitType === cat.value ? 'bg-[#2196F3] text-white border-[#2196F3] shadow-md' : 'bg-white text-[#0D47A1] border-[#BBDEFB] hover:border-[#2196F3] hover:text-[#2196F3]'}`}
                     >
                       {cat.label}
                     </button>
@@ -507,7 +507,7 @@ function PropertiesPageContent() {
                       <button 
                         key={status.value}
                         onClick={() => setDraftFilters({ ...draftFilters, status: status.value })}
-                        className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.status === status.value ? 'bg-[#A88849] text-white border-[#A88849] shadow-md' : 'bg-white text-[#000000] border-gray-200 hover:border-[#A88849] hover:text-[#A88849]'}`}
+                        className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.status === status.value ? 'bg-[#2196F3] text-white border-[#2196F3] shadow-md' : 'bg-white text-[#0D47A1] border-[#BBDEFB] hover:border-[#2196F3] hover:text-[#2196F3]'}`}
                       >
                         {status.label}
                       </button>
@@ -527,7 +527,7 @@ function PropertiesPageContent() {
                       placeholder={t('propertiesPage.sidebar.min') as string} 
                       value={draftFilters.minPrice}
                       onChange={(e) => setDraftFilters({ ...draftFilters, minPrice: e.target.value })}
-                      className="w-full bg-transparent border-b-2 border-gray-200 py-3 pl-6 text-[16px] text-[#000000] placeholder:text-gray-400 focus:outline-none focus:border-[#A88849] transition-colors"
+                      className="w-full bg-transparent border-b-2 border-[#BBDEFB] py-3 pl-6 text-[16px] text-[#0D47A1] placeholder:text-[#90CAF9] focus:outline-none focus:border-[#2196F3] transition-colors"
                     />
                   </div>
                   <div className="w-4 h-[2px] bg-gray-300" />
@@ -538,7 +538,7 @@ function PropertiesPageContent() {
                       placeholder={t('propertiesPage.sidebar.max') as string} 
                       value={draftFilters.maxPrice}
                       onChange={(e) => setDraftFilters({ ...draftFilters, maxPrice: e.target.value })}
-                      className="w-full bg-transparent border-b-2 border-gray-200 py-3 pl-6 text-[16px] text-[#000000] placeholder:text-gray-400 focus:outline-none focus:border-[#A88849] transition-colors"
+                      className="w-full bg-transparent border-b-2 border-[#BBDEFB] py-3 pl-6 text-[16px] text-[#0D47A1] placeholder:text-[#90CAF9] focus:outline-none focus:border-[#2196F3] transition-colors"
                     />
                   </div>
                 </div>
@@ -551,12 +551,12 @@ function PropertiesPageContent() {
                   <select 
                     value={draftFilters.currency}
                     onChange={(e) => setDraftFilters({ ...draftFilters, currency: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-gray-200 py-3 text-[16px] text-[#000000] focus:outline-none focus:border-[#A88849] transition-colors appearance-none cursor-pointer"
+                    className="w-full bg-transparent border-b-2 border-[#BBDEFB] py-3 text-[16px] text-[#0D47A1] focus:outline-none focus:border-[#2196F3] transition-colors appearance-none cursor-pointer"
                   >
                     <option value="" className="text-gray-500">{t('propertiesPage.sidebar.any') as string}</option>
-                    <option value="EGP" className="text-[#000000]">EGP</option>
-                    <option value="USD" className="text-[#000000]">USD</option>
-                    <option value="EUR" className="text-[#000000]">EUR</option>
+                    <option value="EGP" className="text-[#0D47A1]">EGP</option>
+                    <option value="USD" className="text-[#0D47A1]">USD</option>
+                    <option value="EUR" className="text-[#0D47A1]">EUR</option>
                   </select>
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                     <ChevronDown size={18} />
@@ -570,13 +570,13 @@ function PropertiesPageContent() {
             <div className="p-8 bg-white border-t border-gray-200 flex items-center gap-6 shrink-0">
               <button 
                 onClick={clearFilters}
-                className="py-4 px-6 text-[15px] font-bold text-gray-500 hover:text-[#000000] transition-colors cursor-pointer whitespace-nowrap"
+                className="py-4 px-6 text-[15px] font-bold text-gray-500 hover:text-[#1565C0] transition-colors cursor-pointer whitespace-nowrap"
               >
                 {t('propertiesPage.sidebar.resetAll') as string}
               </button>
               <button 
                 onClick={applyFilters}
-                className="flex-1 bg-[#000000] text-white py-4 rounded-full text-[15px] font-bold hover:bg-[#A88849] hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
+                className="flex-1 bg-[#1565C0] text-white py-4 rounded-full text-[15px] font-bold hover:bg-[#2196F3] hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
               >
                 {t('propertiesPage.sidebar.apply') as string}
               </button>

@@ -26,7 +26,7 @@
 
 .who-we-are-tag {
   font-family: var(--font-poppins);
-  color: #c7b7a1;
+  color: #42A5F5;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 2.8px;
@@ -36,7 +36,7 @@
 
 .who-we-are-title {
   font-family: var(--font-radley);
-  color: #000000;
+  color: #0D47A1;
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
@@ -54,7 +54,7 @@
 .who-we-are-accent-line {
   width: 160px;
   height: 4px;
-  background-color: #c7b7a1;
+  background-color: #42A5F5;
   border-radius: 2px;
 }
 
@@ -76,7 +76,7 @@
 
 .who-we-are-info-box {
   flex: 1;
-  background-color: #000000;
+  background-color: #1565C0;
   padding: 60px;
   border-radius: 20px;
   color: #ffffff;
@@ -93,7 +93,7 @@
 
 .info-item-title {
   font-family: var(--font-allura);
-  color: #c7b7a1;
+  color: #BBDEFB;
   font-size: 44px;
   line-height: 1;
 }
@@ -112,7 +112,7 @@
 
 .view-more-btn {
   background-color: #ffffff;
-  color: #000000;
+  color: #0D47A1;
   padding: 14px 40px;
   border-radius: 50px;
   font-family: var(--font-poppins);
@@ -124,7 +124,7 @@
 }
 
 .view-more-btn:hover {
-  background-color: #c7b7a1;
+  background-color: #2196F3;
   color: #ffffff;
 }
 

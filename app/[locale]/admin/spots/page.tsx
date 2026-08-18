@@ -95,7 +95,7 @@ export default function SpotsPage() {
         </div>
         <button
           onClick={handleAddNew}
-          className="bg-[#000000] text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-[#252d46] transition-colors font-poppins font-medium cursor-pointer"
+          className="bg-[#000000] text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-[#0D47A1] transition-colors font-poppins font-medium cursor-pointer"
         >
           <Image src="/admin/spots/add.png" alt="Add" width={20} height={20} className="object-contain" />
           Add New Location
@@ -122,7 +122,7 @@ export default function SpotsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-[20px] shadow-sm border border-[#F0EDE8] overflow-hidden">
+      <div className="bg-white rounded-[20px] shadow-sm border border-[#BBDEFB] overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-24">
             <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
@@ -148,7 +148,7 @@ export default function SpotsPage() {
           <div className="overflow-x-auto">
             <table className="w-full font-poppins">
               <thead>
-                <tr className="bg-[#F8F9FA] border-b border-[#F0EDE8]">
+                <tr className="bg-[#F8F9FA] border-b border-[#BBDEFB]">
                   <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">#</th>
                   <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">City</th>
                   <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">District</th>
@@ -158,7 +158,7 @@ export default function SpotsPage() {
                   <th className="text-center px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#F0EDE8]">
+              <tbody className="divide-y divide-[#BBDEFB]">
                 {filteredLocations.map((loc, idx) => (
                   <tr key={loc.id} className="hover:bg-[#FAFAFA] transition-colors group">
                     <td className="px-6 py-4 text-[14px] text-[#A0AEC0] font-medium">
@@ -168,7 +168,7 @@ export default function SpotsPage() {
                       <span className="text-[15px] font-semibold text-[#000000]">{loc.city}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium bg-[#F0EDE8] text-[#000000]">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium bg-[#BBDEFB] text-[#000000]">
                         {loc.district}
                       </span>
                     </td>
@@ -210,7 +210,7 @@ export default function SpotsPage() {
 
         {/* Pagination */}
         {!isLoading && !error && totalPages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-[#F0EDE8]">
+          <div className="flex items-center justify-between px-6 py-4 border-t border-[#BBDEFB]">
             <p className="text-[13px] text-[#A0AEC0] font-poppins">
               Page {currentPage} of {totalPages}
             </p>

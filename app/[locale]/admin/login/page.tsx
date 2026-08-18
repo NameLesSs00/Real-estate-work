@@ -39,7 +39,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#fbf9f6] font-inter overflow-x-hidden p-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#E3F2FD] font-inter overflow-x-hidden p-6">
       {/* Login Card */}
       <div className="bg-white rounded-3xl w-full max-w-[500px] p-10 md:p-14 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 relative">
         
@@ -75,7 +75,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 px-5 text-[#000000] placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-[#A88849] focus:bg-white transition-all font-inter text-base"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 px-5 text-[#000000] placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-[#2196F3] focus:bg-white transition-all font-inter text-base"
                 required
                 autoComplete="email"
               />
@@ -94,7 +94,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 px-5 text-[#000000] placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-[#A88849] focus:bg-white transition-all font-inter text-base"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 px-5 text-[#000000] placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-[#2196F3] focus:bg-white transition-all font-inter text-base"
                 required
                 autoComplete="current-password"
               />
@@ -111,7 +111,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center bg-[#000000] text-white font-bold h-[54px] rounded-xl transition-all duration-300 hover:bg-[#A88849] hover:shadow-lg hover:-translate-y-0.5 text-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-[#000000] disabled:hover:-translate-y-0 disabled:hover:shadow-none"
+              className="w-full flex items-center justify-center bg-[#000000] text-white font-bold h-[54px] rounded-xl transition-all duration-300 hover:bg-[#2196F3] hover:shadow-lg hover:-translate-y-0.5 text-lg disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-[#000000] disabled:hover:-translate-y-0 disabled:hover:shadow-none"
             >
               {isLoading ? 'Logging in...' : 'Sign In'}
             </button>

@@ -12,7 +12,7 @@ export default function ListPropertyPage() {
         <form className="space-y-12">
           
           {/* Basic Information Section */}
-          <div className="bg-[#F8F5F080] rounded-[24px] p-6 sm:p-8 md:p-12 shadow-sm space-y-8">
+          <div className="bg-[#E3F2FD80] rounded-[24px] p-6 sm:p-8 md:p-12 shadow-sm space-y-8">
             <h2 className="text-[24px] font-bold text-[#000000]">Basic Information</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -138,7 +138,7 @@ export default function ListPropertyPage() {
           </div>
 
           {/* Property Media Section */}
-          <div className="bg-[#F8F5F080] rounded-[24px] p-6 sm:p-8 md:p-12 shadow-sm space-y-8">
+          <div className="bg-[#E3F2FD80] rounded-[24px] p-6 sm:p-8 md:p-12 shadow-sm space-y-8">
             <h2 className="text-[24px] font-bold text-[#000000]">Property media</h2>
             <div className="space-y-4">
               <p className="text-[#000000] font-semibold text-[15px]">Property images</p>
@@ -158,7 +158,7 @@ export default function ListPropertyPage() {
           </div>
 
           {/* Client Details Section */}
-          <div className="bg-[#F8F5F080] rounded-[24px] p-6 sm:p-8 md:p-12 shadow-sm space-y-10">
+          <div className="bg-[#E3F2FD80] rounded-[24px] p-6 sm:p-8 md:p-12 shadow-sm space-y-10">
             <h2 className="text-[24px] font-bold text-[#000000]">Client Details</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">

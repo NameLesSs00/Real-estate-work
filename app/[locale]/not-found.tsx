@@ -11,7 +11,7 @@ export default function NotFound() {
         <div className="text-center space-y-6 max-w-2xl mx-auto">
           {/* 404 Header */}
           <h1 className="text-9xl font-bold text-[#000000]">
-            4<span className="text-[#C7B7A1]">0</span>4
+            4<span className="text-[#42A5F5]">0</span>4
           </h1>
           
           {/* Message */}
