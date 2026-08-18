@@ -17,10 +17,9 @@ const FAQ = () => {
   useEffect(() => {
     getQuestions()
       .then((data) => setFaqData(data.slice(0, 5)))
-      .catch((err) => console.error('[FAQ] Failed to fetch questions:', err))
+      .catch((err) => console.warn('[FAQ] Failed to fetch questions:', err))
       .finally(() => setIsLoading(false));
   }, []);
-
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };

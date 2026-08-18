@@ -1,4 +1,4 @@
-export const API_DOMAIN = 'https://websiterealstate.runasp.net';
+export const API_DOMAIN = 'https://realestateneww.runasp.net';
 
 export const API_BASE_URL = typeof window === 'undefined' 
   ? API_DOMAIN 

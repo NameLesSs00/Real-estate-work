@@ -24,19 +24,19 @@ const WhatsAppButton = () => {
           ${isHovered ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2 pointer-events-none'}
         `}
       >
-        +20 10 95422940
+        1-800-555-1234
         {/* Tooltip Arrow */}
         <div className="absolute top-full right-[22px] md:right-[26px] -translate-y-px border-[6px] border-transparent border-t-[#000000]"></div>
       </div>
 
       {/* WhatsApp Icon */}
       <a
-        href="https://wa.me/message/2CFJ7MIUOG3AM1"
+        href="https://wa.me/18005551234"
         target="_blank"
         rel="noopener noreferrer"
         className="relative w-14 h-14 md:w-16 md:h-16 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 group"
         aria-label="Contact us on WhatsApp"
-        title="+20 10 95422940"
+        title="1-800-555-1234"
       >
         <svg 
           width="28" 

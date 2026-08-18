@@ -326,7 +326,7 @@ const Header = () => {
               <div className="flex items-center justify-center gap-8 mt-4">
                 <a href="https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-[#000000] hover:text-[#1877F2] transition-colors"><FacebookIcon size={28} /></a>
                 <a href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" target="_blank" rel="noopener noreferrer" className="text-[#000000] hover:text-[#E4405F] transition-colors"><InstagramIcon size={28} /></a>
-                <a href="https://wa.me/message/2CFJ7MIUOG3AM1" target="_blank" rel="noopener noreferrer" className="text-[#000000] hover:text-[#25D366] transition-colors"><WhatsAppIcon size={28} /></a>
+                <a href="https://wa.me/18005551234" target="_blank" rel="noopener noreferrer" className="text-[#000000] hover:text-[#25D366] transition-colors"><WhatsAppIcon size={28} /></a>
               </div>
 
               {/* Language Switcher */}

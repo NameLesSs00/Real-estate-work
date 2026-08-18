@@ -30,7 +30,7 @@ const Articles = () => {
         const data = await getBlogs(1, 3);
         setBlogs(data.items || []);
       } catch (error) {
-        console.error('Failed to fetch latest blogs:', error);
+        console.warn('Failed to fetch latest blogs:', error);
       } finally {
         setIsLoading(false);
       }

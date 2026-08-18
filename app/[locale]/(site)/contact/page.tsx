@@ -15,7 +15,7 @@ const infoCards = [
   { icon: `${BASE}/fire.png`, titleKey: 'contactPage.info.follow', socials: [
     { label: "Instagram", href: "https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" },
     { label: "Facebook", href: "https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" },
-    { label: "WhatsApp", href: "https://wa.me/message/2CFJ7MIUOG3AM1" },
+    { label: "WhatsApp", href: "https://wa.me/18005551234" },
   ]},
 ];
 

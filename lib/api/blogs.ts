@@ -71,17 +71,25 @@ export async function getBlogs(
   pageNumber = 1,
   pageSize = 100
 ): Promise<PaginatedBlogs> {
-  const params = new URLSearchParams({
-    PageNumber: String(pageNumber),
-    PageSize: String(pageSize),
-  });
-  const res = await fetch(`${API_BASE_URL}/api/Blogs?${params}`, {
-    headers: { ...getHeaders(undefined, true) },
-    cache: 'no-store'
-  });
-  if (!res.ok) throw new Error('Failed to fetch blogs.');
-  const json = await res.json();
-  return json.data ?? json;
+  try {
+    const params = new URLSearchParams({
+      PageNumber: String(pageNumber),
+      PageSize: String(pageSize),
+    });
+    const res = await fetch(`${API_BASE_URL}/api/Blogs?${params}`, {
+      headers: { ...getHeaders(undefined, true) },
+      cache: 'no-store'
+    });
+    if (!res.ok) {
+      console.warn('Failed to fetch blogs. Status:', res.status);
+      return { items: [], pageNumber, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+    }
+    const json = await res.json();
+    return json.data ?? json;
+  } catch (error) {
+    console.warn('Network error when fetching blogs:', error);
+    return { items: [], pageNumber, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+  }
 }
 
 /** GET /api/Blogs/{id} — get a single blog */

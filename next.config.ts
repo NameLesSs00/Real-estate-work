@@ -30,3 +30,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+// Forced reload for new API_DOMAIN

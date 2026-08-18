@@ -47,7 +47,7 @@ export async function getQuestions(): Promise<Question[]> {
   });
   if (!res.ok) {
     const text = await res.text();
-    console.error('[Questions] Fetch failed:', res.status, text);
+    console.warn('[Questions] Fetch failed:', res.status, text);
     throw new Error('Failed to fetch questions.');
   }
   const text = await res.text();

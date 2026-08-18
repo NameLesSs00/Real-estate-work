@@ -249,12 +249,12 @@ export async function getProjects(pageNumber = 1, pageSize = 10, lang?: string):
   );
   if (!res.ok) {
     const text = await res.text();
-    console.error('[Projects] Fetch failed:', res.status, text);
+    console.warn('[Projects] Fetch failed:', res.status, text);
     throw new Error('Failed to fetch projects.');
   }
   const json: ApiResponse<ProjectsPage> = await res.json();
   if (!json.success || !json.data) {
-    console.error('[Projects] Fetch error:', json.message, json.errors);
+    console.warn('[Projects] Fetch error:', json.message, json.errors);
     throw new Error(json.message || 'Failed to fetch projects.');
   }
   return json.data;

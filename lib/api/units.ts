@@ -63,39 +63,49 @@ export interface PaginatedUnits {
 
 /** GET /api/Units — supports full text search + price/type/project filters */
 export async function getUnitsFiltered(filters: UnitFilters = {}): Promise<PaginatedUnits> {
-  const params = new URLSearchParams();
-  if (filters.SearchTerm) params.set('SearchTerm', filters.SearchTerm);
-  if (filters.MinPrice !== undefined) params.set('MinPrice', String(filters.MinPrice));
-  if (filters.MaxPrice !== undefined) params.set('MaxPrice', String(filters.MaxPrice));
-  if (filters.UnitType) params.set('UnitType', filters.UnitType);
-  if (filters.ProjectId !== undefined) params.set('ProjectId', String(filters.ProjectId));
-  if (filters.LocationId !== undefined) params.set('LocationId', String(filters.LocationId));
-  if (filters.Currency) params.set('Currency', filters.Currency);
+  try {
+    const params = new URLSearchParams();
+    if (filters.SearchTerm) params.set('SearchTerm', filters.SearchTerm);
+    if (filters.MinPrice !== undefined) params.set('MinPrice', String(filters.MinPrice));
+    if (filters.MaxPrice !== undefined) params.set('MaxPrice', String(filters.MaxPrice));
+    if (filters.UnitType) params.set('UnitType', filters.UnitType);
+    if (filters.ProjectId !== undefined) params.set('ProjectId', String(filters.ProjectId));
+    if (filters.LocationId !== undefined) params.set('LocationId', String(filters.LocationId));
+    if (filters.Currency) params.set('Currency', filters.Currency);
 
-  if (filters.PropertyType) params.set('PropertyType', filters.PropertyType);
-  if (filters.Status) params.set('Status', filters.Status);
-  params.set('PageNumber', String(filters.PageNumber ?? 1));
-  params.set('PageSize', String(filters.PageSize ?? 12));
+    if (filters.PropertyType) params.set('PropertyType', filters.PropertyType);
+    if (filters.Status) params.set('Status', filters.Status);
+    params.set('PageNumber', String(filters.PageNumber ?? 1));
+    params.set('PageSize', String(filters.PageSize ?? 12));
 
-  const res = await fetch(`${API_BASE_URL}/api/Units?${params}`, {
-    headers: { ...getHeaders() },
-  });
-  if (!res.ok) throw new Error('Failed to fetch units.');
-  const json: ApiResponse<PaginatedUnits> | UnitListItem[] = await res.json();
+    const res = await fetch(`${API_BASE_URL}/api/Units?${params}`, {
+      headers: { ...getHeaders() },
+    });
+    
+    if (!res.ok) {
+      console.warn('Failed to fetch units. Status:', res.status);
+      return { items: [], pageNumber: 1, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
+    }
+    
+    const json: ApiResponse<PaginatedUnits> | UnitListItem[] = await res.json();
 
-  // Handle both array and paginated responses
-  if (Array.isArray(json)) {
-    return {
-      items: json,
-      pageNumber: 1,
-      totalPages: 1,
-      totalCount: json.length,
-      hasPreviousPage: false,
-      hasNextPage: false,
-    };
+    // Handle both array and paginated responses
+    if (Array.isArray(json)) {
+      return {
+        items: json,
+        pageNumber: 1,
+        totalPages: 1,
+        totalCount: json.length,
+        hasPreviousPage: false,
+        hasNextPage: false,
+      };
+    }
+    const wrapped = json as ApiResponse<PaginatedUnits>;
+    return wrapped.data ?? (json as unknown as PaginatedUnits);
+  } catch (error) {
+    console.warn('Network error when fetching units:', error);
+    return { items: [], pageNumber: 1, totalPages: 1, totalCount: 0, hasPreviousPage: false, hasNextPage: false };
   }
-  const wrapped = json as ApiResponse<PaginatedUnits>;
-  return wrapped.data ?? (json as unknown as PaginatedUnits);
 }
 
 /** GET /api/Units/{id} */

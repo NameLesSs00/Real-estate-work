@@ -8,22 +8,22 @@ import { handleLogout } from '@/lib/auth/logout';
 import { BarChart2 } from 'lucide-react';
 
 const menuItems: { name: string; path: string; icon?: string; lucideIcon?: string }[] = [
-  { name: 'Dashboard',     path: '/admin/dashboard',   icon: '/admin/sidebar/home-2.png' },
-  { name: 'Units',         path: '/admin/units',        icon: '/admin/sidebar/buildings-2.png' },
-  { name: 'Sold Units',    path: '/admin/sold-units',   icon: '/admin/sidebar/receipt-search.png' },
+  { name: 'Dashboard', path: '/admin/dashboard', icon: '/admin/sidebar/home-2.png' },
+  { name: 'Units', path: '/admin/units', icon: '/admin/sidebar/buildings-2.png' },
+  { name: 'Sold Units', path: '/admin/sold-units', icon: '/admin/sidebar/receipt-search.png' },
   // { name: 'Deals',         path: '/admin/deals',        icon: '/admin/dashbaord/revenue.png' },
-  { name: 'Projects',      path: '/admin/projects',     icon: '/admin/sidebar/folder-open.png' },
-  { name: 'Developers',    path: '/admin/developers',   icon: '/admin/sidebar/profile-2user.png' },
-  { name: 'Units Requests',path: '/admin/requests',     icon: '/admin/sidebar/receipt-search.png' },
-  { name: 'Property Leads',path: '/admin/leads',        icon: '/admin/sidebar/receipt-search.png' },
-  { name: 'Contacts',      path: '/admin/contacts',     icon: '/admin/sidebar/profile-2user.png' },
-  { name: 'Facilities',    path: '/admin/facilities',   icon: '/admin/sidebar/location.png' },
-  { name: 'Services',      path: '/admin/services',     icon: '/admin/sidebar/setting-2.png' },
-  { name: 'Spots',         path: '/admin/spots',        icon: '/admin/sidebar/location.png' },
-  { name: 'Blogs',         path: '/admin/blogs',        icon: '/admin/sidebar/blogger.png' },
-  { name: 'FAQ',           path: '/admin/faq',          icon: '/admin/sidebar/setting-2.png' },
-  { name: 'Reviews',       path: '/admin/reviews',      lucideIcon: 'BarChart2' },
-  { name: 'Setting',       path: '/admin/settings',     icon: '/admin/sidebar/setting-2.png' },
+  { name: 'Projects', path: '/admin/projects', icon: '/admin/sidebar/folder-open.png' },
+  { name: 'Developers', path: '/admin/developers', icon: '/admin/sidebar/profile-2user.png' },
+  { name: 'Units Requests', path: '/admin/requests', icon: '/admin/sidebar/receipt-search.png' },
+  { name: 'Property Leads', path: '/admin/leads', icon: '/admin/sidebar/receipt-search.png' },
+  { name: 'Contacts', path: '/admin/contacts', icon: '/admin/sidebar/profile-2user.png' },
+  { name: 'Facilities', path: '/admin/facilities', icon: '/admin/sidebar/location.png' },
+  { name: 'Services', path: '/admin/services', icon: '/admin/sidebar/setting-2.png' },
+  { name: 'Spots', path: '/admin/spots', icon: '/admin/sidebar/location.png' },
+  { name: 'Blogs', path: '/admin/blogs', icon: '/admin/sidebar/blogger.png' },
+  { name: 'FAQ', path: '/admin/faq', icon: '/admin/sidebar/setting-2.png' },
+  { name: 'Reviews', path: '/admin/reviews', lucideIcon: 'BarChart2' },
+  { name: 'Setting', path: '/admin/settings', icon: '/admin/sidebar/setting-2.png' },
 ];
 
 export default function Sidebar() {
@@ -51,14 +51,14 @@ export default function Sidebar() {
       <nav className="flex-1 px-6 overflow-y-auto space-y-2 py-4 scrollbar-hide">
         {menuItems.map((item) => {
           const isActive = pathname?.endsWith(item.path) || pathname?.includes(item.path + '/');
-          
+
           return (
-            <Link 
-              key={item.name} 
+            <Link
+              key={item.name}
               href={item.path}
               className={`flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-300 group mx-2
-                ${isActive 
-                  ? 'bg-[#fbf9f6] text-[#A88849] font-semibold border-r-4 border-[#A88849]' 
+                ${isActive
+                  ? 'bg-[#fbf9f6] text-[#A88849] font-semibold border-r-4 border-[#A88849]'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-[#000000]'
                 }
               `}
@@ -86,11 +86,11 @@ export default function Sidebar() {
 
       {/* Logout Button */}
       <div className="px-6 pb-12 pt-4 mt-auto">
-        <button 
+        <button
           onClick={() => handleLogout()}
           className="w-full flex items-center gap-4 px-6 py-4 rounded-xl text-red-500 transition-all duration-300 group hover:bg-red-50 cursor-pointer"
         >
-          <div 
+          <div
             className="w-6 h-6 bg-red-500 transition-colors duration-300 group-hover:bg-red-600"
             style={{
               WebkitMask: `url('/admin/sidebar/basil_logout-solid.png') center/contain no-repeat`,
