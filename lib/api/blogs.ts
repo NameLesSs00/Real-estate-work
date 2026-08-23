@@ -69,7 +69,8 @@ export function getBlogImageUrl(url?: string) {
 /** GET /api/Blogs — paginated list of all blogs */
 export async function getBlogs(
   pageNumber = 1,
-  pageSize = 100
+  pageSize = 100,
+  lang?: string
 ): Promise<PaginatedBlogs> {
   try {
     const params = new URLSearchParams({
@@ -77,7 +78,7 @@ export async function getBlogs(
       PageSize: String(pageSize),
     });
     const res = await fetch(`${API_BASE_URL}/api/Blogs?${params}`, {
-      headers: { ...getHeaders(undefined, true) },
+      headers: { ...getHeaders(lang) },
       cache: 'no-store'
     });
     if (!res.ok) {

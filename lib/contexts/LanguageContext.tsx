@@ -3,8 +3,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useParams, useRouter, usePathname } from 'next/navigation';
 import enTranslations from '../../public/locales/en.json';
+import { BRAND_NAME } from '@/lib/brand';
 
 export type Language = 'en' | 'de' | 'pl';
+const SUPPORTED_LANGUAGES: Language[] = ['en', 'de', 'pl'];
 
 type TranslationValue = string | number | boolean | null | { [key: string]: TranslationValue } | TranslationValue[];
 
@@ -32,7 +34,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
   // Initialize from URL param if available, otherwise default to 'en'
-  const urlLocale = params?.locale as Language;
+  const rawUrlLocale = params?.locale;
+  const urlLocale = SUPPORTED_LANGUAGES.includes(rawUrlLocale as Language) ? rawUrlLocale as Language : 'en';
   const [language, setLanguageState] = useState<Language>(urlLocale || 'en');
   const [translations, setTranslations] = useState<Record<string, TranslationValue>>(enTranslations as Record<string, TranslationValue>);
   const [isReady, setIsReady] = useState(false);
@@ -46,15 +49,20 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const fetchTranslations = async () => {
+      setIsReady(false);
       try {
         const res = await fetch(`/locales/${language}.json`);
         if (res.ok) {
           const json = await res.json();
           setTranslations(json as Record<string, TranslationValue>);
+        } else {
+          setTranslations(enTranslations as Record<string, TranslationValue>);
         }
       } catch {
         console.error('Failed to load translations for', language);
+        setTranslations(enTranslations as Record<string, TranslationValue>);
       } finally {
+        document.cookie = `NEXT_LOCALE=${language}; path=/; max-age=31536000; SameSite=Lax`;
         setIsReady(true);
       }
     };
@@ -139,7 +147,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
             }
           `}</style>
           <p style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '1px', textTransform: 'uppercase' }}>
-            Luxe Estate
+            {BRAND_NAME}
           </p>
         </div>
       </div>

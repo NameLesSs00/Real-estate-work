@@ -5,6 +5,7 @@ import PopularSpots from "./components/PopularSpots";
 import Articles from "./components/Articles";
 import FinestServices from "./components/FinestServices";
 import HowItWorks from "./components/HowItWorks";
+import FeatureProject from "./components/FeatureProject";
 
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
       <BestListings />
       <HowItWorks />
       <PopularSpots />
+      <FeatureProject />
       <Articles />
       <FinestServices />
       <FAQ />

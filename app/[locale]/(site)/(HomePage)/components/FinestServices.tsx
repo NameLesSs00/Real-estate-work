@@ -3,31 +3,34 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 const stats = [
   {
     image: '/assists/finestServices/1.png',
     value: '$100M',
-    label: 'CURRENT LISTING VOLUME',
+    labelKey: 'finestServices.stats.currentListingVolume',
   },
   {
     image: '/assists/finestServices/2.png',
     value: '$400M',
-    label: 'TOTAL SOLD 2020 - 2024',
+    labelKey: 'finestServices.stats.totalSold',
   },
   {
     image: '/assists/finestServices/3.png',
     value: '$2B',
-    label: 'LIFETIME SALES VOLUME',
+    labelKey: 'finestServices.stats.lifetimeSales',
   },
   {
     image: '/assists/finestServices/4.png',
     value: '$100M',
-    label: 'CURRENT LISTING VOLUME',
+    labelKey: 'finestServices.stats.currentListingVolume',
   },
 ];
 
 const FinestServices = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-24 px-6 relative z-10">
       <div className="container mx-auto max-w-[1280px]">
@@ -41,7 +44,7 @@ const FinestServices = () => {
             transition={{ duration: 0.8 }}
             className="text-[36px] md:text-[48px] font-serif text-[#000000] mb-6"
           >
-            The Finest Services
+            {t('finestServices.title')}
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -50,8 +53,7 @@ const FinestServices = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-gray-500 text-[15px] leading-relaxed"
           >
-            In the vibrant neighborhood of San Jose, California, Sam is renowned among residents, property developers, 
-            local businesses, and professionals in the real estate industry.
+            {t('finestServices.subtitle')}
           </motion.p>
         </div>
 
@@ -69,7 +71,7 @@ const FinestServices = () => {
               <div className="relative w-24 h-24 mb-6">
                 <Image 
                   src={stat.image} 
-                  alt={stat.label} 
+                  alt={t(stat.labelKey)} 
                   fill
                   className="object-contain"
                 />
@@ -78,7 +80,7 @@ const FinestServices = () => {
                 {stat.value}
               </h3>
               <p className="text-[#000000]/60 text-[11px] font-bold uppercase tracking-wider">
-                {stat.label}
+                {t(stat.labelKey)}
               </p>
             </motion.div>
           ))}

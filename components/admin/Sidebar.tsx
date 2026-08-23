@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { handleLogout } from '@/lib/auth/logout';
 import { BarChart2 } from 'lucide-react';
+import BrandLogo from '@/components/BrandLogo';
 
 const menuItems: { name: string; path: string; icon?: string; lucideIcon?: string }[] = [
   { name: 'Dashboard', path: '/admin/dashboard', icon: '/admin/sidebar/home-2.png' },
@@ -38,12 +38,10 @@ export default function Sidebar() {
     <aside className="w-[280px] h-screen bg-white text-gray-800 border-r border-gray-100 flex flex-col fixed left-0 top-0 z-50 font-inter">
       {/* Logo Area */}
       <div className="pt-12 pb-10 flex justify-center items-center">
-        <Image
-          src="/assists/header/headerLogo.png"
-          alt="Luxe Estate"
-          width={120}
-          height={120}
-          className="brightness-0"
+        <BrandLogo
+          variant="charcoal"
+          lockup="mark"
+          className="h-[112px] w-[120px] object-contain"
         />
       </div>
 

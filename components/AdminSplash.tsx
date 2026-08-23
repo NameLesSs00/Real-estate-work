@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import BrandLogo from '@/components/BrandLogo';
 
 const AdminSplash = () => {
   return (
@@ -16,12 +17,12 @@ const AdminSplash = () => {
 
       {/* Center Logo */}
       <div className="relative z-10 flex flex-col items-center animate-pulse">
-        <div className="relative w-[300px] h-[100px] md:w-[450px] md:h-[150px]">
-          <Image
-            src="/admin/splash/logo.png"
-            alt="Luxe Estate Logo"
-            fill
-            className="object-contain"
+        <div className="flex h-[220px] w-[260px] items-center justify-center md:h-[320px] md:w-[380px]">
+          <BrandLogo
+            variant="light"
+            lockup="full"
+            priority
+            className="h-full w-full object-contain"
           />
         </div>
       </div>

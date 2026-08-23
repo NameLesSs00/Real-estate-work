@@ -57,7 +57,7 @@ export default function PropertiesPage() {
 }
 
 function PropertiesPageContent() {
-  const { t, getLocalized } = useLanguage();
+  const { t, getLocalized, language } = useLanguage();
   const searchParams = useSearchParams();
   const [units, setUnits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -155,6 +155,7 @@ function PropertiesPageContent() {
           LocationId: f.locationId ? Number(f.locationId) : undefined,
           PageNumber: page,
           PageSize: 6,
+          Language: language,
         });
         
         let finalItems = data.items || [];
@@ -182,6 +183,7 @@ function PropertiesPageContent() {
             LocationId: f.locationId ? Number(f.locationId) : undefined,
             PageNumber: page,
             PageSize: 4, // Fetch slightly fewer since we combine
+            Language: language,
           }),
           getUnitOutsides({
             SearchTerm: f.searchTerm || undefined,
@@ -226,12 +228,12 @@ function PropertiesPageContent() {
       }
       setCurrentPage(page);
     } catch (err) {
-      setError('Failed to load properties. Please try again.');
+      setError(t('propertiesPage.grid.loadError'));
       console.error('[Properties]', err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [language, t]);
 
   useEffect(() => {
     // Read filters from searchParams
@@ -329,7 +331,7 @@ function PropertiesPageContent() {
                   key={unit.mappedId || unit.id}
                   id={unit.mappedId || unit.id}
                   title={unit.resolvedName ?? getLocalized(unit.name)}
-                  type={unit.propertyTypeLabel || PROPERTY_TYPE_LABEL[String(unit.propertyType)] || unit.unitType || 'Unit'}
+                  type={unit.propertyTypeLabel || PROPERTY_TYPE_LABEL[String(unit.propertyType)] || unit.unitType || t('propertyCard.fallback.unit')}
                   location={unit.locationName || '—'}
                   price={`${unit.currencyCode || unit.currency || 'EGP'} ${unit.price?.toLocaleString()}`}
                   beds={unit.noBedRoom}

@@ -27,7 +27,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }} 
             className="text-[48px] md:text-[64px] font-radley text-white leading-tight"
           >
-            About Luxe Estate
+            About The Rook Real Estate Investment
           </motion.h1>
         </div>
       </section>

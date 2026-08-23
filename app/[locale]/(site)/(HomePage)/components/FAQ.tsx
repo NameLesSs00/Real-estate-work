@@ -15,11 +15,11 @@ const FAQ = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getQuestions()
+    getQuestions(language)
       .then((data) => setFaqData(data.slice(0, 5)))
       .catch((err) => console.warn('[FAQ] Failed to fetch questions:', err))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [language]);
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };

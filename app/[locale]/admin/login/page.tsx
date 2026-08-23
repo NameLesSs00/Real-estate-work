@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { login } from '@/lib/api/auth';
 import { saveTokens } from '@/lib/auth/tokens';
+import BrandLogo from '@/components/BrandLogo';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -45,12 +45,10 @@ export default function LoginPage() {
         
         {/* Logo */}
         <div className="flex justify-center mb-10">
-          <Image 
-            src="/assists/header/headerLogo.png" 
-            alt="Luxe Estate" 
-            width={120} 
-            height={120}
-            className="object-contain brightness-0"
+          <BrandLogo
+            variant="charcoal"
+            lockup="full"
+            className="h-auto w-[180px] object-contain"
             priority
           />
         </div>

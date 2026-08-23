@@ -63,7 +63,7 @@ export default function ContactPage() {
         <div className="absolute inset-0 z-0">
           <Image 
             src={`${BASE}/bgImage.png`} 
-            alt="Contact Us" 
+            alt={t('contactPage.title') as string} 
             fill 
             className="object-cover"
             priority
@@ -89,7 +89,7 @@ export default function ContactPage() {
           {/* Left Column: Contact Info */}
           <div className="lg:w-2/5 bg-[#1565C0] text-white p-10 md:p-14 flex flex-col justify-between">
             <div>
-              <h2 className="text-[36px] font-radley mb-10 leading-tight">Get In Touch</h2>
+              <h2 className="text-[36px] font-radley mb-10 leading-tight">{t('projectDetails.getInTouch') as string}</h2>
               
               <div className="flex flex-col gap-10">
                 {infoCards.map((card) => (

@@ -9,26 +9,26 @@ import { useLanguage } from '@/lib/contexts/LanguageContext';
 const steps = [
   {
     icon: Home,
-    title: 'Sell Your Home',
-    desc: 'We do a free evaluation to be sure you want to start selling.',
+    titleKey: 'howItWorks.cards.sell.title',
+    descKey: 'howItWorks.cards.sell.desc',
     link: '/contact',
   },
   {
     icon: Handshake,
-    title: 'Buy A Home',
-    desc: 'We do a free evaluation to be sure you want to start buying.',
+    titleKey: 'howItWorks.cards.buy.title',
+    descKey: 'howItWorks.cards.buy.desc',
     link: '/properties?unitType=Buy',
   },
   {
     icon: FileText,
-    title: 'Rent A Home',
-    desc: 'We do a free evaluation to be sure you want to start renting.',
+    titleKey: 'howItWorks.cards.rent.title',
+    descKey: 'howItWorks.cards.rent.desc',
     link: '/properties?unitType=Rent',
   },
 ];
 
 const HowItWorks = () => {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <section 
@@ -49,9 +49,9 @@ const HowItWorks = () => {
             transition={{ duration: 0.8 }}
             className="text-[36px] md:text-[56px] font-serif text-white leading-tight"
           >
-            Passionate About
+            {t('howItWorks.headlineTop')}
             <br />
-            Being Different
+            {t('howItWorks.headlineBottom')}
           </motion.h2>
           <motion.span 
             initial={{ opacity: 0, x: -20 }}
@@ -61,7 +61,7 @@ const HowItWorks = () => {
             className="text-[#2196F3] text-[40px] md:text-[56px] font-medium ml-32 md:ml-64 -mt-4 md:-mt-8"
             style={{ fontFamily: 'var(--font-dancing-script)' }}
           >
-            experience
+            {t('howItWorks.accent')}
           </motion.span>
         </div>
 
@@ -79,15 +79,15 @@ const HowItWorks = () => {
               <div className="w-16 h-16 rounded-full bg-[#2196F3] flex items-center justify-center text-white mb-6">
                 <step.icon size={28} />
               </div>
-              <h3 className="text-[#0D47A1] font-bold text-[22px] mb-4">{step.title}</h3>
+              <h3 className="text-[#0D47A1] font-bold text-[22px] mb-4">{t(step.titleKey)}</h3>
               <p className="text-gray-500 text-[15px] leading-relaxed mb-6">
-                {step.desc}
+                {t(step.descKey)}
               </p>
               <Link 
                 href={`/${language}${step.link}`}
                 className="text-[#0D47A1] font-semibold text-[14px] hover:text-[#2196F3] transition-colors mt-auto flex items-center gap-2"
               >
-                Read More &rarr;
+                {t('howItWorks.readMore')} &rarr;
               </Link>
             </motion.div>
           ))}

@@ -18,10 +18,11 @@
       "Al Ahyaa",
       "Sheraton",
       "Makadi Bay"
-    ]
+    ],
+    "language": "Sprache"
   },
   "footer": {
-    "about": "Luxe Estate wurde aus der Leidenschaft heraus gegründet, Menschen mit ihrem Traumhaus und idealen Investitionen zu verbinden. Wir verstehen, dass es bei Immobilien nicht nur um Transaktionen geht; es geht um lebensverändernde Entscheidungen.",
+    "about": "The Rook Real Estate Investment wurde aus der Leidenschaft heraus gegründet, Menschen mit ihrem Traumhaus und idealen Investitionen zu verbinden. Wir verstehen, dass es bei Immobilien nicht nur um Transaktionen geht; es geht um lebensverändernde Entscheidungen.",
     "usefulLinks": "Schnellzugriff",
     "stayConnected": "Folgen Sie uns",
     "newsletter": "Abonnieren Sie unseren Newsletter, um über Funktionen und Veröffentlichungen auf dem Laufenden zu bleiben.",
@@ -63,7 +64,25 @@
     "title": "Ein einfacher Weg, Ihre perfekte Immobilie zu finden",
     "step1": "Entdecken Sie kuratierte Immobilien, die Ihren Bedürfnissen und Ihrem Budget entsprechen.",
     "step2": "Vernetzen Sie sich mit unseren Experten für eine persönliche Beratung.",
-    "step3": "Buchen Sie eine Besichtigung und finden Sie mit Leichtigkeit Ihre ideale Immobilie."
+    "step3": "Buchen Sie eine Besichtigung und finden Sie mit Leichtigkeit Ihre ideale Immobilie.",
+    "headlineTop": "Mit Leidenschaft",
+    "headlineBottom": "anders sein",
+    "accent": "Erlebnis",
+    "readMore": "Mehr lesen",
+    "cards": {
+      "sell": {
+        "title": "Ihr Zuhause verkaufen",
+        "desc": "Wir erstellen eine kostenlose Bewertung, damit Sie sicher mit dem Verkauf starten können."
+      },
+      "buy": {
+        "title": "Ein Zuhause kaufen",
+        "desc": "Wir erstellen eine kostenlose Bewertung, damit Sie sicher mit dem Kauf starten können."
+      },
+      "rent": {
+        "title": "Ein Zuhause mieten",
+        "desc": "Wir erstellen eine kostenlose Bewertung, damit Sie sicher mit der Miete starten können."
+      }
+    }
   },
   "categories": {
     "tag": "AUSGEWÄHLTE ANGEBOTE",
@@ -95,7 +114,9 @@
     "subtitle": "Von den Lagunen von El Gouna bis zu den Stränden von Sahl Hasheesh – finden Sie Ihr perfektes Eck am Roten Meer.",
     "exploreArea": "Gebiet erkunden",
     "property": "Immobilie",
-    "properties": "Immobilien"
+    "properties": "Immobilien",
+    "headline": "Entdecken Sie ?gyptens feinste",
+    "accent": "Destinationen"
   },
   "featureProject": {
     "tag": "AUSGEWÄHLTE PROJEKTE",
@@ -112,7 +133,10 @@
       "deliveryDate": "Lieferdatum",
       "status": "Status",
       "spaces": "Flächen"
-    }
+    },
+    "locationTbd": "Standort noch offen",
+    "fallbackDescription": "Entdecken Sie einen Premium-Lifestyle in dieser außergewöhnlichen Entwicklung mit moderner Architektur und hochwertigen Ausstattungen.",
+    "developerLogo": "Entwicklerlogo"
   },
   "articles": {
     "tag": "NEUESTE ARTIKEL",
@@ -173,11 +197,18 @@
   },
   "projects": {
     "title": "Projekte erkunden",
+    "subtitle": "Entdecken Sie kuratierte Wohnprojekte vertrauenswürdiger Entwickler an den vielversprechendsten Standorten Ägyptens.",
     "loading": "Projekte werden geladen...",
     "error": "Fehler beim Laden der Projekte.",
     "tryAgain": "Erneut versuchen",
     "noResults": "Keine Projekte gefunden.",
     "noLocation": "Standort nicht aufgeführt",
+    "location": "Standort",
+    "units": "Einheiten",
+    "countLabel": "Projekte verfügbar",
+    "developedBy": "Entwickelt von",
+    "noDeveloper": "Entwickler nicht aufgeführt",
+    "unitsAvailable": "Einheiten verfügbar",
     "viewDetails": "Details anzeigen",
     "showMore": "Mehr anzeigen",
     "loadingMore": "Wird geladen...",
@@ -187,6 +218,7 @@
     "backToProjects": "Zurück zu Projekten",
     "loading": "Projekt wird geladen...",
     "notFound": "Projekt nicht gefunden.",
+    "developerSubtitle": "Projektentwickler",
     "getInTouch": "Kontaktieren Sie uns",
     "fullName": "Vollständiger Name",
     "phoneNumber": "Telefonnummer",
@@ -217,11 +249,13 @@
     "cash": "Barzahlung",
     "months": "Monate",
     "downPayment": "Anzahlung",
-    "commission": "Provision"
+    "commission": "Provision",
+    "title": "Immobiliendetails",
+    "price": "Preis"
   },
   "contactPage": {
-    "title": "Kontaktieren Sie Luxe Estate",
-    "subtitle": "Willkommen auf der Kontaktseite von Luxe Estate. Wir sind hier, um Ihnen bei Anfragen, Wünschen oder Feedback behilflich zu sein.",
+    "title": "Kontaktieren Sie The Rook Real Estate Investment",
+    "subtitle": "Willkommen auf der Kontaktseite von The Rook Real Estate Investment. Wir sind hier, um Ihnen bei Anfragen, Wünschen oder Feedback behilflich zu sein.",
     "info": {
       "email": "E-Mail",
       "phone": "Telefon",
@@ -230,7 +264,7 @@
     },
     "form": {
       "title": "Lassen Sie uns vernetzen",
-      "subtitle": "Nutzen Sie das untenstehende Formular, um mit Luxe Estate in Kontakt zu treten.",
+      "subtitle": "Nutzen Sie das untenstehende Formular, um mit The Rook Real Estate Investment in Kontakt zu treten.",
       "firstName": "Vorname",
       "lastName": "Nachname",
       "email": "E-Mail",
@@ -283,7 +317,9 @@
       "showing": "Anzeigen von",
       "results": "Ergebnissen",
       "noResults": "Keine Immobilien gefunden",
-      "adjustFilters": "Versuchen Sie, Ihre Suchfilter anzupassen."
+      "adjustFilters": "Versuchen Sie, Ihre Suchfilter anzupassen.",
+      "loadError": "Immobilien konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
+      "findProperty": "Immobilie finden"
     },
     "pagination": {
       "prev": "Zurück",
@@ -314,7 +350,9 @@
       "max": "Max",
       "resetAll": "Alles zurücksetzen",
       "apply": "Filter anwenden",
-      "currency": "Währung"
+      "currency": "Währung",
+      "allCategories": "Alle Kategorien",
+      "chalet": "Chalet"
     }
   },
   "propertyCard": {
@@ -323,7 +361,8 @@
       "rent": "Mieten",
       "sold": "Verkauft",
       "primary": "Primär",
-      "resale": "Weiterverkauf"
+      "resale": "Weiterverkauf",
+      "featured": "Empfohlen"
     },
     "details": {
       "bedroom": "Schlafzimmer",
@@ -331,14 +370,53 @@
       "viewDetails": "Details anzeigen",
       "area": "Fläche",
       "instalment": "Ratenzahlung",
-      "cash": "Barzahlung"
+      "cash": "Barzahlung",
+      "saveProperty": "Immobilie speichern",
+      "size": "Größe"
+    },
+    "fallback": {
+      "untitled": "Unbenannte Einheit",
+      "unit": "Einheit",
+      "unknownLocation": "Unbekannter Standort"
     }
   },
   "faqPage": {
     "tag": "UNTERSTÜTZUNG",
     "title": "Häufig gestellte Fragen",
-    "subtitle": "Alles, was Sie über das Kaufen, Verkaufen und Mieten bei Luxe Estate wissen müssen.",
+    "subtitle": "Alles, was Sie über das Kaufen, Verkaufen und Mieten bei The Rook Real Estate Investment wissen müssen.",
     "loading": "Fragen werden geladen...",
     "noQuestions": "Zur Zeit sind keine FAQs verfügbar. Schauen Sie bald wieder vorbei!"
+  },
+  "bestListings": {
+    "title": "Beste verfügbare Angebote",
+    "accent": "feinste",
+    "noListings": "Keine Angebote gefunden.",
+    "loadMore": "Mehr Angebote laden"
+  },
+  "listPropertyPage": {
+    "title": "Immobilie hinzufügen",
+    "basicInfo": "Grundinformationen",
+    "propertyTitle": "Immobilientitel",
+    "price": "Preis",
+    "unitSize": "Einheitsgröße",
+    "saleOrRent": "Verkauf oder Miete",
+    "rooms": "Zimmer",
+    "propertyDescription": "Immobilienbeschreibung",
+    "address": "Adresse",
+    "city": "Stadt",
+    "propertyMedia": "Immobilienmedien",
+    "propertyImages": "Immobilienbilder",
+    "uploadImages": "Bilder hochladen",
+    "browseFiles": "Dateien durchsuchen",
+    "clientDetails": "Kundendaten"
+  },
+  "finestServices": {
+    "title": "Die besten Services",
+    "subtitle": "Erleben Sie einen hochwertigen Immobilienservice mit erstklassigen Lagen, vertrauensvoller Beratung und sorgf?ltig ausgew?hlten Chancen in ganz ?gypten.",
+    "stats": {
+      "currentListingVolume": "AKTUELLES ANGEBOTSVOLUMEN",
+      "totalSold": "GESAMT VERKAUFT 2020 - 2024",
+      "lifetimeSales": "VERKAUFSVOLUMEN GESAMT"
+    }
   }
 }

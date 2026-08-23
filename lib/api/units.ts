@@ -15,6 +15,7 @@ export interface UnitFilters {
   UnitType?: string;   // "Buy" or "Rent" as per user request
   PropertyType?: string; // For Apartment/Villa/etc
   Status?: string;      // For primary/resale
+  Language?: string;
 }
 
 export interface UnitListItem {
@@ -79,7 +80,7 @@ export async function getUnitsFiltered(filters: UnitFilters = {}): Promise<Pagin
     params.set('PageSize', String(filters.PageSize ?? 12));
 
     const res = await fetch(`${API_BASE_URL}/api/Units?${params}`, {
-      headers: { ...getHeaders() },
+      headers: { ...getHeaders(filters.Language) },
     });
     
     if (!res.ok) {

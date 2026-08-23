@@ -13,6 +13,9 @@ import {
   resolveImageUrl,
   Developer,
 } from '@/lib/api/developers';
+import { BRAND_LOGOS } from '@/lib/brand';
+
+const DEFAULT_DEVELOPER_LOGO = BRAND_LOGOS.markColor;
 
 interface DeveloperDetailsModalProps {
   isOpen: boolean;
@@ -172,7 +175,7 @@ export default function DeveloperDetailsModal({
                     title={!developer.logoImage ? "Default Logo" : undefined}
                   >
                     <Image
-                      src={developer.logoImage ? (resolveImageUrl(developer.logoImage) ?? '/admin/defaultLogo.png') : '/admin/defaultLogo.png'}
+                      src={developer.logoImage ? (resolveImageUrl(developer.logoImage) ?? DEFAULT_DEVELOPER_LOGO) : DEFAULT_DEVELOPER_LOGO}
                       alt={developer.name}
                       fill
                       className="object-contain"

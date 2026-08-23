@@ -27,7 +27,7 @@ const Articles = () => {
   useEffect(() => {
     const fetchLatestBlogs = async () => {
       try {
-        const data = await getBlogs(1, 3);
+        const data = await getBlogs(1, 3, language);
         setBlogs(data.items || []);
       } catch (error) {
         console.warn('Failed to fetch latest blogs:', error);
@@ -36,7 +36,7 @@ const Articles = () => {
       }
     };
     fetchLatestBlogs();
-  }, []);
+  }, [language]);
 
   if (isLoading) {
     return (

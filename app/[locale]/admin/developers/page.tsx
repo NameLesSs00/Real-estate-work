@@ -6,6 +6,9 @@ import AddDeveloperModal from '@/components/admin/AddDeveloperModal';
 import DeleteDeveloperModal from '@/components/admin/DeleteDeveloperModal';
 import DeveloperDetailsModal from '@/components/admin/DeveloperDetailsModal';
 import { getDevelopers, resolveImageUrl, Developer } from '@/lib/api/developers';
+import { BRAND_LOGOS } from '@/lib/brand';
+
+const DEFAULT_DEVELOPER_LOGO = BRAND_LOGOS.markColor;
 
 export default function DevelopersPage() {
   const [developers, setDevelopers] = useState<Developer[]>([]);
@@ -171,7 +174,7 @@ export default function DevelopersPage() {
                           title={!logoUrl ? "Default Logo" : undefined}
                         >
                           <Image
-                            src={logoUrl || '/admin/defaultLogo.png'}
+                            src={logoUrl || DEFAULT_DEVELOPER_LOGO}
                             alt={dev.name}
                             fill
                             className="object-contain"

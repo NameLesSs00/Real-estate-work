@@ -3,38 +3,34 @@
 import { useState, useEffect, useCallback, use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, ChevronRight, Loader2, Check } from 'lucide-react';
+import { ArrowLeft, Building2, Check, ChevronRight, Loader2, MapPin } from 'lucide-react';
+import { motion, type Variants } from 'framer-motion';
 import { getProjectById, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { getFacilities, Facility } from '@/lib/api/facilities';
-import { motion, type Variants } from 'framer-motion';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import ImageGallery from '@/components/ImageGallery';
+import { BRAND_LOGOS } from '@/lib/brand';
 
 const DEFAULT_IMAGE = '/assists/defaultImage.png';
-
-
+const DEFAULT_DEVELOPER_LOGO = BRAND_LOGOS.markColor;
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      duration: 0.6
-    }
-  }
+    transition: { staggerChildren: 0.08, duration: 0.5 },
+  },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  hidden: { opacity: 0, y: 18 },
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: 'easeOut' as const }
-  }
+    transition: { duration: 0.45, ease: 'easeOut' as const },
+  },
 };
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ProjectDetailsPage({
   params,
 }: {
@@ -42,193 +38,240 @@ export default function ProjectDetailsPage({
 }) {
   const { t, getLocalized, language } = useLanguage();
   const { slug } = use(params);
-  
-  // Extract ID from slug (e.g., "123-my-project" -> 123)
-  const idPart = slug.split('-')[0];
-  const projectId = Number(idPart);
+  const projectId = Number(slug.split('-')[0]);
 
-  const [project,     setProject]     = useState<Project | null>(null);
-  const [facilities,  setFacilities]  = useState<Facility[]>([]);
-  const [loading,     setLoading]     = useState(true);
-  const [error,       setError]       = useState<string | null>(null);
+  const [project, setProject] = useState<Project | null>(null);
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    if (isNaN(projectId)) {
-      setError(t('projectDetails.notFound') as string);
+    if (Number.isNaN(projectId)) {
+      setError(t('projectDetails.notFound'));
       setLoading(false);
       return;
     }
+
     try {
       setLoading(true);
-      const [data, facs] = await Promise.all([
-        getProjectById(projectId),
-        getFacilities()
+      setError(null);
+      const [projectData, facilityData] = await Promise.all([
+        getProjectById(projectId, language),
+        getFacilities(),
       ]);
-      setProject(data);
-      setFacilities(facs);
+      setProject(projectData);
+      setFacilities(facilityData);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : t('projects.error') as string);
+      setError(err instanceof Error ? err.message : t('projects.error'));
     } finally {
       setLoading(false);
     }
-  }, [projectId, t]);
+  }, [language, projectId, t]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
-  // Build resolved image URLs
-  const images: string[] = (project?.imageUrls ?? [])
+  const localizedName = getLocalized(project?.name);
+  const localizedDesc = getLocalized(project?.description);
+  const images = (project?.imageUrls ?? [])
     .map((url) => resolveProjectImageUrl(url) ?? DEFAULT_IMAGE)
     .filter(Boolean);
 
   if (images.length === 0) images.push(DEFAULT_IMAGE);
 
-  // ── Loading ──
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center pt-36">
-        <div className="flex flex-col items-center gap-4 text-gray-400">
-          <Loader2 size={40} className="animate-spin" />
-          <p className="text-[16px] font-poppins">{t('projectDetails.loading') as string}</p>
+      <div className="flex min-h-screen items-center justify-center bg-[#E3F2FD] px-5 pt-32 font-poppins">
+        <div className="flex flex-col items-center gap-4 rounded-[24px] border border-[#BBDEFB] bg-white px-12 py-10 text-[#36516F] shadow-sm">
+          <Loader2 size={38} className="animate-spin text-[#1565C0]" />
+          <p className="text-[15px] font-semibold">{t('projectDetails.loading')}</p>
         </div>
       </div>
     );
   }
 
-  // ── Error ──
-  if (error || !project) {
+  if (error || !project || !localizedName) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center pt-36 gap-4">
-        <p className="text-red-500 text-[16px] font-poppins">{error ?? t('projectDetails.notFound') as string}</p>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-[#E3F2FD] px-5 pt-32 text-center font-poppins">
+        <p className="text-[16px] font-semibold text-[#B42318]">{error ?? t('projectDetails.notFound')}</p>
         <Link
           href={`/${language}/projects`}
-          className="bg-[#000000] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#0D47A1] transition-all"
+          className="inline-flex items-center gap-2 rounded-full bg-[#1565C0] px-7 py-3 text-[14px] font-bold text-white transition-all hover:bg-[#0D47A1]"
         >
-          {t('projectDetails.backToProjects') as string}
+          <ArrowLeft size={17} />
+          {t('projectDetails.backToProjects')}
         </Link>
       </div>
     );
   }
 
-  const localizedName = getLocalized(project.name);
-  const localizedDesc = getLocalized(project.description);
+  const developerLogo = resolveProjectImageUrl(project.logoImage) || DEFAULT_DEVELOPER_LOGO;
+  const unitCount = project.units?.length ?? 0;
+  const facilityIds = project.facilityIds?.length
+    ? project.facilityIds
+    : (project.facilities ?? [])
+      .map((facId) => Number(facId))
+      .filter((facId) => Number.isFinite(facId));
 
   return (
-    <>
-      <div className="min-h-screen bg-white pt-32 md:pt-36 pb-24 font-poppins">
-        <motion.div 
+    <div className="min-h-screen bg-[#F8FBFF] pt-32 font-poppins text-[#0B1F3A]">
+      <section className="bg-[#E3F2FD] px-5 pb-10 pt-8 sm:px-6 md:px-10 md:pb-14 md:pt-12">
+        <motion.div
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-10 flex flex-col gap-6 md:gap-10"
+          className="mx-auto flex max-w-[1280px] flex-col gap-8"
         >
-
-          {/* Breadcrumb */}
-          <motion.nav variants={itemVariants} className="flex items-center gap-1.5 text-[14px] text-[#888]">
-            <Link href={`/${language}/projects`} className="hover:text-[#000000] transition-colors">{t('projects.title') as string}</Link>
-            <ChevronRight size={13} className="text-[#bbb]" />
-            <span className="text-[#000000] font-semibold">{localizedName}</span>
+          <motion.nav variants={itemVariants} className="flex flex-wrap items-center gap-2 text-[13px] font-semibold text-[#5B6F86]">
+            <Link href={`/${language}/projects`} className="transition-colors hover:text-[#1565C0]">
+              {t('projects.title')}
+            </Link>
+            <ChevronRight size={14} className="text-[#90CAF9]" />
+            <span className="text-[#0D47A1]">{localizedName}</span>
           </motion.nav>
 
-          {/* ── Project Header (Meta) ── */}
-          <motion.div variants={itemVariants} className="flex flex-col gap-6">
-            <div className="flex flex-col gap-3">
-              <h1 className="text-[28px] md:text-[36px] font-bold text-[#000000] leading-tight">
+          <motion.div variants={itemVariants} className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-end">
+            <div>
+              <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#90CAF9] bg-white/75 px-4 py-2 text-[12px] font-bold uppercase tracking-[0.18em] text-[#1565C0]">
+                <Building2 size={15} />
+                {t('header.projects')}
+              </span>
+              <h1 className="font-radley text-[40px] leading-[1.05] text-[#0D47A1] sm:text-[52px] md:text-[64px]">
                 {localizedName}
               </h1>
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                <span className="inline-flex max-w-full items-center gap-2 rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-[#36516F] shadow-sm">
+                  <MapPin size={17} className="shrink-0 text-[#2196F3]" />
+                  <span className="truncate">{project.locationName || t('projects.noLocation')}</span>
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-[#36516F] shadow-sm">
+                  <Check size={17} className="text-[#2196F3]" />
+                  {unitCount} {t('projects.unitsAvailable')}
+                </span>
+              </div>
+            </div>
 
-              <div className="flex flex-wrap items-center gap-6 mt-2">
-                <div className="flex items-center gap-2 text-[15px] text-[#666]">
-                  <MapPin size={18} className="text-[#42A5F5] flex-shrink-0" />
-                  <span>{project.locationName || t('projects.noLocation') as string}</span>
+            <div className="rounded-[24px] border border-[#BBDEFB] bg-white p-5 shadow-[0_18px_55px_rgba(13,71,161,0.08)]">
+              <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-[#42A5F5]">
+                {t('projects.developedBy')}
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="relative h-16 w-20 shrink-0 rounded-[18px] border border-[#E1F0FF] bg-[#F8FBFF]">
+                  <Image
+                    src={developerLogo}
+                    alt={project.developerName || t('featureProject.developerLogo')}
+                    fill
+                    sizes="80px"
+                    draggable={false}
+                    className="object-contain p-3"
+                  />
                 </div>
-
-                {project.developerName && (
-                  <div className="flex items-center gap-8 mt-2 group">
-                    {project.logoImage && (
-                      <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 transition-all duration-700 ease-in-out">
-                        <Image 
-                          src={resolveProjectImageUrl(project.logoImage) || DEFAULT_IMAGE} 
-                          alt={project.developerName} 
-                          fill 
-                          className="object-contain"
-                        />
-                      </div>
-                    )}
-                    <div className="h-10 w-px bg-[#E5E2DE]" />
-                    <div className="flex flex-col">
-                      <span className="text-[10px] md:text-[11px] text-[#42A5F5] font-bold uppercase tracking-[0.2em] mb-0.5">Developed By</span>
-                      <span className="text-[18px] md:text-[22px] font-bold text-[#000000] tracking-tight">{project.developerName}</span>
-                    </div>
-                  </div>
-                )}
+                <div className="min-w-0">
+                  <h2 className="truncate text-[20px] font-bold text-[#071F49]">
+                    {project.developerName || t('projects.noDeveloper')}
+                  </h2>
+                  <p className="mt-1 text-[13px] font-medium text-[#6F849D]">
+                    {t('projectDetails.developerSubtitle')}
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>
+        </motion.div>
+      </section>
 
-          {/* ── Image Gallery ── */}
-          <motion.div variants={itemVariants} className="w-full">
+      <section className="px-5 py-10 sm:px-6 md:px-10 md:py-14">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+          className="mx-auto flex max-w-[1280px] flex-col gap-8"
+        >
+          <motion.div variants={itemVariants} className="overflow-hidden rounded-[24px] border border-[#BBDEFB] bg-white p-3 shadow-[0_18px_55px_rgba(13,71,161,0.08)]">
             <ImageGallery images={images} projectName={localizedName} />
           </motion.div>
 
-
-          {/* ── Facilities Grid (Replaces Stats) ── */}
-          {((project.facilityIds && project.facilityIds.length > 0) || (project.facilities && project.facilities.length > 0)) && (
-            <motion.div variants={itemVariants} className="bg-white border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm">
-              <h2 className="text-[20px] font-bold text-[#000000] mb-6 flex items-center gap-3">
-                {t('projectDetails.facilities') || 'Facilities'}
-                <span className="h-px flex-1 bg-gray-100"></span>
+          <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+            <motion.article variants={itemVariants} className="rounded-[24px] border border-[#BBDEFB] bg-white p-6 shadow-sm sm:p-8">
+              <h2 className="font-radley text-[32px] leading-tight text-[#0D47A1]">
+                {t('projectDetails.description')}
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {project.facilityIds && project.facilityIds.length > 0 ? (
-                  project.facilityIds.map((facId) => {
-                    const facName = facilities.find(f => f.id === facId)?.name;
-                    const localizedFacName = typeof facName === 'string' ? facName : (facName ? getLocalized(facName) : `Facility ${facId}`);
-                    return (
-                      <div key={facId} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                        <div className="w-8 h-8 rounded-full bg-[#000000]/5 flex items-center justify-center text-[#000000] group-hover:bg-[#000000] group-hover:text-white transition-all">
-                          <Check size={16} strokeWidth={3} />
-                        </div>
-                        <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#000000] transition-colors">{localizedFacName}</span>
-                      </div>
-                    );
-                  })
-                ) : project.facilities && project.facilities.length > 0 ? (
-                  project.facilities.map((facId) => {
-                    const id = Number(facId);
-                    const facName = facilities.find(f => f.id === id)?.name;
-                    const localizedFacName = typeof facName === 'string' ? facName : (facName ? getLocalized(facName) : `Facility ${facId}`);
-                    return (
-                      <div key={facId} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                        <div className="w-8 h-8 rounded-full bg-[#000000]/5 flex items-center justify-center text-[#000000] group-hover:bg-[#000000] group-hover:text-white transition-all">
-                          <Check size={16} strokeWidth={3} />
-                        </div>
-                        <span className="text-[14px] md:text-[15px] font-medium text-[#666] group-hover:text-[#000000] transition-colors">{localizedFacName}</span>
-                      </div>
-                    );
-                  })
-                ) : null}
-              </div>
-            </motion.div>
-          )}
-
-          {/* ── Description ── */}
-          <motion.div variants={itemVariants} className="bg-[#E3F2FD] border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm">
-            <h2 className="text-[20px] font-bold text-[#000000] mb-4">{t('projectDetails.description') as string}</h2>
-            <hr className="border-[#BBDEFB] mb-6" />
-            <div className="flex flex-col gap-4">
-              {project.description
-                ? localizedDesc.split('\n\n').map((para, i) => (
-                    <p key={i} className="text-[14px] md:text-[15px] text-[#666] leading-relaxed">
+              <div className="mt-5 h-px w-full bg-[#D5EAFF]" />
+              <div className="mt-6 flex flex-col gap-4">
+                {localizedDesc ? (
+                  localizedDesc.split('\n\n').map((para, index) => (
+                    <p key={index} className="text-[15px] leading-8 text-[#4F6580]">
                       {para}
                     </p>
                   ))
-                : <p className="text-[14px] text-[#AAA] italic">{t('projectDetails.noDescription') as string}</p>
-              }
-            </div>
-          </motion.div>
+                ) : (
+                  <p className="text-[15px] italic leading-8 text-[#6F849D]">
+                    {t('projectDetails.noDescription')}
+                  </p>
+                )}
+              </div>
+            </motion.article>
 
+            <motion.aside variants={itemVariants} className="flex flex-col gap-6">
+              <div className="rounded-[24px] border border-[#BBDEFB] bg-[#E3F2FD] p-6 shadow-sm">
+                <h2 className="font-radley text-[28px] leading-tight text-[#0D47A1]">
+                  {t('projectDetails.overview')}
+                </h2>
+                <div className="mt-5 flex flex-col gap-3">
+                  <div className="flex items-start gap-3 rounded-[18px] bg-white p-4">
+                    <MapPin size={18} className="mt-0.5 shrink-0 text-[#2196F3]" />
+                    <div>
+                      <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#42A5F5]">
+                        {t('projects.location')}
+                      </p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#36516F]">
+                        {project.locationName || t('projects.noLocation')}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 rounded-[18px] bg-white p-4">
+                    <Building2 size={18} className="mt-0.5 shrink-0 text-[#2196F3]" />
+                    <div>
+                      <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#42A5F5]">
+                        {t('projects.units')}
+                      </p>
+                      <p className="mt-1 text-[14px] font-semibold text-[#36516F]">
+                        {unitCount} {t('projects.unitsAvailable')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {facilityIds.length > 0 && (
+                <div className="rounded-[24px] border border-[#BBDEFB] bg-white p-6 shadow-sm">
+                  <h2 className="font-radley text-[28px] leading-tight text-[#0D47A1]">
+                    {t('projectDetails.facilities')}
+                  </h2>
+                  <div className="mt-5 flex flex-col gap-3">
+                    {facilityIds.map((facId) => {
+                      const facName = facilities.find((facility) => facility.id === facId)?.name;
+                      const localizedFacName = typeof facName === 'string'
+                        ? facName
+                        : getLocalized(facName) || `${t('projectDetails.facilities')} ${facId}`;
+
+                      return (
+                        <div key={facId} className="flex items-center gap-3 rounded-[18px] bg-[#F8FBFF] p-4 text-[#36516F]">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E3F2FD] text-[#1565C0]">
+                            <Check size={16} strokeWidth={3} />
+                          </span>
+                          <span className="text-[14px] font-semibold">{localizedFacName}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </motion.aside>
+          </div>
         </motion.div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 }

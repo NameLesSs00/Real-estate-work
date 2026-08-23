@@ -2,16 +2,16 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp, X, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from '@/lib/contexts/LanguageContext';
+import BrandLogo from '@/components/BrandLogo';
 
 const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage, t, tRaw } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
@@ -20,7 +20,10 @@ const Header = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
 
-  const locations = (t('header.locations') as unknown as string[]) || [];
+  const translatedLocations = tRaw('header.locations');
+  const locations = Array.isArray(translatedLocations)
+    ? translatedLocations.filter((loc): loc is string => typeof loc === 'string')
+    : [];
 
   const isHomePage = pathname === `/${language}` || pathname === '/';
   const headerBgClass = isHomePage 
@@ -145,13 +148,11 @@ const Header = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href={`/${language}`}>
-              <Image 
-                src="/assists/header/headerLogo.png" 
-                alt="Luxe Estate" 
-                width={100} 
-                height={100} 
+              <BrandLogo
+                variant={isHomePage ? 'light' : 'blue'}
+                lockup="mark"
                 priority
-                className={`h-[60px] w-[60px] md:h-[80px] md:w-[80px] transition-all duration-300 ${textColorClass === 'text-white' ? 'brightness-0 invert' : ''}`}
+                className="h-[60px] w-[65px] md:h-[78px] md:w-[84px] object-contain transition-all duration-300"
               />
             </Link>
           </div>
@@ -164,6 +165,12 @@ const Header = () => {
                 className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-[#42A5F5] transition-colors`}
               >
                 {t('header.home')}
+              </Link>
+              <Link
+                href={`/${language}/projects`}
+                className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-[#42A5F5] transition-colors`}
+              >
+                {t('header.projects')}
               </Link>
               
               <NavDropdown 
@@ -243,12 +250,10 @@ const Header = () => {
           >
             {/* Header of Menu */}
             <div className="flex items-center justify-between py-8 px-8">
-              <Image 
-                src="/assists/header/headerLogo.png" 
-                alt="Luxe Estate" 
-                width={100} 
-                height={100} 
-                className="h-[80px] w-[80px]"
+              <BrandLogo
+                variant="blue"
+                lockup="mark"
+                className="h-[80px] w-[86px] object-contain"
               />
               <button 
                 onClick={() => setIsMenuOpen(false)} 
@@ -261,6 +266,7 @@ const Header = () => {
             {/* Menu Items */}
             <div className="flex-1 px-8 py-4 flex flex-col gap-6 pb-12">
               <Link href={`/${language}`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#0D47A1] border-b border-[#BBDEFB] pb-2">{t('header.home')}</Link>
+              <Link href={`/${language}/projects`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-[#0D47A1] border-b border-[#BBDEFB] pb-2">{t('header.projects')}</Link>
               
               {/* Buy Mobile */}
               <div>
@@ -292,7 +298,7 @@ const Header = () => {
                       ].map(item => (
                         <Link 
                           key={item.label} 
-                          href={item.href}
+                          href={`/${language}${item.href}`}
                           onClick={() => setIsMenuOpen(false)}
                           className="block px-6 py-3 text-[#0D47A1] font-medium border-b border-[#BBDEFB] last:border-0"
                         >
@@ -331,7 +337,7 @@ const Header = () => {
 
               {/* Language Switcher */}
               <div className="mt-6 pt-6 border-t border-gray-100">
-                <p className="text-[12px] font-semibold text-[#42A5F5] uppercase tracking-[0.2em] mb-3">Language</p>
+                <p className="text-[12px] font-semibold text-[#42A5F5] uppercase tracking-[0.2em] mb-3">{t('header.language')}</p>
                 <div className="flex gap-3">
                   {(['en', 'de', 'pl'] as const).map((lang) => (
                     <button

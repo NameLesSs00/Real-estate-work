@@ -18,10 +18,11 @@
       "Al Ahyaa",
       "Sheraton",
       "Makadi Bay"
-    ]
+    ],
+    "language": "Język"
   },
   "footer": {
-    "about": "Luxe Estate powstało z pasji do łączenia ludzi z wymarzonymi domami i idealnymi inwestycjami. Rozumiemy, że nieruchomości to nie tylko transakcje; to decyzje zmieniające życie.",
+    "about": "The Rook Real Estate Investment powstało z pasji do łączenia ludzi z wymarzonymi domami i idealnymi inwestycjami. Rozumiemy, że nieruchomości to nie tylko transakcje; to decyzje zmieniające życie.",
     "usefulLinks": "Szybka akcja",
     "stayConnected": "Obserwuj nas",
     "newsletter": "Zapisz się do naszego newslettera, aby być na bieżąco.",
@@ -63,7 +64,25 @@
     "title": "Prosty sposób na znalezienie idealnej nieruchomości",
     "step1": "Przeglądaj wyselekcjonowane oferty dopasowane do Twoich potrzeb i budżetu.",
     "step2": "Skontaktuj się z naszymi ekspertami w celu uzyskania spersonalizowanych porad.",
-    "step3": "Zarezerwuj wizytę i z łatwością znajdź swoją idealną nieruchomość."
+    "step3": "Zarezerwuj wizytę i z łatwością znajdź swoją idealną nieruchomość.",
+    "headlineTop": "Z pasją",
+    "headlineBottom": "działamy inaczej",
+    "accent": "doświadczenie",
+    "readMore": "Czytaj więcej",
+    "cards": {
+      "sell": {
+        "title": "Sprzedaj swój dom",
+        "desc": "Przygotujemy bezpłatną wycenę, aby pomóc Ci pewnie rozpocząć sprzedaż."
+      },
+      "buy": {
+        "title": "Kup dom",
+        "desc": "Przygotujemy bezpłatną ocenę, aby pomóc Ci pewnie rozpocząć zakup."
+      },
+      "rent": {
+        "title": "Wynajmij dom",
+        "desc": "Przygotujemy bezpłatną ocenę, aby pomóc Ci pewnie rozpocząć wynajem."
+      }
+    }
   },
   "categories": {
     "tag": "WYRÓŻNIONE OFERTY",
@@ -95,7 +114,9 @@
     "subtitle": "Od lagun El Gouna po plaże Sahl Hasheesh – znajdź swój idealny zakątek nad Morzem Czerwonym.",
     "exploreArea": "Eksploruj obszar",
     "property": "Nieruchomość",
-    "properties": "Nieruchomości"
+    "properties": "Nieruchomości",
+    "headline": "Odkryj najlepsze miejsca Egiptu",
+    "accent": "Destynacje"
   },
   "featureProject": {
     "tag": "WYRÓŻNIONE PROJEKTY",
@@ -112,7 +133,10 @@
       "deliveryDate": "Data oddania",
       "status": "Status",
       "spaces": "Powierzchnie"
-    }
+    },
+    "locationTbd": "Lokalizacja do ustalenia",
+    "fallbackDescription": "Odkryj styl życia premium w tej wyjątkowej inwestycji, zaprojektowanej z nowoczesną architekturą i wysokiej jakości wykończeniami.",
+    "developerLogo": "Logo dewelopera"
   },
   "articles": {
     "tag": "NAJNOWSZE ARTYKUŁY",
@@ -173,11 +197,18 @@
   },
   "projects": {
     "title": "Eksploruj projekty",
+    "subtitle": "Przeglądaj wybrane projekty mieszkaniowe od zaufanych deweloperów w najbardziej obiecujących lokalizacjach Egiptu.",
     "loading": "Ładowanie projektów...",
     "error": "Nie udało się załadować projektów.",
     "tryAgain": "Spróbuj ponownie",
     "noResults": "Nie znaleziono żadnych projektów.",
     "noLocation": "Lokalizacja nie została podana",
+    "location": "Lokalizacja",
+    "units": "Lokale",
+    "countLabel": "dostępnych projektów",
+    "developedBy": "Deweloper",
+    "noDeveloper": "Deweloper nie został podany",
+    "unitsAvailable": "dostępnych lokali",
     "viewDetails": "Pokaż szczegóły",
     "showMore": "Pokaż więcej",
     "loadingMore": "Ładowanie...",
@@ -187,6 +218,7 @@
     "backToProjects": "Powrót do projektów",
     "loading": "Ładowanie projektu...",
     "notFound": "Nie znaleziono projektu.",
+    "developerSubtitle": "Deweloper projektu",
     "getInTouch": "Skontaktuj się z nami",
     "fullName": "Imię i nazwisko",
     "phoneNumber": "Numer telefonu",
@@ -217,11 +249,13 @@
     "cash": "Gotówka",
     "months": "Miesiące",
     "downPayment": "Zaliczka",
-    "commission": "Prowizja"
+    "commission": "Prowizja",
+    "title": "Szczegóły nieruchomości",
+    "price": "Cena"
   },
   "contactPage": {
-    "title": "Skontaktuj się z Luxe Estate",
-    "subtitle": "Witamy na stronie kontaktowej Luxe Estate. Jesteśmy tutaj, aby pomóc Ci w przypadku jakichkolwiek pytań, próśb lub opinii.",
+    "title": "Skontaktuj się z The Rook Real Estate Investment",
+    "subtitle": "Witamy na stronie kontaktowej The Rook Real Estate Investment. Jesteśmy tutaj, aby pomóc Ci w przypadku jakichkolwiek pytań, próśb lub opinii.",
     "info": {
       "email": "E-mail",
       "phone": "Telefon",
@@ -230,7 +264,7 @@
     },
     "form": {
       "title": "Połączmy się",
-      "subtitle": "Użyj poniższego formularza, aby skontaktować się z Luxe Estate.",
+      "subtitle": "Użyj poniższego formularza, aby skontaktować się z The Rook Real Estate Investment.",
       "firstName": "Imię",
       "lastName": "Nazwisko",
       "email": "E-mail",
@@ -283,7 +317,9 @@
       "showing": "Pokazuje",
       "results": "wyników",
       "noResults": "Nie znaleziono nieruchomości",
-      "adjustFilters": "Spróbuj dostosować filtry wyszukiwania."
+      "adjustFilters": "Spróbuj dostosować filtry wyszukiwania.",
+      "loadError": "Nie udało się załadować nieruchomości. Spróbuj ponownie.",
+      "findProperty": "Znajdź nieruchomość"
     },
     "pagination": {
       "prev": "Poprzednia",
@@ -314,7 +350,9 @@
       "max": "Maks",
       "resetAll": "Resetuj wszystko",
       "apply": "Zastosuj filtry",
-      "currency": "Waluta"
+      "currency": "Waluta",
+      "allCategories": "Wszystkie kategorie",
+      "chalet": "Chalet"
     }
   },
   "propertyCard": {
@@ -323,7 +361,8 @@
       "rent": "Wynajem",
       "sold": "Sprzedane",
       "primary": "Pierwotny",
-      "resale": "Wtórny"
+      "resale": "Wtórny",
+      "featured": "Wyróżnione"
     },
     "details": {
       "bedroom": "Sypialnia",
@@ -331,14 +370,53 @@
       "viewDetails": "Pokaż szczegóły",
       "area": "Powierzchnia",
       "instalment": "Raty",
-      "cash": "Gotówka"
+      "cash": "Gotówka",
+      "saveProperty": "Zapisz nieruchomość",
+      "size": "Rozmiar"
+    },
+    "fallback": {
+      "untitled": "Jednostka bez tytułu",
+      "unit": "Jednostka",
+      "unknownLocation": "Nieznana lokalizacja"
     }
   },
   "faqPage": {
     "tag": "WSPARCIE",
     "title": "Często zadawane pytania",
-    "subtitle": "Wszystko, co musisz wiedzieć o kupnie, sprzedaży i wynajmie z Luxe Estate.",
+    "subtitle": "Wszystko, co musisz wiedzieć o kupnie, sprzedaży i wynajmie z The Rook Real Estate Investment.",
     "loading": "Ładowanie pytań...",
     "noQuestions": "Obecnie brak dostępnych pytań FAQ. Zapraszamy wkrótce!"
+  },
+  "bestListings": {
+    "title": "Najlepsze dostępne oferty",
+    "accent": "najlepsze",
+    "noListings": "Nie znaleziono ofert.",
+    "loadMore": "Załaduj więcej ofert"
+  },
+  "listPropertyPage": {
+    "title": "Dodaj nieruchomość",
+    "basicInfo": "Podstawowe informacje",
+    "propertyTitle": "Tytuł nieruchomości",
+    "price": "Cena",
+    "unitSize": "Rozmiar jednostki",
+    "saleOrRent": "Sprzedaż lub wynajem",
+    "rooms": "Pokoje",
+    "propertyDescription": "Opis nieruchomości",
+    "address": "Adres",
+    "city": "Miasto",
+    "propertyMedia": "Media nieruchomości",
+    "propertyImages": "Zdjęcia nieruchomości",
+    "uploadImages": "Prześlij zdjęcia",
+    "browseFiles": "Przeglądaj pliki",
+    "clientDetails": "Dane klienta"
+  },
+  "finestServices": {
+    "title": "Najlepsze us?ugi",
+    "subtitle": "Skorzystaj z dopracowanej obs?ugi nieruchomo?ci opartej na najlepszych lokalizacjach, zaufanym doradztwie i starannie wybranych mo?liwo?ciach w ca?ym Egipcie.",
+    "stats": {
+      "currentListingVolume": "AKTUALNA WARTO?? OFERT",
+      "totalSold": "SPRZEDA? ??CZNIE 2020 - 2024",
+      "lifetimeSales": "??CZNY WOLUMEN SPRZEDA?Y"
+    }
   }
 }

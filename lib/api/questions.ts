@@ -40,9 +40,9 @@ function parseQuestionsResponse(text: string): Question[] {
 // ─── Endpoints ───────────────────────────────────────────────────────────────
 
 /** GET /api/Questions — returns all questions */
-export async function getQuestions(): Promise<Question[]> {
+export async function getQuestions(lang?: string): Promise<Question[]> {
   const res = await fetch(`${API_BASE_URL}/api/Questions`, {
-    headers: { ...getHeaders() },
+    headers: { ...getHeaders(lang) },
     cache: 'no-store',
   });
   if (!res.ok) {

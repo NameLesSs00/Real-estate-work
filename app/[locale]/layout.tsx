@@ -3,6 +3,7 @@ import { Poppins, Work_Sans, Radley, Allura, Inter, Dancing_Script } from "next/
 import "../globals.css";
 import { LanguageProvider } from "@/lib/contexts/LanguageContext";
 import TokenRefresher from "@/lib/auth/TokenRefresher";
+import { BRAND_LOGOS, BRAND_NAME } from "@/lib/brand";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -43,11 +44,11 @@ const dancingScript = Dancing_Script({
 export const metadata: Metadata = {
   metadataBase: new URL("https://luxe-estate.com"),
   title: {
-    default: "Luxe Estate | Premium Real Estate in Egypt",
-    template: "%s | Luxe Estate",
+    default: `${BRAND_NAME} | Premium Real Estate in Egypt`,
+    template: `%s | ${BRAND_NAME}`,
   },
-  description: "Find your dream home with Luxe Estate. We offer a curated selection of premium properties, luxury villas, and exclusive apartments in Egypt's most sought-after locations.",
-  keywords: ["Luxe Estate", "Luxe Real Estate", "Real Estate Egypt", "Property in Egypt", "Luxury Homes Egypt", "Buy Villas Egypt", "Apartments for Sale", "Premium Real Estate"],
+  description: `Find your dream home with ${BRAND_NAME}. We offer a curated selection of premium properties, luxury villas, and exclusive apartments in Egypt's most sought-after locations.`,
+  keywords: [BRAND_NAME, "The Rook Real Estate", "Real Estate Egypt", "Property in Egypt", "Luxury Homes Egypt", "Buy Villas Egypt", "Apartments for Sale", "Premium Real Estate"],
   robots: {
     index: true,
     follow: true,
@@ -60,16 +61,16 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Luxe Estate | Premium Real Estate",
+    title: `${BRAND_NAME} | Premium Real Estate`,
     description: "Find your dream home with our premium real estate services. Redefining luxury living in Egypt.",
     url: "https://luxe-estate.com",
-    siteName: "Luxe Estate",
+    siteName: BRAND_NAME,
     images: [
       {
         url: "/assists/defaultImage.png",
         width: 1200,
         height: 630,
-        alt: "Luxe Estate Showcase",
+        alt: `${BRAND_NAME} Showcase`,
       },
     ],
     locale: "en_US",
@@ -77,12 +78,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Luxe Estate | Premium Real Estate",
+    title: `${BRAND_NAME} | Premium Real Estate`,
     description: "Discover exclusive properties in top locations.",
-    images: ["/assists/header/headerLogo.png"],
+    images: [BRAND_LOGOS.fullColor],
   },
   icons: {
-    icon: "/icon.svg",
+    icon: "/icon.ico",
     apple: "/apple-touch-icon.png",
   },
 };

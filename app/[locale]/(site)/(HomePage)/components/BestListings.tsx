@@ -8,7 +8,7 @@ import { resolveProjectImageUrl } from '@/lib/api/projects';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 const BestListings = () => {
-  const { getLocalized, language } = useLanguage();
+  const { t, getLocalized, language } = useLanguage();
   const [units, setUnits] = useState<UnitListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -16,7 +16,7 @@ const BestListings = () => {
     async function loadUnits() {
       setIsLoading(true);
       try {
-        const data = await getUnitsFiltered({ PageNumber: 1, PageSize: 8 });
+        const data = await getUnitsFiltered({ PageNumber: 1, PageSize: 8, Language: language });
         setUnits(data.items || []);
       } catch (err) {
         console.error('Failed to load units:', err);
@@ -25,7 +25,7 @@ const BestListings = () => {
       }
     }
     loadUnits();
-  }, []);
+  }, [language]);
 
   return (
     <section className="pt-32 pb-20 px-6">
@@ -34,13 +34,13 @@ const BestListings = () => {
         {/* Header */}
         <div className="text-center mb-16 flex items-baseline justify-center gap-4">
           <h2 className="text-[40px] md:text-[56px] font-serif text-[#000000] leading-tight">
-            Best Listings Available
+            {t('bestListings.title')}
           </h2>
           <span 
             className="text-[#2196F3] text-[40px] md:text-[56px] font-medium"
             style={{ fontFamily: 'var(--font-dancing-script)' }}
           >
-            finest
+            {t('bestListings.accent')}
           </span>
         </div>
 
@@ -52,16 +52,16 @@ const BestListings = () => {
             ))}
           </div>
         ) : units.length === 0 ? (
-          <div className="text-center py-20 text-gray-500 font-medium">No listings found.</div>
+          <div className="text-center py-20 text-gray-500 font-medium">{t('bestListings.noListings')}</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {units.map((unit) => (
               <ListingCard
                 key={unit.id}
                 id={unit.id}
-                title={getLocalized(unit.name) || 'Untitled Unit'}
-                type={unit.propertyType || unit.unitType || 'Unit'}
-                location={unit.locationName || 'Unknown Location'}
+                title={getLocalized(unit.name) || t('propertyCard.fallback.untitled')}
+                type={unit.propertyType || unit.unitType || t('propertyCard.fallback.unit')}
+                location={unit.locationName || t('propertyCard.fallback.unknownLocation')}
                 price={`${unit.currencyCode || unit.currency || 'EGP'} ${unit.price?.toLocaleString()}`}
                 beds={unit.noBedRoom || 0}
                 baths={unit.noBathRoom || 0}
@@ -81,7 +81,7 @@ const BestListings = () => {
             href={`/${language}/properties`}
             className="bg-[#2196F3] hover:bg-[#8F7239] text-white px-8 py-3 rounded-[8px] font-bold text-[14px] transition-colors"
           >
-            Load More Listings
+            {t('bestListings.loadMore')}
           </Link>
         </div>
 

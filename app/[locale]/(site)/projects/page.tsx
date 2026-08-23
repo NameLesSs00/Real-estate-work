@@ -3,62 +3,62 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, Loader2 } from 'lucide-react';
-import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
-
+import { ArrowRight, Building2, Loader2, MapPin, SearchX } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-
+import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { slugify } from '@/lib/utils';
+import { BRAND_LOGOS } from '@/lib/brand';
 
 const DEFAULT_IMAGE = '/assists/defaultImage.png';
-const DEFAULT_DEVELOPER_LOGO = '/assists/defaultLogo.png';
+const DEFAULT_DEVELOPER_LOGO = BRAND_LOGOS.markColor;
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
+    transition: { staggerChildren: 0.08 },
+  },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 30, scale: 0.98 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    scale: 1,
-    transition: { duration: 0.5, ease: 'easeOut' as const }
-  }
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: 'easeOut' as const },
+  },
 };
 
 export default function ProjectsPage() {
   const { t, getLocalized, language } = useLanguage();
-  const [projects, setProjects]           = useState<Project[]>([]);
-  const [page, setPage]                   = useState(1);
-  const [hasMore, setHasMore]             = useState(true);
-  const [loading, setLoading]             = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [error, setError]                 = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchPage = useCallback(async (pageNumber: number) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getProjects(pageNumber, 10, language);
-      setProjects((prev) => pageNumber === 1 ? data.items : [...prev, ...data.items]);
+      const data = await getProjects(pageNumber, 9, language);
+      setProjects((prev) => (pageNumber === 1 ? data.items : [...prev, ...data.items]));
+      setTotalCount(data.totalCount || data.items.length);
       setHasMore(data.hasNextPage);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : t('projects.error') as string);
+      setError(err instanceof Error ? err.message : t('projects.error'));
     } finally {
       setLoading(false);
       setInitialLoading(false);
     }
-  }, [t, language]);
+  }, [language, t]);
 
   useEffect(() => {
+    setPage(1);
+    setInitialLoading(true);
     fetchPage(1);
   }, [fetchPage]);
 
@@ -69,163 +69,184 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] pt-36 pb-24 font-poppins">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-10">
-
-        {/* Page Header */}
-        <motion.div 
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12"
+    <div className="min-h-screen bg-[#E3F2FD] pt-32 font-poppins text-[#0B1F3A]">
+      <section className="px-5 pb-8 pt-8 sm:px-6 md:px-10 md:pb-12 md:pt-12">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55 }}
+          className="mx-auto flex max-w-[1280px] flex-col gap-6"
         >
-          <h1 className="text-[36px] md:text-[48px] font-bold text-[#000000] leading-tight">
-            {t('projects.title') as string}
-          </h1>
-        </motion.div>
-
-        {/* Initial Loading */}
-        {initialLoading && (
-          <div className="flex flex-col items-center justify-center py-32 gap-4 text-gray-400">
-            <Loader2 className="animate-spin" size={36} />
-            <p className="text-[16px]">{t('projects.loading') as string}</p>
-          </div>
-        )}
-
-        {/* Error */}
-        {error && !initialLoading && (
-          <div className="flex flex-col items-center justify-center py-24 gap-4">
-            <p className="text-red-500 text-[16px]">{error}</p>
-            <button
-              onClick={() => fetchPage(1)}
-              className="bg-[#000000] text-white px-8 py-3 rounded-full text-[15px] hover:bg-[#0D47A1] transition-all"
-            >
-              {t('projects.tryAgain') as string}
-            </button>
-          </div>
-        )}
-
-        {/* Project Cards */}
-        {!initialLoading && !error && (
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="flex flex-col gap-8"
-          >
-            {projects.length === 0 ? (
-              <div className="text-center py-24 text-gray-400 text-[18px]">
-                {t('projects.noResults') as string}
-              </div>
-            ) : (
-              <AnimatePresence mode="popLayout">
-                {projects.map((project) => {
-                  const heroImage =
-                    project.imageUrls?.[0]
-                      ? (resolveProjectImageUrl(project.imageUrls[0]) ?? DEFAULT_IMAGE)
-                      : DEFAULT_IMAGE;
-
-                  const localizedName = getLocalized(project.name);
-                  const localizedDesc = getLocalized(project.description);
-
-                  return (
-                    <motion.div
-                      key={project.id}
-                      variants={itemVariants}
-                      layout
-                      className="bg-white rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.05)] overflow-hidden border border-[#BBDEFB] hover:shadow-[0_16px_48px_rgba(0,0,0,0.09)] hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row"
-                    >
-                      {/* Left: Hero Image */}
-                      <Link href={`/${language}/projects/${project.id}-${slugify(localizedName)}`} className="relative w-full md:w-[400px] h-[240px] md:h-auto flex-shrink-0 overflow-hidden block">
-                        <Image
-                          src={heroImage}
-                          alt={localizedName}
-                          fill
-                          draggable={false}
-                          className="object-cover transition-transform duration-700 hover:scale-105"
-                        />
-                      </Link>
-
-                      {/* Right: Content */}
-                      <div className="flex-1 p-7 md:p-10 flex flex-col justify-between relative">
-
-                        {/* Developer Logo — top right */}
-                        <div className="absolute top-5 right-5">
-                          <div className="relative w-[60px] h-[30px] sm:w-[100px] sm:h-[50px]">
-                            <Image
-                              src={resolveProjectImageUrl(project.logoImage) || DEFAULT_DEVELOPER_LOGO}
-                              alt={project.developerName}
-                              fill
-                              draggable={false}
-                              className="object-contain"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Top Content */}
-                        <div className="flex flex-col gap-3 pr-20 sm:pr-28">
-                          {/* Project Name */}
-                          <h2 className="text-[22px] md:text-[28px] font-bold text-[#000000] leading-tight">
-                            {localizedName}
-                          </h2>
-
-                          {/* Location */}
-                          <div className="flex items-center gap-2 text-[14px] text-[#888]">
-                            <MapPin size={16} className="text-[#42A5F5] flex-shrink-0" />
-                            <span>{project.locationName || t('projects.noLocation') as string}</span>
-                          </div>
-
-                          {/* Description */}
-                          <p className="text-[14px] md:text-[15px] text-[#666] leading-relaxed line-clamp-3 mt-1">
-                            {localizedDesc}
-                          </p>
-                        </div>
-
-                        {/* Bottom: View Details Button */}
-                        <div className="flex justify-end mt-8">
-                          <Link
-                            href={`/${language}/projects/${project.id}-${slugify(localizedName)}`}
-                            className="bg-[#000000] text-white px-10 py-3.5 rounded-full text-[15px] font-semibold hover:bg-[#0D47A1] hover:-translate-y-0.5 transition-all"
-                          >
-                            {t('projects.viewDetails') as string}
-                          </Link>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            )}
-
-            {/* Show More */}
-            {hasMore && (
-              <div className="flex justify-center mt-4">
-                <button
-                  onClick={handleShowMore}
-                  disabled={loading}
-                  className="w-full flex items-center justify-center gap-3 border border-[#000000] text-[#000000] rounded-full py-5 text-[17px] font-semibold hover:bg-[#000000] hover:text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 size={20} className="animate-spin" />
-                      {t('projects.loadingMore') as string}
-                    </>
-                  ) : (
-                    t('projects.showMore') as string
-                  )}
-                </button>
-              </div>
-            )}
-
-            {/* End of results */}
-            {!hasMore && projects.length > 0 && (
-              <p className="text-center text-[14px] text-gray-400 pt-4">
-                {t('projects.allLoaded') as string}
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-[720px]">
+              <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#90CAF9] bg-white/75 px-4 py-2 text-[12px] font-bold uppercase tracking-[0.18em] text-[#1565C0]">
+                <Building2 size={15} />
+                {t('header.projects')}
+              </span>
+              <h1 className="font-radley text-[42px] leading-[1.05] text-[#0D47A1] sm:text-[52px] md:text-[64px]">
+                {t('projects.title')}
+              </h1>
+              <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#36516F] md:text-[17px]">
+                {t('projects.subtitle')}
               </p>
+            </div>
+
+            {!initialLoading && !error && (
+              <div className="w-fit rounded-full border border-[#BBDEFB] bg-white px-5 py-3 text-[14px] font-semibold text-[#0D47A1] shadow-sm">
+                {totalCount} {t('projects.countLabel')}
+              </div>
             )}
-          </motion.div>
-        )}
-      </div>
+          </div>
+        </motion.div>
+      </section>
+
+      <section className="bg-[#F8FBFF] px-5 py-12 sm:px-6 md:px-10 md:py-16">
+        <div className="mx-auto max-w-[1280px]">
+          {initialLoading && (
+            <div className="flex min-h-[360px] flex-col items-center justify-center gap-4 rounded-[24px] border border-[#BBDEFB] bg-white text-[#36516F]">
+              <Loader2 className="animate-spin text-[#1565C0]" size={36} />
+              <p className="text-[15px] font-semibold">{t('projects.loading')}</p>
+            </div>
+          )}
+
+          {error && !initialLoading && (
+            <div className="flex min-h-[320px] flex-col items-center justify-center gap-5 rounded-[24px] border border-[#BBDEFB] bg-white px-6 text-center shadow-sm">
+              <SearchX className="text-[#1565C0]" size={38} />
+              <p className="text-[16px] font-semibold text-[#B42318]">{error}</p>
+              <button
+                onClick={() => fetchPage(1)}
+                className="rounded-full bg-[#1565C0] px-7 py-3 text-[14px] font-bold text-white transition-all hover:bg-[#0D47A1]"
+              >
+                {t('projects.tryAgain')}
+              </button>
+            </div>
+          )}
+
+          {!initialLoading && !error && (
+            <motion.div variants={containerVariants} initial="hidden" animate="visible" className="flex flex-col gap-10">
+              {projects.length === 0 ? (
+                <div className="flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-[24px] border border-[#BBDEFB] bg-white px-6 text-center text-[#36516F] shadow-sm">
+                  <SearchX className="text-[#1565C0]" size={38} />
+                  <p className="text-[17px] font-semibold">{t('projects.noResults')}</p>
+                </div>
+              ) : (
+                <AnimatePresence mode="popLayout">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    {projects.map((project) => {
+                      const localizedName = getLocalized(project.name);
+                      const localizedDesc = getLocalized(project.description);
+                      const heroImage = resolveProjectImageUrl(project.imageUrls?.[0]) || DEFAULT_IMAGE;
+                      const developerLogo = resolveProjectImageUrl(project.logoImage) || DEFAULT_DEVELOPER_LOGO;
+                      const projectHref = `/${language}/projects/${project.id}-${slugify(localizedName || project.name)}`;
+                      const unitCount = project.units?.length ?? 0;
+
+                      return (
+                        <motion.article
+                          key={project.id}
+                          variants={itemVariants}
+                          layout
+                          className="group overflow-hidden rounded-[24px] border border-[#BBDEFB] bg-white shadow-[0_18px_55px_rgba(13,71,161,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(13,71,161,0.14)]"
+                        >
+                          <Link href={projectHref} className="relative block aspect-[1.35] overflow-hidden bg-[#D7ECFF]">
+                            <Image
+                              src={heroImage}
+                              alt={localizedName || t('projects.title')}
+                              fill
+                              sizes="(min-width: 1280px) 390px, (min-width: 768px) 50vw, 100vw"
+                              draggable={false}
+                              className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#061A36]/70 to-transparent" />
+                            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3">
+                              <span className="inline-flex min-w-0 items-center gap-2 rounded-full bg-white/95 px-3 py-2 text-[12px] font-bold text-[#0D47A1] shadow-sm">
+                                <MapPin size={14} className="shrink-0 text-[#2196F3]" />
+                                <span className="truncate">{project.locationName || t('projects.noLocation')}</span>
+                              </span>
+                            </div>
+                          </Link>
+
+                          <div className="flex min-h-[260px] flex-col p-5 sm:p-6">
+                            <div className="mb-5 flex items-center justify-between gap-4">
+                              <div className="min-w-0">
+                                <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-[#42A5F5]">
+                                  {t('projects.developedBy')}
+                                </p>
+                                <p className="truncate text-[14px] font-semibold text-[#36516F]">
+                                  {project.developerName || t('projects.noDeveloper')}
+                                </p>
+                              </div>
+                              <div className="relative h-12 w-16 shrink-0 rounded-[14px] border border-[#E1F0FF] bg-[#F8FBFF] p-2">
+                                <Image
+                                  src={developerLogo}
+                                  alt={project.developerName || t('featureProject.developerLogo')}
+                                  fill
+                                  sizes="64px"
+                                  draggable={false}
+                                  className="object-contain p-2"
+                                />
+                              </div>
+                            </div>
+
+                            <h2 className="line-clamp-2 text-[22px] font-bold leading-tight text-[#071F49]">
+                              <Link href={projectHref} className="transition-colors hover:text-[#1565C0]">
+                                {localizedName}
+                              </Link>
+                            </h2>
+                            <p className="mt-3 line-clamp-3 text-[14px] leading-7 text-[#5B6F86]">
+                              {localizedDesc || t('projectDetails.noDescription')}
+                            </p>
+
+                            <div className="mt-auto flex items-center justify-between gap-4 pt-6">
+                              <span className="rounded-full bg-[#E3F2FD] px-4 py-2 text-[12px] font-bold text-[#1565C0]">
+                                {unitCount} {t('projects.unitsAvailable')}
+                              </span>
+                              <Link
+                                href={projectHref}
+                                className="inline-flex items-center gap-2 rounded-full bg-[#1565C0] px-5 py-3 text-[14px] font-bold text-white transition-all hover:bg-[#0D47A1]"
+                              >
+                                {t('projects.viewDetails')}
+                                <ArrowRight size={17} />
+                              </Link>
+                            </div>
+                          </div>
+                        </motion.article>
+                      );
+                    })}
+                  </div>
+                </AnimatePresence>
+              )}
+
+              {hasMore && projects.length > 0 && (
+                <div className="flex justify-center">
+                  <button
+                    onClick={handleShowMore}
+                    disabled={loading}
+                    className="inline-flex min-w-[220px] items-center justify-center gap-3 rounded-full border border-[#1565C0] bg-white px-8 py-4 text-[15px] font-bold text-[#1565C0] transition-all hover:bg-[#1565C0] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 size={18} className="animate-spin" />
+                        {t('projects.loadingMore')}
+                      </>
+                    ) : (
+                      <>
+                        {t('projects.showMore')}
+                        <ArrowRight size={18} />
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              {!hasMore && projects.length > 0 && (
+                <p className="text-center text-[14px] font-medium text-[#6F849D]">
+                  {t('projects.allLoaded')}
+                </p>
+              )}
+            </motion.div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

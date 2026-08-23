@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { MapPin, Check, Loader2 } from 'lucide-react';
+import { ArrowRight, Check, Loader2, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
@@ -11,8 +11,9 @@ import { getServices, Service } from '@/lib/api/services';
 
 import './FeatureProject.css';
 import { slugify } from '@/lib/utils';
+import { BRAND_LOGOS } from '@/lib/brand';
 
-const DEFAULT_LOGO = '/assists/defaultLogo.png';
+const DEFAULT_LOGO = BRAND_LOGOS.markColor;
 
 const FeatureProject = () => {
   const { t, language } = useLanguage();
@@ -85,7 +86,7 @@ const FeatureProject = () => {
     .filter(Boolean) as string[];
 
   return (
-    <section className="feature-project-section overflow-hidden">
+    <section className="feature-project-section overflow-hidden" aria-labelledby="feature-project-heading">
       <div className="feature-project-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -95,12 +96,12 @@ const FeatureProject = () => {
           className="feature-project-header"
         >
           <span className="feature-project-tag">{t('featureProject.tag') as string}</span>
-          <h2 className="feature-project-title">{t('featureProject.title') as string}</h2>
+          <h2 id="feature-project-heading" className="feature-project-title">{t('featureProject.title') as string}</h2>
           <p className="feature-project-subtitle">{t('featureProject.subtitle') as string}</p>
           <div className="feature-project-accent-line"></div>
         </motion.div>
 
-        <div className="feature-project-content-wrapper relative">
+        <div className="feature-project-content-wrapper">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeProject.id}
@@ -139,13 +140,13 @@ const FeatureProject = () => {
                 <h3 className="project-name">{activeProject.name}</h3>
                 <div className="project-location-row">
                   <div className="project-location">
-                    <MapPin size={20} className="text-[#000000]" />
-                    <span>{activeProject.locationName || 'Location TBD'}</span>
+                    <MapPin size={18} />
+                    <span>{activeProject.locationName || t('featureProject.locationTbd')}</span>
                   </div>
-                  <div className="developer-logo-inline">
+                  <div className="developer-logo-inline" title={activeProject.developerName || undefined}>
                     <Image
                       src={developerLogoUrl}
-                      alt={activeProject.developerName || 'Developer logo'}
+                      alt={activeProject.developerName || t('featureProject.developerLogo')}
                       width={60}
                       height={60}
                       className="dev-logo-img"
@@ -154,11 +155,14 @@ const FeatureProject = () => {
                         (e.currentTarget as HTMLImageElement).src = DEFAULT_LOGO;
                       }}
                     />
+                    {activeProject.developerName && (
+                      <span className="developer-name">{activeProject.developerName}</span>
+                    )}
                   </div>
                 </div>
                 <p className="project-desc line-clamp-3">
                   {activeProject.description ||
-                    'Discover a premium lifestyle in this exceptional development, designed with modern architecture and high-quality finishes.'}
+                    t('featureProject.fallbackDescription')}
                 </p>
 
                 {projectFacilities.length > 0 && (
@@ -173,8 +177,8 @@ const FeatureProject = () => {
                           transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
                           className="detail-info-card"
                         >
-                          <div className="detail-info-icon-wrapper">
-                            <Check size={20} className="text-[#000000]" />
+                          <div className="detail-info-icon-wrapper" aria-hidden="true">
+                            <Check size={16} />
                           </div>
                           <span className="detail-info-value">{facName}</span>
                         </motion.div>
@@ -183,12 +187,13 @@ const FeatureProject = () => {
                   </>
                 )}
 
-                  <div className="project-actions">
-                    <Link href={`/${language}/projects/${activeProject.id}-${slugify(activeProject.name)}`}>
-                      <button className="get-in-touch-btn">{t('featureProject.viewProjectDetails') as string}</button>
-                    </Link>
-                  </div>
-                </motion.div>
+                <div className="project-actions">
+                  <Link href={`/${language}/projects/${activeProject.id}-${slugify(activeProject.name)}`} className="get-in-touch-btn">
+                    {t('featureProject.viewProjectDetails') as string}
+                    <ArrowRight size={18} />
+                  </Link>
+                </div>
+              </motion.div>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -197,10 +202,13 @@ const FeatureProject = () => {
         <div className="stationary-dots-container">
           <div className="pagination-dots">
             {projects.map((_, index) => (
-              <span
+              <button
                 key={index}
                 className={`dot ${activeIndex === index ? 'active' : ''}`}
                 onClick={() => setActiveIndex(index)}
+                type="button"
+                aria-label={`${t('featureProject.viewProjectDetails')} ${index + 1}`}
+                aria-current={activeIndex === index}
               />
             ))}
           </div>
@@ -214,7 +222,8 @@ const FeatureProject = () => {
           className="show-more-projects-wrapper"
         >
           <Link href={`/${language}/projects`} className="show-more-projects-link">
-            <button className="show-more-projects-btn">{t('featureProject.showMore') as string}</button>
+            {t('featureProject.showMore') as string}
+            <ArrowRight size={18} />
           </Link>
         </motion.div>
       </div>

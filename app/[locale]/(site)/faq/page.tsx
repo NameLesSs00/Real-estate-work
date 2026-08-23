@@ -8,17 +8,17 @@ import { getQuestions, Question } from '@/lib/api/questions';
 import './faq.css';
 
 export default function FAQPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [faqData, setFaqData] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   useEffect(() => {
-    getQuestions()
+    getQuestions(language)
       .then((data) => setFaqData(data))
       .catch((err) => console.error('[FAQPage] Failed to fetch questions:', err))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [language]);
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);

@@ -24,7 +24,7 @@ const Hero = () => {
   const [locationId, setLocationId] = useState('');
   const [locations, setLocations] = useState<Location[]>([]);
 
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     getLocations(1).then(data => {
@@ -55,7 +55,7 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }} 
           className="text-[36px] sm:text-[50px] md:text-[72px] font-serif font-medium text-white leading-[1.15] max-w-4xl mx-auto drop-shadow-lg"
         >
-          Discover Your Dream Home
+          <span dangerouslySetInnerHTML={{ __html: t('hero.title') }} />
         </motion.h1>
       </div>
 
@@ -74,13 +74,13 @@ const Hero = () => {
               onClick={() => setUnitType('Buy')} 
               className={`px-6 py-2 rounded-full font-bold text-[14px] transition-all duration-300 ${unitType === 'Buy' ? 'bg-[#1565C0] text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-[#E3F2FD] hover:text-[#1565C0]'}`}
             >
-              Buy
+              {t('propertiesPage.sidebar.buy')}
             </button>
             <button 
               onClick={() => setUnitType('Rent')} 
               className={`px-6 py-2 rounded-full font-bold text-[14px] transition-all duration-300 ${unitType === 'Rent' ? 'bg-[#000000] text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-gray-100 hover:text-[#000000]'}`}
             >
-              Rent
+              {t('propertiesPage.sidebar.rent')}
             </button>
           </div>
 
@@ -90,7 +90,7 @@ const Hero = () => {
               <Search className="text-[#2196F3] mr-3 shrink-0" size={20} />
               <input 
                 type="text" 
-                placeholder="Search locations, projects..." 
+                placeholder={t('hero.searchPlaceholder')} 
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="bg-transparent w-full outline-none text-[#0D47A1] placeholder-gray-400 font-semibold text-[14px]"
@@ -105,7 +105,7 @@ const Hero = () => {
                 onChange={e => setLocationId(e.target.value)} 
                 className="bg-transparent w-full outline-none text-[#0D47A1] font-semibold text-[14px] appearance-none cursor-pointer pr-4"
               >
-                <option value="">All Locations</option>
+                <option value="">{t('hero.allLocations')}</option>
                 {locations.map(loc => (
                   <option key={loc.id} value={loc.id}>{loc.district || loc.city}</option>
                 ))}
@@ -122,9 +122,9 @@ const Hero = () => {
                 onChange={e => setPropertyType(e.target.value)} 
                 className="bg-transparent w-full outline-none text-[#0D47A1] font-semibold text-[14px] appearance-none cursor-pointer pr-4"
               >
-                <option value="">All Types</option>
+                <option value="">{t('hero.allTypes')}</option>
                 {PROPERTY_TYPES.map(type => (
-                  <option key={type.key} value={type.value}>{type.key.charAt(0).toUpperCase() + type.key.slice(1)}</option>
+                  <option key={type.key} value={type.value}>{t(`propertiesPage.sidebar.${type.key}`)}</option>
                 ))}
               </select>
               <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -134,7 +134,7 @@ const Hero = () => {
 
             {/* Search Button */}
             <button type="submit" className="w-full lg:w-auto bg-[#2196F3] text-white px-8 py-3.5 rounded-[20px] font-bold text-[15px] hover:bg-[#1565C0] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-[#2196F3]/30 hover:-translate-y-0.5 whitespace-nowrap shrink-0">
-              <span>Search</span>
+              <span>{t('hero.search')}</span>
             </button>
           </form>
         </div>

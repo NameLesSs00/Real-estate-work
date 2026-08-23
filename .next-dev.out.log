@@ -1,0 +1,18 @@
+
+> real-estate@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.15
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.14:3000
+
+ ✓ Starting...
+ ✓ Ready in 3.4s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 814ms (115 modules)
+ ○ Compiling /[locale]/projects/[slug] ...
+ ✓ Compiled /[locale]/projects/[slug] in 13.1s (1589 modules)
+ GET /en/projects 200 in 15152ms
+ GET /de/projects 200 in 15169ms
+ GET /pl/projects 200 in 15181ms
+ GET /en/projects/1-test 200 in 15194ms

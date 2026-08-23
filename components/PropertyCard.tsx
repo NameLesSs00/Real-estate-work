@@ -89,17 +89,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         <div className="border-t border-gray-100 pt-5 mt-auto">
           <div className="flex items-center justify-between text-[#0D47A1] font-poppins text-[14px] mb-5">
             <div className="flex items-center gap-2">
-              <Image src="/assists/card/lucide_bed.png" alt="Beds" width={18} height={18} className="brightness-0 opacity-60" />
-              <span className="font-semibold">{beds} <span className="font-normal text-gray-400 text-[12px] uppercase">Beds</span></span>
+              <Image src="/assists/card/lucide_bed.png" alt={t('projectDetails.bedrooms')} width={18} height={18} className="brightness-0 opacity-60" />
+              <span className="font-semibold">{beds} <span className="font-normal text-gray-400 text-[12px] uppercase">{t('projectDetails.bedrooms')}</span></span>
             </div>
             <div className="w-[1px] h-4 bg-gray-200"></div>
             <div className="flex items-center gap-2">
-              <Image src="/assists/card/cil_bath.png" alt="Baths" width={18} height={18} className="brightness-0 opacity-60" />
-              <span className="font-semibold">{baths} <span className="font-normal text-gray-400 text-[12px] uppercase">Baths</span></span>
+              <Image src="/assists/card/cil_bath.png" alt={t('projectDetails.bathrooms')} width={18} height={18} className="brightness-0 opacity-60" />
+              <span className="font-semibold">{baths} <span className="font-normal text-gray-400 text-[12px] uppercase">{t('projectDetails.bathrooms')}</span></span>
             </div>
             <div className="w-[1px] h-4 bg-gray-200"></div>
             <div className="flex items-center gap-2">
-              <Image src="/assists/card/fluent_slide-size-24-regular.png" alt="Area" width={18} height={18} className="brightness-0 opacity-60" />
+              <Image src="/assists/card/fluent_slide-size-24-regular.png" alt={t('projectDetails.areaSize')} width={18} height={18} className="brightness-0 opacity-60" />
               <span className="font-semibold">{area}</span>
             </div>
           </div>

@@ -18,10 +18,11 @@
       "Al Ahyaa",
       "Sheraton",
       "Makadi Bay"
-    ]
+    ],
+    "language": "Language"
   },
   "footer": {
-    "about": "Luxe Estate was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
+    "about": "The Rook Real Estate Investment was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
     "usefulLinks": "Quick action",
     "stayConnected": "Follow Us",
     "newsletter": "Join our newsletter to stay up to date on features and releases.",
@@ -63,7 +64,25 @@
     "title": "A Simple Way to Find Your Perfect Property",
     "step1": "Explore curated properties that match your needs and budget.",
     "step2": "Connect with our experts for personalized guidance.",
-    "step3": "Book a visit and find your ideal property with ease."
+    "step3": "Book a visit and find your ideal property with ease.",
+    "headlineTop": "Passionate About",
+    "headlineBottom": "Being Different",
+    "accent": "experience",
+    "readMore": "Read More",
+    "cards": {
+      "sell": {
+        "title": "Sell Your Home",
+        "desc": "We do a free evaluation to be sure you want to start selling."
+      },
+      "buy": {
+        "title": "Buy A Home",
+        "desc": "We do a free evaluation to be sure you want to start buying."
+      },
+      "rent": {
+        "title": "Rent A Home",
+        "desc": "We do a free evaluation to be sure you want to start renting."
+      }
+    }
   },
   "categories": {
     "tag": "FEATURED LISTINGS",
@@ -95,7 +114,9 @@
     "subtitle": "From the lagoons of El Gouna to the beaches of Sahl Hasheesh — find your perfect corner of the Red Sea.",
     "exploreArea": "Explore Area",
     "property": "Property",
-    "properties": "Properties"
+    "properties": "Properties",
+    "headline": "Discover Egypt's Finest",
+    "accent": "Destinations"
   },
   "featureProject": {
     "tag": "FEATURED PROJECTS",
@@ -112,7 +133,10 @@
       "deliveryDate": "Delivery Date",
       "status": "Status",
       "spaces": "Spaces"
-    }
+    },
+    "locationTbd": "Location TBD",
+    "fallbackDescription": "Discover a premium lifestyle in this exceptional development, designed with modern architecture and high-quality finishes.",
+    "developerLogo": "Developer logo"
   },
   "articles": {
     "tag": "LATEST ARTICLES",
@@ -151,7 +175,7 @@
     "missionTitle": "Our Mission",
     "missionText": "We are dedicated to providing an elite, personalized service that transcends expectations. By blending deep market expertise with uncompromising integrity, we guide our clients toward exceptional investments and their ultimate dream homes.",
     "journeyTitle": "Our Legacy",
-    "journeyText": "Born from a passion for architectural brilliance and refined living, Luxe Estate has evolved into the region's premier luxury real estate boutique. Our journey is defined by a commitment to excellence, matching discerning buyers with truly magnificent properties.",
+    "journeyText": "Born from a passion for architectural brilliance and refined living, The Rook Real Estate Investment has evolved into the region's premier luxury real estate boutique. Our journey is defined by a commitment to excellence, matching discerning buyers with truly magnificent properties.",
     "offerTitle": "Exclusive Services",
     "offers": {
       "sales": {
@@ -173,11 +197,18 @@
   },
   "projects": {
     "title": "Explore Projects",
+    "subtitle": "Browse curated residential projects from trusted developers across Egypt's most promising destinations.",
     "loading": "Loading projects...",
     "error": "Failed to load projects.",
     "tryAgain": "Try Again",
     "noResults": "No projects found.",
     "noLocation": "Location not listed",
+    "location": "Location",
+    "units": "Units",
+    "countLabel": "projects available",
+    "developedBy": "Developed by",
+    "noDeveloper": "Developer not listed",
+    "unitsAvailable": "units available",
     "viewDetails": "View Details",
     "showMore": "Show More",
     "loadingMore": "Loading...",
@@ -187,6 +218,7 @@
     "backToProjects": "Back to Projects",
     "loading": "Loading project...",
     "notFound": "Project not found.",
+    "developerSubtitle": "Project developer",
     "getInTouch": "Get in Touch",
     "fullName": "Full Name",
     "phoneNumber": "Phone Number",
@@ -217,11 +249,13 @@
     "cash": "Cash",
     "months": "Months",
     "downPayment": "Down Payment",
-    "commission": "Commission"
+    "commission": "Commission",
+    "title": "Property Details",
+    "price": "Price"
   },
   "contactPage": {
-    "title": "Get in Touch with Luxe Estate",
-    "subtitle": "Welcome to Luxe Estate' Contact page. We're here to assist you with any inquiries, requests, or feedback you may have.",
+    "title": "Get in Touch with The Rook Real Estate Investment",
+    "subtitle": "Welcome to The Rook Real Estate Investment's Contact page. We're here to assist you with any inquiries, requests, or feedback you may have.",
     "info": {
       "email": "Email",
       "phone": "Phone",
@@ -230,7 +264,7 @@
     },
     "form": {
       "title": "Let's Connect",
-      "subtitle": "Use the form below to get in touch with Luxe Estate.",
+      "subtitle": "Use the form below to get in touch with The Rook Real Estate Investment.",
       "firstName": "First Name",
       "lastName": "Last Name",
       "email": "Email",
@@ -283,7 +317,9 @@
       "showing": "Showing",
       "results": "results",
       "noResults": "No properties found",
-      "adjustFilters": "Try adjusting your search filters."
+      "adjustFilters": "Try adjusting your search filters.",
+      "loadError": "Failed to load properties. Please try again.",
+      "findProperty": "Find Property"
     },
     "pagination": {
       "prev": "Prev",
@@ -314,7 +350,9 @@
       "max": "Max",
       "resetAll": "Reset All",
       "apply": "Apply Filters",
-      "currency": "Currency"
+      "currency": "Currency",
+      "allCategories": "All Categories",
+      "chalet": "Chalet"
     }
   },
   "propertyCard": {
@@ -323,7 +361,8 @@
       "rent": "Rent",
       "sold": "Sold",
       "primary": "Primary",
-      "resale": "Resale"
+      "resale": "Resale",
+      "featured": "Featured"
     },
     "details": {
       "bedroom": "Bedroom",
@@ -331,14 +370,53 @@
       "viewDetails": "View Details",
       "area": "Area",
       "instalment": "Instalment",
-      "cash": "Cash"
+      "cash": "Cash",
+      "saveProperty": "Save property",
+      "size": "Size"
+    },
+    "fallback": {
+      "untitled": "Untitled Unit",
+      "unit": "Unit",
+      "unknownLocation": "Unknown Location"
     }
   },
   "faqPage": {
     "tag": "SUPPORT",
     "title": "Frequently Asked Questions",
-    "subtitle": "Everything you need to know about buying, selling, and renting with Luxe Estate.",
+    "subtitle": "Everything you need to know about buying, selling, and renting with The Rook Real Estate Investment.",
     "loading": "Loading questions...",
     "noQuestions": "No FAQs available at the moment. Check back soon!"
+  },
+  "bestListings": {
+    "title": "Best Listings Available",
+    "accent": "finest",
+    "noListings": "No listings found.",
+    "loadMore": "Load More Listings"
+  },
+  "listPropertyPage": {
+    "title": "Add Property",
+    "basicInfo": "Basic Information",
+    "propertyTitle": "Property Title",
+    "price": "Price",
+    "unitSize": "Unit Size",
+    "saleOrRent": "Sale Or Rent",
+    "rooms": "Rooms",
+    "propertyDescription": "Property Description",
+    "address": "Address",
+    "city": "City",
+    "propertyMedia": "Property media",
+    "propertyImages": "Property images",
+    "uploadImages": "Upload images",
+    "browseFiles": "Browse Files",
+    "clientDetails": "Client Details"
+  },
+  "finestServices": {
+    "title": "The Finest Services",
+    "subtitle": "Experience a refined real estate service built around premium locations, trusted guidance, and carefully selected opportunities across Egypt.",
+    "stats": {
+      "currentListingVolume": "CURRENT LISTING VOLUME",
+      "totalSold": "TOTAL SOLD 2020 - 2024",
+      "lifetimeSales": "LIFETIME SALES VOLUME"
+    }
   }
 }
