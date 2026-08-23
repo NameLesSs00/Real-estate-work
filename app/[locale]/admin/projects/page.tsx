@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import { DollarSign } from 'lucide-react';
 import AddProjectModal from '@/components/admin/AddProjectModal';
 import DeleteProjectModal from '@/components/admin/DeleteProjectModal';
 import ProjectDetailsModal from '@/components/admin/ProjectDetailsModal';
+import ProjectPriceListsModal from '@/components/admin/ProjectPriceListsModal';
 import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 
 export default function ProjectsPage() {
@@ -26,6 +28,8 @@ export default function ProjectsPage() {
   const [deletingName, setDeletingName] = useState('');
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [viewingId, setViewingId] = useState<number | null>(null);
+  const [isPriceListsModalOpen, setIsPriceListsModalOpen] = useState(false);
+  const [priceListsProject, setPriceListsProject] = useState<Project | null>(null);
 
   const fetchProjects = useCallback(async (page = 1) => {
     setIsLoading(true);
@@ -67,6 +71,11 @@ export default function ProjectsPage() {
     setDeletingId(project.id);
     setDeletingName(project.name);
     setIsDeleteModalOpen(true);
+  };
+
+  const handlePriceLists = (project: Project) => {
+    setPriceListsProject(project);
+    setIsPriceListsModalOpen(true);
   };
 
   const handleSuccess = () => fetchProjects(currentPage);
@@ -235,6 +244,13 @@ export default function ProjectsPage() {
                               }}
                             />
                           </button>
+                          <button
+                            onClick={() => handlePriceLists(project)}
+                            className="p-2.5 bg-gray-50 hover:bg-emerald-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            title="Price Lists"
+                          >
+                            <DollarSign size={20} strokeWidth={2.5} />
+                          </button>
                           <button 
                             onClick={() => handleDelete(project)} 
                             className="p-2.5 bg-gray-50 hover:bg-red-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
@@ -303,6 +319,12 @@ export default function ProjectsPage() {
         onClose={() => setIsDetailsModalOpen(false)}
         projectId={viewingId}
         onUpdate={handleSuccess}
+      />
+
+      <ProjectPriceListsModal
+        isOpen={isPriceListsModalOpen}
+        onClose={() => setIsPriceListsModalOpen(false)}
+        project={priceListsProject}
       />
     </div>
   );

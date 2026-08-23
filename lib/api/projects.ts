@@ -49,6 +49,20 @@ export interface Project {
   updatedAt: string | null;
 }
 
+export interface ProjectImagePricelist {
+  id: number;
+  projectId: number;
+  name: string;
+  imageUrl: string;
+  displayOrder: number;
+}
+
+export interface ProjectImagePricelistPayload {
+  name: string;
+  displayOrder: number;
+  image?: File | null;
+}
+
 
 export interface ProjectsPage {
   items: Project[];
@@ -402,6 +416,140 @@ export async function deleteProjectImage(id: number, imageUrl?: string): Promise
     const text = await res.text();
     console.error('[Projects] Image delete failed:', res.status, text);
     throw new Error('Failed to delete project image.');
+  }
+}
+
+// Project image pricelists
+
+/** GET /api/projects/{projectId}/image-pricelists */
+export async function getProjectImagePricelists(projectId: number): Promise<ProjectImagePricelist[]> {
+  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists`, {
+    headers: { ...getHeaders() },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('[ProjectImagePricelists] Fetch failed:', res.status, text);
+    throw new Error('Failed to load price list images.');
+  }
+
+  const json: ApiResponse<ProjectImagePricelist[]> = await res.json();
+  if (!json.success || !json.data) {
+    console.error('[ProjectImagePricelists] Fetch error:', json.message, json.errors);
+    throw new Error(json.message || 'Failed to load price list images.');
+  }
+
+  return json.data;
+}
+
+/** GET /api/projects/{projectId}/image-pricelists/{id} */
+export async function getProjectImagePricelist(projectId: number, id: number): Promise<ProjectImagePricelist> {
+  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists/${id}`, {
+    headers: { ...getHeaders() },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('[ProjectImagePricelists] Fetch by ID failed:', res.status, text);
+    throw new Error('Failed to load price list image.');
+  }
+
+  const json: ApiResponse<ProjectImagePricelist> = await res.json();
+  if (!json.success || !json.data) {
+    console.error('[ProjectImagePricelists] Fetch by ID error:', json.message, json.errors);
+    throw new Error(json.message || 'Failed to load price list image.');
+  }
+
+  return json.data;
+}
+
+/** POST /api/projects/{projectId}/image-pricelists */
+export async function createProjectImagePricelist(
+  projectId: number,
+  payload: ProjectImagePricelistPayload
+): Promise<number> {
+  if (!payload.image) {
+    throw new Error('Price list image is required.');
+  }
+
+  const formData = new FormData();
+  formData.append('ProjectId', String(projectId));
+  formData.append('Name', payload.name);
+  formData.append('Image', payload.image);
+  formData.append('DisplayOrder', String(payload.displayOrder));
+
+  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists`, {
+    method: 'POST',
+    headers: { ...getHeaders() },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('[ProjectImagePricelists] Create failed:', res.status, text);
+    throw new Error('Failed to create price list image.');
+  }
+
+  const json: ApiResponse<number> = await res.json();
+  if (!json.success || !json.data) {
+    console.error('[ProjectImagePricelists] Create error:', json.message, json.errors);
+    throw new Error(json.message || 'Failed to create price list image.');
+  }
+
+  return json.data;
+}
+
+/** PUT /api/projects/{projectId}/image-pricelists/{id} */
+export async function updateProjectImagePricelist(
+  projectId: number,
+  id: number,
+  payload: ProjectImagePricelistPayload
+): Promise<number> {
+  const formData = new FormData();
+  formData.append('Id', String(id));
+  formData.append('ProjectId', String(projectId));
+  formData.append('Name', payload.name);
+  if (payload.image) formData.append('Image', payload.image);
+  formData.append('DisplayOrder', String(payload.displayOrder));
+
+  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists/${id}`, {
+    method: 'PUT',
+    headers: { ...getHeaders() },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('[ProjectImagePricelists] Update failed:', res.status, text);
+    throw new Error('Failed to update price list image.');
+  }
+
+  const json: ApiResponse<number> = await res.json();
+  if (!json.success || !json.data) {
+    console.error('[ProjectImagePricelists] Update error:', json.message, json.errors);
+    throw new Error(json.message || 'Failed to update price list image.');
+  }
+
+  return json.data;
+}
+
+/** DELETE /api/projects/{projectId}/image-pricelists/{id} */
+export async function deleteProjectImagePricelist(projectId: number, id: number): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists/${id}`, {
+    method: 'DELETE',
+    headers: { ...getHeaders() },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('[ProjectImagePricelists] Delete failed:', res.status, text);
+    throw new Error('Failed to delete price list image.');
+  }
+
+  const json: ApiResponse<number> = await res.json();
+  if (!json.success) {
+    console.error('[ProjectImagePricelists] Delete error:', json.message, json.errors);
+    throw new Error(json.message || 'Failed to delete price list image.');
   }
 }
 
