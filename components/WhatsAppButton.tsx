@@ -12,7 +12,7 @@ const WhatsAppButton = () => {
 
   return (
     <div 
-      className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100]"
+      className="fixed bottom-6 right-6 z-[100] hidden md:bottom-8 md:right-8 md:block"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

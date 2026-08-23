@@ -302,19 +302,17 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 {developers.map((d) => <option key={d.id} value={d.id}>{d.label}</option>)}
               </select>
             </div>
-            {!isEditMode && (
-              <div className="space-y-3">
-                <label className="text-[#000000] font-bold text-[16px] flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#000000]"></span>
-                  Location *
-                </label>
-                <select value={form.locationId ?? ''} onChange={handleChange('locationId')}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] bg-white cursor-pointer shadow-sm transition-all hover:border-[#000000]/30">
-                  <option value="">— None —</option>
-                  {locations.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
-                </select>
-              </div>
-            )}
+            <div className="space-y-3">
+              <label className="text-[#000000] font-bold text-[16px] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#000000]"></span>
+                Location *
+              </label>
+              <select value={form.locationId ?? ''} onChange={handleChange('locationId')}
+                className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] bg-white cursor-pointer shadow-sm transition-all hover:border-[#000000]/30">
+                <option value="">— None —</option>
+                {locations.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
+              </select>
+            </div>
           </div>
 
           {/* Language Specific Content */}
