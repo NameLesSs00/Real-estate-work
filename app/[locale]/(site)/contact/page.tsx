@@ -9,13 +9,13 @@ import { useLanguage } from "@/lib/contexts/LanguageContext";
 const BASE = "/assists/contactUs";
 
 const infoCards = [
-  { icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: "info@luxe-estate.com", href: "mailto:info@luxe-estate.com" },
-  { icon: `${BASE}/phone.png`, titleKey: 'contactPage.info.phone', content: "+20 102 111 1666", href: "tel:+201021111666" },
-  { icon: `${BASE}/locatoin.png`, titleKey: 'contactPage.info.address', content: "Al-Kawsar, Hurghada", href: "https://maps.google.com" },
+  { icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: "Info@thegate-realestate.com", href: "mailto:Info@thegate-realestate.com" },
+  { icon: `${BASE}/phone.png`, titleKey: 'contactPage.info.phone', content: "01200339790", href: "tel:01200339790" },
+  { icon: `${BASE}/locatoin.png`, titleKey: 'contactPage.info.address', content: "Hurghada, El Kawther", href: "https://maps.google.com" },
   { icon: `${BASE}/fire.png`, titleKey: 'contactPage.info.follow', socials: [
     { label: "Instagram", href: "https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" },
     { label: "Facebook", href: "https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" },
-    { label: "WhatsApp", href: "https://wa.me/18005551234" },
+    { label: "WhatsApp", href: "https://wa.me/01200339790" },
   ]},
 ];
 

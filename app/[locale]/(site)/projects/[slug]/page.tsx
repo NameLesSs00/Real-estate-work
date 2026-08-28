@@ -1,29 +1,22 @@
 'use client';
 
-import { useState, useEffect, useCallback, use, useRef } from 'react';
+import { useState, useEffect, useCallback, use } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Building2, Check, ChevronRight, Loader2, MapPin, Minus, Plus, RotateCcw, X, ZoomIn } from 'lucide-react';
+import { ArrowLeft, Building2, Check, ChevronRight, Loader2, MapPin } from 'lucide-react';
 import { motion, type Variants } from 'framer-motion';
 import {
   getProjectById,
-  getProjectImagePricelists,
   resolveProjectImageUrl,
   Project,
-  ProjectImagePricelist,
 } from '@/lib/api/projects';
 import { getFacilities, Facility } from '@/lib/api/facilities';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
-import { useEscapeKey } from '@/hooks/useEscapeKey';
 import ImageGallery from '@/components/ImageGallery';
 import { BRAND_LOGOS } from '@/lib/brand';
 
 const DEFAULT_IMAGE = '/assists/defaultImage.png';
 const DEFAULT_DEVELOPER_LOGO = BRAND_LOGOS.markColor;
-const MIN_LIGHTBOX_ZOOM = 1;
-const MAX_LIGHTBOX_ZOOM = 4;
-const LIGHTBOX_ZOOM_STEP = 0.25;
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -53,88 +46,8 @@ export default function ProjectDetailsPage({
 
   const [project, setProject] = useState<Project | null>(null);
   const [facilities, setFacilities] = useState<Facility[]>([]);
-  const [priceLists, setPriceLists] = useState<ProjectImagePricelist[]>([]);
-  const [selectedPriceList, setSelectedPriceList] = useState<ProjectImagePricelist | null>(null);
-  const [lightboxZoom, setLightboxZoom] = useState(MIN_LIGHTBOX_ZOOM);
-  const [lightboxPan, setLightboxPan] = useState({ x: 0, y: 0 });
-  const [isPanning, setIsPanning] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const panStartRef = useRef({ pointerId: null as number | null, x: 0, y: 0, panX: 0, panY: 0 });
-
-  useBodyScrollLock(Boolean(selectedPriceList));
-
-  const resetLightboxView = useCallback(() => {
-    setLightboxZoom(MIN_LIGHTBOX_ZOOM);
-    setLightboxPan({ x: 0, y: 0 });
-    setIsPanning(false);
-    panStartRef.current = { pointerId: null, x: 0, y: 0, panX: 0, panY: 0 };
-  }, []);
-
-  const closePriceListLightbox = useCallback(() => {
-    setSelectedPriceList(null);
-    resetLightboxView();
-  }, [resetLightboxView]);
-
-  useEscapeKey(closePriceListLightbox, Boolean(selectedPriceList));
-
-  const openPriceListLightbox = (priceList: ProjectImagePricelist) => {
-    resetLightboxView();
-    setSelectedPriceList(priceList);
-  };
-
-  const changeLightboxZoom = useCallback((delta: number) => {
-    setLightboxZoom((current) => {
-      const next = Math.min(MAX_LIGHTBOX_ZOOM, Math.max(MIN_LIGHTBOX_ZOOM, current + delta));
-      if (next === MIN_LIGHTBOX_ZOOM) setLightboxPan({ x: 0, y: 0 });
-      return Number(next.toFixed(2));
-    });
-  }, []);
-
-  const resetLightboxZoom = () => {
-    setLightboxZoom(MIN_LIGHTBOX_ZOOM);
-    setLightboxPan({ x: 0, y: 0 });
-    setIsPanning(false);
-  };
-
-  const handleLightboxWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    changeLightboxZoom(event.deltaY < 0 ? LIGHTBOX_ZOOM_STEP : -LIGHTBOX_ZOOM_STEP);
-  };
-
-  const handlePanStart = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (lightboxZoom <= MIN_LIGHTBOX_ZOOM) return;
-
-    event.currentTarget.setPointerCapture(event.pointerId);
-    panStartRef.current = {
-      pointerId: event.pointerId,
-      x: event.clientX,
-      y: event.clientY,
-      panX: lightboxPan.x,
-      panY: lightboxPan.y,
-    };
-    setIsPanning(true);
-  };
-
-  const handlePanMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!isPanning || panStartRef.current.pointerId !== event.pointerId) return;
-
-    const start = panStartRef.current;
-    setLightboxPan({
-      x: start.panX + event.clientX - start.x,
-      y: start.panY + event.clientY - start.y,
-    });
-  };
-
-  const handlePanEnd = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (panStartRef.current.pointerId !== event.pointerId) return;
-
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    panStartRef.current.pointerId = null;
-    setIsPanning(false);
-  };
 
   const load = useCallback(async () => {
     if (Number.isNaN(projectId)) {
@@ -146,17 +59,12 @@ export default function ProjectDetailsPage({
     try {
       setLoading(true);
       setError(null);
-      const [projectData, facilityData, priceListData] = await Promise.all([
+      const [projectData, facilityData] = await Promise.all([
         getProjectById(projectId, language),
         getFacilities(),
-        getProjectImagePricelists(projectId).catch((priceListError) => {
-          console.error('[ProjectDetailsPage] Failed to load price lists:', priceListError);
-          return [];
-        }),
       ]);
       setProject(projectData);
       setFacilities(facilityData);
-      setPriceLists(priceListData);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t('projects.error'));
     } finally {
@@ -209,10 +117,7 @@ export default function ProjectDetailsPage({
     : (project.facilities ?? [])
       .map((facId) => Number(facId))
       .filter((facId) => Number.isFinite(facId));
-  const sortedPriceLists = [...priceLists].sort((a, b) => a.displayOrder - b.displayOrder || a.id - b.id);
-  const selectedPriceListImage = selectedPriceList
-    ? resolveProjectImageUrl(selectedPriceList.imageUrl)
-    : null;
+
 
   return (
     <div className="min-h-screen bg-[#F8FBFF] pt-32 font-poppins text-[#0B1F3A]">
@@ -371,132 +276,8 @@ export default function ProjectDetailsPage({
             </motion.aside>
           </div>
 
-          {sortedPriceLists.length > 0 && (
-            <motion.section variants={itemVariants} className="rounded-[24px] border border-[#BBDEFB] bg-white p-6 shadow-sm sm:p-8">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <h2 className="font-radley text-[32px] leading-tight text-[#0D47A1]">
-                    {t('projectDetails.priceLists')}
-                  </h2>
-                  <div className="mt-4 h-px w-full bg-[#D5EAFF] sm:w-[260px]" />
-                </div>
-              </div>
-
-              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {sortedPriceLists.map((priceList) => {
-                  const imageUrl = resolveProjectImageUrl(priceList.imageUrl);
-
-                  return (
-                    <button
-                      key={priceList.id}
-                      type="button"
-                      onClick={() => {
-                        if (imageUrl) openPriceListLightbox(priceList);
-                      }}
-                      disabled={!imageUrl}
-                      aria-label={t('projectDetails.viewPriceList')}
-                      className="group relative aspect-[1.35] w-full overflow-hidden rounded-[20px] border border-[#D5EAFF] bg-[#E3F2FD] transition-all hover:-translate-y-0.5 hover:border-[#90CAF9] hover:shadow-[0_16px_40px_rgba(13,71,161,0.1)] disabled:cursor-default disabled:hover:translate-y-0 disabled:hover:border-[#D5EAFF] disabled:hover:shadow-none"
-                    >
-                      {imageUrl ? (
-                        <Image
-                          src={imageUrl}
-                          alt={t('projectDetails.priceLists')}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-[13px] font-semibold text-[#6F849D]">
-                          {t('projectDetails.noPriceLists')}
-                        </div>
-                      )}
-                      <span className="absolute bottom-3 right-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-[#1565C0] shadow-sm transition-transform group-hover:scale-105">
-                        <ZoomIn size={18} />
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </motion.section>
-          )}
         </motion.div>
       </section>
-
-      {selectedPriceList && selectedPriceListImage && (
-        <div
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
-          onClick={closePriceListLightbox}
-        >
-          <div className="relative flex h-full max-h-[92vh] w-full max-w-[1180px] flex-col gap-4" onClick={(event) => event.stopPropagation()}>
-            <div className="flex items-center justify-end gap-2 text-white">
-              <button
-                type="button"
-                onClick={() => changeLightboxZoom(-LIGHTBOX_ZOOM_STEP)}
-                disabled={lightboxZoom <= MIN_LIGHTBOX_ZOOM}
-                className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40 sm:inline-flex"
-                aria-label="Zoom out"
-              >
-                <Minus size={20} />
-              </button>
-              <span className="hidden h-11 min-w-16 items-center justify-center rounded-full bg-white/10 px-4 text-[13px] font-bold tabular-nums sm:inline-flex">
-                {Math.round(lightboxZoom * 100)}%
-              </span>
-              <button
-                type="button"
-                onClick={() => changeLightboxZoom(LIGHTBOX_ZOOM_STEP)}
-                disabled={lightboxZoom >= MAX_LIGHTBOX_ZOOM}
-                className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40 sm:inline-flex"
-                aria-label="Zoom in"
-              >
-                <Plus size={20} />
-              </button>
-              <button
-                type="button"
-                onClick={resetLightboxZoom}
-                className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:inline-flex"
-                aria-label="Reset zoom"
-              >
-                <RotateCcw size={19} />
-              </button>
-              <button
-                type="button"
-                onClick={closePriceListLightbox}
-                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-                aria-label="Close price list image"
-              >
-                <X size={22} />
-              </button>
-            </div>
-
-            <div
-              className={`relative min-h-0 flex-1 overflow-hidden rounded-[20px] bg-black ${lightboxZoom > MIN_LIGHTBOX_ZOOM ? isPanning ? 'cursor-grabbing touch-none' : 'cursor-grab touch-none' : 'cursor-zoom-in'}`}
-              onWheel={handleLightboxWheel}
-              onPointerDown={handlePanStart}
-              onPointerMove={handlePanMove}
-              onPointerUp={handlePanEnd}
-              onPointerCancel={handlePanEnd}
-            >
-              <div
-                className="absolute inset-0 transition-transform duration-100 ease-out"
-                style={{
-                  transform: `translate3d(${lightboxPan.x}px, ${lightboxPan.y}px, 0) scale(${lightboxZoom})`,
-                  transformOrigin: 'center',
-                }}
-              >
-                <Image
-                  src={selectedPriceListImage}
-                  alt={t('projectDetails.priceLists')}
-                  fill
-                  sizes="100vw"
-                  className="select-none object-contain"
-                  draggable={false}
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

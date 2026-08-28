@@ -67,19 +67,19 @@ const Footer = () => {
               <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#BF9C48] transition-colors">
                 <Phone size={16} className="text-[#BF9C48] group-hover:text-white transition-colors" />
               </div>
-              <a href="tel:+1 800 555 0199" className="hover:text-[#BF9C48] transition-colors break-all mt-1">+1 800 555 0199</a>
+              <a href="tel:01200339790" className="hover:text-[#BF9C48] transition-colors break-all mt-1">01200339790</a>
             </li>
             <li className="flex items-start gap-4 group">
               <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#BF9C48] transition-colors">
                 <Earth size={16} className="text-[#BF9C48] group-hover:text-white transition-colors" />
               </div>
-              <a href="mailto:info@luxe-estate.com" className="hover:text-[#BF9C48] transition-colors break-all mt-1">info@luxe-estate.com</a>
+              <a href="mailto:Info@thegate-realestate.com" className="hover:text-[#BF9C48] transition-colors break-all mt-1">Info@thegate-realestate.com</a>
             </li>
             <li className="flex items-start gap-4 group">
               <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#BF9C48] transition-colors">
                 <MapPin size={16} className="text-[#BF9C48] group-hover:text-white transition-colors" />
               </div>
-              <span className="break-words mt-1 leading-relaxed">123 Luxury Avenue, Beverly Hills, CA</span>
+              <span className="break-words mt-1 leading-relaxed">Hurghada, El Kawther</span>
             </li>
           </ul>
         </div>
@@ -111,7 +111,7 @@ const Footer = () => {
               </svg>
             </a>
             <a 
-              href="https://wa.me/message/2CFJ7MIUOG3AM1" 
+              href="https://wa.me/01200339790" 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#BF9C48] hover:-translate-y-1 transition-all shadow-md"
