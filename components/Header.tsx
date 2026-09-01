@@ -26,10 +26,11 @@ const Header = () => {
     : [];
 
   const isHomePage = pathname === `/${language}` || pathname === '/';
-  const headerBgClass = isHomePage 
-    ? (isScrolled ? 'bg-brand-primary shadow-md py-4' : 'bg-transparent py-6')
-    : 'bg-brand-bg shadow-sm py-4 border-b border-brand-divider';
-  const textColorClass = isHomePage ? 'text-white' : 'text-brand-primary';
+  const isTransparentHomeHeader = isHomePage && !isScrolled;
+  const headerBgClass = isTransparentHomeHeader
+    ? 'bg-transparent py-6'
+    : 'bg-brand-primary shadow-md py-4';
+  const textColorClass = 'text-white';
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -149,7 +150,7 @@ const Header = () => {
           <div className="flex-shrink-0">
             <Link href={`/${language}`}>
               <BrandLogo
-                variant={isHomePage ? 'light' : 'blue'}
+                variant="light"
                 lockup="mark"
                 priority
                 className="h-[60px] w-[65px] md:h-[78px] md:w-[84px] object-contain transition-all duration-300"
@@ -187,7 +188,7 @@ const Header = () => {
             </div>
 
             {/* Language & Action */}
-            <div className={`flex items-center gap-4 px-4 border-l ${isHomePage ? 'border-white/20' : 'border-black/20'}`}>
+            <div className="flex items-center gap-4 px-4 border-l border-white/20">
               {/* Language Switcher */}
               <div className="relative" ref={langRef}>
                 <button 
@@ -248,7 +249,7 @@ const Header = () => {
             {/* Header of Menu */}
             <div className="flex items-center justify-between py-8 px-8">
               <BrandLogo
-                variant="blue"
+                variant="charcoal"
                 lockup="mark"
                 className="h-[80px] w-[86px] object-contain"
               />

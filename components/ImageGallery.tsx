@@ -163,7 +163,7 @@ export default function ImageGallery({ images, projectName = 'Project Image' }: 
         {/* ── Main Featured Image ── */}
         <div
           className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-[32px] overflow-hidden shadow-lg cursor-zoom-in group/main"
-          style={{ backgroundColor: 'var(--color-brand-primary)' }}
+          style={{ backgroundColor: 'var(--color-brand-bg)' }}
           onClick={() => setLightbox({ open: true, index: lightbox.index })}
         >
           {/* Using standard img for maximum compatibility and to ensure visibility */}
