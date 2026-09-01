@@ -175,7 +175,7 @@
     "missionTitle": "Unsere Mission",
     "missionText": "Unsere Kunden bei jedem Schritt ihrer Immobilienreise mit Ehrlichkeit, Fachkompetenz und Sorgfalt zu begleiten. Wir verpflichten uns, einen außergewöhnlichen Service, kuratierte Immobilienauswahlen und ein nahtloses Erlebnis zu bieten, das langfristiges Vertrauen schafft.",
     "journeyTitle": "Ihre Immobilienreise beginnt bei uns",
-    "journeyText": "Wir sind ein Immobilienunternehmen, das sich darauf spezialisiert hat, Ihnen zu helfen, die perfekte Immobilie in ganz Ägypten zu finden. Von modernen Wohnungen und Luxusvillen bis hin zu intelligenten Investitionsmöglichkeiten gestalten wir Ihren Weg zum Kauf oder zur Miete nahtlos, zuverlässig und lohnend.",
+    "journeyText": "Wir sind ein Immobilienunternehmen, das sich darauf spezialisiert hat, Ihnen zu helfen, die perfekte Immobilie in ganz Ägypten zu finden. Von modernen Wohnungen und Luxusvillen bis hin zu intelligenten Investitionsmöglichkeiten gestalten wir Ihren Weg zum Kauf nahtlos, zuverlässig und lohnend.",
     "offerTitle": "Was wir bieten?",
     "offers": {
       "sales": {
@@ -386,7 +386,7 @@
   "faqPage": {
     "tag": "UNTERSTÜTZUNG",
     "title": "Häufig gestellte Fragen",
-    "subtitle": "Alles, was Sie über das Kaufen, Verkaufen und Mieten bei The Rook Real Estate Investment wissen müssen.",
+    "subtitle": "Alles, was Sie über das Kaufen und Verkaufen bei The Rook Real Estate Investment wissen müssen.",
     "loading": "Fragen werden geladen...",
     "noQuestions": "Zur Zeit sind keine FAQs verfügbar. Schauen Sie bald wieder vorbei!"
   },
@@ -402,7 +402,7 @@
     "propertyTitle": "Immobilientitel",
     "price": "Preis",
     "unitSize": "Einheitsgröße",
-    "saleOrRent": "Verkauf oder Miete",
+    "saleOrRent": "Angebotstyp",
     "rooms": "Zimmer",
     "propertyDescription": "Immobilienbeschreibung",
     "address": "Adresse",

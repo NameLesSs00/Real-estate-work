@@ -1,5 +1,5 @@
 .blogs-page {
-  background-color: #FFFFFF;
+  background-color: var(--color-brand-surface);
   min-height: 100vh;
   padding-bottom: 100px;
 }
@@ -35,7 +35,7 @@
   font-family: var(--font-poppins);
   font-size: 28px;
   font-weight: 700;
-  color: #000000;
+  color: var(--color-brand-primary);
   margin-bottom: 20px;
 }
 
@@ -74,7 +74,7 @@
 }
 
 .blog-item-title {
-  color: #FFFFFF;
+  color: var(--color-brand-surface);
   font-family: var(--font-poppins);
   font-size: 20px;
   font-weight: 700;
@@ -84,8 +84,8 @@
 
 .blog-item-read-more {
   align-self: flex-end;
-  background: #FFFFFF;
-  color: #000000;
+  background: var(--color-brand-surface);
+  color: var(--color-brand-primary);
   padding: 8px 20px;
   border-radius: 50px;
   font-family: var(--font-poppins);
@@ -108,25 +108,25 @@
   max-width: 300px;
   padding: 18px;
   border-radius: 50px;
-  border: 1.5px solid #000000;
+  border: 1.5px solid var(--color-brand-primary);
   background: transparent;
   font-family: var(--font-poppins);
   font-size: 18px;
   font-weight: 600;
-  color: #000000;
+  color: var(--color-brand-primary);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .load-more-btn:hover {
-  background: #000000;
-  color: #FFFFFF;
+  background: var(--color-brand-primary);
+  color: var(--color-brand-surface);
 }
 
 /* --- Single Blog Page --- */
 .single-blog-page {
   padding-bottom: 100px;
-  background-color: #FFFFFF;
+  background-color: var(--color-brand-surface);
 }
 
 .single-blog-container {
@@ -142,7 +142,7 @@
   margin-bottom: 30px;
   font-family: var(--font-poppins);
   font-size: 14px;
-  color: #666;
+  color: var(--color-brand-muted);
 }
 
 .breadcrumb-icon {
@@ -151,14 +151,14 @@
 }
 
 .breadcrumb-separator {
-  color: #999;
+  color: var(--color-brand-muted-light);
 }
 
 .single-blog-title {
   font-family: var(--font-poppins);
   font-size: 48px;
   font-weight: 700;
-  color: #000000;
+  color: var(--color-brand-primary);
   line-height: 1.2;
   margin-bottom: 40px;
 }
@@ -176,7 +176,7 @@
   font-family: var(--font-poppins);
   font-size: 18px;
   line-height: 1.8;
-  color: #333;
+  color: var(--color-brand-primary);
 }
 
 .blog-section {
@@ -185,7 +185,7 @@
 
 .blog-section h2 {
   font-weight: 700;
-  color: #000000;
+  color: var(--color-brand-primary);
   margin-bottom: 20px;
   font-size: 28px;
 }

@@ -21,17 +21,11 @@ const PROPERTY_TYPES = [
   { key: 'chalet', value: '5' },
 ];
 
-const CATEGORIES = [
-  { value: 'Buy' },
-  { value: 'Rent' },
-];
-
 const PropertyFilters = ({ onSearch }: Props) => {
   const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
   const [propertyType, setPropertyType] = useState('');
-  const [unitType, setUnitType] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   
@@ -45,7 +39,7 @@ const PropertyFilters = ({ onSearch }: Props) => {
   }, []);
 
   const handleSearch = () => {
-    onSearch({ searchTerm, location, propertyType, unitType, minPrice, maxPrice, currency: 'EGP', status: '', locationId: '', country: '' });
+    onSearch({ searchTerm, location, propertyType, unitType: 'Buy', minPrice, maxPrice, currency: 'EGP', status: '', locationId: '', country: '' });
   };
   const selectedPropertyType = PROPERTY_TYPES.find((type) => type.value === propertyType);
 
@@ -102,24 +96,6 @@ const PropertyFilters = ({ onSearch }: Props) => {
           <ChevronDown className="filter-chevron pointer-events-none" size={18} />
         </div>
 
-        <div className="filter-dropdown relative group">
-          <div className="filter-left">
-            <Image src="/assists/Properties/PropertyType.png" alt={t('propertiesPage.sidebar.category')} width={20} height={20} className="filter-icon" />
-            <select 
-              value={unitType} 
-              onChange={(e) => setUnitType(e.target.value)} 
-              className="filter-text bg-transparent outline-none appearance-none cursor-pointer absolute inset-0 w-full h-full opacity-0"
-            >
-              <option value="">{t('propertiesPage.sidebar.allCategories')}</option>
-              {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.value === 'Buy' ? t('propertiesPage.sidebar.buy') : t('propertiesPage.sidebar.rent')}</option>)}
-            </select>
-            <span className="filter-text pointer-events-none">
-              {unitType ? (unitType === 'Buy' ? t('propertiesPage.sidebar.buy') : t('propertiesPage.sidebar.rent')) : t('propertiesPage.sidebar.category')}
-            </span>
-          </div>
-          <ChevronDown className="filter-chevron pointer-events-none" size={18} />
-        </div>
-        
         <div className="filter-dropdown relative">
           <div className="filter-left w-full">
             <Image src="/assists/Properties/PricingRange.png" alt={t('propertiesPage.sidebar.priceRange')} width={20} height={20} className="filter-icon flex-shrink-0" />
@@ -128,7 +104,7 @@ const PropertyFilters = ({ onSearch }: Props) => {
               placeholder={t('propertiesPage.sidebar.min')}
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="w-full bg-transparent outline-none text-[14px] text-[#000000] placeholder:text-[#949494]"
+              className="w-full bg-transparent outline-none text-[14px] text-brand-primary placeholder:text-brand-muted-light"
             />
           </div>
         </div>
@@ -141,7 +117,7 @@ const PropertyFilters = ({ onSearch }: Props) => {
               placeholder={t('propertiesPage.sidebar.max')}
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-full bg-transparent outline-none text-[14px] text-[#000000] placeholder:text-[#949494]"
+              className="w-full bg-transparent outline-none text-[14px] text-brand-primary placeholder:text-brand-muted-light"
             />
           </div>
         </div>

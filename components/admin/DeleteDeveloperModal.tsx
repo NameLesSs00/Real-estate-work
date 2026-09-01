@@ -53,7 +53,7 @@ export default function DeleteDeveloperModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#000000] px-8 py-5 flex items-center justify-between shrink-0">
+        <div className="bg-brand-primary px-8 py-5 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[20px] font-bold">Delete Developer</h2>
           <button
             onClick={onClose}
@@ -70,9 +70,9 @@ export default function DeleteDeveloperModal({
 
         {/* Body */}
         <div className="p-10 text-center space-y-6">
-          <p className="text-[#475467] text-[18px] leading-relaxed">
+          <p className="text-admin-muted text-[18px] leading-relaxed">
             Are you sure you want to delete{' '}
-            <span className="font-bold text-[#000000]">
+            <span className="font-bold text-brand-primary">
               {developerName || 'this developer'}
             </span>
             ? This action cannot be undone.
@@ -83,14 +83,14 @@ export default function DeleteDeveloperModal({
           <div className="flex gap-4">
             <button
               onClick={onClose}
-              className="flex-1 py-4 rounded-xl border border-gray-200 text-[#000000] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
+              className="flex-1 py-4 rounded-xl border border-gray-200 text-brand-primary font-bold hover:bg-gray-50 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleConfirm}
               disabled={isLoading}
-              className="flex-1 py-4 rounded-xl bg-[#000000] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex-1 py-4 rounded-xl bg-brand-primary hover:bg-brand-primary-hover text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Deleting...' : 'Delete'}
             </button>

@@ -36,7 +36,7 @@
 
 .properties-hero-title {
   font-family: var(--font-poppins);
-  color: #ffffff;
+  color: var(--color-brand-surface);
   font-size: 42px;
   font-weight: 600;
   line-height: 1.2;
@@ -45,7 +45,7 @@
 
 .properties-hero-subtitle {
   font-family: var(--font-poppins);
-  color: #e0e0e0;
+  color: var(--color-brand-divider);
   font-size: 16px;
   line-height: 1.6;
   max-width: 800px;
@@ -58,7 +58,7 @@
 
 .properties-grid-section {
   padding: 40px 0 100px;
-  background-color: #ffffff;
+  background-color: var(--color-brand-surface);
   display: flex;
   justify-content: center;
   width: 100%;
@@ -79,14 +79,14 @@
 
 .properties-grid-title {
   font-family: var(--font-poppins);
-  color: #0D47A1;
+  color: var(--color-brand-primary);
   font-size: 32px;
   font-weight: 600;
 }
 
 .properties-grid-subtitle {
   font-family: var(--font-poppins);
-  color: #949494;
+  color: var(--color-brand-muted-light);
   font-size: 16px;
 }
 
@@ -106,19 +106,19 @@
 .load-more-button {
   padding: 18px 40px;
   border-radius: 50px;
-  border: 1.5px solid #1565C0;
+  border: 1.5px solid var(--color-brand-primary);
   background-color: transparent;
   font-family: var(--font-poppins);
   font-size: 18px;
   font-weight: 600;
-  color: #1565C0;
+  color: var(--color-brand-primary);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .load-more-button:hover {
-  background-color: #1565C0;
-  color: #ffffff;
+  background-color: var(--color-brand-primary);
+  color: var(--color-brand-surface);
 }
 
 @media (max-width: 1200px) {

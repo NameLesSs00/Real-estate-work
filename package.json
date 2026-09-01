@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "node app.js",
+    "build:monsterasp": "next build && node scripts/prepare-monsterasp.js",
+    "start": "node server.js",
     "lint": "eslint"
   },
   "dependencies": {

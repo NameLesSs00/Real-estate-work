@@ -4,7 +4,7 @@ import BrandLogo from '@/components/BrandLogo';
 
 const AdminSplash = () => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-[#000000] z-50 overflow-hidden">
+    <div className="fixed inset-0 flex items-center justify-center bg-brand-primary z-50 overflow-hidden">
       {/* Background Illustration */}
       <div className="absolute inset-0 z-0 opacity-40">
         <Image

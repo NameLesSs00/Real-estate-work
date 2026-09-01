@@ -386,7 +386,7 @@
   "faqPage": {
     "tag": "WSPARCIE",
     "title": "Często zadawane pytania",
-    "subtitle": "Wszystko, co musisz wiedzieć o kupnie, sprzedaży i wynajmie z The Rook Real Estate Investment.",
+    "subtitle": "Wszystko, co musisz wiedzieć o kupnie i sprzedaży z The Rook Real Estate Investment.",
     "loading": "Ładowanie pytań...",
     "noQuestions": "Obecnie brak dostępnych pytań FAQ. Zapraszamy wkrótce!"
   },
@@ -402,7 +402,7 @@
     "propertyTitle": "Tytuł nieruchomości",
     "price": "Cena",
     "unitSize": "Rozmiar jednostki",
-    "saleOrRent": "Sprzedaż lub wynajem",
+    "saleOrRent": "Typ oferty",
     "rooms": "Pokoje",
     "propertyDescription": "Opis nieruchomości",
     "address": "Adres",

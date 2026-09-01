@@ -20,7 +20,7 @@ const CopyLinkButton = () => {
     <div className="relative">
       <button
         onClick={handleCopy}
-        className="w-12 h-12 bg-white border border-[#ECECEC] rounded-[10px] flex items-center justify-center shadow-sm hover:bg-gray-50 transition-all group relative"
+        className="w-12 h-12 bg-white border border-brand-divider rounded-[10px] flex items-center justify-center shadow-sm hover:bg-gray-50 transition-all group relative"
         title="Copy Link"
       >
         {copied ? (

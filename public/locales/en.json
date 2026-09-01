@@ -386,7 +386,7 @@
   "faqPage": {
     "tag": "SUPPORT",
     "title": "Frequently Asked Questions",
-    "subtitle": "Everything you need to know about buying, selling, and renting with The Rook Real Estate Investment.",
+    "subtitle": "Everything you need to know about buying and selling with The Rook Real Estate Investment.",
     "loading": "Loading questions...",
     "noQuestions": "No FAQs available at the moment. Check back soon!"
   },
@@ -402,7 +402,7 @@
     "propertyTitle": "Property Title",
     "price": "Price",
     "unitSize": "Unit Size",
-    "saleOrRent": "Sale Or Rent",
+    "saleOrRent": "Listing Type",
     "rooms": "Rooms",
     "propertyDescription": "Property Description",
     "address": "Address",

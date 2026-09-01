@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Home, Handshake, FileText } from 'lucide-react';
+import { Home, Handshake } from 'lucide-react';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 const steps = [
@@ -18,12 +18,6 @@ const steps = [
     titleKey: 'howItWorks.cards.buy.title',
     descKey: 'howItWorks.cards.buy.desc',
     link: '/properties?unitType=Buy',
-  },
-  {
-    icon: FileText,
-    titleKey: 'howItWorks.cards.rent.title',
-    descKey: 'howItWorks.cards.rent.desc',
-    link: '/properties?unitType=Rent',
   },
 ];
 
@@ -58,7 +52,7 @@ const HowItWorks = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-[#2196F3] text-[40px] md:text-[56px] font-medium ml-32 md:ml-64 -mt-4 md:-mt-8"
+            className="text-brand-secondary text-[40px] md:text-[56px] font-medium ml-32 md:ml-64 -mt-4 md:-mt-8"
             style={{ fontFamily: 'var(--font-dancing-script)' }}
           >
             {t('howItWorks.accent')}
@@ -66,7 +60,7 @@ const HowItWorks = () => {
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {steps.map((step, index) => (
             <motion.div
               key={index}
@@ -76,16 +70,16 @@ const HowItWorks = () => {
               transition={{ duration: 0.6, delay: index * 0.2 }}
               className="bg-white rounded-[24px] p-8 flex flex-col items-center text-center shadow-2xl"
             >
-              <div className="w-16 h-16 rounded-full bg-[#2196F3] flex items-center justify-center text-white mb-6">
+              <div className="w-16 h-16 rounded-full bg-brand-secondary flex items-center justify-center text-white mb-6">
                 <step.icon size={28} />
               </div>
-              <h3 className="text-[#0D47A1] font-bold text-[22px] mb-4">{t(step.titleKey)}</h3>
+              <h3 className="text-brand-primary font-bold text-[22px] mb-4">{t(step.titleKey)}</h3>
               <p className="text-gray-500 text-[15px] leading-relaxed mb-6">
                 {t(step.descKey)}
               </p>
               <Link 
                 href={`/${language}${step.link}`}
-                className="text-[#0D47A1] font-semibold text-[14px] hover:text-[#2196F3] transition-colors mt-auto flex items-center gap-2"
+                className="text-brand-primary font-semibold text-[14px] hover:text-brand-secondary transition-colors mt-auto flex items-center gap-2"
               >
                 {t('howItWorks.readMore')} &rarr;
               </Link>

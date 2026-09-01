@@ -37,7 +37,7 @@ export default function DashboardPage() {
       setLoading(true);
       try {
         const [unitsData, projectsData, devsData, requestsData, dealsData] = await Promise.allSettled([
-          getUnitsFiltered({ PageSize: 5 }),
+          getUnitsFiltered({ UnitType: 'Buy', PageSize: 5 }),
           getProjects(1),
           getDevelopers(1),
           getRequests(1, 5, 0), // status 0 = pending
@@ -72,7 +72,7 @@ export default function DashboardPage() {
           );
         }
         if (dealsData.status === 'fulfilled') {
-          setRecentDeals(dealsData.value.items.map(d => ({
+          setRecentDeals(dealsData.value.items.filter(d => d.dealType?.toLowerCase() !== 'rent').map(d => ({
             id: d.id,
             unit: {
               ...d.unit,
@@ -98,9 +98,9 @@ export default function DashboardPage() {
       loading,
       icon: '/admin/dashbaord/units.png',
       bg: 'bg-white border border-gray-100',
-      textCol: 'text-[#000000]',
+      textCol: 'text-brand-primary',
       subText: 'text-gray-500',
-      iconBg: 'bg-[#EEF0F5]',
+      iconBg: 'bg-brand-secondary-soft',
     },
     {
       title: 'Active Projects',
@@ -108,9 +108,9 @@ export default function DashboardPage() {
       loading,
       icon: '/admin/dashbaord/activeProject.png',
       bg: 'bg-white border border-gray-100',
-      textCol: 'text-[#000000]',
+      textCol: 'text-brand-primary',
       subText: 'text-gray-500',
-      iconBg: 'bg-[#F3E8FF]',
+      iconBg: 'bg-brand-secondary-soft',
     },
     {
       title: 'Developers',
@@ -118,9 +118,9 @@ export default function DashboardPage() {
       loading,
       icon: '/admin/dashbaord/developers.png',
       bg: 'bg-white border border-gray-100',
-      textCol: 'text-[#000000]',
+      textCol: 'text-brand-primary',
       subText: 'text-gray-500',
-      iconBg: 'bg-[#EEF0F5]',
+      iconBg: 'bg-brand-secondary-soft',
     },
     {
       title: 'Pending Requests',
@@ -128,20 +128,20 @@ export default function DashboardPage() {
       loading,
       icon: '/admin/dashbaord/revenue.png',
       bg: 'bg-white border border-gray-100',
-      textCol: 'text-[#000000]',
+      textCol: 'text-brand-primary',
       subText: 'text-gray-500',
-      iconBg: 'bg-[#F3E8FF]',
+      iconBg: 'bg-brand-secondary-soft',
     },
   ];
 
   return (
-    <div className="p-8 md:p-10 min-h-screen font-inter" style={{ backgroundColor: '#F9F9F980' }}>
+    <div className="p-8 md:p-10 min-h-screen font-inter" style={{ backgroundColor: 'rgb(247 245 243 / 0.50)' }}>
       <div className="max-w-[1400px] mx-auto">
 
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-[32px] font-bold text-[#000000] mb-2">Dashboard Overview</h1>
-          <p className="text-[#64748B] text-lg">Welcome back! Here&apos;s what&apos;s happening today.</p>
+          <h1 className="text-[32px] font-bold text-brand-primary mb-2">Dashboard Overview</h1>
+          <p className="text-admin-muted text-lg">Welcome back! Here&apos;s what&apos;s happening today.</p>
         </div>
 
         {/* Stat Cards */}
@@ -165,10 +165,10 @@ export default function DashboardPage() {
           {/* Recent Units */}
           <div>
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-[22px] font-bold text-[#000000]">Recent Units</h3>
-              <Link href="/admin/units" className="text-[14px] text-[#64748B] hover:text-[#000000] font-medium transition-colors">View all →</Link>
+              <h3 className="text-[22px] font-bold text-brand-primary">Recent Units</h3>
+              <Link href="/admin/units" className="text-[14px] text-admin-muted hover:text-brand-primary font-medium transition-colors">View all →</Link>
             </div>
-            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#E3F2FD80' }}>
+            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: 'rgb(247 245 243 / 0.50)' }}>
               {loading ? (
                 Array(3).fill(0).map((_, i) => (
                   <div key={i} className="bg-white rounded-[20px] p-5 animate-pulse h-[88px]" />
@@ -187,12 +187,12 @@ export default function DashboardPage() {
                       />
                     </div>
                     <div>
-                      <h4 className="text-[15px] font-bold text-[#000000] line-clamp-1">{unit.name}</h4>
+                      <h4 className="text-[15px] font-bold text-brand-primary line-clamp-1">{unit.name}</h4>
                       <p className="text-[13px] text-gray-500 mt-0.5">{unit.locationName || '—'}</p>
                     </div>
                   </div>
                   <div className="text-right pr-1">
-                    <p className="text-[16px] font-bold text-[#000000]">{unit.currencyCode || 'EGP'} {unit.price?.toLocaleString()}</p>
+                    <p className="text-[16px] font-bold text-brand-primary">{unit.currencyCode || 'EGP'} {unit.price?.toLocaleString()}</p>
                     <span className={`text-[12px] font-semibold ${unit.isActive ? 'text-green-500' : 'text-red-400'}`}>
                       {unit.isActive ? 'Active' : 'Sold'}
                     </span>
@@ -205,10 +205,10 @@ export default function DashboardPage() {
           {/* Pending Requests */}
           <div>
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-[22px] font-bold text-[#000000]">Pending Requests</h3>
-              <Link href="/admin/requests" className="text-[14px] text-[#64748B] hover:text-[#000000] font-medium transition-colors">View all →</Link>
+              <h3 className="text-[22px] font-bold text-brand-primary">Pending Requests</h3>
+              <Link href="/admin/requests" className="text-[14px] text-admin-muted hover:text-brand-primary font-medium transition-colors">View all →</Link>
             </div>
-            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: '#E3F2FD80' }}>
+            <div className="p-4 rounded-[32px] space-y-3" style={{ backgroundColor: 'rgb(247 245 243 / 0.50)' }}>
               {loading ? (
                 Array(3).fill(0).map((_, i) => (
                   <div key={i} className="bg-white rounded-[20px] p-5 animate-pulse h-[78px]" />
@@ -218,12 +218,12 @@ export default function DashboardPage() {
               ) : pendingRequests.map((req) => (
                 <div key={req.id} className="bg-white rounded-[20px] p-4 flex items-center justify-between shadow-sm">
                   <div>
-                    <h4 className="text-[15px] font-bold text-[#000000]">{req.unitName}</h4>
+                    <h4 className="text-[15px] font-bold text-brand-primary">{req.unitName}</h4>
                     <p className="text-[13px] text-gray-500 mt-0.5">{req.applicantName}</p>
                   </div>
                   <Link
                     href="/admin/requests"
-                    className="text-[13px] font-semibold text-[#000000] border border-[#000000] px-4 py-1.5 rounded-full hover:bg-[#000000] hover:text-white transition-all"
+                    className="text-[13px] font-semibold text-brand-primary border border-brand-primary px-4 py-1.5 rounded-full hover:bg-brand-primary hover:text-white transition-all"
                   >
                     Review
                   </Link>
@@ -237,12 +237,12 @@ export default function DashboardPage() {
         {recentDeals.length > 0 && (
           <div>
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-[22px] font-bold text-[#000000]">Recent Deals</h3>
+              <h3 className="text-[22px] font-bold text-brand-primary">Recent Deals</h3>
             </div>
             <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 overflow-hidden">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-gray-50 text-[14px] font-bold text-[#64748B]">
+                  <tr className="border-b border-gray-50 text-[14px] font-bold text-admin-muted">
                     <th className="py-4 px-6">Unit</th>
                     <th className="py-4 px-6">Project</th>
                     <th className="py-4 px-6">Type</th>
@@ -252,11 +252,11 @@ export default function DashboardPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {recentDeals.map((deal) => (
-                    <tr key={deal.id} className="text-[14px] text-[#000000] hover:bg-gray-50/50 transition-colors">
+                    <tr key={deal.id} className="text-[14px] text-brand-primary hover:bg-gray-50/50 transition-colors">
                       <td className="py-4 px-6 font-semibold">{deal.unit?.unitName}</td>
                       <td className="py-4 px-6 text-gray-500">{deal.unit?.projectName}</td>
                       <td className="py-4 px-6">
-                        <span className="px-3 py-1 bg-[#EEF0F5] rounded-full text-xs font-semibold">{deal.dealType}</span>
+                        <span className="px-3 py-1 bg-brand-secondary-soft rounded-full text-xs font-semibold">{deal.dealType}</span>
                       </td>
                       <td className="py-4 px-6 font-bold">{deal.unit?.currencyCode || 'EGP'} {deal.unit?.price?.toLocaleString()}</td>
                       <td className="py-4 px-6 text-gray-400">{new Date(deal.createdAt).toLocaleDateString()}</td>

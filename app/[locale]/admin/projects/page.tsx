@@ -89,19 +89,19 @@ export default function ProjectsPage() {
 
 
   return (
-    <div className="p-10 lg:p-14 font-inter bg-[#F8F9FA] min-h-full scrollbar-hide">
+    <div className="p-10 lg:p-14 font-inter bg-admin-bg min-h-full scrollbar-hide">
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
         <div>
-          <h1 className="text-[36px] font-bold text-[#000000] mb-1">Projects</h1>
-          <p className="text-[#64748B] text-[17px]">
+          <h1 className="text-[36px] font-bold text-brand-primary mb-1">Projects</h1>
+          <p className="text-admin-muted text-[17px]">
             {totalCount} project{totalCount !== 1 ? 's' : ''} total
           </p>
         </div>
         <button
           onClick={handleAddNew}
-          className="bg-[#000000] text-white px-10 py-5 rounded-[24px] flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-xl hover:shadow-2xl active:scale-95 group cursor-pointer"
+          className="bg-brand-primary text-white px-10 py-5 rounded-[24px] flex items-center gap-3 hover:bg-brand-primary-hover transition-all shadow-xl hover:shadow-2xl active:scale-95 group cursor-pointer"
         >
           <Image
             src="/admin/projects/mingcute_add-fill.png"
@@ -122,7 +122,7 @@ export default function ProjectsPage() {
         <input
           type="text"
           placeholder="Search projects..."
-          className="w-full bg-white border border-gray-100 rounded-[28px] py-6 pl-18 pr-10 text-[18px] text-[#000000] focus:outline-none focus:ring-4 focus:ring-[#000000]/5 transition-all shadow-sm placeholder:text-[#94A3B8]"
+          className="w-full bg-white border border-gray-100 rounded-[28px] py-6 pl-18 pr-10 text-[18px] text-brand-primary focus:outline-none focus:ring-4 focus:ring-brand-primary/5 transition-all shadow-sm placeholder:text-brand-muted-light"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -132,21 +132,21 @@ export default function ProjectsPage() {
       <div className="bg-white rounded-[32px] shadow-sm border border-gray-50 overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-24">
-            <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <p className="text-red-500">{error}</p>
             <button
               onClick={() => fetchProjects(currentPage)}
-              className="bg-[#000000] text-white px-6 py-2 rounded-full text-sm cursor-pointer"
+              className="bg-brand-primary text-white px-6 py-2 rounded-full text-sm cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : filteredProjects.length === 0 ? (
           <div className="flex items-center justify-center py-20">
-            <p className="text-[#64748B] text-[18px]">
+            <p className="text-admin-muted text-[18px]">
               {searchQuery ? 'No projects match your search.' : 'No projects yet. Add one!'}
             </p>
           </div>
@@ -154,7 +154,7 @@ export default function ProjectsPage() {
           <div className="overflow-x-auto scrollbar-hide">
             <table className="w-full min-w-[900px] text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-50 text-[15px] font-bold text-[#000000]">
+                <tr className="border-b border-gray-50 text-[15px] font-bold text-brand-primary">
                   <th className="py-7 px-10">Image</th>
                   <th className="py-7 px-4">Name</th>
                   <th className="py-7 px-4">Description</th>
@@ -187,7 +187,7 @@ export default function ProjectsPage() {
                       {/* Name */}
                       <td className="py-6 px-4">
                         <span
-                          className="text-[17px] font-bold text-[#000000] cursor-pointer hover:text-blue-600 transition-colors"
+                          className="text-[17px] font-bold text-brand-primary cursor-pointer hover:text-brand-secondary transition-colors"
                           onClick={() => handleView(project)}
                         >
                           {project.name}
@@ -196,21 +196,21 @@ export default function ProjectsPage() {
 
                       {/* Description */}
                       <td className="py-6 px-4 max-w-[220px]">
-                        <p className="text-[14px] text-[#64748B] line-clamp-2 leading-relaxed break-words">
+                        <p className="text-[14px] text-admin-muted line-clamp-2 leading-relaxed break-words">
                           {project.description || <span className="italic text-gray-300">—</span>}
                         </p>
                       </td>
 
                       {/* Developer */}
                       <td className="py-6 px-4">
-                        <span className="text-[14px] text-[#64748B]">
+                        <span className="text-[14px] text-admin-muted">
                           {project.developerName || <span className="italic text-gray-300">—</span>}
                         </span>
                       </td>
 
                       {/* Location */}
                       <td className="py-6 px-4">
-                        <span className="text-[14px] text-[#64748B]">
+                        <span className="text-[14px] text-admin-muted">
                           {project.locationName || <span className="italic text-gray-300">—</span>}
                         </span>
                       </td>
@@ -220,7 +220,7 @@ export default function ProjectsPage() {
                         <div className="flex items-center justify-end gap-2">
                           <button 
                             onClick={() => handleView(project)} 
-                            className="p-2.5 bg-gray-50 hover:bg-[#000000] text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            className="p-2.5 bg-gray-50 hover:bg-brand-primary text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
                             title="View Details"
                           >
                             <div 
@@ -233,7 +233,7 @@ export default function ProjectsPage() {
                           </button>
                           <button 
                             onClick={() => handleEdit(project)} 
-                            className="p-2.5 bg-gray-50 hover:bg-blue-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            className="p-2.5 bg-gray-50 hover:bg-brand-secondary text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
                             title="Edit Project"
                           >
                             <div 
@@ -277,19 +277,19 @@ export default function ProjectsPage() {
         {/* Pagination */}
         {!isLoading && !error && totalPages > 1 && (
           <div className="flex items-center justify-between px-10 py-5 border-t border-gray-50">
-            <p className="text-[14px] text-[#94A3B8]">Page {currentPage} of {totalPages}</p>
+            <p className="text-[14px] text-brand-muted-light">Page {currentPage} of {totalPages}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => fetchProjects(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Previous
               </button>
               <button
                 onClick={() => fetchProjects(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Next
               </button>

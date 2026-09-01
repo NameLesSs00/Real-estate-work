@@ -4,6 +4,7 @@ import { ACCESS_TOKEN_KEY } from '@/lib/auth/tokens';
 
 const locales = ['en', 'de', 'pl'];
 const defaultLocale = 'en';
+const iisnodePipeSegment = /\/pipe\/[0-9a-f-]{36}/gi;
 
 function getLocale(request: NextRequest): string {
   // 1. Check cookie
@@ -22,6 +23,13 @@ function getLocale(request: NextRequest): string {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (iisnodePipeSegment.test(pathname)) {
+    iisnodePipeSegment.lastIndex = 0;
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.replace(iisnodePipeSegment, '').replace(/\/{2,}/g, '/') || '/';
+    return NextResponse.rewrite(url);
+  }
 
   // 1. Skip static files and API routes
   if (

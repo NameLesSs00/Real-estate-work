@@ -105,13 +105,13 @@ export default function RequestsPage() {
   };
 
   return (
-    <div className="p-8 md:p-10 min-h-screen bg-[#FDFCFB] font-inter">
+    <div className="p-8 md:p-10 min-h-screen bg-brand-bg font-inter">
       <div className="max-w-[1200px] mx-auto">
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-[32px] font-bold text-[#000000] mb-1">Unit Requests</h1>
-          <p className="text-[#64748B]">{totalCount} request{totalCount !== 1 ? 's' : ''} total</p>
+          <h1 className="text-[32px] font-bold text-brand-primary mb-1">Unit Requests</h1>
+          <p className="text-admin-muted">{totalCount} request{totalCount !== 1 ? 's' : ''} total</p>
         </div>
 
         {/* Notification */}
@@ -123,12 +123,12 @@ export default function RequestsPage() {
         )}
 
         {/* Filter Tabs */}
-        <div className="flex gap-2 mb-8 bg-[#F0EBE3] p-1.5 rounded-2xl w-fit">
+        <div className="flex gap-2 mb-8 bg-brand-secondary-soft p-1.5 rounded-2xl w-fit">
           {(['all', 'pending', 'approved', 'rejected'] as StatusFilter[]).map((filter) => (
             <button
               key={filter}
               onClick={() => handleFilterChange(filter)}
-              className={`px-6 py-2.5 rounded-xl text-[14px] font-semibold capitalize transition-all duration-200 cursor-pointer ${activeFilter === filter ? 'bg-[#000000] text-white shadow-md' : 'text-[#000000] hover:bg-white/50'}`}
+              className={`px-6 py-2.5 rounded-xl text-[14px] font-semibold capitalize transition-all duration-200 cursor-pointer ${activeFilter === filter ? 'bg-brand-primary text-white shadow-md' : 'text-brand-primary hover:bg-white/50'}`}
             >
               {filter}
             </button>
@@ -139,22 +139,22 @@ export default function RequestsPage() {
         <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-24">
-              <Loader2 className="animate-spin text-[#000000]" size={36} />
+              <Loader2 className="animate-spin text-brand-primary" size={36} />
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <p className="text-red-500">{error}</p>
-              <button onClick={() => fetchRequests(currentPage, activeFilter)} className="bg-[#000000] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
+              <button onClick={() => fetchRequests(currentPage, activeFilter)} className="bg-brand-primary text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
             </div>
           ) : requests.length === 0 ? (
             <div className="flex items-center justify-center py-20">
-              <p className="text-[#64748B] text-[16px]">No {activeFilter === 'all' ? '' : activeFilter} requests found.</p>
+              <p className="text-admin-muted text-[16px]">No {activeFilter === 'all' ? '' : activeFilter} requests found.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left min-w-[700px]">
                 <thead>
-                  <tr className="border-b border-gray-50 text-[13px] font-bold text-[#64748B]">
+                  <tr className="border-b border-gray-50 text-[13px] font-bold text-admin-muted">
                     <th className="py-5 px-6">Unit</th>
                     <th className="py-5 px-6">Applicant</th>
                     <th className="py-5 px-6">Status</th>
@@ -165,20 +165,20 @@ export default function RequestsPage() {
                 <tbody className="divide-y divide-gray-50">
                   {requests.map((req) => (
                     <tr key={req.id} className="text-[14px] hover:bg-gray-50/50 transition-colors">
-                      <td className="py-4 px-6 font-semibold text-[#000000]">{req.unitName}</td>
-                      <td className="py-4 px-6 text-[#64748B]">{req.applicantName}</td>
+                      <td className="py-4 px-6 font-semibold text-brand-primary">{req.unitName}</td>
+                      <td className="py-4 px-6 text-admin-muted">{req.applicantName}</td>
                       <td className="py-4 px-6">
                         <span className={`px-3 py-1 rounded-full text-[12px] font-semibold capitalize ${statusBadge(req.status)}`}>
                           {req.status}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-[#94A3B8]">{new Date(req.createdAt).toLocaleDateString()}</td>
+                      <td className="py-4 px-6 text-brand-muted-light">{new Date(req.createdAt).toLocaleDateString()}</td>
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => handleViewDetail(req.id)}
                             disabled={detailLoading}
-                            className="p-2 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer text-[#64748B] hover:text-[#000000]"
+                            className="p-2 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer text-admin-muted hover:text-brand-primary"
                             title="View details"
                           >
                             <Eye size={16} />
@@ -215,17 +215,17 @@ export default function RequestsPage() {
           {/* Pagination */}
           {!loading && !error && totalPages > 1 && (
             <div className="flex items-center justify-between px-6 py-4 border-t border-gray-50">
-              <p className="text-[13px] text-[#94A3B8]">Page {currentPage} of {totalPages}</p>
+              <p className="text-[13px] text-brand-muted-light">Page {currentPage} of {totalPages}</p>
               <div className="flex gap-2">
                 <button
                   onClick={() => { fetchRequests(currentPage - 1, activeFilter); setCurrentPage(p => p - 1); }}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-xl border border-gray-200 text-[13px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                  className="px-4 py-2 rounded-xl border border-gray-200 text-[13px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                 >Previous</button>
                 <button
                   onClick={() => { fetchRequests(currentPage + 1, activeFilter); setCurrentPage(p => p + 1); }}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-xl border border-gray-200 text-[13px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                  className="px-4 py-2 rounded-xl border border-gray-200 text-[13px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                 >Next</button>
               </div>
             </div>
@@ -236,21 +236,21 @@ export default function RequestsPage() {
         {selectedRequest && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4" onClick={() => setSelectedRequest(null)}>
             <div className="bg-white rounded-[28px] w-full max-w-lg shadow-2xl p-8" onClick={e => e.stopPropagation()}>
-              <h2 className="text-[22px] font-bold text-[#000000] mb-6">Request Details</h2>
+              <h2 className="text-[22px] font-bold text-brand-primary mb-6">Request Details</h2>
               <div className="space-y-3 text-[14px]">
-                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Unit</span><span className="font-semibold text-[#000000]">{selectedRequest.unitName}</span></div>
-                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Unit Price</span><span className="font-semibold text-[#000000]">EGP {selectedRequest.unitPrice?.toLocaleString()}</span></div>
-                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Unit Area</span><span className="font-semibold text-[#000000]">{selectedRequest.unitArea} m²</span></div>
-                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Applicant</span><span className="font-semibold text-[#000000]">{selectedRequest.applicantName}</span></div>
-                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Email</span><span className="text-[#000000]">{selectedRequest.applicantEmail}</span></div>
-                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Phone</span><span className="text-[#000000]">{selectedRequest.applicantPhone}</span></div>
+                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Unit</span><span className="font-semibold text-brand-primary">{selectedRequest.unitName}</span></div>
+                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Unit Price</span><span className="font-semibold text-brand-primary">EGP {selectedRequest.unitPrice?.toLocaleString()}</span></div>
+                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Unit Area</span><span className="font-semibold text-brand-primary">{selectedRequest.unitArea} m²</span></div>
+                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Applicant</span><span className="font-semibold text-brand-primary">{selectedRequest.applicantName}</span></div>
+                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Email</span><span className="text-brand-primary">{selectedRequest.applicantEmail}</span></div>
+                <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500 font-medium">Phone</span><span className="text-brand-primary">{selectedRequest.applicantPhone}</span></div>
                 <div className="flex justify-between py-2"><span className="text-gray-500 font-medium">Status</span>
                   <span className={`px-3 py-0.5 rounded-full text-[12px] font-semibold capitalize ${statusBadge(selectedRequest.status)}`}>{selectedRequest.status}</span>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedRequest(null)}
-                className="mt-8 w-full bg-[#000000] text-white py-3 rounded-2xl font-semibold hover:bg-[#2a3347] transition-colors cursor-pointer"
+                className="mt-8 w-full bg-brand-primary text-white py-3 rounded-2xl font-semibold hover:bg-brand-primary-hover transition-colors cursor-pointer"
               >Close</button>
             </div>
           </div>

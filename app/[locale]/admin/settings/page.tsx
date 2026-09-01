@@ -66,7 +66,7 @@ export default function SettingsPage() {
           console.log("No matching admin found for email:", currentEmail);
         }
       } else if (!currentEmail && data.items && data.items.length > 0) {
-        // Fallback: If we don't have a stored email, we'll use the first one 
+        // Fallback: If we don't have a stored email, we'll use the first one
         // as a placeholder until the user logs in again to sync.
         const first = data.items[0];
         setProfileData(prev => ({
@@ -142,25 +142,25 @@ export default function SettingsPage() {
 
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] p-4 md:p-8 pt-10">
+    <div className="min-h-screen bg-brand-bg p-4 md:p-8 pt-10">
       <div className="max-w-[1000px] mx-auto">
-        
+
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-[32px] font-bold text-[#000000] font-radley mb-2">Settings</h1>
-          <p className="text-[#666] font-poppins">Manage your profile, security, and team members.</p>
+          <h1 className="text-[32px] font-bold text-brand-primary font-radley mb-2">Settings</h1>
+          <p className="text-brand-muted font-poppins">Manage your profile, security, and team members.</p>
         </div>
 
         {/* Notification Box */}
         <AnimatePresence>
           {notification && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               className={`mb-6 p-4 rounded-xl flex items-center gap-3 shadow-sm border ${
-                notification.type === 'success' 
-                  ? 'bg-green-50 border-green-100 text-green-700' 
+                notification.type === 'success'
+                  ? 'bg-green-50 border-green-100 text-green-700'
                   : 'bg-red-50 border-red-100 text-red-700'
               }`}
             >
@@ -171,7 +171,7 @@ export default function SettingsPage() {
         </AnimatePresence>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 bg-[#F0EBE3] p-1.5 rounded-2xl w-fit">
+        <div className="flex gap-2 mb-8 bg-brand-secondary-soft p-1.5 rounded-2xl w-fit">
           {[
             { id: 'profile', label: 'My Profile', icon: User },
             { id: 'security', label: 'Security', icon: Shield },
@@ -181,9 +181,9 @@ export default function SettingsPage() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as Tab)}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[15px] font-semibold transition-all duration-300 ${
-                activeTab === tab.id 
-                  ? 'bg-[#000000] text-white shadow-md' 
-                  : 'text-[#000000] hover:bg-white/50'
+                activeTab === tab.id
+                  ? 'bg-brand-primary text-white shadow-md'
+                  : 'text-brand-primary hover:bg-white/50'
               }`}
             >
               <tab.icon size={18} />
@@ -193,56 +193,56 @@ export default function SettingsPage() {
         </div>
 
         {/* Content Area */}
-        <motion.div 
+        <motion.div
           key={activeTab}
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
-          className="bg-white rounded-[32px] border border-[#BBDEFB] shadow-sm p-8 md:p-10"
+          className="bg-white rounded-[32px] border border-brand-divider shadow-sm p-8 md:p-10"
         >
           {/* Profile Tab */}
           {activeTab === 'profile' && (
             <div className="max-w-xl">
-              <h2 className="text-2xl font-bold text-[#000000] mb-6 font-radley">Personal Information</h2>
+              <h2 className="text-2xl font-bold text-brand-primary mb-6 font-radley">Personal Information</h2>
               <form onSubmit={handleProfileUpdate} className="space-y-6">
                 <div className="grid gap-6">
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#000000] ml-1">Full Name</label>
-                    <input 
-                      type="text" 
+                    <label className="text-[14px] font-bold text-brand-primary ml-1">Full Name</label>
+                    <input
+                      type="text"
                       value={profileData.userName}
                       onChange={(e) => setProfileData({...profileData, userName: e.target.value})}
                       placeholder="Your Name"
-                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#000000] ml-1">Email Address</label>
-                    <input 
-                      type="email" 
+                    <label className="text-[14px] font-bold text-brand-primary ml-1">Email Address</label>
+                    <input
+                      type="email"
                       value={profileData.email}
                       onChange={(e) => setProfileData({...profileData, email: e.target.value})}
                       placeholder="email@example.com"
-                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#000000] ml-1">Phone Number</label>
-                    <input 
-                      type="tel" 
+                    <label className="text-[14px] font-bold text-brand-primary ml-1">Phone Number</label>
+                    <input
+                      type="tel"
                       value={profileData.phoneNumber}
                       onChange={(e) => setProfileData({...profileData, phoneNumber: e.target.value})}
                       placeholder="+20 123 456 7890"
-                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
                       required
                     />
                   </div>
                 </div>
-                <button 
+                <button
                   disabled={loading}
-                  className="bg-[#000000] text-white px-10 py-4 rounded-full font-bold text-[16px] shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                  className="bg-brand-primary text-white px-10 py-4 rounded-full font-bold text-[16px] shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
                 >
                   {loading && <Loader2 className="animate-spin" size={20} />}
                   Save Changes
@@ -254,43 +254,43 @@ export default function SettingsPage() {
           {/* Security Tab */}
           {activeTab === 'security' && (
             <div className="max-w-xl">
-              <h2 className="text-2xl font-bold text-[#000000] mb-6 font-radley">Security Settings</h2>
+              <h2 className="text-2xl font-bold text-brand-primary mb-6 font-radley">Security Settings</h2>
               <form onSubmit={handlePasswordUpdate} className="space-y-6">
                 <div className="grid gap-6">
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#000000] ml-1">Current Password</label>
-                    <input 
-                      type="password" 
+                    <label className="text-[14px] font-bold text-brand-primary ml-1">Current Password</label>
+                    <input
+                      type="password"
                       value={passwordData.oldPassword}
                       onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
-                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#000000] ml-1">New Password</label>
-                    <input 
-                      type="password" 
+                    <label className="text-[14px] font-bold text-brand-primary ml-1">New Password</label>
+                    <input
+                      type="password"
                       value={passwordData.newPassword}
                       onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
-                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-[#000000] ml-1">Confirm New Password</label>
-                    <input 
-                      type="password" 
+                    <label className="text-[14px] font-bold text-brand-primary ml-1">Confirm New Password</label>
+                    <input
+                      type="password"
                       value={passwordData.confirmPassword}
                       onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
-                      className="w-full bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]"
+                      className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
                       required
                     />
                   </div>
                 </div>
-                <button 
+                <button
                   disabled={loading}
-                  className="bg-[#000000] text-white px-10 py-4 rounded-full font-bold text-[16px] shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                  className="bg-brand-primary text-white px-10 py-4 rounded-full font-bold text-[16px] shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
                 >
                   {loading && <Loader2 className="animate-spin" size={20} />}
                   Update Password
@@ -303,10 +303,10 @@ export default function SettingsPage() {
           {activeTab === 'admins' && (
             <div className="space-y-8">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-[#000000] font-radley">Team Management</h2>
-                <button 
+                <h2 className="text-2xl font-bold text-brand-primary font-radley">Team Management</h2>
+                <button
                   onClick={() => setShowAddAdmin(!showAddAdmin)}
-                  className="bg-[#000000] text-white px-6 py-2.5 rounded-full font-semibold text-[14px] shadow-md hover:scale-105 transition-all"
+                  className="bg-brand-primary text-white px-6 py-2.5 rounded-full font-semibold text-[14px] shadow-md hover:scale-105 transition-all"
                 >
                   {showAddAdmin ? 'Cancel' : 'Add New Admin'}
                 </button>
@@ -315,59 +315,59 @@ export default function SettingsPage() {
               {/* Add Admin Form */}
               <AnimatePresence>
                 {showAddAdmin && (
-                  <motion.div 
+                  <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="bg-[#E3F2FD] p-8 rounded-[24px] mb-8">
-                      <h3 className="font-bold text-[#000000] mb-6">New Administrator</h3>
+                    <div className="bg-brand-bg p-8 rounded-[24px] mb-8">
+                      <h3 className="font-bold text-brand-primary mb-6">New Administrator</h3>
                       <form onSubmit={handleAddAdmin} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <label className="text-[13px] font-bold text-[#000000] ml-1">First Name</label>
-                          <input 
-                            type="text" 
+                          <label className="text-[13px] font-bold text-brand-primary ml-1">First Name</label>
+                          <input
+                            type="text"
                             value={newAdmin.firstName}
                             onChange={(e) => setNewAdmin({...newAdmin, firstName: e.target.value})}
-                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10"
                             required
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[13px] font-bold text-[#000000] ml-1">Last Name</label>
-                          <input 
-                            type="text" 
+                          <label className="text-[13px] font-bold text-brand-primary ml-1">Last Name</label>
+                          <input
+                            type="text"
                             value={newAdmin.lastName}
                             onChange={(e) => setNewAdmin({...newAdmin, lastName: e.target.value})}
-                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10"
                             required
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[13px] font-bold text-[#000000] ml-1">Email</label>
-                          <input 
-                            type="email" 
+                          <label className="text-[13px] font-bold text-brand-primary ml-1">Email</label>
+                          <input
+                            type="email"
                             value={newAdmin.email}
                             onChange={(e) => setNewAdmin({...newAdmin, email: e.target.value})}
-                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10"
                             required
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-[13px] font-bold text-[#000000] ml-1">Password</label>
-                          <input 
-                            type="password" 
+                          <label className="text-[13px] font-bold text-brand-primary ml-1">Password</label>
+                          <input
+                            type="password"
                             value={newAdmin.password}
                             onChange={(e) => setNewAdmin({...newAdmin, password: e.target.value})}
-                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10"
                             required
                           />
                         </div>
                         <div className="md:col-span-2 pt-2">
-                          <button 
+                          <button
                             disabled={loading}
-                            className="bg-[#000000] text-white px-8 py-3 rounded-full font-bold text-[15px] shadow-md hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2"
+                            className="bg-brand-primary text-white px-8 py-3 rounded-full font-bold text-[15px] shadow-md hover:scale-105 transition-all disabled:opacity-50 flex items-center gap-2"
                           >
                             {loading && <Loader2 className="animate-spin" size={18} />}
                             Create Account
@@ -383,23 +383,23 @@ export default function SettingsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-[#BBDEFB] text-[#000000]/50 text-[13px] font-bold uppercase tracking-wider">
+                    <tr className="border-b border-brand-divider text-brand-primary/50 text-[13px] font-bold uppercase tracking-wider">
                       <th className="px-4 py-4">Username</th>
                       <th className="px-4 py-4">Email</th>
                       <th className="px-4 py-4">Created At</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#BBDEFB]">
+                  <tbody className="divide-y divide-brand-divider">
                     {adminsData?.items?.map((admin) => (
-                      <tr key={admin.id} className="text-[#000000] hover:bg-[#FDFCFB] transition-colors">
+                      <tr key={admin.id} className="text-brand-primary hover:bg-brand-bg transition-colors">
                         <td className="px-4 py-5 font-semibold">{admin.username}</td>
                         <td className="px-4 py-5 font-medium">{admin.email}</td>
-                        <td className="px-4 py-5 text-[#666]">{new Date(admin.createdAt).toLocaleDateString()}</td>
+                        <td className="px-4 py-5 text-brand-muted">{new Date(admin.createdAt).toLocaleDateString()}</td>
                       </tr>
                     ))}
                     {adminsData && (!adminsData.items || adminsData.items.length === 0) && (
                       <tr>
-                        <td colSpan={3} className="px-4 py-10 text-center text-[#000000]/40 font-medium">
+                        <td colSpan={3} className="px-4 py-10 text-center text-brand-primary/40 font-medium">
                           No administrators found.
                         </td>
                       </tr>
@@ -411,20 +411,20 @@ export default function SettingsPage() {
               {/* Pagination */}
               {adminsData && adminsData.totalPages > 1 && (
                 <div className="flex items-center justify-center gap-4 pt-6">
-                  <button 
+                  <button
                     disabled={!adminsData.hasPreviousPage || loading}
                     onClick={() => fetchAdmins(currentPage - 1)}
-                    className="p-2 rounded-full border border-[#BBDEFB] text-[#000000] disabled:opacity-30 hover:bg-[#E3F2FD] transition-colors"
+                    className="p-2 rounded-full border border-brand-divider text-brand-primary disabled:opacity-30 hover:bg-brand-bg transition-colors"
                   >
                     <ChevronLeft size={20} />
                   </button>
-                  <span className="font-semibold text-[15px] text-[#000000]">
+                  <span className="font-semibold text-[15px] text-brand-primary">
                     Page {adminsData.pageNumber} of {adminsData.totalPages}
                   </span>
-                  <button 
+                  <button
                     disabled={!adminsData.hasNextPage || loading}
                     onClick={() => fetchAdmins(currentPage + 1)}
-                    className="p-2 rounded-full border border-[#BBDEFB] text-[#000000] disabled:opacity-30 hover:bg-[#E3F2FD] transition-colors"
+                    className="p-2 rounded-full border border-brand-divider text-brand-primary disabled:opacity-30 hover:bg-brand-bg transition-colors"
                   >
                     <ChevronRight size={20} />
                   </button>

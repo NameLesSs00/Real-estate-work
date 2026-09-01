@@ -12,7 +12,7 @@ export interface UnitFilters {
   PageNumber?: number;
   PageSize?: number;
   Currency?: string;
-  UnitType?: string;   // "Buy" or "Rent" as per user request
+  UnitType?: string;   // API supports multiple listing types; UI currently requests Buy listings.
   PropertyType?: string; // For Apartment/Villa/etc
   Status?: string;      // For primary/resale
   Language?: string;

@@ -43,7 +43,7 @@ export default function SingleBlogPage() {
   if (isLoading) {
     return (
       <div className="pt-32 pb-32 flex justify-center items-center h-screen">
-        <div className="w-12 h-12 border-4 border-[#000000] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -65,7 +65,7 @@ export default function SingleBlogPage() {
             height={16} 
             className="breadcrumb-icon"
           />
-          <Link href="/blogs" className="hover:text-[#000000] transition-colors">Blogs</Link>
+          <Link href="/blogs" className="hover:text-brand-primary transition-colors">Blogs</Link>
           <span className="breadcrumb-separator">&gt;</span>
           <span className="current-crumb">{blog.title}</span>
         </nav>

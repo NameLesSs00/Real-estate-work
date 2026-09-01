@@ -1,6 +1,6 @@
 .who-we-are-section {
   padding: 100px 0;
-  background-color: #ffffff;
+  background-color: var(--color-brand-surface);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -26,7 +26,7 @@
 
 .who-we-are-tag {
   font-family: var(--font-poppins);
-  color: #42A5F5;
+  color: var(--color-brand-secondary);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 2.8px;
@@ -36,7 +36,7 @@
 
 .who-we-are-title {
   font-family: var(--font-radley);
-  color: #0D47A1;
+  color: var(--color-brand-primary);
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
@@ -44,7 +44,7 @@
 
 .who-we-are-subtitle {
   font-family: var(--font-poppins);
-  color: #555555;
+  color: var(--color-brand-muted);
   font-size: 18px;
   max-width: 800px;
   line-height: 1.6;
@@ -54,7 +54,7 @@
 .who-we-are-accent-line {
   width: 160px;
   height: 4px;
-  background-color: #42A5F5;
+  background-color: var(--color-brand-secondary);
   border-radius: 2px;
 }
 
@@ -76,10 +76,10 @@
 
 .who-we-are-info-box {
   flex: 1;
-  background-color: #1565C0;
+  background-color: var(--color-brand-primary);
   padding: 60px;
   border-radius: 20px;
-  color: #ffffff;
+  color: var(--color-brand-surface);
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -93,14 +93,14 @@
 
 .info-item-title {
   font-family: var(--font-allura);
-  color: #BBDEFB;
+  color: var(--color-brand-divider);
   font-size: 44px;
   line-height: 1;
 }
 
 .info-item-text {
   font-family: var(--font-poppins);
-  color: #ffffff;
+  color: var(--color-brand-surface);
   font-size: 18px;
   line-height: 1.6;
   opacity: 0.9;
@@ -111,8 +111,8 @@
 }
 
 .view-more-btn {
-  background-color: #ffffff;
-  color: #0D47A1;
+  background-color: var(--color-brand-surface);
+  color: var(--color-brand-primary);
   padding: 14px 40px;
   border-radius: 50px;
   font-family: var(--font-poppins);
@@ -124,8 +124,8 @@
 }
 
 .view-more-btn:hover {
-  background-color: #2196F3;
-  color: #ffffff;
+  background-color: var(--color-brand-secondary);
+  color: var(--color-brand-surface);
 }
 
 .bg-ellipse-1 {

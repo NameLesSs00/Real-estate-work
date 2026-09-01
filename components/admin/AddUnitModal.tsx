@@ -16,9 +16,9 @@ interface AddUnitModalProps {
   editData?: ApiUnit | null;
 }
 
-const EMPTY_FORM = { 
-  name: { en: '', de: '', pl: '' }, 
-  description: { en: '', de: '', pl: '' }, 
+const EMPTY_FORM = {
+  name: { en: '', de: '', pl: '' },
+  description: { en: '', de: '', pl: '' },
   price: '' as number | '',
   propertyType: 0,
   noBathRoom: '',
@@ -30,7 +30,7 @@ const EMPTY_FORM = {
   view: '',
   isFeatured: false,
   currencyCode: 'EGP',
-  type: 'Buy' as 'Buy' | 'Rent',
+  type: 'Buy',
   status: 0 as 0 | 1, // 0=Primary, 1=Resale
   paymentPlans: [] as { id?: number; installmentMonthes: number | ''; installmentDownPayment: number | ''; paymentType: string }[],
   servicesIds: [] as number[],
@@ -147,7 +147,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             view: (enData.View ?? enData.view ?? '').toString(),
             isFeatured: enData.IsFeatured ?? enData.isFeatured ?? false,
             currencyCode: enData.CurrencyCode || (enData.currencyCode as string) || 'EGP',
-            type: (enData.Type || enData.type || 'Buy') as 'Buy' | 'Rent',
+            type: 'Buy',
             status: ((enData.Status || enData.status) === 'resale' ? 1 : 0) as 0 | 1,
             servicesIds: (detail.Services || detail.services || []).map((s: { id?: number; Id?: number } | number) => typeof s === 'number' ? s : (s.id ?? s.Id)).filter((id: number | undefined) => id !== undefined),
             paymentPlans: (() => {
@@ -222,7 +222,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
         : e.target.type === 'number'
           ? e.target.value === '' ? '' : Number(e.target.value)
           : e.target.value;
-      
+
       if (lang) {
         setForm((prev) => ({
           ...prev,
@@ -246,7 +246,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     if (!form.view.trim()) { setError('View is required.'); return; }
 
     // Remove VIEW_MAPPING as view is now a custom string input
-    
+
     const validatedPlans = form.paymentPlans.map(p => {
       const isCash = p.paymentType === 'Cash';
       return {
@@ -261,7 +261,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
       setError('Installment plans must have months greater than 0.');
       return;
     }
-    
+
     setIsLoading(true); setError('');
     try {
       const viewValue = form.view.toString();
@@ -287,7 +287,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           installmentMothes: Number(p.installmentMonthes),
         })),
         servicesIds: form.servicesIds.map(id => Number(id)),
-        type: form.type === 'Buy' ? 'Buy' : 'Rent',
+        type: 'Buy',
         status: 'Primary',
         isActive: true,
       };
@@ -320,22 +320,22 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
         console.log('[AddUnitModal] Updating unit with payload:', JSON.stringify(updatePayload, null, 2));
         await updateUnit(updatePayload);
-        
+
         // Handle payment plans individually because UpdateUnit doesn't save them
         try {
           const currentPlans = await getPaymentPlansByUnit(editData.id).catch(() => []);
           const currentPlanIds = currentPlans.map(p => p.id).filter(Boolean);
-          
+
           const newPlans = validatedPlans.filter(p => !p.id);
           const updatedPlans = validatedPlans.filter(p => p.id);
           const updatedPlanIds = updatedPlans.map(p => p.id);
           const deletedPlanIds = currentPlanIds.filter(id => !updatedPlanIds.includes(id));
-          
+
           // Delete removed plans
           for (const id of deletedPlanIds) {
             await deletePaymentPlan(id).catch(e => console.error('Failed to delete plan', e));
           }
-          
+
           // Add new plans
           for (const p of newPlans) {
             await createPaymentPlan({
@@ -346,7 +346,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               installmentMonths: p.installmentMonthes
             }).catch(e => console.error('Failed to create plan', e));
           }
-          
+
           // Update existing plans
           for (const p of updatedPlans) {
             await updatePaymentPlan({
@@ -368,7 +368,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           projectId: selectedProjectId!,
           units: [unitPayload],
         });
-        
+
         let targetUnitId = newUnitId;
         // If the API returns the Project ID instead of the Unit ID, fetch to find the actual Unit ID
         if (newUnitId === selectedProjectId) {
@@ -409,13 +409,13 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
     }
   };
 
-  const inputCls = 'w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#000000]/20 text-[#000000] placeholder-gray-400 bg-white';
+  const inputCls = 'w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 text-brand-primary placeholder-gray-400 bg-white';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
       <div className="bg-white rounded-[32px] w-full max-w-[1200px] max-h-[94vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
 
-        <div className="bg-[#000000] rounded-t-[32px] px-8 py-6 flex items-center justify-between shrink-0">
+        <div className="bg-brand-primary rounded-t-[32px] px-8 py-6 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[24px] font-bold tracking-tight">{isEditMode ? 'Edit Unit Details' : 'Register New Unit'}</h2>
           <button onClick={onClose} className="hover:rotate-90 transition-transform duration-300 cursor-pointer border-none bg-transparent outline-none">
             <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={28} height={28} />
@@ -427,30 +427,30 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           {!isEditMode && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50/50 p-6 rounded-[28px] border border-gray-100">
               <div className="space-y-3">
-                <label className="text-[#000000] font-bold text-[16px] flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#000000]"></span>
+                <label className="text-brand-primary font-bold text-[16px] flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-brand-primary"></span>
                   Target Project *
                 </label>
                 <select
                   value={selectedProjectId ?? ''}
                   onChange={(e) => setSelectedProjectId(e.target.value === '' ? null : Number(e.target.value))}
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] bg-white cursor-pointer shadow-sm transition-all hover:border-[#000000]/30"
+                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary bg-white cursor-pointer shadow-sm transition-all hover:border-brand-primary/30"
                 >
                   <option value="">— Select a project —</option>
                   {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
               <div className="space-y-3">
-                <label className="text-[#000000] font-bold text-[16px] flex items-center gap-2">
+                <label className="text-brand-primary font-bold text-[16px] flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-gray-300"></span>
                   Location
                 </label>
-                <input 
-                  type="text" 
-                  readOnly 
-                  value={projects.find(p => p.id === selectedProjectId)?.locationName || ''} 
-                  placeholder="Derived from project..." 
-                  className="w-full border border-gray-200 bg-gray-100/50 rounded-2xl px-5 py-4 text-gray-500 cursor-not-allowed shadow-inner" 
+                <input
+                  type="text"
+                  readOnly
+                  value={projects.find(p => p.id === selectedProjectId)?.locationName || ''}
+                  placeholder="Derived from project..."
+                  className="w-full border border-gray-200 bg-gray-100/50 rounded-2xl px-5 py-4 text-gray-500 cursor-not-allowed shadow-inner"
                 />
               </div>
             </div>
@@ -468,19 +468,19 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               {/* English */}
               <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm space-y-6 transition-all hover:shadow-md">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-black uppercase tracking-wider">English</span>
-                  <div className="h-px flex-1 bg-blue-50"></div>
+                  <span className="px-3 py-1 bg-brand-secondary-soft text-brand-secondary rounded-lg text-[10px] font-black uppercase tracking-wider">English</span>
+                  <div className="h-px flex-1 bg-brand-secondary-soft"></div>
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Unit Name (EN) *</label>
-                    <input type="text" value={form.name.en || ''} onChange={set('name', 'en')} placeholder="e.g. Luxury 3BR Apartment" 
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                    <label className="text-brand-primary font-bold text-[15px]">Unit Name (EN) *</label>
+                    <input type="text" value={form.name.en || ''} onChange={set('name', 'en')} placeholder="e.g. Luxury 3BR Apartment"
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Description (EN) *</label>
-                    <textarea value={form.description.en || ''} onChange={set('description', 'en')} placeholder="Describe the unit in English..." rows={4} 
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                    <label className="text-brand-primary font-bold text-[15px]">Description (EN) *</label>
+                    <textarea value={form.description.en || ''} onChange={set('description', 'en')} placeholder="Describe the unit in English..." rows={4}
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                 </div>
               </div>
@@ -493,14 +493,14 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Einheitsname (DE)</label>
-                    <input type="text" value={form.name.de || ''} onChange={set('name', 'de')} placeholder="Name auf Deutsch" 
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                    <label className="text-brand-primary font-bold text-[15px]">Einheitsname (DE)</label>
+                    <input type="text" value={form.name.de || ''} onChange={set('name', 'de')} placeholder="Name auf Deutsch"
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Beschreibung (DE)</label>
-                    <textarea value={form.description.de || ''} onChange={set('description', 'de')} placeholder="Beschreibung auf Deutsch..." rows={4} 
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                    <label className="text-brand-primary font-bold text-[15px]">Beschreibung (DE)</label>
+                    <textarea value={form.description.de || ''} onChange={set('description', 'de')} placeholder="Beschreibung auf Deutsch..." rows={4}
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                 </div>
               </div>
@@ -513,14 +513,14 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Nazwa Jednostki (PL)</label>
-                    <input type="text" value={form.name.pl || ''} onChange={set('name', 'pl')} placeholder="Nazwa po polsku" 
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                    <label className="text-brand-primary font-bold text-[15px]">Nazwa Jednostki (PL)</label>
+                    <input type="text" value={form.name.pl || ''} onChange={set('name', 'pl')} placeholder="Nazwa po polsku"
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Opis (PL)</label>
-                    <textarea value={form.description.pl || ''} onChange={set('description', 'pl')} placeholder="Opis po polsku..." rows={4} 
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                    <label className="text-brand-primary font-bold text-[15px]">Opis (PL)</label>
+                    <textarea value={form.description.pl || ''} onChange={set('description', 'pl')} placeholder="Opis po polsku..." rows={4}
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                 </div>
               </div>
@@ -529,17 +529,17 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
           <div className="grid grid-cols-2 gap-5">
             <div className="space-y-2">
-              <label className="text-[14px] font-bold text-[#000000] ml-1">Price *</label>
+              <label className="text-[14px] font-bold text-brand-primary ml-1">Price *</label>
               <div className="flex gap-2">
                 <input type="number" value={form.price}
                   onChange={(e) => setForm((prev) => ({ ...prev, price: e.target.value ? Number(e.target.value) : '' }))}
                   placeholder="e.g. 5000000"
-                  className="flex-1 bg-[#E3F2FD] border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-medium text-[#000000]" 
+                  className="flex-1 bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
                   required />
-                <select 
+                <select
                   value={form.currencyCode}
                   onChange={(e) => setForm((prev) => ({ ...prev, currencyCode: e.target.value }))}
-                  className="w-[100px] bg-[#E3F2FD] border-none rounded-2xl px-3 py-4 outline-none focus:ring-2 focus:ring-[#000000]/10 transition-all font-bold text-[#000000] appearance-none text-center"
+                  className="w-[100px] bg-brand-bg border-none rounded-2xl px-3 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-bold text-brand-primary appearance-none text-center"
                 >
                   <option value="EGP">EGP</option>
                   <option value="USD">USD</option>
@@ -548,7 +548,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[#000000] font-semibold text-[15px]">Property Type *</label>
+              <label className="text-brand-primary font-semibold text-[15px]">Property Type *</label>
               <select value={form.propertyType} onChange={set('propertyType')} className={inputCls}>
                 <option value={0}>Apartment</option>
                 <option value={1}>Villa</option>
@@ -558,58 +558,57 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[#000000] font-semibold text-[15px]">Listing Type *</label>
+              <label className="text-brand-primary font-semibold text-[15px]">Listing Type *</label>
               <select value={form.type} onChange={set('type')} className={inputCls}>
                 <option value="Buy">Buy</option>
-                <option value="Rent">Rent</option>
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[#000000] font-semibold text-[15px]">Bedrooms *</label>
+              <label className="text-brand-primary font-semibold text-[15px]">Bedrooms *</label>
               <input type="number" value={form.noBedRoom} onChange={set('noBedRoom')} min={0} className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#000000] font-semibold text-[15px]">Bathrooms *</label>
+              <label className="text-brand-primary font-semibold text-[15px]">Bathrooms *</label>
               <input type="number" value={form.noBathRoom} onChange={set('noBathRoom')} min={0} className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#000000] font-semibold text-[15px]">Kitchens *</label>
+              <label className="text-brand-primary font-semibold text-[15px]">Kitchens *</label>
               <input type="number" value={form.noKithchen} onChange={set('noKithchen')} min={0} className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#000000] font-semibold text-[15px]">Floor Number *</label>
+              <label className="text-brand-primary font-semibold text-[15px]">Floor Number *</label>
               <input type="number" value={form.floorNumber} onChange={set('floorNumber')} className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#000000] font-semibold text-[15px]">Floor Name</label>
+              <label className="text-brand-primary font-semibold text-[15px]">Floor Name</label>
               <input type="text" value={form.floorName} onChange={set('floorName')} placeholder="e.g. Ground Floor" className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#000000] font-semibold text-[15px]">Area (m²) *</label>
+              <label className="text-brand-primary font-semibold text-[15px]">Area (m²) *</label>
               <input type="number" value={form.area} onChange={set('area')} min={0} className={inputCls} />
             </div>
             <div className="space-y-2">
-              <label className="text-[#000000] font-semibold text-[15px]">View *</label>
-              <input 
-                type="text" 
-                value={form.view} 
-                onChange={set('view')} 
-                placeholder="e.g. Sea View, Garden View" 
-                className={inputCls} 
+              <label className="text-brand-primary font-semibold text-[15px]">View *</label>
+              <input
+                type="text"
+                value={form.view}
+                onChange={set('view')}
+                placeholder="e.g. Sea View, Garden View"
+                className={inputCls}
               />
             </div>
           </div>
 
           <div className="space-y-4 pt-4 border-t border-gray-100">
             <div className="flex items-center justify-between">
-              <label className="text-[#000000] font-semibold text-[15px]">Payment Plans</label>
+              <label className="text-brand-primary font-semibold text-[15px]">Payment Plans</label>
               <button
                 type="button"
                 onClick={() => setForm(prev => ({
                   ...prev,
                   paymentPlans: [...prev.paymentPlans, { installmentMonthes: 1, installmentDownPayment: 0, paymentType: 'Installment' }]
                 }))}
-                className="text-sm bg-gray-100 hover:bg-gray-200 text-[#000000] px-3 py-1.5 rounded-lg font-medium transition-colors"
+                className="text-sm bg-gray-100 hover:bg-gray-200 text-brand-primary px-3 py-1.5 rounded-lg font-medium transition-colors"
               >
                 + Add Plan
               </button>
@@ -629,12 +628,12 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                             const val = e.target.value === '' ? '' : Number(e.target.value);
                             setForm(prev => ({
                               ...prev,
-                              paymentPlans: prev.paymentPlans.map((p, i) => 
+                              paymentPlans: prev.paymentPlans.map((p, i) =>
                                 i === index ? { ...p, installmentMonthes: val } : p
                               )
                             }));
                           }}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/20"
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                         />
                       </div>
                       <div className="space-y-1.5">
@@ -649,12 +648,12 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                               const val = e.target.value === '' ? '' : Number(e.target.value);
                               setForm(prev => ({
                                 ...prev,
-                                paymentPlans: prev.paymentPlans.map((p, i) => 
+                                paymentPlans: prev.paymentPlans.map((p, i) =>
                                   i === index ? { ...p, installmentDownPayment: val } : p
                                 )
                               }));
                             }}
-                            className="w-full border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/20"
+                            className="w-full border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                           />
                           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
                         </div>
@@ -663,7 +662,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                   ) : (
                     <div className="bg-white border border-gray-200 rounded-lg p-4 flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-700">Cash Amount</span>
-                      <span className="text-lg font-bold text-[#000000]">{form.currencyCode} {form.price.toLocaleString()}</span>
+                      <span className="text-lg font-bold text-brand-primary">{form.currencyCode} {form.price.toLocaleString()}</span>
                     </div>
                   )}
                   <div className="space-y-1.5">
@@ -674,12 +673,12 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                         const val = e.target.value;
                         setForm(prev => ({
                           ...prev,
-                          paymentPlans: prev.paymentPlans.map((p, i) => 
+                          paymentPlans: prev.paymentPlans.map((p, i) =>
                             i === index ? { ...p, paymentType: val } : p
                           )
                         }));
                       }}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#000000]/20 bg-white"
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 bg-white"
                     >
                       <option value="Installment">Installment</option>
                       <option value="Cash">Cash</option>
@@ -703,11 +702,11 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           {/* Services */}
           <div className="space-y-3 pt-4 border-t border-gray-100">
             <div className="flex items-center justify-between">
-              <label className="text-[#000000] font-semibold text-[15px]">Services</label>
-              <button 
+              <label className="text-brand-primary font-semibold text-[15px]">Services</label>
+              <button
                 type="button"
                 onClick={() => setIsAddingService(!isAddingService)}
-                className="text-[12px] font-bold text-[#000000] hover:underline flex items-center gap-1"
+                className="text-[12px] font-bold text-brand-primary hover:underline flex items-center gap-1"
               >
                 {isAddingService ? 'Cancel' : '+ Add New'}
               </button>
@@ -716,26 +715,26 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               {isAddingService && (
                 <div className="bg-gray-50 p-3 rounded-xl space-y-3 border border-gray-100 shadow-inner mb-2">
                   <div className="grid grid-cols-1 gap-2">
-                    <input 
-                      placeholder="EN Name" 
-                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#000000]/20"
+                    <input
+                      placeholder="EN Name"
+                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-brand-primary/20"
                       value={newServiceName.en}
                       onChange={e => setNewServiceName({...newServiceName, en: e.target.value})}
                     />
-                    <input 
-                      placeholder="DE Name" 
-                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#000000]/20"
+                    <input
+                      placeholder="DE Name"
+                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-brand-primary/20"
                       value={newServiceName.de}
                       onChange={e => setNewServiceName({...newServiceName, de: e.target.value})}
                     />
-                    <input 
-                      placeholder="PL Name" 
-                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-[#000000]/20"
+                    <input
+                      placeholder="PL Name"
+                      className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-brand-primary/20"
                       value={newServiceName.pl}
                       onChange={e => setNewServiceName({...newServiceName, pl: e.target.value})}
                     />
                   </div>
-                  <button 
+                  <button
                     type="button"
                     disabled={isSubmittingQuick || !newServiceName.en}
                     onClick={async () => {
@@ -745,7 +744,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                         setNewServiceName({ en: '', de: '', pl: '' });
                         setIsAddingService(false);
                         await fetchData();
-                        
+
                         // Automatically select the newly created service
                         if (typeof newId === 'number') {
                           setForm(prev => ({
@@ -759,7 +758,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                         setIsSubmittingQuick(false);
                       }
                     }}
-                    className="w-full bg-[#000000] text-white py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
+                    className="w-full bg-brand-primary text-white py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
                   >
                     {isSubmittingQuick ? 'Saving...' : 'Save Service'}
                   </button>
@@ -776,21 +775,21 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                     const isChecked = form.servicesIds.includes(ser.id);
                     return (
                       <label key={ser.id} className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100">
-                        <input 
-                          type="checkbox" 
+                        <input
+                          type="checkbox"
                           checked={isChecked}
                           onChange={(e) => {
                             const checked = e.target.checked;
                             setForm(prev => ({
                               ...prev,
-                              servicesIds: checked 
+                              servicesIds: checked
                                 ? [...prev.servicesIds, ser.id]
                                 : prev.servicesIds.filter(id => id !== ser.id)
                             }));
                           }}
-                          className="w-4 h-4 rounded accent-[#000000] cursor-pointer" 
+                          className="w-4 h-4 rounded accent-brand-primary cursor-pointer"
                         />
-                        <span className="text-[#000000] text-[14px]">{serName as string}</span>
+                        <span className="text-brand-primary text-[14px]">{serName as string}</span>
                       </label>
                     );
                   })
@@ -804,7 +803,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Hero / Cover Image */}
                 <div>
-                  <label className="text-[#000000] font-bold text-[15px] flex items-center gap-2 mb-1">
+                  <label className="text-brand-primary font-bold text-[15px] flex items-center gap-2 mb-1">
                     <span className="w-2 h-2 rounded-full bg-amber-400" />
                     Hero / Cover Image
                   </label>
@@ -831,8 +830,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
                 {/* Gallery Images */}
                 <div>
-                  <label className="text-[#000000] font-bold text-[15px] flex items-center gap-2 mb-1">
-                    <span className="w-2 h-2 rounded-full bg-[#000000]" />
+                  <label className="text-brand-primary font-bold text-[15px] flex items-center gap-2 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-brand-primary" />
                     Gallery Images
                   </label>
                   <p className="text-[12px] text-gray-400 mb-3">Additional images for the unit gallery.</p>
@@ -868,8 +867,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           <label className="flex items-center gap-3 cursor-pointer pt-4 border-t border-gray-100">
             <input type="checkbox" checked={form.isFeatured}
               onChange={(e) => setForm((prev) => ({ ...prev, isFeatured: e.target.checked }))}
-              className="w-5 h-5 rounded accent-[#000000] cursor-pointer" />
-            <span className="text-[#000000] font-semibold text-[15px]">Featured Unit</span>
+              className="w-5 h-5 rounded accent-brand-primary cursor-pointer" />
+            <span className="text-brand-primary font-semibold text-[15px]">Featured Unit</span>
           </label>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -877,12 +876,12 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
 
         {/* Footer */}
         <div className="p-10 pt-0 border-t border-gray-100 flex gap-6 shrink-0 bg-gray-50/30 rounded-b-[32px]">
-          <button onClick={onClose} 
-            className="flex-1 py-5 rounded-2xl border border-gray-200 text-[#000000] font-bold hover:bg-white hover:border-[#000000]/20 transition-all cursor-pointer shadow-sm active:scale-[0.98]">
+          <button onClick={onClose}
+            className="flex-1 py-5 rounded-2xl border border-gray-200 text-brand-primary font-bold hover:bg-white hover:border-brand-primary/20 transition-all cursor-pointer shadow-sm active:scale-[0.98]">
             Cancel
           </button>
           <button onClick={handleSubmit} disabled={isLoading}
-            className="flex-[2] py-5 rounded-2xl bg-[#000000] hover:bg-[#1a304a] text-white font-bold transition-all cursor-pointer shadow-lg shadow-[#000000]/20 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]">
+            className="flex-[2] py-5 rounded-2xl bg-brand-primary hover:bg-brand-primary-hover text-white font-bold transition-all cursor-pointer shadow-lg shadow-brand-primary/20 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]">
             {isLoading ? 'Processing...' : isEditMode ? 'Update Unit Details' : 'Register Unit'}
           </button>
         </div>

@@ -42,7 +42,7 @@ const FinestServices = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-[36px] md:text-[48px] font-serif text-[#000000] mb-6"
+            className="text-[36px] md:text-[48px] font-serif text-brand-primary mb-6"
           >
             {t('finestServices.title')}
           </motion.h2>
@@ -76,10 +76,10 @@ const FinestServices = () => {
                   className="object-contain"
                 />
               </div>
-              <h3 className="text-[#000000] font-serif font-medium text-[40px] leading-none mb-3">
+              <h3 className="text-brand-primary font-serif font-medium text-[40px] leading-none mb-3">
                 {stat.value}
               </h3>
-              <p className="text-[#000000]/60 text-[11px] font-bold uppercase tracking-wider">
+              <p className="text-brand-primary/60 text-[11px] font-bold uppercase tracking-wider">
                 {t(stat.labelKey)}
               </p>
             </motion.div>

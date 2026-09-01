@@ -111,7 +111,7 @@ export default function UnitOutsideDetailsModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#000000] px-8 py-5 flex items-center justify-between shrink-0">
+        <div className="bg-brand-primary px-8 py-5 flex items-center justify-between shrink-0">
           <div>
             <h2 className="text-white text-[20px] font-bold">Resale Unit Details</h2>
             {unit && (
@@ -132,7 +132,7 @@ export default function UnitOutsideDetailsModal({
         <div className="overflow-y-auto scrollbar-hide flex-1 p-8 space-y-8">
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
             </div>
           ) : error ? (
             <p className="text-red-500 text-center py-20">{error}</p>
@@ -141,8 +141,8 @@ export default function UnitOutsideDetailsModal({
               {/* ── Images ── */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-[16px] font-bold text-[#000000]">Images</h3>
-                  <label className="flex items-center gap-2 bg-[#000000] hover:bg-[#1e324d] text-white text-[13px] font-bold px-4 py-2 rounded-xl cursor-pointer transition-all">
+                  <h3 className="text-[16px] font-bold text-brand-primary">Images</h3>
+                  <label className="flex items-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white text-[13px] font-bold px-4 py-2 rounded-xl cursor-pointer transition-all">
                     {isUploadingImages ? (
                       <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
@@ -161,7 +161,7 @@ export default function UnitOutsideDetailsModal({
 
                 {images.length === 0 ? (
                   <div className="h-48 flex items-center justify-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-                    <p className="text-[#94A3B8] text-sm">No images uploaded yet.</p>
+                    <p className="text-brand-muted-light text-sm">No images uploaded yet.</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -188,7 +188,7 @@ export default function UnitOutsideDetailsModal({
                             onClick={() => setActiveImageIdx(idx)}
                             className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
                               activeImageIdx === idx
-                                ? 'border-[#000000] shadow-md'
+                                ? 'border-brand-primary shadow-md'
                                 : 'border-transparent'
                             }`}
                           >
@@ -236,10 +236,10 @@ export default function UnitOutsideDetailsModal({
                     key={label}
                     className="bg-gray-50 rounded-2xl px-5 py-4 border border-gray-100"
                   >
-                    <p className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-wider mb-1">
+                    <p className="text-[11px] font-bold text-brand-muted-light uppercase tracking-wider mb-1">
                       {label}
                     </p>
-                    <p className="text-[15px] font-bold text-[#000000]">{value}</p>
+                    <p className="text-[15px] font-bold text-brand-primary">{value}</p>
                   </div>
                 ))}
               </div>
@@ -249,7 +249,7 @@ export default function UnitOutsideDetailsModal({
                 <span
                   className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold ${
                     unit.isActive
-                      ? 'bg-[#DCFCE7] text-[#166534]'
+                      ? 'bg-status-success-bg text-status-success'
                       : 'bg-gray-100 text-gray-400'
                   }`}
                 >
@@ -261,12 +261,12 @@ export default function UnitOutsideDetailsModal({
                   {unit.isActive ? 'Active' : 'Inactive'}
                 </span>
                 {unit.isFeatured && (
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold bg-[#FEF9C3] text-[#A16207]">
+                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold bg-status-warning-bg text-status-warning">
                     ⭐ Featured
                   </span>
                 )}
                 {unit.soldCount > 0 && (
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold bg-[#FEE2E2] text-[#991B1B]">
+                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-bold bg-status-danger-bg text-status-danger-hover">
                     Sold {unit.soldCount}×
                   </span>
                 )}
@@ -275,21 +275,21 @@ export default function UnitOutsideDetailsModal({
               {/* Description */}
               {unit.description && (
                 <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                  <p className="text-[12px] font-bold text-[#94A3B8] uppercase tracking-wider mb-2">
+                  <p className="text-[12px] font-bold text-brand-muted-light uppercase tracking-wider mb-2">
                     Description
                   </p>
-                  <p className="text-[15px] text-[#000000] leading-relaxed">{getLocalized(unit.description)}</p>
+                  <p className="text-[15px] text-brand-primary leading-relaxed">{getLocalized(unit.description)}</p>
                 </div>
               )}
 
               {/* Payment Plans */}
               {unit.paymentPlans && unit.paymentPlans.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="text-[16px] font-bold text-[#000000]">Payment Plans</h3>
+                  <h3 className="text-[16px] font-bold text-brand-primary">Payment Plans</h3>
                   <div className="overflow-x-auto scrollbar-hide">
                     <table className="w-full text-left">
                       <thead>
-                        <tr className="border-b border-gray-100 text-[12px] font-bold text-[#94A3B8] uppercase tracking-wider">
+                        <tr className="border-b border-gray-100 text-[12px] font-bold text-brand-muted-light uppercase tracking-wider">
                           <th className="py-3 pr-6">Type</th>
                           <th className="py-3 pr-6">Commission</th>
                           <th className="py-3 pr-6">Months</th>
@@ -300,12 +300,12 @@ export default function UnitOutsideDetailsModal({
                       <tbody className="divide-y divide-gray-50">
                         {unit.paymentPlans.map((plan) => (
                           <tr key={plan.id} className="text-[14px]">
-                            <td className="py-3 pr-6 font-bold text-[#000000]">{plan.paymentType}</td>
-                            <td className="py-3 pr-6 text-[#64748B]">{plan.commissionRate}%</td>
-                            <td className="py-3 pr-6 text-[#64748B]">
+                            <td className="py-3 pr-6 font-bold text-brand-primary">{plan.paymentType}</td>
+                            <td className="py-3 pr-6 text-admin-muted">{plan.commissionRate}%</td>
+                            <td className="py-3 pr-6 text-admin-muted">
                               {plan.installmentMothes > 0 ? `${plan.installmentMothes} mo` : '—'}
                             </td>
-                            <td className="py-3 pr-6 text-[#64748B]">
+                            <td className="py-3 pr-6 text-admin-muted">
                               {plan.installmentDownPayment > 0
                                 ? `${plan.installmentDownPayment}%`
                                 : '—'}
@@ -353,13 +353,13 @@ export default function UnitOutsideDetailsModal({
               })()}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold px-8 py-3.5 rounded-2xl transition-all border border-blue-100 text-center"
+              className="bg-brand-secondary-soft hover:bg-brand-secondary text-brand-primary hover:text-white font-bold px-8 py-3.5 rounded-2xl transition-all border border-brand-divider text-center"
             >
               View as Client
             </a>
             <button
               onClick={onClose}
-              className="bg-[#000000] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer"
+              className="bg-brand-primary hover:bg-brand-primary-hover text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer"
             >
               Close
             </button>

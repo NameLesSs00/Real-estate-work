@@ -10,7 +10,7 @@ export default function AboutPage() {
   const { t, language } = useLanguage();
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#E3F2FD] overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-brand-bg overflow-hidden">
       {/* Hero Banner */}
       <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -41,25 +41,25 @@ export default function AboutPage() {
           className="flex flex-col gap-12"
         >
           <div className="flex flex-col gap-3">
-            <h2 className="text-[32px] md:text-[40px] font-radley text-[#000000] leading-tight">{t('aboutPage.visionTitle')}</h2>
-            <div className="w-12 h-[3px] bg-[#2196F3] rounded-full mb-2"></div>
-            <p className="text-[16px] md:text-[18px] text-[#555555] leading-relaxed font-poppins">
+            <h2 className="text-[32px] md:text-[40px] font-radley text-brand-primary leading-tight">{t('aboutPage.visionTitle')}</h2>
+            <div className="w-12 h-[3px] bg-brand-secondary rounded-full mb-2"></div>
+            <p className="text-[16px] md:text-[18px] text-brand-muted leading-relaxed font-poppins">
               {t('aboutPage.visionText')}
             </p>
           </div>
 
           <div className="flex flex-col gap-3">
-            <h2 className="text-[32px] md:text-[40px] font-radley text-[#000000] leading-tight">{t('aboutPage.missionTitle')}</h2>
-            <div className="w-12 h-[3px] bg-[#2196F3] rounded-full mb-2"></div>
-            <p className="text-[16px] md:text-[18px] text-[#555555] leading-relaxed font-poppins">
+            <h2 className="text-[32px] md:text-[40px] font-radley text-brand-primary leading-tight">{t('aboutPage.missionTitle')}</h2>
+            <div className="w-12 h-[3px] bg-brand-secondary rounded-full mb-2"></div>
+            <p className="text-[16px] md:text-[18px] text-brand-muted leading-relaxed font-poppins">
               {t('aboutPage.missionText')}
             </p>
           </div>
 
           <div className="flex flex-col gap-3">
-            <h2 className="text-[32px] md:text-[40px] font-radley text-[#000000] leading-tight">{t('aboutPage.journeyTitle')}</h2>
-            <div className="w-12 h-[3px] bg-[#2196F3] rounded-full mb-2"></div>
-            <p className="text-[16px] md:text-[18px] text-[#555555] leading-relaxed font-poppins">
+            <h2 className="text-[32px] md:text-[40px] font-radley text-brand-primary leading-tight">{t('aboutPage.journeyTitle')}</h2>
+            <div className="w-12 h-[3px] bg-brand-secondary rounded-full mb-2"></div>
+            <p className="text-[16px] md:text-[18px] text-brand-muted leading-relaxed font-poppins">
               {t('aboutPage.journeyText')}
             </p>
           </div>
@@ -91,7 +91,7 @@ export default function AboutPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-[38px] md:text-[52px] font-radley text-[#000000] text-center mb-16"
+          className="text-[38px] md:text-[52px] font-radley text-brand-primary text-center mb-16"
         >
           {t('aboutPage.offerTitle')}
         </motion.h2>
@@ -109,7 +109,7 @@ export default function AboutPage() {
               }
             }
           }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full"
         >
           {/* Card 1: Property Sales */}
           <motion.div 
@@ -120,16 +120,16 @@ export default function AboutPage() {
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             className="bg-white border border-gray-100 rounded-[32px] px-8 py-12 flex flex-col items-center text-center gap-6 shadow-sm hover:shadow-xl transition-shadow"
           >
-            <div className="w-24 h-24 bg-[#E3F2FD] rounded-full flex items-center justify-center">
+            <div className="w-24 h-24 bg-brand-bg rounded-full flex items-center justify-center">
               <Image src="/assists/aboutUs/money.png" alt={t('aboutPage.offers.sales.title') as string} width={48} height={48} className="brightness-0" />
             </div>
-            <h3 className="text-[22px] md:text-[26px] font-bold text-[#000000] font-radley">{t('aboutPage.offers.sales.title')}</h3>
-            <p className="text-[15px] md:text-[16px] text-[#666] leading-relaxed font-poppins max-w-[450px]">
+            <h3 className="text-[22px] md:text-[26px] font-bold text-brand-primary font-radley">{t('aboutPage.offers.sales.title')}</h3>
+            <p className="text-[15px] md:text-[16px] text-brand-muted leading-relaxed font-poppins max-w-[450px]">
               {t('aboutPage.offers.sales.text')}
             </p>
           </motion.div>
 
-          {/* Card 2: Property Rentals */}
+          {/* Card 2: Investment Opportunities */}
           <motion.div 
             variants={{
               hidden: { opacity: 0, y: 30 },
@@ -138,29 +138,11 @@ export default function AboutPage() {
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             className="bg-white border border-gray-100 rounded-[32px] px-8 py-12 flex flex-col items-center text-center gap-6 shadow-sm hover:shadow-xl transition-shadow"
           >
-            <div className="w-24 h-24 bg-[#E3F2FD] rounded-full flex items-center justify-center">
-              <Image src="/assists/aboutUs/home.png" alt={t('aboutPage.offers.rentals.title') as string} width={48} height={48} className="brightness-0" />
-            </div>
-            <h3 className="text-[22px] md:text-[26px] font-bold text-[#000000] font-radley">{t('aboutPage.offers.rentals.title')}</h3>
-            <p className="text-[15px] md:text-[16px] text-[#666] leading-relaxed font-poppins max-w-[450px]">
-              {t('aboutPage.offers.rentals.text')}
-            </p>
-          </motion.div>
-
-          {/* Card 3: Investment Opportunities */}
-          <motion.div 
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-            }}
-            whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-            className="bg-white border border-gray-100 rounded-[32px] px-8 py-12 flex flex-col items-center text-center gap-6 shadow-sm hover:shadow-xl transition-shadow"
-          >
-            <div className="w-24 h-24 bg-[#E3F2FD] rounded-full flex items-center justify-center">
+            <div className="w-24 h-24 bg-brand-bg rounded-full flex items-center justify-center">
               <Image src="/assists/aboutUs/sun.png" alt={t('aboutPage.offers.investment.title') as string} width={48} height={48} className="brightness-0" />
             </div>
-            <h3 className="text-[22px] md:text-[26px] font-bold text-[#000000] font-radley">{t('aboutPage.offers.investment.title')}</h3>
-            <p className="text-[15px] md:text-[16px] text-[#666] leading-relaxed font-poppins max-w-[450px]">
+            <h3 className="text-[22px] md:text-[26px] font-bold text-brand-primary font-radley">{t('aboutPage.offers.investment.title')}</h3>
+            <p className="text-[15px] md:text-[16px] text-brand-muted leading-relaxed font-poppins max-w-[450px]">
               {t('aboutPage.offers.investment.text')}
             </p>
           </motion.div>
@@ -177,7 +159,7 @@ export default function AboutPage() {
               backgroundImage: 'url("/assists/aboutUs/image.jpg")',
             }}
           ></div>
-          <div className="absolute inset-0 bg-[#000000B2]"></div>
+          <div className="absolute inset-0 bg-brand-primary/70"></div>
         </div>
 
         {/* Content */}
@@ -196,7 +178,7 @@ export default function AboutPage() {
           </p>
           <Link 
             href={`/${language}/contact`} 
-            className="mt-4 bg-white text-[#000000] px-14 py-4 rounded-full font-bold text-[18px] hover:bg-[#E3F2FD] transition-all transform hover:scale-105"
+            className="mt-4 bg-white text-brand-primary px-14 py-4 rounded-full font-bold text-[18px] hover:bg-brand-bg transition-all transform hover:scale-105"
           >
             {t('aboutPage.contactBtn')}
           </Link>

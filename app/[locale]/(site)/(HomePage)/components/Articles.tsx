@@ -42,7 +42,7 @@ const Articles = () => {
     return (
       <section className="articles-section overflow-hidden">
         <div className="articles-container flex justify-center py-20">
-          <div className="w-8 h-8 border-4 border-[#000000] border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
         </div>
       </section>
     );
@@ -62,8 +62,8 @@ const Articles = () => {
           className="articles-header"
         >
           <span className="articles-tag">{t('articles.tag') as string}</span>
-          <h2 className="articles-title font-radley text-[#000000] text-[48px] leading-[1.2] mb-6">{t('articles.title') as string}</h2>
-          <p className="articles-subtitle text-[#666666]">
+          <h2 className="articles-title font-radley text-brand-primary text-[48px] leading-[1.2] mb-6">{t('articles.title') as string}</h2>
+          <p className="articles-subtitle text-brand-muted">
             {t('articles.subtitle') as string}
           </p>
           <div className="articles-accent-line"></div>
@@ -108,10 +108,10 @@ const Articles = () => {
                     />
                   </div>
                   <div className="p-8 flex flex-col justify-between h-[180px]">
-                    <h3 className="font-radley text-[#000000] text-[22px] font-bold leading-snug line-clamp-2">
+                    <h3 className="font-radley text-brand-primary text-[22px] font-bold leading-snug line-clamp-2">
                       {blog.title}
                     </h3>
-                    <div className="flex items-center gap-2 mt-4 text-[#42A5F5] font-poppins font-semibold text-[15px] group-hover:text-[#2196F3] transition-colors">
+                    <div className="flex items-center gap-2 mt-4 text-brand-secondary font-poppins font-semibold text-[15px] group-hover:text-brand-secondary transition-colors">
                       {t('articles.readMore') as string}
                       <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </div>

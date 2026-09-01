@@ -68,7 +68,7 @@ export default function BlogsPage() {
   if (isLoading && blogs.length === 0) {
     return (
       <div className="p-8 flex justify-center items-center h-full">
-        <div className="w-8 h-8 border-4 border-[#000000] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -82,7 +82,7 @@ export default function BlogsPage() {
         </div>
         <Link 
           href="/admin/blogs/create" 
-          className="bg-[#000000] text-white px-6 py-3 rounded-xl font-poppins font-medium hover:bg-gray-800 transition-colors"
+          className="bg-brand-primary text-white px-6 py-3 rounded-xl font-poppins font-medium hover:bg-gray-800 transition-colors"
         >
           Create New Blog
         </Link>
@@ -92,7 +92,7 @@ export default function BlogsPage() {
         {blogs.length === 0 ? (
           <div className="p-16 flex flex-col items-center justify-center text-center">
             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#42A5F5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -104,7 +104,7 @@ export default function BlogsPage() {
             <p className="text-gray-500 mb-6">Get started by creating your first blog article.</p>
             <Link 
               href="/admin/blogs/create"
-              className="text-[#42A5F5] font-medium hover:underline"
+              className="text-brand-secondary font-medium hover:underline"
             >
               Create your first blog
             </Link>
@@ -148,7 +148,7 @@ export default function BlogsPage() {
                       <div className="flex items-center justify-end gap-3">
                         <Link 
                           href={`/admin/blogs/${blog.id}`}
-                          className="p-2 text-gray-400 hover:text-[#42A5F5] transition-colors"
+                          className="p-2 text-gray-400 hover:text-brand-secondary transition-colors"
                           title="Edit"
                         >
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

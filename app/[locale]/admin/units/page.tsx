@@ -127,13 +127,13 @@ export default function UnitsPage() {
   });
 
   return (
-    <div className="p-10 lg:p-14 font-inter bg-[#F8F9FA] min-h-full scrollbar-hide">
+    <div className="p-10 lg:p-14 font-inter bg-admin-bg min-h-full scrollbar-hide">
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
         <div>
-          <h1 className="text-[36px] font-bold text-[#000000] mb-1">Units</h1>
-          <p className="text-[#64748B] text-[17px]">
+          <h1 className="text-[36px] font-bold text-brand-primary mb-1">Units</h1>
+          <p className="text-admin-muted text-[17px]">
             {activeTab === 'project'
               ? `${totalCount} project unit${totalCount !== 1 ? 's' : ''} total`
               : `${outsideTotalCount} resale unit${outsideTotalCount !== 1 ? 's' : ''} total`}
@@ -141,7 +141,7 @@ export default function UnitsPage() {
         </div>
         <button
           onClick={activeTab === 'project' ? handleAddNew : () => { setEditingOutside(null); setIsAddOutsideOpen(true); }}
-          className="bg-[#000000] text-white px-10 py-5 rounded-[24px] flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-xl hover:shadow-2xl active:scale-95 group cursor-pointer"
+          className="bg-brand-primary text-white px-10 py-5 rounded-[24px] flex items-center gap-3 hover:bg-brand-primary-hover transition-all shadow-xl hover:shadow-2xl active:scale-95 group cursor-pointer"
         >
           <Image src="/admin/projects/mingcute_add-fill.png" alt="Add" width={24} height={24} className="group-hover:rotate-90 transition-transform duration-300" />
           <span className="text-[18px] font-semibold">{activeTab === 'project' ? 'Add Unit' : 'Add Resale Unit'}</span>
@@ -156,8 +156,8 @@ export default function UnitsPage() {
             onClick={() => setActiveTab(tab)}
             className={`px-6 py-2.5 rounded-xl text-[14px] font-bold transition-all cursor-pointer ${
               activeTab === tab
-                ? 'bg-[#000000] text-white shadow-md'
-                : 'text-[#64748B] hover:text-[#000000] hover:bg-gray-50'
+                ? 'bg-brand-primary text-white shadow-md'
+                : 'text-admin-muted hover:text-brand-primary hover:bg-gray-50'
             }`}
           >
             {tab === 'project' ? 'Project Units' : 'Resale Units'}
@@ -183,7 +183,7 @@ export default function UnitsPage() {
         <input
           type="text"
           placeholder="Search units..."
-          className="w-full bg-white border border-gray-100 rounded-[28px] py-5 pl-18 pr-10 text-[17px] text-[#000000] focus:outline-none focus:ring-4 focus:ring-[#000000]/5 transition-all shadow-sm placeholder:text-[#94A3B8]"
+          className="w-full bg-white border border-gray-100 rounded-[28px] py-5 pl-18 pr-10 text-[17px] text-brand-primary focus:outline-none focus:ring-4 focus:ring-brand-primary/5 transition-all shadow-sm placeholder:text-brand-muted-light"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -193,16 +193,16 @@ export default function UnitsPage() {
       <div className="bg-white rounded-[32px] shadow-sm border border-gray-50 overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-24">
-            <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <p className="text-red-500">{error}</p>
-            <button onClick={() => fetchUnits(currentPage)} className="bg-[#000000] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
+            <button onClick={() => fetchUnits(currentPage)} className="bg-brand-primary text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
           </div>
         ) : filteredUnits.length === 0 ? (
           <div className="flex items-center justify-center py-20">
-            <p className="text-[#64748B] text-[17px]">
+            <p className="text-admin-muted text-[17px]">
               {searchQuery ? 'No units match your search.' : 'No units yet. Click "Add Unit" to create one!'}
             </p>
           </div>
@@ -210,7 +210,7 @@ export default function UnitsPage() {
           <div className="overflow-x-auto scrollbar-hide">
             <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-50 text-[15px] font-bold text-[#000000]">
+                <tr className="border-b border-gray-50 text-[15px] font-bold text-brand-primary">
                   <th className="py-7 px-6 w-[20%] max-w-[250px]">Name</th>
                   <th className="py-7 px-4">Marker ID</th>
                   <th className="py-7 px-4">Price</th>
@@ -227,38 +227,38 @@ export default function UnitsPage() {
                   <tr key={unit.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="py-6 px-6 max-w-[250px]">
                       <span
-                        className="text-[16px] font-bold text-[#000000] cursor-pointer hover:text-blue-600 transition-colors"
+                        className="text-[16px] font-bold text-brand-primary cursor-pointer hover:text-brand-secondary transition-colors"
                         onClick={() => handleView(unit)}
                       >
                         {getLocalized(unit.name)}
                       </span>
                       {unit.description && (
-                        <p className="text-[13px] text-[#94A3B8] mt-0.5 line-clamp-1">{getLocalized(unit.description)}</p>
+                        <p className="text-[13px] text-brand-muted-light mt-0.5 line-clamp-1">{getLocalized(unit.description)}</p>
                       )}
                     </td>
                     <td className="py-6 px-4">
-                      <span className="text-[14px] text-[#64748B] font-medium">{unit.markerId || '—'}</span>
+                      <span className="text-[14px] text-admin-muted font-medium">{unit.markerId || '—'}</span>
                     </td>
                     <td className="py-6 px-4">
-                      <span className="text-[15px] font-bold text-[#000000]">{unit.currencyCode || 'EGP'} {unit.price.toLocaleString()}</span>
+                      <span className="text-[15px] font-bold text-brand-primary">{unit.currencyCode || 'EGP'} {unit.price.toLocaleString()}</span>
                     </td>
                     <td className="py-6 px-4 text-center">
-                      <span className="inline-flex px-4 py-1.5 rounded-full bg-[#EBF3FF] text-[#1447E6] text-[13px] font-bold">{unit.noBedRoom}</span>
+                      <span className="inline-flex px-4 py-1.5 rounded-full bg-brand-primary-soft text-brand-primary text-[13px] font-bold">{unit.noBedRoom}</span>
                     </td>
                     <td className="py-6 px-4 text-center">
-                      <span className="inline-flex px-4 py-1.5 rounded-full bg-[#F3E8FF] text-[#8200DB] text-[13px] font-bold">{unit.noBathRoom}</span>
+                      <span className="inline-flex px-4 py-1.5 rounded-full bg-brand-secondary-soft text-brand-secondary text-[13px] font-bold">{unit.noBathRoom}</span>
                     </td>
                      <td className="py-6 px-4 text-center">
-                      <span className="text-[14px] text-[#64748B]">{unit.area} m²</span>
+                      <span className="text-[14px] text-admin-muted">{unit.area} m²</span>
                     </td>
                     <td className="py-6 px-4 text-center">
-                      <span className={`inline-flex px-3 py-1 rounded-full text-[13px] font-bold ${unit.paymentPlans?.length ? 'bg-[#DCFCE7] text-[#166534]' : 'bg-gray-100 text-gray-400'}`}>
+                      <span className={`inline-flex px-3 py-1 rounded-full text-[13px] font-bold ${unit.paymentPlans?.length ? 'bg-status-success-bg text-status-success' : 'bg-gray-100 text-gray-400'}`}>
                         {unit.paymentPlans?.length || 0} Plans
                       </span>
                     </td>
                     <td className="py-6 px-4 text-center">
                       {unit.isFeatured
-                        ? <span className="inline-flex px-4 py-1.5 rounded-full bg-[#FEF9C3] text-[#A16207] text-[13px] font-bold">Yes</span>
+                        ? <span className="inline-flex px-4 py-1.5 rounded-full bg-status-warning-bg text-status-warning text-[13px] font-bold">Yes</span>
                         : <span className="text-gray-300 text-[13px]">—</span>}
                     </td>
                     <td className="py-6 px-6">
@@ -266,7 +266,7 @@ export default function UnitsPage() {
                         {unit.isActive && (
                           <button 
                             onClick={() => handleMarkSold(unit)} 
-                            className="bg-[#FEF9C3] text-[#A16207] hover:bg-[#FDE047] px-4 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer mr-1 whitespace-nowrap shadow-sm hover:shadow-md"
+                            className="bg-status-warning-bg text-status-warning hover:bg-status-warning-border px-4 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer mr-1 whitespace-nowrap shadow-sm hover:shadow-md"
                             title="Mark as Sold"
                           >
                             Mark Sold
@@ -275,7 +275,7 @@ export default function UnitsPage() {
                         <div className="flex items-center gap-1.5">
                           <button 
                             onClick={() => handleView(unit)} 
-                            className="p-2.5 bg-gray-50 hover:bg-[#000000] text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            className="p-2.5 bg-gray-50 hover:bg-brand-primary text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
                             title="View Details"
                           >
                             <div 
@@ -288,7 +288,7 @@ export default function UnitsPage() {
                           </button>
                           <button 
                             onClick={() => handleEdit(unit)} 
-                            className="p-2.5 bg-gray-50 hover:bg-blue-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
+                            className="p-2.5 bg-gray-50 hover:bg-brand-secondary text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
                             title="Edit Unit"
                           >
                             <div 
@@ -325,19 +325,19 @@ export default function UnitsPage() {
         {/* Pagination */}
         {!isLoading && !error && totalPages > 1 && (
           <div className="flex items-center justify-between px-10 py-5 border-t border-gray-50">
-            <p className="text-[14px] text-[#94A3B8]">Page {currentPage} of {totalPages}</p>
+            <p className="text-[14px] text-brand-muted-light">Page {currentPage} of {totalPages}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => fetchUnits(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Previous
               </button>
               <button
                 onClick={() => fetchUnits(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Next
               </button>
@@ -366,7 +366,7 @@ export default function UnitsPage() {
             <input
               type="text"
               placeholder="Search resale units..."
-              className="w-full bg-white border border-gray-100 rounded-[28px] py-5 pl-18 pr-10 text-[17px] text-[#000000] focus:outline-none focus:ring-4 focus:ring-[#000000]/5 transition-all shadow-sm placeholder:text-[#94A3B8]"
+              className="w-full bg-white border border-gray-100 rounded-[28px] py-5 pl-18 pr-10 text-[17px] text-brand-primary focus:outline-none focus:ring-4 focus:ring-brand-primary/5 transition-all shadow-sm placeholder:text-brand-muted-light"
               value={outsideSearch}
               onChange={(e) => setOutsideSearch(e.target.value)}
             />
@@ -375,16 +375,16 @@ export default function UnitsPage() {
           <div className="bg-white rounded-[32px] shadow-sm border border-gray-50 overflow-hidden">
             {outsideLoading ? (
               <div className="flex items-center justify-center py-24">
-                <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+                <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
               </div>
             ) : outsideError ? (
               <div className="flex flex-col items-center justify-center py-24 gap-4">
                 <p className="text-red-500">{outsideError}</p>
-                <button onClick={() => fetchOutsideUnits(outsidePage)} className="bg-[#000000] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
+                <button onClick={() => fetchOutsideUnits(outsidePage)} className="bg-brand-primary text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
               </div>
             ) : outsideUnits.filter(u => u.name.toLowerCase().includes(outsideSearch.toLowerCase())).length === 0 ? (
               <div className="flex items-center justify-center py-20">
-                <p className="text-[#64748B] text-[17px]">
+                <p className="text-admin-muted text-[17px]">
                   {outsideSearch ? 'No units match your search.' : 'No resale units yet. Click "Add Resale Unit" to create one!'}
                 </p>
               </div>
@@ -392,7 +392,7 @@ export default function UnitsPage() {
               <div className="overflow-x-auto scrollbar-hide">
                 <table className="w-full min-w-[1100px] text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-gray-50 text-[15px] font-bold text-[#000000]">
+                    <tr className="border-b border-gray-50 text-[15px] font-bold text-brand-primary">
                       <th className="py-7 px-6 w-[20%] max-w-[250px]">Name</th>
                       <th className="py-7 px-4">Marker ID</th>
                       <th className="py-7 px-4">Price</th>
@@ -412,37 +412,37 @@ export default function UnitsPage() {
                         <tr key={unit.id} className="hover:bg-gray-50/50 transition-colors">
                           <td className="py-6 px-6 max-w-[250px]">
                             <span
-                              className="text-[16px] font-bold text-[#000000] cursor-pointer hover:text-blue-600 transition-colors"
+                              className="text-[16px] font-bold text-brand-primary cursor-pointer hover:text-brand-secondary transition-colors"
                               onClick={() => setViewingOutsideId(unit.id)}
                             >{getLocalized(unit.name)}</span>
-                            {unit.description && <p className="text-[13px] text-[#94A3B8] mt-0.5 line-clamp-1">{getLocalized(unit.description)}</p>}
+                            {unit.description && <p className="text-[13px] text-brand-muted-light mt-0.5 line-clamp-1">{getLocalized(unit.description)}</p>}
                           </td>
                           <td className="py-6 px-4">
-                            <span className="text-[14px] text-[#64748B] font-medium">{unit.markerId || '—'}</span>
+                            <span className="text-[14px] text-admin-muted font-medium">{unit.markerId || '—'}</span>
                           </td>
                           <td className="py-6 px-4">
-                            <span className="text-[15px] font-bold text-[#000000]">{unit.currencyCode} {unit.price.toLocaleString()}</span>
+                            <span className="text-[15px] font-bold text-brand-primary">{unit.currencyCode} {unit.price.toLocaleString()}</span>
                           </td>
                           <td className="py-6 px-4">
-                            <span className="text-[14px] text-[#64748B]">{unit.city}, {unit.country}</span>
+                            <span className="text-[14px] text-admin-muted">{unit.city}, {unit.country}</span>
                           </td>
                           <td className="py-6 px-4 text-center">
-                            <span className="inline-flex px-4 py-1.5 rounded-full bg-[#EBF3FF] text-[#1447E6] text-[13px] font-bold">{unit.noBedRoom}</span>
+                            <span className="inline-flex px-4 py-1.5 rounded-full bg-brand-primary-soft text-brand-primary text-[13px] font-bold">{unit.noBedRoom}</span>
                           </td>
                           <td className="py-6 px-4 text-center">
-                            <span className="inline-flex px-4 py-1.5 rounded-full bg-[#F3E8FF] text-[#8200DB] text-[13px] font-bold">{unit.noBathRoom}</span>
+                            <span className="inline-flex px-4 py-1.5 rounded-full bg-brand-secondary-soft text-brand-secondary text-[13px] font-bold">{unit.noBathRoom}</span>
                           </td>
                           <td className="py-6 px-4 text-center">
-                            <span className="text-[14px] text-[#64748B]">{unit.area} m²</span>
+                            <span className="text-[14px] text-admin-muted">{unit.area} m²</span>
                           </td>
                           <td className="py-6 px-4 text-center">
-                            <span className={`inline-flex px-3 py-1 rounded-full text-[13px] font-bold ${unit.paymentPlans?.length ? 'bg-[#DCFCE7] text-[#166534]' : 'bg-gray-100 text-gray-400'}`}>
+                            <span className={`inline-flex px-3 py-1 rounded-full text-[13px] font-bold ${unit.paymentPlans?.length ? 'bg-status-success-bg text-status-success' : 'bg-gray-100 text-gray-400'}`}>
                               {unit.paymentPlans?.length || 0} Plans
                             </span>
                           </td>
                           <td className="py-6 px-4 text-center">
                             {unit.isFeatured
-                              ? <span className="inline-flex px-4 py-1.5 rounded-full bg-[#FEF9C3] text-[#A16207] text-[13px] font-bold">Yes</span>
+                              ? <span className="inline-flex px-4 py-1.5 rounded-full bg-status-warning-bg text-status-warning text-[13px] font-bold">Yes</span>
                               : <span className="text-gray-300 text-[13px]">—</span>}
                           </td>
                           <td className="py-6 px-4">
@@ -450,14 +450,14 @@ export default function UnitsPage() {
                               {unit.isActive && (
                                 <button
                                   onClick={() => setMarkSoldOutside(unit)}
-                                  className="bg-[#FEF9C3] text-[#A16207] hover:bg-[#FDE047] px-4 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer mr-1 whitespace-nowrap shadow-sm hover:shadow-md"
+                                  className="bg-status-warning-bg text-status-warning hover:bg-status-warning-border px-4 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer mr-1 whitespace-nowrap shadow-sm hover:shadow-md"
                                 >Mark Sold</button>
                               )}
                               <div className="flex items-center gap-1.5">
-                                <button onClick={() => setViewingOutsideId(unit.id)} className="p-2.5 bg-gray-50 hover:bg-[#000000] text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md" title="View">
+                                <button onClick={() => setViewingOutsideId(unit.id)} className="p-2.5 bg-gray-50 hover:bg-brand-primary text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md" title="View">
                                   <div className="w-[20px] h-[20px] bg-current" style={{ WebkitMask: "url('/admin/units/view.png') center/contain no-repeat", mask: "url('/admin/units/view.png') center/contain no-repeat" }} />
                                 </button>
-                                <button onClick={() => { setEditingOutside(unit); setIsAddOutsideOpen(true); }} className="p-2.5 bg-gray-50 hover:bg-blue-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md" title="Edit">
+                                <button onClick={() => { setEditingOutside(unit); setIsAddOutsideOpen(true); }} className="p-2.5 bg-gray-50 hover:bg-brand-secondary text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md" title="Edit">
                                   <div className="w-[20px] h-[20px] bg-current" style={{ WebkitMask: "url('/admin/projects/edit.png') center/contain no-repeat", mask: "url('/admin/projects/edit.png') center/contain no-repeat" }} />
                                 </button>
                                 <button onClick={() => setDeletingOutside(unit)} className="p-2.5 bg-gray-50 hover:bg-red-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md" title="Delete">
@@ -475,10 +475,10 @@ export default function UnitsPage() {
             {/* Pagination */}
             {!outsideLoading && !outsideError && outsideTotalPages > 1 && (
               <div className="flex items-center justify-between px-10 py-5 border-t border-gray-50">
-                <p className="text-[14px] text-[#94A3B8]">Page {outsidePage} of {outsideTotalPages}</p>
+                <p className="text-[14px] text-brand-muted-light">Page {outsidePage} of {outsideTotalPages}</p>
                 <div className="flex gap-3">
-                  <button onClick={() => fetchOutsideUnits(outsidePage - 1)} disabled={outsidePage === 1} className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer">Previous</button>
-                  <button onClick={() => fetchOutsideUnits(outsidePage + 1)} disabled={outsidePage === outsideTotalPages} className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer">Next</button>
+                  <button onClick={() => fetchOutsideUnits(outsidePage - 1)} disabled={outsidePage === 1} className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer">Previous</button>
+                  <button onClick={() => fetchOutsideUnits(outsidePage + 1)} disabled={outsidePage === outsideTotalPages} className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer">Next</button>
                 </div>
               </div>
             )}

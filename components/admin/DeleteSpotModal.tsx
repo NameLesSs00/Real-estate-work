@@ -46,7 +46,7 @@ export default function DeleteSpotModal({ isOpen, locationId, onClose, onSuccess
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-[#000000] px-8 py-5 flex items-center justify-between">
+        <div className="bg-brand-primary px-8 py-5 flex items-center justify-between">
           <h2 className="text-white text-[20px] font-bold">Delete Location</h2>
           <button onClick={onClose} className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none">
             <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={24} height={24} />
@@ -55,7 +55,7 @@ export default function DeleteSpotModal({ isOpen, locationId, onClose, onSuccess
 
         {/* Body */}
         <div className="p-10 text-center space-y-6">
-          <p className="text-[#475467] text-[18px] leading-relaxed">
+          <p className="text-admin-muted text-[18px] leading-relaxed">
             Are you sure you want to delete this location? This action cannot be undone.
           </p>
 
@@ -64,14 +64,14 @@ export default function DeleteSpotModal({ isOpen, locationId, onClose, onSuccess
           <div className="flex gap-4">
             <button
               onClick={onClose}
-              className="flex-1 py-4 rounded-xl border border-gray-200 text-[#000000] font-bold hover:bg-gray-50 transition-colors cursor-pointer"
+              className="flex-1 py-4 rounded-xl border border-gray-200 text-brand-primary font-bold hover:bg-gray-50 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleConfirm}
               disabled={isLoading}
-              className="flex-1 py-4 rounded-xl bg-[#000000] hover:bg-[#1a304a] text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex-1 py-4 rounded-xl bg-brand-primary hover:bg-brand-primary-hover text-white font-bold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Deleting...' : 'Delete'}
             </button>

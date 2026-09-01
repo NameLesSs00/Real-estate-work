@@ -32,7 +32,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
-  
+
   // Initialize from URL param if available, otherwise default to 'en'
   const rawUrlLocale = params?.locale;
   const urlLocale = SUPPORTED_LANGUAGES.includes(rawUrlLocale as Language) ? rawUrlLocale as Language : 'en';
@@ -66,19 +66,19 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         setIsReady(true);
       }
     };
-    
+
     fetchTranslations();
   }, [language]);
 
   const setLanguage = (lang: Language) => {
     if (lang === language) return;
-    
+
     // Redirect to the new locale path
     // Example: /en/about -> /de/about
     const segments = pathname.split('/');
     segments[1] = lang;
     const newPath = segments.join('/');
-    
+
     router.push(newPath);
   };
 
@@ -120,23 +120,23 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   if (!isReady) {
     return (
-      <div style={{ 
-        height: '100vh', 
-        width: '100%', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        backgroundColor: '#fff',
+      <div style={{
+        height: '100vh',
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'var(--color-brand-surface)',
         fontFamily: 'sans-serif',
-        color: '#000000'
+        color: 'var(--color-brand-primary)'
       }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ 
-            width: '40px', 
-            height: '40px', 
-            border: '3px solid #f3f3f3', 
-            borderTop: '3px solid #000000', 
-            borderRadius: '50%', 
+          <div style={{
+            width: '40px',
+            height: '40px',
+            border: '3px solid var(--color-brand-divider)',
+            borderTop: '3px solid var(--color-brand-primary)',
+            borderRadius: '50%',
             animation: 'spin 1s linear infinite',
             margin: '0 auto 20px'
           }} />

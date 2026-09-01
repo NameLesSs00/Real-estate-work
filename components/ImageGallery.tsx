@@ -163,7 +163,7 @@ export default function ImageGallery({ images, projectName = 'Project Image' }: 
         {/* ── Main Featured Image ── */}
         <div
           className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] rounded-2xl md:rounded-[32px] overflow-hidden shadow-lg cursor-zoom-in group/main"
-          style={{ backgroundColor: '#0A0A0B' }}
+          style={{ backgroundColor: 'var(--color-brand-primary)' }}
           onClick={() => setLightbox({ open: true, index: lightbox.index })}
         >
           {/* Using standard img for maximum compatibility and to ensure visibility */}
@@ -225,7 +225,7 @@ export default function ImageGallery({ images, projectName = 'Project Image' }: 
                 onClick={() => setLightbox((prev) => ({ ...prev, index: i }))}
                 className={`relative flex-shrink-0 w-16 h-12 sm:w-20 sm:h-14 md:w-28 md:h-18 rounded-lg overflow-hidden transition-all duration-300 border-2 ${
                   i === lightbox.index
-                    ? 'border-[#000000] ring-1 ring-[#000000]/30 shadow-md'
+                    ? 'border-brand-primary ring-1 ring-brand-primary/30 shadow-md'
                     : 'border-transparent opacity-50 hover:opacity-90'
                 }`}
               >

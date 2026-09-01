@@ -15,7 +15,7 @@
 .how-it-works-overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(27, 33, 52, 0.9); /* #000000E5 is ~90% opacity */
+  background-color: rgba(27, 33, 52, 0.9); /* rgb(7 44 62 / 0.90) is ~90% opacity */
   z-index: 1;
 }
 
@@ -40,7 +40,7 @@
 
 .how-it-works-tag {
   font-family: var(--font-poppins);
-  color: #42A5F5;
+  color: var(--color-brand-secondary);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 2.8px;
@@ -50,7 +50,7 @@
 
 .how-it-works-title {
   font-family: var(--font-radley);
-  color: #ffffff;
+  color: var(--color-brand-surface);
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
@@ -59,7 +59,7 @@
 .how-it-works-accent-line {
   width: 160px;
   height: 4px;
-  background-color: #42A5F5;
+  background-color: var(--color-brand-secondary);
   border-radius: 2px;
 }
 
@@ -97,12 +97,12 @@
   width: 64px;
   height: 64px;
   object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(64%) sepia(62%) saturate(562%) hue-rotate(182deg) brightness(103%) contrast(97%); /* #42A5F5 color filter */
+  filter: brightness(0) saturate(100%) invert(64%) sepia(62%) saturate(562%) hue-rotate(182deg) brightness(103%) contrast(97%); /* var(--color-brand-secondary) color filter */
 }
 
 .how-it-works-text {
   font-family: var(--font-poppins);
-  color: #ffffff;
+  color: var(--color-brand-surface);
   font-size: 18px;
   line-height: 1.6;
   font-weight: 400;

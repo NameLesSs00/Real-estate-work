@@ -30,7 +30,7 @@ export default function ProjectCard({ project, onEdit, onDelete, onView }: Proje
       {/* Content */}
       <div className="flex flex-col gap-3 px-2">
         <h3 
-          className="text-[20px] font-bold text-[#000000] line-clamp-1 cursor-pointer hover:text-blue-600 transition-colors"
+          className="text-[20px] font-bold text-brand-primary line-clamp-1 cursor-pointer hover:text-brand-secondary transition-colors"
           onClick={() => onView(project)}
         >
           {project.title}
@@ -47,7 +47,7 @@ export default function ProjectCard({ project, onEdit, onDelete, onView }: Proje
                 className="opacity-60"
               />
             </div>
-            <span className="text-[#64748B] text-[15px]">{project.developer}</span>
+            <span className="text-admin-muted text-[15px]">{project.developer}</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -60,11 +60,11 @@ export default function ProjectCard({ project, onEdit, onDelete, onView }: Proje
                 className="opacity-60"
               />
             </div>
-            <span className="text-[#64748B] text-[15px]">{project.location}</span>
+            <span className="text-admin-muted text-[15px]">{project.location}</span>
           </div>
         </div>
 
-        <div className="text-[17px] font-semibold text-[#000000] mt-1">
+        <div className="text-[17px] font-semibold text-brand-primary mt-1">
           {project.unitCount} Units
         </div>
 
@@ -72,7 +72,7 @@ export default function ProjectCard({ project, onEdit, onDelete, onView }: Proje
         <div className="flex items-center gap-3 mt-2">
           <button 
             onClick={() => onEdit(project)}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl border border-[#E2E8F0] hover:bg-gray-50 transition-colors group/btn cursor-pointer"
+            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl border border-brand-divider hover:bg-gray-50 transition-colors group/btn cursor-pointer"
           >
             <Image 
               src="/admin/projects/edit.png" 
@@ -81,11 +81,11 @@ export default function ProjectCard({ project, onEdit, onDelete, onView }: Proje
               height={18}
               className="opacity-70 group-hover/btn:opacity-100"
             />
-            <span className="text-[16px] font-medium text-[#475569]">Edit</span>
+            <span className="text-[16px] font-medium text-admin-muted">Edit</span>
           </button>
           <button 
             onClick={() => onDelete(project.id)}
-            className="w-[52px] h-[52px] flex items-center justify-center rounded-2xl border border-[#FEE2E2] hover:bg-[#FEF2F2] transition-colors group/del cursor-pointer"
+            className="w-[52px] h-[52px] flex items-center justify-center rounded-2xl border border-status-danger-bg hover:bg-status-danger-soft transition-colors group/del cursor-pointer"
           >
             <Image 
               src="/admin/projects/delete.png" 

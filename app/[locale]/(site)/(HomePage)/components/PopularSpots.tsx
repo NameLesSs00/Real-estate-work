@@ -28,7 +28,7 @@ const PopularSpots = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-[36px] md:text-[48px] font-serif text-[#000000] leading-tight"
+            className="text-[36px] md:text-[48px] font-serif text-brand-primary leading-tight"
           >
             {t('popularSpots.headline')}
           </motion.h2>
@@ -37,7 +37,7 @@ const PopularSpots = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-[#2196F3] text-[40px] md:text-[56px] font-medium"
+            className="text-brand-secondary text-[40px] md:text-[56px] font-medium"
             style={{ fontFamily: 'var(--font-dancing-script)' }}
           >
             {t('popularSpots.accent')}
@@ -81,7 +81,7 @@ const PopularSpots = () => {
                     <h3 className="text-white font-serif text-[28px] md:text-[36px] font-bold leading-tight mb-1 shadow-sm">
                       {spot.name}
                     </h3>
-                    <p className="text-[#2196F3] font-semibold text-[15px] uppercase tracking-wider">
+                    <p className="text-brand-secondary font-semibold text-[15px] uppercase tracking-wider">
                       {t('popularSpots.exploreArea')}
                     </p>
                   </div>

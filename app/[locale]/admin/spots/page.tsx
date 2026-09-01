@@ -83,19 +83,19 @@ export default function SpotsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] p-8 md:p-10">
+    <div className="min-h-screen bg-brand-bg p-8 md:p-10">
 
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-[28px] font-bold text-[#000000] font-poppins mb-1">Locations</h1>
-          <p className="text-[15px] text-[#666] font-poppins">
+          <h1 className="text-[28px] font-bold text-brand-primary font-poppins mb-1">Locations</h1>
+          <p className="text-[15px] text-brand-muted font-poppins">
             {totalCount} location{totalCount !== 1 ? 's' : ''} total
           </p>
         </div>
         <button
           onClick={handleAddNew}
-          className="bg-[#000000] text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-[#0D47A1] transition-colors font-poppins font-medium cursor-pointer"
+          className="bg-brand-primary text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-brand-primary transition-colors font-poppins font-medium cursor-pointer"
         >
           <Image src="/admin/spots/add.png" alt="Add" width={20} height={20} className="object-contain" />
           Add New Location
@@ -106,7 +106,7 @@ export default function SpotsPage() {
       <div className="mb-8">
         <div className="relative max-w-full md:max-w-2xl">
           <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A0AEC0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand-muted-light)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
@@ -116,69 +116,69 @@ export default function SpotsPage() {
             placeholder="Search by city, district or country..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-[#E2E8F0] rounded-[20px] py-4 pl-12 pr-4 text-[#4A5568] placeholder-[#A0AEC0] focus:outline-none focus:border-[#000000] focus:ring-1 focus:ring-[#000000] transition-all font-poppins shadow-sm"
+            className="w-full bg-white border border-brand-divider rounded-[20px] py-4 pl-12 pr-4 text-admin-muted placeholder:text-brand-muted-light focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all font-poppins shadow-sm"
           />
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-[20px] shadow-sm border border-[#BBDEFB] overflow-hidden">
+      <div className="bg-white rounded-[20px] shadow-sm border border-brand-divider overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-24">
-            <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <p className="text-red-500 font-poppins">{error}</p>
             <button
               onClick={() => fetchLocations(currentPage)}
-              className="bg-[#000000] text-white px-6 py-2 rounded-full font-poppins text-sm cursor-pointer"
+              className="bg-brand-primary text-white px-6 py-2 rounded-full font-poppins text-sm cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : filteredLocations.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-2">
-            <p className="text-[#666] font-poppins text-lg">No locations found.</p>
+            <p className="text-brand-muted font-poppins text-lg">No locations found.</p>
             {searchQuery && (
-              <p className="text-[#A0AEC0] font-poppins text-sm">Try adjusting your search.</p>
+              <p className="text-brand-muted-light font-poppins text-sm">Try adjusting your search.</p>
             )}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full font-poppins">
               <thead>
-                <tr className="bg-[#F8F9FA] border-b border-[#BBDEFB]">
-                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">#</th>
-                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">City</th>
-                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">District</th>
-                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">Street</th>
-                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">Country</th>
-                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">Created</th>
-                  <th className="text-center px-6 py-4 text-[13px] font-semibold text-[#6B7280] uppercase tracking-wider">Actions</th>
+                <tr className="bg-admin-bg border-b border-brand-divider">
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">#</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">City</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">District</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">Street</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">Country</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">Created</th>
+                  <th className="text-center px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#BBDEFB]">
+              <tbody className="divide-y divide-brand-divider">
                 {filteredLocations.map((loc, idx) => (
-                  <tr key={loc.id} className="hover:bg-[#FAFAFA] transition-colors group">
-                    <td className="px-6 py-4 text-[14px] text-[#A0AEC0] font-medium">
+                  <tr key={loc.id} className="hover:bg-brand-bg transition-colors group">
+                    <td className="px-6 py-4 text-[14px] text-brand-muted-light font-medium">
                       {(currentPage - 1) * 10 + idx + 1}
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-[15px] font-semibold text-[#000000]">{loc.city}</span>
+                      <span className="text-[15px] font-semibold text-brand-primary">{loc.city}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium bg-[#BBDEFB] text-[#000000]">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-[13px] font-medium bg-brand-divider text-brand-primary">
                         {loc.district}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-[14px] text-[#718096]">
-                      {loc.street || <span className="text-[#CBD5E0] italic">—</span>}
+                    <td className="px-6 py-4 text-[14px] text-admin-muted">
+                      {loc.street || <span className="text-brand-divider italic">—</span>}
                     </td>
-                    <td className="px-6 py-4 text-[14px] text-[#718096]">
-                      {loc.country || <span className="text-[#CBD5E0] italic">—</span>}
+                    <td className="px-6 py-4 text-[14px] text-admin-muted">
+                      {loc.country || <span className="text-brand-divider italic">—</span>}
                     </td>
-                    <td className="px-6 py-4 text-[13px] text-[#A0AEC0]">
+                    <td className="px-6 py-4 text-[13px] text-brand-muted-light">
                       {formatDate(loc.createdAt)}
                     </td>
                     <td className="px-6 py-4">
@@ -187,7 +187,7 @@ export default function SpotsPage() {
                         <button
                           onClick={() => handleEdit(loc)}
                           title="Edit"
-                          className="w-9 h-9 flex items-center justify-center rounded-lg border border-[#E2E8F0] hover:bg-[#F8F9FA] transition-colors cursor-pointer"
+                          className="w-9 h-9 flex items-center justify-center rounded-lg border border-brand-divider hover:bg-admin-bg transition-colors cursor-pointer"
                         >
                           <Image src="/admin/spots/edit.png" alt="Edit" width={16} height={16} />
                         </button>
@@ -195,7 +195,7 @@ export default function SpotsPage() {
                         <button
                           onClick={() => handleDelete(loc.id)}
                           title="Delete"
-                          className="w-9 h-9 flex items-center justify-center rounded-lg border border-[#FEB2B2] hover:bg-red-50 transition-colors cursor-pointer"
+                          className="w-9 h-9 flex items-center justify-center rounded-lg border border-status-danger-border hover:bg-red-50 transition-colors cursor-pointer"
                         >
                           <Image src="/admin/spots/delete.png" alt="Delete" width={16} height={16} />
                         </button>
@@ -210,22 +210,22 @@ export default function SpotsPage() {
 
         {/* Pagination */}
         {!isLoading && !error && totalPages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-[#BBDEFB]">
-            <p className="text-[13px] text-[#A0AEC0] font-poppins">
+          <div className="flex items-center justify-between px-6 py-4 border-t border-brand-divider">
+            <p className="text-[13px] text-brand-muted-light font-poppins">
               Page {currentPage} of {totalPages}
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => fetchLocations(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="px-4 py-2 rounded-lg border border-[#E2E8F0] text-[14px] font-medium text-[#000000] hover:bg-[#F8F9FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
+                className="px-4 py-2 rounded-lg border border-brand-divider text-[14px] font-medium text-brand-primary hover:bg-admin-bg disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
               >
                 Previous
               </button>
               <button
                 onClick={() => fetchLocations(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="px-4 py-2 rounded-lg border border-[#E2E8F0] text-[14px] font-medium text-[#000000] hover:bg-[#F8F9FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
+                className="px-4 py-2 rounded-lg border border-brand-divider text-[14px] font-medium text-brand-primary hover:bg-admin-bg disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer font-poppins"
               >
                 Next
               </button>

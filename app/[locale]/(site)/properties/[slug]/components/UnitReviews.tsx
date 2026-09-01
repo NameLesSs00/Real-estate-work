@@ -36,7 +36,7 @@ function StarRow({
             <Star
               size={size}
               className={display >= s ? 'text-amber-400' : 'text-gray-200'}
-              fill={display >= s ? '#FBBF24' : 'none'}
+              fill={display >= s ? 'var(--color-status-star)' : 'none'}
             />
           </span>
         ))}
@@ -61,7 +61,7 @@ function StarRow({
           <Star
             size={size}
             className={display >= s ? 'text-amber-400' : 'text-gray-200'}
-            fill={display >= s ? '#FBBF24' : 'none'}
+            fill={display >= s ? 'var(--color-status-star)' : 'none'}
           />
         </button>
       ))}
@@ -174,13 +174,13 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
   const otherReviews = reviews.filter((r) => r.id !== myReviewId);
 
   const inputCls =
-    'w-full border border-[#E5E2DE] rounded-[10px] px-4 py-3 text-[14px] placeholder:text-[#BDBDBD] outline-none focus:border-[#000000] transition-colors font-poppins bg-white';
+    'w-full border border-brand-divider rounded-[10px] px-4 py-3 text-[14px] placeholder:text-brand-muted-light outline-none focus:border-brand-primary transition-colors font-poppins bg-white';
 
   return (
-    <div className="bg-white border border-[#BBDEFB] rounded-[24px] p-6 sm:p-8 shadow-sm">
+    <div className="bg-white border border-brand-divider rounded-[24px] p-6 sm:p-8 shadow-sm">
       {/* Section heading */}
       <div className="flex items-center gap-3 mb-6">
-        <h2 className="text-[20px] font-bold text-[#000000] font-poppins">Reviews</h2>
+        <h2 className="text-[20px] font-bold text-brand-primary font-poppins">Reviews</h2>
         <div className="h-px flex-1 bg-gray-100" />
       </div>
 
@@ -212,10 +212,10 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-center sm:items-start gap-4 bg-[#E3F2FD] rounded-2xl p-5 mb-7"
+          className="flex flex-col sm:flex-row items-center sm:items-start gap-4 bg-brand-bg rounded-2xl p-5 mb-7"
         >
           <div className="flex flex-col items-center">
-            <span className="text-[48px] font-bold text-[#000000] leading-none font-poppins">
+            <span className="text-[48px] font-bold text-brand-primary leading-none font-poppins">
               {avgRating.toFixed(1)}
             </span>
             <span className="text-[12px] text-gray-400 mt-1">out of 5</span>
@@ -223,7 +223,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
           <div className="flex flex-col justify-center gap-2">
             <StarRow rating={Math.round(avgRating)} size={22} />
             <p className="text-[13px] text-gray-500 font-poppins">
-              Based on <strong className="text-[#000000]">{reviews.length}</strong>{' '}
+              Based on <strong className="text-brand-primary">{reviews.length}</strong>{' '}
               {reviews.length === 1 ? 'review' : 'reviews'}
             </p>
           </div>
@@ -234,7 +234,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
       {loading ? (
         <div className="space-y-4 mb-7">
           {[1, 2].map((i) => (
-            <div key={i} className="animate-pulse bg-[#E3F2FD] rounded-2xl h-24" />
+            <div key={i} className="animate-pulse bg-brand-bg rounded-2xl h-24" />
           ))}
         </div>
       ) : reviews.length === 0 ? (
@@ -249,15 +249,15 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
               key={myReview.id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="border-2 border-[#000000]/10 bg-[#000000]/[0.02] rounded-2xl p-5"
+              className="border-2 border-brand-primary/10 bg-brand-primary/[0.02] rounded-2xl p-5"
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-[15px] text-[#000000] font-poppins">
+                    <span className="font-bold text-[15px] text-brand-primary font-poppins">
                       {myReview.fullName}
                     </span>
-                    <span className="text-[11px] bg-[#000000] text-white px-2 py-0.5 rounded-full font-semibold">
+                    <span className="text-[11px] bg-brand-primary text-white px-2 py-0.5 rounded-full font-semibold">
                       You
                     </span>
                   </div>
@@ -277,7 +277,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
                   </button>
                 </div>
               </div>
-              <p className="text-[14px] text-[#555] font-poppins leading-relaxed">
+              <p className="text-[14px] text-brand-muted font-poppins leading-relaxed">
                 {myReview.comment}
               </p>
 
@@ -324,11 +324,11 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
               key={review.id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#FDFCFB] border border-[#BBDEFB] rounded-2xl p-5"
+              className="bg-brand-bg border border-brand-divider rounded-2xl p-5"
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
-                  <span className="font-bold text-[15px] text-[#000000] font-poppins">
+                  <span className="font-bold text-[15px] text-brand-primary font-poppins">
                     {review.fullName}
                   </span>
                   <div className="flex items-center gap-2 mt-1">
@@ -339,7 +339,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
                   </div>
                 </div>
               </div>
-              <p className="text-[14px] text-[#555] font-poppins leading-relaxed">
+              <p className="text-[14px] text-brand-muted font-poppins leading-relaxed">
                 {review.comment}
               </p>
             </motion.div>
@@ -349,13 +349,13 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
 
       {/* ── Add Review Form (hidden if visitor already submitted this session) ── */}
       {!myReviewId && (
-        <div className="border-t border-[#BBDEFB] pt-6">
-          <h3 className="text-[16px] font-bold text-[#000000] font-poppins mb-4">
+        <div className="border-t border-brand-divider pt-6">
+          <h3 className="text-[16px] font-bold text-brand-primary font-poppins mb-4">
             Write a Review
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[13px] font-medium text-[#000000]">
+              <label className="text-[13px] font-medium text-brand-primary">
                 Your Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -368,7 +368,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[13px] font-medium text-[#000000]">
+              <label className="text-[13px] font-medium text-brand-primary">
                 Rating <span className="text-red-500">*</span>
               </label>
               <StarRow
@@ -380,7 +380,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[13px] font-medium text-[#000000]">
+              <label className="text-[13px] font-medium text-brand-primary">
                 Comment <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -402,7 +402,7 @@ export default function UnitReviews({ unitId }: UnitReviewsProps) {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#000000] text-white px-10 py-4 rounded-full text-[15px] font-semibold hover:bg-[#0D47A1] transition-all disabled:opacity-50"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-brand-primary text-white px-10 py-4 rounded-full text-[15px] font-semibold hover:bg-brand-primary transition-all disabled:opacity-50"
             >
               {submitting && <Loader2 size={18} className="animate-spin" />}
               Submit Review

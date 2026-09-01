@@ -69,7 +69,7 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#E3F2FD] pt-32 font-poppins text-[#0B1F3A]">
+    <div className="min-h-screen bg-brand-bg pt-32 font-poppins text-brand-primary">
       <section className="px-5 pb-8 pt-8 sm:px-6 md:px-10 md:pb-12 md:pt-12">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -79,20 +79,20 @@ export default function ProjectsPage() {
         >
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-[720px]">
-              <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#90CAF9] bg-white/75 px-4 py-2 text-[12px] font-bold uppercase tracking-[0.18em] text-[#1565C0]">
+              <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-brand-muted-light bg-white/75 px-4 py-2 text-[12px] font-bold uppercase tracking-[0.18em] text-brand-primary">
                 <Building2 size={15} />
                 {t('header.projects')}
               </span>
-              <h1 className="font-radley text-[42px] leading-[1.05] text-[#0D47A1] sm:text-[52px] md:text-[64px]">
+              <h1 className="font-radley text-[42px] leading-[1.05] text-brand-primary sm:text-[52px] md:text-[64px]">
                 {t('projects.title')}
               </h1>
-              <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-[#36516F] md:text-[17px]">
+              <p className="mt-4 max-w-[620px] text-[15px] leading-7 text-brand-muted md:text-[17px]">
                 {t('projects.subtitle')}
               </p>
             </div>
 
             {!initialLoading && !error && (
-              <div className="w-fit rounded-full border border-[#BBDEFB] bg-white px-5 py-3 text-[14px] font-semibold text-[#0D47A1] shadow-sm">
+              <div className="w-fit rounded-full border border-brand-divider bg-white px-5 py-3 text-[14px] font-semibold text-brand-primary shadow-sm">
                 {totalCount} {t('projects.countLabel')}
               </div>
             )}
@@ -100,22 +100,22 @@ export default function ProjectsPage() {
         </motion.div>
       </section>
 
-      <section className="bg-[#F8FBFF] px-5 py-12 sm:px-6 md:px-10 md:py-16">
+      <section className="bg-brand-primary-soft px-5 py-12 sm:px-6 md:px-10 md:py-16">
         <div className="mx-auto max-w-[1280px]">
           {initialLoading && (
-            <div className="flex min-h-[360px] flex-col items-center justify-center gap-4 rounded-[24px] border border-[#BBDEFB] bg-white text-[#36516F]">
-              <Loader2 className="animate-spin text-[#1565C0]" size={36} />
+            <div className="flex min-h-[360px] flex-col items-center justify-center gap-4 rounded-[24px] border border-brand-divider bg-white text-brand-muted">
+              <Loader2 className="animate-spin text-brand-primary" size={36} />
               <p className="text-[15px] font-semibold">{t('projects.loading')}</p>
             </div>
           )}
 
           {error && !initialLoading && (
-            <div className="flex min-h-[320px] flex-col items-center justify-center gap-5 rounded-[24px] border border-[#BBDEFB] bg-white px-6 text-center shadow-sm">
-              <SearchX className="text-[#1565C0]" size={38} />
-              <p className="text-[16px] font-semibold text-[#B42318]">{error}</p>
+            <div className="flex min-h-[320px] flex-col items-center justify-center gap-5 rounded-[24px] border border-brand-divider bg-white px-6 text-center shadow-sm">
+              <SearchX className="text-brand-primary" size={38} />
+              <p className="text-[16px] font-semibold text-status-danger">{error}</p>
               <button
                 onClick={() => fetchPage(1)}
-                className="rounded-full bg-[#1565C0] px-7 py-3 text-[14px] font-bold text-white transition-all hover:bg-[#0D47A1]"
+                className="rounded-full bg-brand-primary px-7 py-3 text-[14px] font-bold text-white transition-all hover:bg-brand-primary"
               >
                 {t('projects.tryAgain')}
               </button>
@@ -125,8 +125,8 @@ export default function ProjectsPage() {
           {!initialLoading && !error && (
             <motion.div variants={containerVariants} initial="hidden" animate="visible" className="flex flex-col gap-10">
               {projects.length === 0 ? (
-                <div className="flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-[24px] border border-[#BBDEFB] bg-white px-6 text-center text-[#36516F] shadow-sm">
-                  <SearchX className="text-[#1565C0]" size={38} />
+                <div className="flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-[24px] border border-brand-divider bg-white px-6 text-center text-brand-muted shadow-sm">
+                  <SearchX className="text-brand-primary" size={38} />
                   <p className="text-[17px] font-semibold">{t('projects.noResults')}</p>
                 </div>
               ) : (
@@ -145,9 +145,9 @@ export default function ProjectsPage() {
                           key={project.id}
                           variants={itemVariants}
                           layout
-                          className="group overflow-hidden rounded-[24px] border border-[#BBDEFB] bg-white shadow-[0_18px_55px_rgba(13,71,161,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(13,71,161,0.14)]"
+                          className="group overflow-hidden rounded-[24px] border border-brand-divider bg-white shadow-[0_18px_55px_rgba(7,44,62,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(7,44,62,0.14)]"
                         >
-                          <Link href={projectHref} className="relative block aspect-[1.35] overflow-hidden bg-[#D7ECFF]">
+                          <Link href={projectHref} className="relative block aspect-[1.35] overflow-hidden bg-brand-primary-soft">
                             <Image
                               src={heroImage}
                               alt={localizedName || t('projects.title')}
@@ -156,10 +156,10 @@ export default function ProjectsPage() {
                               draggable={false}
                               className="object-cover transition-transform duration-700 group-hover:scale-105"
                             />
-                            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#061A36]/70 to-transparent" />
+                            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-brand-primary/70 to-transparent" />
                             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3">
-                              <span className="inline-flex min-w-0 items-center gap-2 rounded-full bg-white/95 px-3 py-2 text-[12px] font-bold text-[#0D47A1] shadow-sm">
-                                <MapPin size={14} className="shrink-0 text-[#2196F3]" />
+                              <span className="inline-flex min-w-0 items-center gap-2 rounded-full bg-white/95 px-3 py-2 text-[12px] font-bold text-brand-primary shadow-sm">
+                                <MapPin size={14} className="shrink-0 text-brand-secondary" />
                                 <span className="truncate">{project.locationName || t('projects.noLocation')}</span>
                               </span>
                             </div>
@@ -168,14 +168,14 @@ export default function ProjectsPage() {
                           <div className="flex min-h-[260px] flex-col p-5 sm:p-6">
                             <div className="mb-5 flex items-center justify-between gap-4">
                               <div className="min-w-0">
-                                <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-[#42A5F5]">
+                                <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-secondary">
                                   {t('projects.developedBy')}
                                 </p>
-                                <p className="truncate text-[14px] font-semibold text-[#36516F]">
+                                <p className="truncate text-[14px] font-semibold text-brand-muted">
                                   {project.developerName || t('projects.noDeveloper')}
                                 </p>
                               </div>
-                              <div className="relative h-12 w-16 shrink-0 rounded-[14px] border border-[#E1F0FF] bg-[#F8FBFF] p-2">
+                              <div className="relative h-12 w-16 shrink-0 rounded-[14px] border border-brand-primary-soft bg-brand-primary-soft p-2">
                                 <Image
                                   src={developerLogo}
                                   alt={project.developerName || t('featureProject.developerLogo')}
@@ -187,22 +187,22 @@ export default function ProjectsPage() {
                               </div>
                             </div>
 
-                            <h2 className="line-clamp-2 text-[22px] font-bold leading-tight text-[#071F49]">
-                              <Link href={projectHref} className="transition-colors hover:text-[#1565C0]">
+                            <h2 className="line-clamp-2 text-[22px] font-bold leading-tight text-brand-primary">
+                              <Link href={projectHref} className="transition-colors hover:text-brand-primary">
                                 {localizedName}
                               </Link>
                             </h2>
-                            <p className="mt-3 line-clamp-3 text-[14px] leading-7 text-[#5B6F86]">
+                            <p className="mt-3 line-clamp-3 text-[14px] leading-7 text-brand-muted">
                               {localizedDesc || t('projectDetails.noDescription')}
                             </p>
 
                             <div className="mt-auto flex items-center justify-between gap-4 pt-6">
-                              <span className="rounded-full bg-[#E3F2FD] px-4 py-2 text-[12px] font-bold text-[#1565C0]">
+                              <span className="rounded-full bg-brand-bg px-4 py-2 text-[12px] font-bold text-brand-primary">
                                 {unitCount} {t('projects.unitsAvailable')}
                               </span>
                               <Link
                                 href={projectHref}
-                                className="inline-flex items-center gap-2 rounded-full bg-[#1565C0] px-5 py-3 text-[14px] font-bold text-white transition-all hover:bg-[#0D47A1]"
+                                className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-5 py-3 text-[14px] font-bold text-white transition-all hover:bg-brand-primary"
                               >
                                 {t('projects.viewDetails')}
                                 <ArrowRight size={17} />
@@ -221,7 +221,7 @@ export default function ProjectsPage() {
                   <button
                     onClick={handleShowMore}
                     disabled={loading}
-                    className="inline-flex min-w-[220px] items-center justify-center gap-3 rounded-full border border-[#1565C0] bg-white px-8 py-4 text-[15px] font-bold text-[#1565C0] transition-all hover:bg-[#1565C0] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex min-w-[220px] items-center justify-center gap-3 rounded-full border border-brand-primary bg-white px-8 py-4 text-[15px] font-bold text-brand-primary transition-all hover:bg-brand-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {loading ? (
                       <>
@@ -239,7 +239,7 @@ export default function ProjectsPage() {
               )}
 
               {!hasMore && projects.length > 0 && (
-                <p className="text-center text-[14px] font-medium text-[#6F849D]">
+                <p className="text-center text-[14px] font-medium text-brand-muted">
                   {t('projects.allLoaded')}
                 </p>
               )}

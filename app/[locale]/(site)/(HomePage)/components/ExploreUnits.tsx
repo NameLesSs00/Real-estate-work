@@ -29,7 +29,7 @@ const ExploreUnits = () => {
         // Fetch a larger set to allow meaningful client-side sorting if API doesn't support it
         // Or if the API is simple, we take the first page and sort it.
         // For 'Hot Deal', we'll just take the first page as is (latest).
-        const data = await getUnitsFiltered({ PageNumber: 1, PageSize: 50, Language: language });
+        const data = await getUnitsFiltered({ UnitType: 'Buy', PageNumber: 1, PageSize: 50, Language: language });
         let items = data.items;
 
         if (activeTab === 1) {
@@ -84,7 +84,7 @@ const ExploreUnits = () => {
                 key={unit.id}
                 id={unit.id}
                 title={getLocalized(unit.name) || t('propertyCard.fallback.untitled')}
-                type={unit.propertyType || unit.unitType || t('propertyCard.fallback.unit')}
+                type={unit.propertyType || t('propertyCard.fallback.unit')}
                 location={unit.locationName || t('propertyCard.fallback.unknownLocation')}
                 price={`${unit.currencyCode || unit.currency || 'EGP'} ${unit.price?.toLocaleString()}`}
                 beds={unit.noBedRoom || 0}

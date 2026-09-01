@@ -238,7 +238,7 @@ export default function ProjectPriceListsModal({ isOpen, onClose, project }: Pro
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
       <div className="bg-white rounded-[32px] w-full max-w-[1040px] max-h-[92vh] flex flex-col shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-        <div className="bg-[#000000] px-8 py-5 flex items-center justify-between shrink-0">
+        <div className="bg-brand-primary px-8 py-5 flex items-center justify-between shrink-0">
           <div>
             <h2 className="text-white text-[20px] font-bold">Project Price Lists</h2>
             <p className="text-white/60 text-[13px] mt-1">{project.name}</p>
@@ -249,16 +249,16 @@ export default function ProjectPriceListsModal({ isOpen, onClose, project }: Pro
         </div>
 
         <div className="flex-1 overflow-y-auto scrollbar-hide p-8 grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8">
-          <form onSubmit={handleSubmit} className="bg-[#F8F9FA] border border-gray-100 rounded-[24px] p-6 h-fit space-y-5">
+          <form onSubmit={handleSubmit} className="bg-admin-bg border border-gray-100 rounded-[24px] p-6 h-fit space-y-5">
             <div className="flex items-center justify-between gap-4">
-              <h3 className="text-[18px] font-bold text-[#000000]">
+              <h3 className="text-[18px] font-bold text-brand-primary">
                 {formMode === 'edit' ? 'Edit Price List' : 'Add Price List'}
               </h3>
               {formMode === 'edit' && (
                 <button
                   type="button"
                   onClick={() => resetForm()}
-                  className="text-[13px] font-bold text-[#64748B] hover:text-[#000000] cursor-pointer"
+                  className="text-[13px] font-bold text-admin-muted hover:text-brand-primary cursor-pointer"
                 >
                   New
                 </button>
@@ -266,30 +266,30 @@ export default function ProjectPriceListsModal({ isOpen, onClose, project }: Pro
             </div>
 
             <div className="space-y-2">
-              <label className="text-[#000000] font-bold text-[14px]">Name *</label>
+              <label className="text-brand-primary font-bold text-[14px]">Name *</label>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => updateForm({ name: e.target.value })}
-                className="w-full border border-gray-200 bg-white rounded-2xl px-5 py-3.5 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium"
+                className="w-full border border-gray-200 bg-white rounded-2xl px-5 py-3.5 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 font-medium"
                 placeholder="Price list name"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-[#000000] font-bold text-[14px]">Display Order *</label>
+              <label className="text-brand-primary font-bold text-[14px]">Display Order *</label>
               <input
                 type="number"
                 min={1}
                 step={1}
                 value={form.displayOrder}
                 onChange={(e) => updateForm({ displayOrder: e.target.value })}
-                className="w-full border border-gray-200 bg-white rounded-2xl px-5 py-3.5 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium"
+                className="w-full border border-gray-200 bg-white rounded-2xl px-5 py-3.5 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 font-medium"
               />
             </div>
 
             <div className="space-y-3">
-              <label className="text-[#000000] font-bold text-[14px]">Image {formMode === 'create' ? '*' : ''}</label>
+              <label className="text-brand-primary font-bold text-[14px]">Image {formMode === 'create' ? '*' : ''}</label>
               {imageSource && (
                 <div className="relative aspect-video rounded-2xl overflow-hidden border border-gray-200 bg-gray-100">
                   <Image src={imageSource} alt={form.name || 'Price list image'} fill className="object-cover" />
@@ -297,7 +297,7 @@ export default function ProjectPriceListsModal({ isOpen, onClose, project }: Pro
               )}
               <label htmlFor={`price-list-image-${project.id}-${formKey}`} className="border-2 border-dashed border-gray-200 rounded-2xl p-5 flex flex-col items-center justify-center gap-2 cursor-pointer bg-white hover:bg-gray-50 transition-colors">
                 <Image src="/admin/units/addUnit/upload.png" alt="Upload" width={28} height={28} className="opacity-50" />
-                <span className="text-[#475467] font-semibold text-[14px]">
+                <span className="text-admin-muted font-semibold text-[14px]">
                   {imageSource ? 'Replace image' : 'Upload image'}
                 </span>
               </label>
@@ -316,7 +316,7 @@ export default function ProjectPriceListsModal({ isOpen, onClose, project }: Pro
             <button
               type="submit"
               disabled={isSaving}
-              className="w-full py-4 rounded-2xl bg-[#000000] hover:bg-[#1a304a] text-white font-bold transition-all cursor-pointer shadow-lg shadow-[#000000]/15 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]"
+              className="w-full py-4 rounded-2xl bg-brand-primary hover:bg-brand-primary-hover text-white font-bold transition-all cursor-pointer shadow-lg shadow-brand-primary/15 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]"
             >
               {isSaving ? 'Saving...' : formMode === 'edit' ? 'Save Price List' : 'Create Price List'}
             </button>
@@ -324,14 +324,14 @@ export default function ProjectPriceListsModal({ isOpen, onClose, project }: Pro
 
           <div className="min-w-0">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-[18px] font-bold text-[#000000]">
+              <h3 className="text-[18px] font-bold text-brand-primary">
                 Price Lists <span className="text-[14px] font-normal text-gray-400">({priceLists.length})</span>
               </h3>
               <button
                 type="button"
                 onClick={fetchPriceLists}
                 disabled={isLoading}
-                className="text-[13px] font-bold text-[#000000] border border-gray-200 rounded-full px-4 py-2 hover:bg-gray-50 disabled:opacity-50 cursor-pointer"
+                className="text-[13px] font-bold text-brand-primary border border-gray-200 rounded-full px-4 py-2 hover:bg-gray-50 disabled:opacity-50 cursor-pointer"
               >
                 Refresh
               </button>
@@ -339,7 +339,7 @@ export default function ProjectPriceListsModal({ isOpen, onClose, project }: Pro
 
             {isLoading ? (
               <div className="flex items-center justify-center py-24">
-                <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+                <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
               </div>
             ) : sortedPriceLists.length === 0 ? (
               <div className="border-2 border-dashed border-gray-200 rounded-[24px] p-12 text-center text-gray-400">
@@ -353,27 +353,27 @@ export default function ProjectPriceListsModal({ isOpen, onClose, project }: Pro
                   const isConfirmingDelete = confirmDeleteId === item.id;
 
                   return (
-                    <div key={item.id} className={`border rounded-[20px] overflow-hidden bg-white transition-all ${isEditing ? 'border-[#000000] shadow-md' : 'border-gray-100 hover:shadow-md'}`}>
+                    <div key={item.id} className={`border rounded-[20px] overflow-hidden bg-white transition-all ${isEditing ? 'border-brand-primary shadow-md' : 'border-gray-100 hover:shadow-md'}`}>
                       <div className="relative aspect-video bg-gray-100">
                         {resolvedImage ? (
                           <Image src={resolvedImage} alt={item.name} fill className="object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-gray-300 text-[13px]">No image</div>
                         )}
-                        <div className="absolute top-3 left-3 bg-white/95 text-[#000000] rounded-full px-3 py-1 text-[12px] font-black shadow-sm">
+                        <div className="absolute top-3 left-3 bg-white/95 text-brand-primary rounded-full px-3 py-1 text-[12px] font-black shadow-sm">
                           #{item.displayOrder}
                         </div>
                       </div>
                       <div className="p-4 space-y-4">
                         <div>
-                          <h4 className="text-[#000000] text-[16px] font-bold truncate">{item.name}</h4>
-                          <p className="text-[#94A3B8] text-[12px] mt-1">ID {item.id}</p>
+                          <h4 className="text-brand-primary text-[16px] font-bold truncate">{item.name}</h4>
+                          <p className="text-brand-muted-light text-[12px] mt-1">ID {item.id}</p>
                         </div>
                         <div className="flex gap-3">
                           <button
                             type="button"
                             onClick={() => handleEdit(item)}
-                            className="flex-1 py-2.5 rounded-xl border border-gray-200 text-[#000000] font-bold text-[13px] hover:bg-gray-50 cursor-pointer transition-colors"
+                            className="flex-1 py-2.5 rounded-xl border border-gray-200 text-brand-primary font-bold text-[13px] hover:bg-gray-50 cursor-pointer transition-colors"
                           >
                             Edit
                           </button>
@@ -400,7 +400,7 @@ export default function ProjectPriceListsModal({ isOpen, onClose, project }: Pro
         </div>
 
         <div className="px-8 py-5 border-t border-gray-100 shrink-0 flex justify-end bg-white">
-          <button onClick={onClose} className="bg-[#000000] hover:bg-[#1a304a] text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer">
+          <button onClick={onClose} className="bg-brand-primary hover:bg-brand-primary-hover text-white font-bold px-16 py-3.5 rounded-2xl transition-all cursor-pointer">
             Close
           </button>
         </div>

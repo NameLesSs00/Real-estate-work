@@ -16,7 +16,7 @@ const BestListings = () => {
     async function loadUnits() {
       setIsLoading(true);
       try {
-        const data = await getUnitsFiltered({ PageNumber: 1, PageSize: 8, Language: language });
+        const data = await getUnitsFiltered({ UnitType: 'Buy', PageNumber: 1, PageSize: 8, Language: language });
         setUnits(data.items || []);
       } catch (err) {
         console.error('Failed to load units:', err);
@@ -33,11 +33,11 @@ const BestListings = () => {
         
         {/* Header */}
         <div className="text-center mb-16 flex items-baseline justify-center gap-4">
-          <h2 className="text-[40px] md:text-[56px] font-serif text-[#000000] leading-tight">
+          <h2 className="text-[40px] md:text-[56px] font-serif text-brand-primary leading-tight">
             {t('bestListings.title')}
           </h2>
           <span 
-            className="text-[#2196F3] text-[40px] md:text-[56px] font-medium"
+            className="text-brand-secondary text-[40px] md:text-[56px] font-medium"
             style={{ fontFamily: 'var(--font-dancing-script)' }}
           >
             {t('bestListings.accent')}
@@ -60,7 +60,7 @@ const BestListings = () => {
                 key={unit.id}
                 id={unit.id}
                 title={getLocalized(unit.name) || t('propertyCard.fallback.untitled')}
-                type={unit.propertyType || unit.unitType || t('propertyCard.fallback.unit')}
+                type={unit.propertyType || t('propertyCard.fallback.unit')}
                 location={unit.locationName || t('propertyCard.fallback.unknownLocation')}
                 price={`${unit.currencyCode || unit.currency || 'EGP'} ${unit.price?.toLocaleString()}`}
                 beds={unit.noBedRoom || 0}
@@ -79,7 +79,7 @@ const BestListings = () => {
         <div className="mt-16 flex justify-center">
           <Link 
             href={`/${language}/properties`}
-            className="bg-[#2196F3] hover:bg-[#8F7239] text-white px-8 py-3 rounded-[8px] font-bold text-[14px] transition-colors"
+            className="bg-brand-secondary hover:bg-brand-secondary-hover text-white px-8 py-3 rounded-[8px] font-bold text-[14px] transition-colors"
           >
             {t('bestListings.loadMore')}
           </Link>

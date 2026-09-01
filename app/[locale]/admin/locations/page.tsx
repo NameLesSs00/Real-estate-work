@@ -168,18 +168,18 @@ export default function LocationsPage() {
   });
 
   return (
-    <div className="p-8 md:p-12 min-h-screen font-inter bg-[#F8F9FA]">
+    <div className="p-8 md:p-12 min-h-screen font-inter bg-admin-bg">
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <h1 className="text-[36px] font-bold text-[#000000] mb-2">Locations</h1>
-            <p className="text-[#64748B] text-lg">Manage cities, districts, and coordinates.</p>
+            <h1 className="text-[36px] font-bold text-brand-primary mb-2">Locations</h1>
+            <p className="text-admin-muted text-lg">Manage cities, districts, and coordinates.</p>
           </div>
           <button 
             onClick={openAdd}
-            className="bg-[#000000] text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-[#1e324d] transition-all shadow-lg active:scale-95"
+            className="bg-brand-primary text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-brand-primary-hover transition-all shadow-lg active:scale-95"
           >
             <Plus size={20} />
             Add New Location
@@ -211,15 +211,15 @@ export default function LocationsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">English *</label>
-                        <input type="text" required value={formData.city.en} onChange={e => setFormData({...formData, city: {...formData.city, en: e.target.value}})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. Dubai" />
+                        <input type="text" required value={formData.city.en} onChange={e => setFormData({...formData, city: {...formData.city, en: e.target.value}})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. Dubai" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">German *</label>
-                        <input type="text" required value={formData.city.de} onChange={e => setFormData({...formData, city: {...formData.city, de: e.target.value}})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. Dubai" />
+                        <input type="text" required value={formData.city.de} onChange={e => setFormData({...formData, city: {...formData.city, de: e.target.value}})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. Dubai" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">Polish *</label>
-                        <input type="text" required value={formData.city.pl} onChange={e => setFormData({...formData, city: {...formData.city, pl: e.target.value}})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. Dubaj" />
+                        <input type="text" required value={formData.city.pl} onChange={e => setFormData({...formData, city: {...formData.city, pl: e.target.value}})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. Dubaj" />
                       </div>
                     </div>
                   </div>
@@ -230,15 +230,15 @@ export default function LocationsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">English *</label>
-                        <input type="text" required value={formData.district.en} onChange={e => setFormData({...formData, district: {...formData.district, en: e.target.value}})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. Downtown" />
+                        <input type="text" required value={formData.district.en} onChange={e => setFormData({...formData, district: {...formData.district, en: e.target.value}})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. Downtown" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">German *</label>
-                        <input type="text" required value={formData.district.de} onChange={e => setFormData({...formData, district: {...formData.district, de: e.target.value}})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. Innenstadt" />
+                        <input type="text" required value={formData.district.de} onChange={e => setFormData({...formData, district: {...formData.district, de: e.target.value}})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. Innenstadt" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">Polish *</label>
-                        <input type="text" required value={formData.district.pl} onChange={e => setFormData({...formData, district: {...formData.district, pl: e.target.value}})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. Śródmieście" />
+                        <input type="text" required value={formData.district.pl} onChange={e => setFormData({...formData, district: {...formData.district, pl: e.target.value}})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. Śródmieście" />
                       </div>
                     </div>
                   </div>
@@ -249,19 +249,19 @@ export default function LocationsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">Country</label>
-                        <input type="text" value={formData.country} onChange={e => setFormData({...formData, country: e.target.value})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. UAE" />
+                        <input type="text" value={formData.country} onChange={e => setFormData({...formData, country: e.target.value})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. UAE" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">Street</label>
-                        <input type="text" value={formData.street || ''} onChange={e => setFormData({...formData, street: e.target.value})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. Sheikh Zayed Road" />
+                        <input type="text" value={formData.street || ''} onChange={e => setFormData({...formData, street: e.target.value})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. Sheikh Zayed Road" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">Latitude</label>
-                        <input type="text" value={formData.latitude} onChange={e => setFormData({...formData, latitude: e.target.value})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. 25.2048" />
+                        <input type="text" value={formData.latitude} onChange={e => setFormData({...formData, latitude: e.target.value})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. 25.2048" />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-bold text-gray-700 ml-1">Longitude</label>
-                        <input type="text" value={formData.longitude} onChange={e => setFormData({...formData, longitude: e.target.value})} className="w-full bg-[#F8F9FA] border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#000000]/10" placeholder="e.g. 55.2708" />
+                        <input type="text" value={formData.longitude} onChange={e => setFormData({...formData, longitude: e.target.value})} className="w-full bg-admin-bg border border-gray-100 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-primary/10" placeholder="e.g. 55.2708" />
                       </div>
                     </div>
                   </div>
@@ -272,7 +272,7 @@ export default function LocationsPage() {
                     </button>
                     <button 
                       disabled={isSubmitting}
-                      className="bg-[#000000] text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-gray-800 transition-all disabled:opacity-50 flex items-center gap-2"
+                      className="bg-brand-primary text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-gray-800 transition-all disabled:opacity-50 flex items-center gap-2"
                     >
                       {isSubmitting && <Loader2 className="animate-spin" size={18} />}
                       {isEditing ? 'Save Changes' : 'Create Location'}
@@ -292,7 +292,7 @@ export default function LocationsPage() {
             placeholder="Search locations by city or district..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-[16px] outline-none focus:ring-4 focus:ring-[#000000]/5 shadow-sm transition-all"
+            className="w-full bg-white border border-gray-100 rounded-2xl py-4 pl-14 pr-6 text-[16px] outline-none focus:ring-4 focus:ring-brand-primary/5 shadow-sm transition-all"
           />
         </div>
 
@@ -300,7 +300,7 @@ export default function LocationsPage() {
         <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
           <table className="w-full text-left">
             <thead className="bg-gray-50/50">
-              <tr className="text-[#000000] text-[14px] font-bold uppercase tracking-wider">
+              <tr className="text-brand-primary text-[14px] font-bold uppercase tracking-wider">
                 <th className="px-8 py-6 w-24">ID</th>
                 <th className="px-8 py-6">City</th>
                 <th className="px-8 py-6">District</th>
@@ -318,7 +318,7 @@ export default function LocationsPage() {
               ) : filteredLocations.map((loc) => (
                 <tr key={loc.id} className="hover:bg-gray-50/30 transition-colors group">
                   <td className="px-8 py-6 font-mono text-sm text-gray-400">#{loc.id}</td>
-                  <td className="px-8 py-6 font-bold text-[#000000]">{loc.city}</td>
+                  <td className="px-8 py-6 font-bold text-brand-primary">{loc.city}</td>
                   <td className="px-8 py-6 text-gray-600">{loc.district}</td>
                   <td className="px-8 py-6 text-gray-500">{loc.country || '-'}</td>
                   <td className="px-8 py-6 text-right">
@@ -326,7 +326,7 @@ export default function LocationsPage() {
                       <button 
                         onClick={() => openEdit(loc)}
                         disabled={isFetchingDetails === loc.id}
-                        className="p-2.5 text-[#000000]/70 hover:text-[#000000] hover:bg-gray-100 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center"
+                        className="p-2.5 text-brand-primary/70 hover:text-brand-primary hover:bg-gray-100 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center"
                       >
                         {isFetchingDetails === loc.id ? <Loader2 size={18} className="animate-spin" /> : <Edit2 size={18} />}
                       </button>

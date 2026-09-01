@@ -1,6 +1,6 @@
 .faq-section {
   padding: 100px 0;
-  background: #E3F2FD;
+  background: var(--color-brand-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,7 +23,7 @@
 
 .faq-tag {
   font-family: var(--font-poppins);
-  color: #2196F3;
+  color: var(--color-brand-secondary);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 2.8px;
@@ -33,7 +33,7 @@
 
 .faq-title {
   font-family: var(--font-radley);
-  color: #000000;
+  color: var(--color-brand-primary);
   font-size: 48px;
   line-height: 1.2;
   margin-bottom: 24px;
@@ -41,7 +41,7 @@
 
 .faq-subtitle {
   font-family: var(--font-poppins);
-  color: #555555;
+  color: var(--color-brand-muted);
   font-size: 18px;
   max-width: 700px;
   line-height: 1.6;
@@ -51,7 +51,7 @@
 .faq-accent-line {
   width: 160px;
   height: 4px;
-  background-color: #2196F3;
+  background-color: var(--color-brand-secondary);
   border-radius: 2px;
 }
 
@@ -64,9 +64,9 @@
 }
 
 .faq-item {
-  background-color: #ffffff;
+  background-color: var(--color-brand-surface);
   border-radius: 20px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--color-brand-divider);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
   overflow: hidden;
   transition: all 0.3s ease;
@@ -85,7 +85,7 @@
   font-family: var(--font-poppins);
   font-size: 20px;
   font-weight: 600;
-  color: #000000;
+  color: var(--color-brand-primary);
   transition: color 0.3s ease;
 }
 
@@ -96,7 +96,7 @@
 .faq-chevron {
   width: 24px;
   height: 24px;
-  color: #000000;
+  color: var(--color-brand-primary);
   transition: transform 0.3s ease;
 }
 
@@ -118,7 +118,7 @@
 
 .faq-answer p {
   font-family: var(--font-poppins);
-  color: #666666;
+  color: var(--color-brand-muted);
   font-size: 16px;
   line-height: 1.6;
   margin: 0;
@@ -134,7 +134,7 @@
 .faq-spinner {
   width: 40px;
   height: 40px;
-  color: #2196F3;
+  color: var(--color-brand-secondary);
   animation: spin 1s linear infinite;
 }
 
@@ -155,8 +155,8 @@
   gap: 8px;
   padding: 16px 48px;
   border-radius: 50px;
-  background-color: #000000;
-  color: #ffffff;
+  background-color: var(--color-brand-primary);
+  color: var(--color-brand-surface);
   font-family: var(--font-poppins);
   font-size: 16px;
   font-weight: 600;
@@ -166,8 +166,8 @@
 }
 
 .faq-view-all-link:hover {
-  background-color: #2196F3;
-  color: #ffffff;
+  background-color: var(--color-brand-secondary);
+  color: var(--color-brand-surface);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(168, 136, 73, 0.3);
 }

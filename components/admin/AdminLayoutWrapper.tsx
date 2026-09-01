@@ -9,7 +9,7 @@ export default function AdminLayoutWrapper({ children }: { children: React.React
   const isAuthPage = pathname.includes('/admin/login') || pathname.endsWith('/admin') || pathname.endsWith('/admin/');
 
   return (
-    <div className="flex min-h-screen bg-[#F8F9FA]">
+    <div className="flex min-h-screen bg-admin-bg">
       {!isAuthPage && <Sidebar />}
       <main className={`flex-1 transition-all duration-300 flex flex-col ${!isAuthPage ? 'ml-[280px]' : ''}`}>
         {!isAuthPage && <AdminHeader />}

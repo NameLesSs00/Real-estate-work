@@ -4,9 +4,9 @@ import { ExternalLink } from 'lucide-react';
 import { UnitDetail } from '@/lib/api/projects';
 
 const InfoCard = ({ label, value }: { label: string; value: React.ReactNode }) => (
-  <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
+  <div className="bg-brand-secondary-soft rounded-2xl px-6 py-5">
     <p className="text-[13px] text-gray-500 font-medium mb-1">{label}</p>
-    <p className="text-[#000000] text-[18px] font-bold">{value}</p>
+    <p className="text-brand-primary text-[18px] font-bold">{value}</p>
   </div>
 );
 
@@ -19,21 +19,21 @@ export default function UnitInfo({ unit }: UnitInfoProps) {
     <>
       {/* Name + Status badges */}
       <div className="flex flex-wrap items-center gap-3">
-        <h3 className="text-[26px] font-bold text-[#000000]">
+        <h3 className="text-[26px] font-bold text-brand-primary">
           {typeof unit.Name === 'string' ? unit.Name : (unit.Name?.en || (typeof unit.name === 'string' ? unit.name : unit.name?.en) || 'Untitled')}
         </h3>
         {unit.IsFeatured && (
-          <span className="inline-flex px-4 py-1.5 rounded-full bg-[#FEF9C3] text-[#A16207] text-[13px] font-bold">⭐ Featured</span>
+          <span className="inline-flex px-4 py-1.5 rounded-full bg-status-warning-bg text-status-warning text-[13px] font-bold">⭐ Featured</span>
         )}
         {unit.IsActive || unit.isActive ? (
-          <span className="inline-flex px-4 py-1.5 rounded-full bg-[#DCFCE7] text-[#166534] text-[13px] font-bold">Active</span>
+          <span className="inline-flex px-4 py-1.5 rounded-full bg-status-success-bg text-status-success text-[13px] font-bold">Active</span>
         ) : (
-          <span className="inline-flex px-4 py-1.5 rounded-full bg-[#FEE2E2] text-[#991B1B] text-[13px] font-bold">Sold</span>
+          <span className="inline-flex px-4 py-1.5 rounded-full bg-status-danger-bg text-status-danger-hover text-[13px] font-bold">Sold</span>
         )}
         <Link 
           href={`/properties/${unit.Id || unit.id}`}
           target="_blank"
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EBF3FF] text-[#1447E6] text-[13px] font-bold hover:bg-[#D6E6FF] transition-all cursor-pointer shadow-sm border border-[#D6E6FF]"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-primary-soft text-brand-primary text-[13px] font-bold hover:bg-brand-primary-soft transition-all cursor-pointer shadow-sm border border-brand-primary-soft"
         >
           <ExternalLink size={14} />
           View as Client
@@ -58,9 +58,9 @@ export default function UnitInfo({ unit }: UnitInfoProps) {
 
       {/* Description */}
       {(unit.Description || unit.description) && (
-        <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
+        <div className="bg-brand-secondary-soft rounded-2xl px-6 py-5">
           <p className="text-[13px] text-gray-500 font-medium mb-2">Description</p>
-          <p className="text-[#000000] text-[15px] leading-relaxed">
+          <p className="text-brand-primary text-[15px] leading-relaxed">
             {typeof unit.Description === 'object' ? (unit.Description.en || unit.Description.de || unit.Description.pl) : 
              (typeof unit.description === 'object' ? (unit.description.en || unit.description.de || unit.description.pl) : (unit.Description || unit.description))}
           </p>
@@ -70,13 +70,13 @@ export default function UnitInfo({ unit }: UnitInfoProps) {
       {/* Services */}
       <div className="grid grid-cols-1 gap-4">
         {(unit.Services || unit.services) && (unit.Services || unit.services)!.length > 0 && (
-          <div className="bg-[#F9F6F2] rounded-2xl px-6 py-5">
+          <div className="bg-brand-secondary-soft rounded-2xl px-6 py-5">
             <p className="text-[13px] text-gray-500 font-medium mb-3">Services</p>
             <div className="flex flex-wrap gap-2">
               {(unit.Services || unit.services)!.map((s, i) => {
                 const name = typeof s.name === 'string' ? s.name : (s.name?.en || s.name?.de || s.name?.pl || 'Unknown');
                 return (
-                  <span key={i} className="px-3 py-1 bg-white rounded-full text-[13px] text-[#000000] font-medium border border-gray-200">{name}</span>
+                  <span key={i} className="px-3 py-1 bg-white rounded-full text-[13px] text-brand-primary font-medium border border-gray-200">{name}</span>
                 );
               })}
             </div>

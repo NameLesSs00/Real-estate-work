@@ -30,7 +30,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
   area,
   image,
   status = 'For Sale',
-  unitType,
   featured = false,
 }) => {
   const { t, language } = useLanguage();
@@ -53,17 +52,17 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <div className="absolute top-4 left-4 right-4 flex justify-between items-start pointer-events-none">
           <div className="flex gap-2">
             {featured && (
-              <span className="bg-[#1565C0]/80 backdrop-blur-sm text-white text-[12px] font-semibold px-3 py-1 rounded-full">
+              <span className="bg-brand-primary/80 backdrop-blur-sm text-white text-[12px] font-semibold px-3 py-1 rounded-full">
                 {t('propertyCard.status.featured')}
               </span>
             )}
           </div>
           <div className="flex gap-2">
-            <span className="bg-[#2196F3]/90 backdrop-blur-sm text-white text-[12px] font-semibold px-3 py-1 rounded-full">
-              {unitType === 'Rent' ? t('propertyCard.status.rent') : t('propertyCard.status.sale')}
+            <span className="bg-brand-secondary/90 backdrop-blur-sm text-white text-[12px] font-semibold px-3 py-1 rounded-full">
+              {t('propertyCard.status.sale')}
             </span>
             {status === 'Sold' && (
-              <span className="bg-[#2196F3]/90 backdrop-blur-sm text-white text-[12px] font-semibold px-3 py-1 rounded-full">
+              <span className="bg-brand-secondary/90 backdrop-blur-sm text-white text-[12px] font-semibold px-3 py-1 rounded-full">
                 {t('propertyCard.status.sold')}
               </span>
             )}
@@ -71,17 +70,17 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
 
         {/* Heart Icon */}
-        <button className="absolute bottom-4 right-4 text-white hover:text-[#42A5F5] transition-colors z-10" aria-label={t('propertyCard.details.saveProperty')}>
+        <button className="absolute bottom-4 right-4 text-white hover:text-brand-secondary transition-colors z-10" aria-label={t('propertyCard.details.saveProperty')}>
           <Heart size={24} className="drop-shadow-md" />
         </button>
       </Link>
 
       <div className="pt-4 pb-2">
-        <p className="text-[#2196F3] font-bold text-[16px] mb-1">{price}</p>
+        <p className="text-brand-secondary font-bold text-[16px] mb-1">{price}</p>
         <Link href={`/${language}/properties/${propertySlug}`}>
-          <h3 className="text-[#0D47A1] font-bold text-[18px] mb-2 leading-tight hover:text-[#2196F3] transition-colors line-clamp-1">{title}</h3>
+          <h3 className="text-brand-primary font-bold text-[18px] mb-2 leading-tight hover:text-brand-secondary transition-colors line-clamp-1">{title}</h3>
         </Link>
-        <p className="text-[#0D47A1]/70 text-[13px] font-medium flex items-center gap-3">
+        <p className="text-brand-primary/70 text-[13px] font-medium flex items-center gap-3">
           <span>{t('projectDetails.bedrooms')}: {beds}</span>
           <span>{t('projectDetails.bathrooms')}: {baths}</span>
           <span>{t('propertyCard.details.size')}: {area}</span>

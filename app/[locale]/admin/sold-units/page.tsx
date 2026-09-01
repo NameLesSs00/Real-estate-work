@@ -124,27 +124,27 @@ export default function SoldUnitsPage() {
     new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
   return (
-    <div className="p-10 lg:p-14 font-inter bg-[#F8F9FA] min-h-full scrollbar-hide">
+    <div className="p-10 lg:p-14 font-inter bg-admin-bg min-h-full scrollbar-hide">
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
         <div>
-          <h1 className="text-[36px] font-bold text-[#000000] mb-1">Sold Units</h1>
-          <p className="text-[#64748B] text-[17px]">
+          <h1 className="text-[36px] font-bold text-brand-primary mb-1">Sold Units</h1>
+          <p className="text-admin-muted text-[17px]">
             {totalCount} sold unit{totalCount !== 1 ? 's' : ''} total
           </p>
         </div>
         {/* stat badge */}
-        <div className="flex items-center gap-3 bg-[#FEF9C3] border border-[#FDE047]/40 px-6 py-3 rounded-2xl shadow-sm">
-          <div className="w-8 h-8 bg-[#A16207] rounded-lg flex items-center justify-center">
+        <div className="flex items-center gap-3 bg-status-warning-bg border border-status-warning-border/40 px-6 py-3 rounded-2xl shadow-sm">
+          <div className="w-8 h-8 bg-status-warning rounded-lg flex items-center justify-center">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
               <line x1="7" y1="7" x2="7.01" y2="7" />
             </svg>
           </div>
           <div>
-            <p className="text-[11px] text-[#A16207] font-semibold uppercase tracking-wider">Total Sold</p>
-            <p className="text-[20px] font-bold text-[#000000] leading-none">{totalCount}</p>
+            <p className="text-[11px] text-status-warning font-semibold uppercase tracking-wider">Total Sold</p>
+            <p className="text-[20px] font-bold text-brand-primary leading-none">{totalCount}</p>
           </div>
         </div>
       </div>
@@ -155,14 +155,14 @@ export default function SoldUnitsPage() {
       <div className="flex flex-col md:flex-row gap-3 mb-8">
         <div className="relative flex-1">
           <div className="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand-muted-light)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
           </div>
           <input
             type="text"
             placeholder="Search by unit name…"
-            className="w-full bg-white border border-gray-100 rounded-[20px] py-4 pl-12 pr-4 text-[15px] text-[#000000] focus:outline-none focus:ring-4 focus:ring-[#000000]/5 shadow-sm placeholder:text-[#94A3B8]"
+            className="w-full bg-white border border-gray-100 rounded-[20px] py-4 pl-12 pr-4 text-[15px] text-brand-primary focus:outline-none focus:ring-4 focus:ring-brand-primary/5 shadow-sm placeholder:text-brand-muted-light"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -174,7 +174,7 @@ export default function SoldUnitsPage() {
             setSoldTypeFilter(e.target.value);
             fetchSoldUnits(1, searchQuery, e.target.value);
           }}
-          className="bg-white border border-gray-100 rounded-[20px] py-4 px-5 text-[15px] text-[#000000] focus:outline-none focus:ring-4 focus:ring-[#000000]/5 shadow-sm cursor-pointer min-w-[160px]"
+          className="bg-white border border-gray-100 rounded-[20px] py-4 px-5 text-[15px] text-brand-primary focus:outline-none focus:ring-4 focus:ring-brand-primary/5 shadow-sm cursor-pointer min-w-[160px]"
         >
           <option value="">All Types</option>
           <option value="Primary">Primary</option>
@@ -182,14 +182,14 @@ export default function SoldUnitsPage() {
         </select>
         <button
           onClick={handleSearch}
-          className="bg-[#000000] text-white px-8 py-4 rounded-[20px] text-[15px] font-semibold hover:bg-[#1e324d] transition-all shadow-sm cursor-pointer whitespace-nowrap"
+          className="bg-brand-primary text-white px-8 py-4 rounded-[20px] text-[15px] font-semibold hover:bg-brand-primary-hover transition-all shadow-sm cursor-pointer whitespace-nowrap"
         >
           Search
         </button>
         {(searchQuery || soldTypeFilter) && (
           <button
             onClick={handleClearFilters}
-            className="border border-gray-200 text-[#64748B] px-6 py-4 rounded-[20px] text-[15px] font-medium hover:bg-gray-50 transition-all cursor-pointer whitespace-nowrap"
+            className="border border-gray-200 text-admin-muted px-6 py-4 rounded-[20px] text-[15px] font-medium hover:bg-gray-50 transition-all cursor-pointer whitespace-nowrap"
           >
             Clear
           </button>
@@ -200,31 +200,31 @@ export default function SoldUnitsPage() {
       <div className="bg-white rounded-[32px] shadow-sm border border-gray-50 overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center py-24">
-            <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <p className="text-red-500">{error}</p>
-            <button onClick={() => fetchSoldUnits(currentPage)} className="bg-[#000000] text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
+            <button onClick={() => fetchSoldUnits(currentPage)} className="bg-brand-primary text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
           </div>
         ) : soldUnits.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <div className="w-16 h-16 bg-[#FEF9C3] rounded-2xl flex items-center justify-center">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A16207" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-16 h-16 bg-status-warning-bg rounded-2xl flex items-center justify-center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-status-warning)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
                 <line x1="7" y1="7" x2="7.01" y2="7" />
               </svg>
             </div>
-            <p className="text-[#64748B] text-[17px] font-medium">No sold units found.</p>
+            <p className="text-admin-muted text-[17px] font-medium">No sold units found.</p>
             {(searchQuery || soldTypeFilter) && (
-              <button onClick={handleClearFilters} className="text-[#000000] underline text-sm cursor-pointer">Clear filters</button>
+              <button onClick={handleClearFilters} className="text-brand-primary underline text-sm cursor-pointer">Clear filters</button>
             )}
           </div>
         ) : (
           <div className="overflow-x-auto scrollbar-hide">
             <table className="w-full min-w-[900px] text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-50 text-[14px] font-bold text-[#64748B]">
+                <tr className="border-b border-gray-50 text-[14px] font-bold text-admin-muted">
                   <th className="py-6 px-8">Unit</th>
                   <th className="py-6 px-4">Project</th>
                   <th className="py-6 px-4">Location</th>
@@ -253,39 +253,39 @@ export default function SoldUnitsPage() {
                           </div>
                         ) : (
                           <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand-muted-light)" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
                           </div>
                         )}
-                        <span className="text-[15px] font-bold text-[#000000]">{unit.unitName}</span>
+                        <span className="text-[15px] font-bold text-brand-primary">{unit.unitName}</span>
                       </div>
                     </td>
                     {/* Project */}
                     <td className="py-5 px-4">
-                      <span className="text-[14px] text-[#64748B]">{unit.projectName || '—'}</span>
+                      <span className="text-[14px] text-admin-muted">{unit.projectName || '—'}</span>
                     </td>
                     {/* Location */}
                     <td className="py-5 px-4">
-                      <span className="text-[13px] text-[#64748B]">
+                      <span className="text-[13px] text-admin-muted">
                         {[unit.city, unit.country].filter(Boolean).join(', ') || '—'}
                       </span>
                     </td>
                     {/* Sold Type */}
                     <td className="py-5 px-4 text-center">
-                      <span className="inline-flex px-3 py-1.5 rounded-full bg-[#FEF9C3] text-[#A16207] text-[12px] font-bold">
+                      <span className="inline-flex px-3 py-1.5 rounded-full bg-status-warning-bg text-status-warning text-[12px] font-bold">
                         {unit.soldType || '—'}
                       </span>
                     </td>
                     {/* Sold Date */}
                     <td className="py-5 px-4 text-center">
-                      <span className="text-[13px] text-[#64748B]">{unit.soldoutDate ? formatDate(unit.soldoutDate) : '—'}</span>
+                      <span className="text-[13px] text-admin-muted">{unit.soldoutDate ? formatDate(unit.soldoutDate) : '—'}</span>
                     </td>
                     {/* Notes */}
                     <td className="py-5 px-4 max-w-[150px]">
-                      <span className="text-[13px] text-[#64748B] line-clamp-2">{unit.notes || <span className="text-[#CBD5E0]">—</span>}</span>
+                      <span className="text-[13px] text-admin-muted line-clamp-2">{unit.notes || <span className="text-brand-divider">—</span>}</span>
                     </td>
                     {/* Created By */}
                     <td className="py-5 px-4">
-                      <span className="text-[13px] text-[#64748B]">{unit.createdBy || '—'}</span>
+                      <span className="text-[13px] text-admin-muted">{unit.createdBy || '—'}</span>
                     </td>
                     {/* Actions */}
                     <td className="py-5 px-8">
@@ -294,7 +294,7 @@ export default function SoldUnitsPage() {
                         <button
                           onClick={() => setViewingId(unit.id)}
                           title="View Detail"
-                          className="p-2.5 bg-gray-50 hover:bg-[#000000] text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
+                          className="p-2.5 bg-gray-50 hover:bg-brand-primary text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md"
                         >
                           <div
                             className="w-[18px] h-[18px] bg-current"
@@ -314,19 +314,19 @@ export default function SoldUnitsPage() {
         {/* Pagination */}
         {!isLoading && !error && totalPages > 1 && (
           <div className="flex items-center justify-between px-10 py-5 border-t border-gray-50">
-            <p className="text-[14px] text-[#94A3B8]">Page {currentPage} of {totalPages}</p>
+            <p className="text-[14px] text-brand-muted-light">Page {currentPage} of {totalPages}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => fetchSoldUnits(currentPage - 1, searchQuery, soldTypeFilter)}
                 disabled={currentPage === 1}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Previous
               </button>
               <button
                 onClick={() => fetchSoldUnits(currentPage + 1, searchQuery, soldTypeFilter)}
                 disabled={currentPage === totalPages}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-[#000000] hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-[14px] font-medium text-brand-primary hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Next
               </button>

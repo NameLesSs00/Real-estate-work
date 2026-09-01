@@ -20,7 +20,6 @@ const Hero = () => {
   // Search state
   const [searchTerm, setSearchTerm] = useState('');
   const [propertyType, setPropertyType] = useState('');
-  const [unitType, setUnitType] = useState('Buy'); // Buy or Rent
   const [locationId, setLocationId] = useState('');
   const [locations, setLocations] = useState<Location[]>([]);
 
@@ -37,7 +36,7 @@ const Hero = () => {
     const params = new URLSearchParams();
     if (searchTerm) params.set('searchTerm', searchTerm);
     if (propertyType) params.set('propertyType', propertyType);
-    if (unitType) params.set('unitType', unitType);
+    params.set('unitType', 'Buy');
     if (locationId) params.set('locationId', locationId);
     router.push(`/${language}/properties?${params.toString()}`);
   };
@@ -68,42 +67,26 @@ const Hero = () => {
       >
         <div className="bg-white p-3 rounded-[28px] shadow-[0_20px_40px_rgba(0,0,0,0.12)] backdrop-blur-xl border border-white/50">
           
-          {/* Tabs */}
-          <div className="flex items-center gap-1 mb-3 px-2 pt-1">
-            <button 
-              onClick={() => setUnitType('Buy')} 
-              className={`px-6 py-2 rounded-full font-bold text-[14px] transition-all duration-300 ${unitType === 'Buy' ? 'bg-[#1565C0] text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-[#E3F2FD] hover:text-[#1565C0]'}`}
-            >
-              {t('propertiesPage.sidebar.buy')}
-            </button>
-            <button 
-              onClick={() => setUnitType('Rent')} 
-              className={`px-6 py-2 rounded-full font-bold text-[14px] transition-all duration-300 ${unitType === 'Rent' ? 'bg-[#000000] text-white shadow-md' : 'bg-transparent text-gray-500 hover:bg-gray-100 hover:text-[#000000]'}`}
-            >
-              {t('propertiesPage.sidebar.rent')}
-            </button>
-          </div>
-
           <form onSubmit={handleSearch} className="flex flex-col lg:flex-row items-center gap-2">
             {/* Search Input */}
-            <div className="flex-1 w-full bg-[#E3F2FD] rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-[#2196F3] focus-within:bg-white transition-all shadow-inner">
-              <Search className="text-[#2196F3] mr-3 shrink-0" size={20} />
+            <div className="flex-1 w-full bg-brand-bg rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-brand-secondary focus-within:bg-white transition-all shadow-inner">
+              <Search className="text-brand-secondary mr-3 shrink-0" size={20} />
               <input 
                 type="text" 
                 placeholder={t('hero.searchPlaceholder')} 
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="bg-transparent w-full outline-none text-[#0D47A1] placeholder-gray-400 font-semibold text-[14px]"
+                className="bg-transparent w-full outline-none text-brand-primary placeholder-gray-400 font-semibold text-[14px]"
               />
             </div>
 
             {/* Location Dropdown */}
-            <div className="w-full lg:w-[200px] bg-[#E3F2FD] rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-[#2196F3] focus-within:bg-white transition-all shadow-inner relative shrink-0">
-              <MapPin className="text-[#2196F3] mr-3 shrink-0" size={20} />
+            <div className="w-full lg:w-[200px] bg-brand-bg rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-brand-secondary focus-within:bg-white transition-all shadow-inner relative shrink-0">
+              <MapPin className="text-brand-secondary mr-3 shrink-0" size={20} />
               <select 
                 value={locationId} 
                 onChange={e => setLocationId(e.target.value)} 
-                className="bg-transparent w-full outline-none text-[#0D47A1] font-semibold text-[14px] appearance-none cursor-pointer pr-4"
+                className="bg-transparent w-full outline-none text-brand-primary font-semibold text-[14px] appearance-none cursor-pointer pr-4"
               >
                 <option value="">{t('hero.allLocations')}</option>
                 {locations.map(loc => (
@@ -116,11 +99,11 @@ const Hero = () => {
             </div>
 
             {/* Type Dropdown */}
-            <div className="w-full lg:w-[180px] bg-[#E3F2FD] rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-[#2196F3] focus-within:bg-white transition-all shadow-inner relative shrink-0">
+            <div className="w-full lg:w-[180px] bg-brand-bg rounded-[20px] flex items-center px-5 py-3.5 border border-transparent focus-within:border-brand-secondary focus-within:bg-white transition-all shadow-inner relative shrink-0">
               <select 
                 value={propertyType} 
                 onChange={e => setPropertyType(e.target.value)} 
-                className="bg-transparent w-full outline-none text-[#0D47A1] font-semibold text-[14px] appearance-none cursor-pointer pr-4"
+                className="bg-transparent w-full outline-none text-brand-primary font-semibold text-[14px] appearance-none cursor-pointer pr-4"
               >
                 <option value="">{t('hero.allTypes')}</option>
                 {PROPERTY_TYPES.map(type => (
@@ -133,7 +116,7 @@ const Hero = () => {
             </div>
 
             {/* Search Button */}
-            <button type="submit" className="w-full lg:w-auto bg-[#2196F3] text-white px-8 py-3.5 rounded-[20px] font-bold text-[15px] hover:bg-[#1565C0] transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-[#2196F3]/30 hover:-translate-y-0.5 whitespace-nowrap shrink-0">
+            <button type="submit" className="w-full lg:w-auto bg-brand-secondary text-white px-8 py-3.5 rounded-[20px] font-bold text-[15px] hover:bg-brand-primary transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-brand-secondary/30 hover:-translate-y-0.5 whitespace-nowrap shrink-0">
               <span>{t('hero.search')}</span>
             </button>
           </form>

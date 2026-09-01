@@ -19,14 +19,14 @@ const WhatsAppButton = () => {
       {/* Tooltip */}
       <div 
         className={`
-          absolute bottom-full right-0 mb-4 px-3 py-1.5 bg-[#000000] text-white text-[12px] font-medium rounded-md shadow-lg whitespace-nowrap
+          absolute bottom-full right-0 mb-4 px-3 py-1.5 bg-brand-primary text-white text-[12px] font-medium rounded-md shadow-lg whitespace-nowrap
           transition-all duration-200 transform origin-bottom
           ${isHovered ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2 pointer-events-none'}
         `}
       >
         01200339790
         {/* Tooltip Arrow */}
-        <div className="absolute top-full right-[22px] md:right-[26px] -translate-y-px border-[6px] border-transparent border-t-[#000000]"></div>
+        <div className="absolute top-full right-[22px] md:right-[26px] -translate-y-px border-[6px] border-transparent border-t-brand-primary"></div>
       </div>
 
       {/* WhatsApp Icon */}
@@ -34,7 +34,7 @@ const WhatsAppButton = () => {
         href="https://wa.me/01200339790"
         target="_blank"
         rel="noopener noreferrer"
-        className="relative w-14 h-14 md:w-16 md:h-16 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 group"
+        className="relative w-14 h-14 md:w-16 md:h-16 bg-social-whatsapp rounded-full flex items-center justify-center text-white shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 group"
         aria-label="Contact us on WhatsApp"
         title="01200339790"
       >

@@ -1,22 +1,56 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-primary: #1565C0;
-  --color-brand-secondary: #42A5F5;
-  --color-brand-bg: #E3F2FD;
-  --color-brand-divider: #BBDEFB;
+  --color-brand-primary: #072C3E;
+  --color-brand-primary-hover: #041E2B;
+  --color-brand-primary-soft: #F3F0EC;
+  --color-brand-secondary: #B4944B;
+  --color-brand-secondary-hover: #8D7335;
+  --color-brand-secondary-soft: #F5EFDF;
+  --color-brand-bg: #F7F5F3;
+  --color-brand-surface: #FFFFFF;
+  --color-brand-divider: #DED6D1;
+  --color-brand-muted: #6D6462;
+  --color-brand-muted-light: #978E8B;
+  --color-brand-danger: #B42318;
+  --color-brand-success: #166534;
+  --color-brand-warning: #A16207;
+  --color-status-success: #166534;
+  --color-status-success-bg: #DCFCE7;
+  --color-status-warning: #A16207;
+  --color-status-warning-hover: #8A5305;
+  --color-status-warning-bg: #FEF9C3;
+  --color-status-warning-border: #FDE047;
+  --color-status-danger: #B42318;
+  --color-status-danger-hover: #991B1B;
+  --color-status-danger-bg: #FEE2E2;
+  --color-status-danger-soft: #FEF2F2;
+  --color-status-danger-border: #FEB2B2;
+  --color-status-star: #FBBF24;
+  --color-social-facebook: #1877F2;
+  --color-social-instagram: #E4405F;
+  --color-social-whatsapp: #25D366;
+  --color-admin-bg: #F7F5F3;
+  --color-admin-surface: #FFFFFF;
+  --color-admin-text: #072C3E;
+  --color-admin-muted: #6D6462;
+  --color-admin-border: #DED6D1;
+  --color-admin-action: #072C3E;
+  --color-admin-action-hover: #B4944B;
   
   --font-poppins: var(--font-poppins);
   --font-work-sans: var(--font-work-sans);
   --font-radley: var(--font-radley);
   --font-allura: var(--font-allura);
 }
-.empty{
-color: white;
+
+.empty {
+  color: white;
 }
+
 :root {
-  --background: #E3F2FD;
-  --foreground: #0D47A1;
+  --background: var(--color-brand-bg);
+  --foreground: var(--color-brand-primary);
 }
 
 body {

@@ -64,16 +64,16 @@ export default function MarkUnitOutsideSoldModal({
       <div className="relative bg-white rounded-[28px] shadow-2xl w-full max-w-md p-8 z-10 font-inter">
         {/* Icon + Title */}
         <div className="flex flex-col items-center text-center mb-6">
-          <div className="w-16 h-16 bg-[#FEF9C3] rounded-2xl flex items-center justify-center mb-4">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A16207" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="w-16 h-16 bg-status-warning-bg rounded-2xl flex items-center justify-center mb-4">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-status-warning)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" />
               <line x1="7" y1="7" x2="7.01" y2="7" />
             </svg>
           </div>
-          <h2 className="text-[22px] font-bold text-[#000000] mb-1">Mark as Sold</h2>
-          <p className="text-[14px] text-[#64748B] leading-relaxed">
+          <h2 className="text-[22px] font-bold text-brand-primary mb-1">Mark as Sold</h2>
+          <p className="text-[14px] text-admin-muted leading-relaxed">
             You are marking{' '}
-            <span className="font-semibold text-[#000000]">&ldquo;{unit.name}&rdquo;</span> as
+            <span className="font-semibold text-brand-primary">&ldquo;{unit.name}&rdquo;</span> as
             sold.
             <br />
             This action will deactivate the unit.
@@ -83,7 +83,7 @@ export default function MarkUnitOutsideSoldModal({
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Payment Plan Selector */}
           <div>
-            <label className="block text-[13px] font-semibold text-[#000000] mb-2">
+            <label className="block text-[13px] font-semibold text-brand-primary mb-2">
               Payment Plan *
             </label>
             {plans.length === 0 ? (
@@ -95,7 +95,7 @@ export default function MarkUnitOutsideSoldModal({
               <select
                 value={selectedPlanId}
                 onChange={(e) => setSelectedPlanId(e.target.value === '' ? '' : Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-[#000000] focus:outline-none focus:ring-2 focus:ring-[#A16207]/30 focus:border-[#A16207] transition-all bg-[#FAFAFA] cursor-pointer"
+                className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-[14px] text-brand-primary focus:outline-none focus:ring-2 focus:ring-status-warning/30 focus:border-status-warning transition-all bg-brand-bg cursor-pointer"
               >
                 <option value="">— Select a plan —</option>
                 {plans.map((plan) => (
@@ -123,14 +123,14 @@ export default function MarkUnitOutsideSoldModal({
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="flex-1 py-3.5 rounded-2xl border border-gray-200 text-[15px] font-semibold text-[#64748B] hover:bg-gray-50 transition-all disabled:opacity-50 cursor-pointer"
+              className="flex-1 py-3.5 rounded-2xl border border-gray-200 text-[15px] font-semibold text-admin-muted hover:bg-gray-50 transition-all disabled:opacity-50 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading || plans.length === 0}
-              className="flex-1 py-3.5 rounded-2xl bg-[#A16207] text-white text-[15px] font-semibold hover:bg-[#8a5305] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+              className="flex-1 py-3.5 rounded-2xl bg-status-warning text-white text-[15px] font-semibold hover:bg-status-warning-hover active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>

@@ -56,8 +56,8 @@ export default function Sidebar() {
               href={item.path}
               className={`flex items-center gap-4 px-6 py-4 rounded-xl transition-all duration-300 group mx-2
                 ${isActive
-                  ? 'bg-[#E3F2FD] text-[#2196F3] font-semibold border-r-4 border-[#2196F3]'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#000000]'
+                  ? 'bg-brand-bg text-brand-secondary font-semibold border-r-4 border-brand-secondary'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-brand-primary'
                 }
               `}
             >
@@ -65,11 +65,11 @@ export default function Sidebar() {
               {item.lucideIcon === 'BarChart2' ? (
                 <BarChart2
                   size={22}
-                  className={`transition-colors duration-300 ${isActive ? 'text-[#2196F3]' : 'text-gray-400 group-hover:text-[#000000]'}`}
+                  className={`transition-colors duration-300 ${isActive ? 'text-brand-secondary' : 'text-gray-400 group-hover:text-brand-primary'}`}
                 />
               ) : (
                 <div
-                  className={`w-6 h-6 transition-colors duration-300 ${isActive ? 'bg-[#2196F3]' : 'bg-gray-400 group-hover:bg-[#000000]'}`}
+                  className={`w-6 h-6 transition-colors duration-300 ${isActive ? 'bg-brand-secondary' : 'bg-gray-400 group-hover:bg-brand-primary'}`}
                   style={{
                     WebkitMask: `url('${item.icon}') center/contain no-repeat`,
                     mask: `url('${item.icon}') center/contain no-repeat`

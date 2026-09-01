@@ -39,25 +39,25 @@ export default function DealDetailModal({ isOpen, dealId, onClose }: DealDetailM
         {/* Header */}
         <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-8 py-5 flex items-center justify-between rounded-t-[28px]">
           <div>
-            <h2 className="text-[20px] font-bold text-[#000000]">Deal Detail</h2>
-            <p className="text-[13px] text-[#64748B]">Deal #{dealId}</p>
+            <h2 className="text-[20px] font-bold text-brand-primary">Deal Detail</h2>
+            <p className="text-[13px] text-admin-muted">Deal #{dealId}</p>
           </div>
           <button onClick={onClose} className="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors cursor-pointer">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-admin-muted)" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
           </button>
         </div>
 
         <div className="p-8">
           {isLoading && (
             <div className="flex items-center justify-center py-16">
-              <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
             </div>
           )}
           {error && <div className="text-center py-12 text-red-500">{error}</div>}
           {deal && (
             <div className="space-y-6">
               {/* Overview banner */}
-              <div className="flex items-center gap-4 bg-[#000000] rounded-2xl p-5 text-white">
+              <div className="flex items-center gap-4 bg-brand-primary rounded-2xl p-5 text-white">
                 <div>
                   <p className="text-white/60 text-[12px] uppercase tracking-wider">Deal Type</p>
                   <p className="text-[20px] font-bold">{deal.dealType || '—'}</p>
@@ -89,7 +89,7 @@ export default function DealDetailModal({ isOpen, dealId, onClose }: DealDetailM
                 <IC label="Payment Type" value={deal.unitDetails?.paymentType} />
                 <IC label="Installment Months" value={deal.unitDetails?.installmentMothes} />
                 <IC label="Down Payment" value={deal.unitDetails?.installmentDownPayment !== undefined ? `${deal.unitDetails.installmentDownPayment}%` : '—'} />
-                <IC label="Status" value={<span className="inline-flex px-2 py-0.5 rounded-full text-[12px] font-bold bg-[#EEF0F5] text-[#000000]">{deal.unitDetails?.status || '—'}</span>} />
+                <IC label="Status" value={<span className="inline-flex px-2 py-0.5 rounded-full text-[12px] font-bold bg-brand-secondary-soft text-brand-primary">{deal.unitDetails?.status || '—'}</span>} />
               </div>
 
               {/* Buyer */}
@@ -118,14 +118,14 @@ export default function DealDetailModal({ isOpen, dealId, onClose }: DealDetailM
 }
 
 function SectionLabel({ title }: { title: string }) {
-  return <h3 className="text-[12px] font-bold text-[#94A3B8] uppercase tracking-wider">{title}</h3>;
+  return <h3 className="text-[12px] font-bold text-brand-muted-light uppercase tracking-wider">{title}</h3>;
 }
 
 function IC({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="bg-[#F8F9FA] rounded-xl p-3">
-      <p className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider mb-0.5">{label}</p>
-      <div className="text-[13px] font-semibold text-[#000000]">{value ?? '—'}</div>
+    <div className="bg-admin-bg rounded-xl p-3">
+      <p className="text-[11px] font-semibold text-brand-muted-light uppercase tracking-wider mb-0.5">{label}</p>
+      <div className="text-[13px] font-semibold text-brand-primary">{value ?? '—'}</div>
     </div>
   );
 }

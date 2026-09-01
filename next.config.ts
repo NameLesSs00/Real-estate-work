@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { API_DOMAIN } from "./lib/api/config";
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   images: {
     unoptimized: true,
     remotePatterns: [

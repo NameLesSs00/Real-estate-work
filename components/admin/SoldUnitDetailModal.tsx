@@ -47,14 +47,14 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
         {/* Header */}
         <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-8 py-5 flex items-center justify-between rounded-t-[28px]">
           <div>
-            <h2 className="text-[20px] font-bold text-[#000000]">Sold Unit Detail</h2>
-            <p className="text-[13px] text-[#64748B]">ID #{soldUnitId}</p>
+            <h2 className="text-[20px] font-bold text-brand-primary">Sold Unit Detail</h2>
+            <p className="text-[13px] text-admin-muted">ID #{soldUnitId}</p>
           </div>
           <button
             onClick={onClose}
             className="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors cursor-pointer"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2.5" strokeLinecap="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-admin-muted)" strokeWidth="2.5" strokeLinecap="round">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
@@ -63,7 +63,7 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
         <div className="p-8">
           {isLoading ? (
             <div className="flex items-center justify-center py-16">
-              <div className="w-10 h-10 border-4 border-[#000000] border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
             </div>
           ) : error ? (
             <div className="text-center py-12 text-red-500">{error}</div>
@@ -93,7 +93,7 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
                           key={i}
                           onClick={() => setActiveImg(i)}
                           className={`relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
-                            i === activeImg ? 'border-[#000000]' : 'border-transparent opacity-60 hover:opacity-80'
+                            i === activeImg ? 'border-brand-primary' : 'border-transparent opacity-60 hover:opacity-80'
                           }`}
                         >
                           <Image src={resolveImage(img)} alt="" fill className="object-cover" />
@@ -111,7 +111,7 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
                 <InfoCard label="City" value={unit.city} />
                 <InfoCard label="Country" value={unit.country} />
                 <InfoCard label="Sold Type" value={
-                  <span className="inline-flex px-3 py-1 rounded-full bg-[#FEF9C3] text-[#A16207] text-[12px] font-bold">
+                  <span className="inline-flex px-3 py-1 rounded-full bg-status-warning-bg text-status-warning text-[12px] font-bold">
                     {unit.soldType || '—'}
                   </span>
                 } />
@@ -122,9 +122,9 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
 
               {/* Notes */}
               {unit.notes && (
-                <div className="bg-[#F8F9FA] rounded-2xl p-4">
-                  <p className="text-[12px] font-semibold text-[#94A3B8] uppercase tracking-wider mb-2">Notes</p>
-                  <p className="text-[14px] text-[#000000] leading-relaxed">{unit.notes}</p>
+                <div className="bg-admin-bg rounded-2xl p-4">
+                  <p className="text-[12px] font-semibold text-brand-muted-light uppercase tracking-wider mb-2">Notes</p>
+                  <p className="text-[14px] text-brand-primary leading-relaxed">{unit.notes}</p>
                 </div>
               )}
             </div>
@@ -137,9 +137,9 @@ export default function SoldUnitDetailModal({ isOpen, soldUnitId, onClose }: Sol
 
 function InfoCard({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="bg-[#F8F9FA] rounded-2xl p-4">
-      <p className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider mb-1">{label}</p>
-      <div className="text-[14px] font-semibold text-[#000000]">{value || '—'}</div>
+    <div className="bg-admin-bg rounded-2xl p-4">
+      <p className="text-[11px] font-semibold text-brand-muted-light uppercase tracking-wider mb-1">{label}</p>
+      <div className="text-[14px] font-semibold text-brand-primary">{value || '—'}</div>
     </div>
   );
 }

@@ -18,10 +18,10 @@ interface AddProjectModalProps {
 
 interface DropdownOption { id: number; label: string; }
 
-const EMPTY_FORM = { 
-  name: { en: '', de: '', pl: '' }, 
-  description: { en: '', de: '', pl: '' }, 
-  developerId: null as number | null, 
+const EMPTY_FORM = {
+  name: { en: '', de: '', pl: '' },
+  description: { en: '', de: '', pl: '' },
+  developerId: null as number | null,
   locationId: null as number | null,
   facilityIds: [] as number[]
 };
@@ -77,9 +77,9 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         while (page <= 3) {
           const res = await getLocations(page);
           if (!res || !res.items || res.items.length === 0) break;
-          all = [...all, ...res.items.map(item => ({ 
-            id: item.id, 
-            label: [item.city, item.district, item.street, item.country].filter(Boolean).join(' - ') 
+          all = [...all, ...res.items.map(item => ({
+            id: item.id,
+            label: [item.city, item.district, item.street, item.country].filter(Boolean).join(' - ')
           }))];
           if (!res.hasNextPage) break;
           page++;
@@ -126,22 +126,22 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             getProjectById(editData.id, 'pl')
           ]);
 
-          console.log('[AddProjectModal] Triple GET success:', { 
-            en: enData.name, 
-            de: deData.name, 
-            pl: plData.name 
+          console.log('[AddProjectModal] Triple GET success:', {
+            en: enData.name,
+            de: deData.name,
+            pl: plData.name
           });
 
           // Map facilities robustly (handle lowercase, uppercase, and objects)
-          const currentFacilityIds = enData.facilityIds || 
-            (enData as unknown as { Facilities?: { id: number }[] }).Facilities?.map((f) => f.id) || 
-            (enData as unknown as { facilities?: ({ id: number } | number)[] }).facilities?.map((f) => typeof f === 'object' ? f.id : null).filter((id): id is number => id !== null) || 
+          const currentFacilityIds = enData.facilityIds ||
+            (enData as unknown as { Facilities?: { id: number }[] }).Facilities?.map((f) => f.id) ||
+            (enData as unknown as { facilities?: ({ id: number } | number)[] }).facilities?.map((f) => typeof f === 'object' ? f.id : null).filter((id): id is number => id !== null) ||
             [];
 
           setInitialFacilityIds(currentFacilityIds);
           const currentFacilities = (enData.facilities || (enData as unknown as { Facilities?: unknown[] }).Facilities || []) as unknown[];
           setFacilityStrings(currentFacilities.map((f: unknown) => typeof f === 'string' ? f : ((f as { name?: string; Name?: string }).name || (f as { name?: string; Name?: string }).Name || 'Unknown')));
-          
+
           setForm({
             name: {
               en: enData.name,
@@ -273,7 +273,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
       <div className="bg-white rounded-[32px] w-full max-w-[1100px] max-h-[92vh] flex flex-col shadow-2xl" onClick={(e) => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="bg-[#000000] rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
+        <div className="bg-brand-primary rounded-t-[24px] px-8 py-5 flex items-center justify-between shrink-0">
           <h2 className="text-white text-[22px] font-bold">{isEditMode ? 'Edit Project' : 'Add New Project'}</h2>
           <button onClick={onClose} className="hover:opacity-80 transition-opacity cursor-pointer border-none bg-transparent outline-none">
             <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={24} height={24} />
@@ -284,31 +284,31 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
         <div className="p-10 overflow-y-auto space-y-10 scrollbar-hide relative min-h-[400px]">
           {isLoading && !isEditMode === false && (
             <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-30 flex flex-col items-center justify-center gap-4">
-              <div className="w-12 h-12 border-4 border-[#000000] border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-[#000000] font-bold text-sm animate-pulse">Fetching multilingual data...</p>
+              <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-brand-primary font-bold text-sm animate-pulse">Fetching multilingual data...</p>
             </div>
           )}
-          
+
           {/* Main Info Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50/50 p-6 rounded-[28px] border border-gray-100">
             <div className="space-y-3">
-              <label className="text-[#000000] font-bold text-[16px] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#000000]"></span>
+              <label className="text-brand-primary font-bold text-[16px] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-brand-primary"></span>
                 Developer
               </label>
               <select value={form.developerId ?? ''} onChange={handleChange('developerId')}
-                className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] bg-white cursor-pointer shadow-sm transition-all hover:border-[#000000]/30">
+                className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary bg-white cursor-pointer shadow-sm transition-all hover:border-brand-primary/30">
                 <option value="">— None —</option>
                 {developers.map((d) => <option key={d.id} value={d.id}>{d.label}</option>)}
               </select>
             </div>
             <div className="space-y-3">
-              <label className="text-[#000000] font-bold text-[16px] flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#000000]"></span>
+              <label className="text-brand-primary font-bold text-[16px] flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-brand-primary"></span>
                 Location *
               </label>
               <select value={form.locationId ?? ''} onChange={handleChange('locationId')}
-                className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] bg-white cursor-pointer shadow-sm transition-all hover:border-[#000000]/30">
+                className="w-full border border-gray-200 rounded-2xl px-5 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary bg-white cursor-pointer shadow-sm transition-all hover:border-brand-primary/30">
                 <option value="">— None —</option>
                 {locations.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
               </select>
@@ -327,19 +327,19 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
               {/* English Section */}
               <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm space-y-6 transition-all hover:shadow-md">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-black uppercase tracking-wider">English</span>
-                  <div className="h-px flex-1 bg-blue-50"></div>
+                  <span className="px-3 py-1 bg-brand-secondary-soft text-brand-secondary rounded-lg text-[10px] font-black uppercase tracking-wider">English</span>
+                  <div className="h-px flex-1 bg-brand-secondary-soft"></div>
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Project Name *</label>
+                    <label className="text-brand-primary font-bold text-[15px]">Project Name *</label>
                     <input type="text" value={form.name.en || ''} onChange={handleChange('name', 'en')} placeholder="e.g. Skyline Residence"
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Detailed Description</label>
+                    <label className="text-brand-primary font-bold text-[15px]">Detailed Description</label>
                     <textarea value={form.description.en || ''} onChange={handleChange('description', 'en')} placeholder="Describe the project in English..." rows={5}
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                 </div>
               </div>
@@ -352,14 +352,14 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Projektname</label>
+                    <label className="text-brand-primary font-bold text-[15px]">Projektname</label>
                     <input type="text" value={form.name.de || ''} onChange={handleChange('name', 'de')} placeholder="Name auf Deutsch"
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Ausführliche Beschreibung</label>
+                    <label className="text-brand-primary font-bold text-[15px]">Ausführliche Beschreibung</label>
                     <textarea value={form.description.de || ''} onChange={handleChange('description', 'de')} placeholder="Beschreibung auf Deutsch..." rows={5}
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                 </div>
               </div>
@@ -372,14 +372,14 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Nazwa Projektu</label>
+                    <label className="text-brand-primary font-bold text-[15px]">Nazwa Projektu</label>
                     <input type="text" value={form.name.pl || ''} onChange={handleChange('name', 'pl')} placeholder="Nazwa po polsku"
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-[#000000] font-bold text-[15px]">Szczegółowy Opis</label>
+                    <label className="text-brand-primary font-bold text-[15px]">Szczegółowy Opis</label>
                     <textarea value={form.description.pl || ''} onChange={handleChange('description', 'pl')} placeholder="Opis po polsku..." rows={5}
-                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-[#000000]/5 text-[#000000] placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-[#000000]/20" />
+                      className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                 </div>
               </div>
@@ -389,11 +389,11 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           {/* Facilities Section */}
           <div className="space-y-4 pt-4 border-t border-gray-100">
             <div className="flex items-center justify-between">
-              <label className="text-[#000000] font-semibold text-[15px]">Project Facilities</label>
-              <button 
+              <label className="text-brand-primary font-semibold text-[15px]">Project Facilities</label>
+              <button
                 type="button"
                 onClick={() => setIsAddingFacility(!isAddingFacility)}
-                className="text-[13px] font-bold text-[#000000] hover:underline"
+                className="text-[13px] font-bold text-brand-primary hover:underline"
               >
                 {isAddingFacility ? 'Cancel' : '+ Add New Facility'}
               </button>
@@ -402,26 +402,26 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             {isAddingFacility && (
               <div className="bg-gray-50 p-4 rounded-2xl space-y-3 border border-gray-100 shadow-inner">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <input 
-                    placeholder="EN Name" 
-                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#000000]/10"
+                  <input
+                    placeholder="EN Name"
+                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-brand-primary/10"
                     value={newFacilityName.en}
                     onChange={e => setNewFacilityName({...newFacilityName, en: e.target.value})}
                   />
-                  <input 
-                    placeholder="DE Name" 
-                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#000000]/10"
+                  <input
+                    placeholder="DE Name"
+                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-brand-primary/10"
                     value={newFacilityName.de}
                     onChange={e => setNewFacilityName({...newFacilityName, de: e.target.value})}
                   />
-                  <input 
-                    placeholder="PL Name" 
-                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#000000]/10"
+                  <input
+                    placeholder="PL Name"
+                    className="text-sm p-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-brand-primary/10"
                     value={newFacilityName.pl}
                     onChange={e => setNewFacilityName({...newFacilityName, pl: e.target.value})}
                   />
                 </div>
-                <button 
+                <button
                   type="button"
                   disabled={isSubmittingQuick || !newFacilityName.en}
                   onClick={async () => {
@@ -437,7 +437,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                       setIsSubmittingQuick(false);
                     }
                   }}
-                  className="bg-[#000000] text-white px-6 py-2 rounded-xl text-sm font-bold disabled:opacity-50"
+                  className="bg-brand-primary text-white px-6 py-2 rounded-xl text-sm font-bold disabled:opacity-50"
                 >
                   {isSubmittingQuick ? 'Saving...' : 'Save & Refresh'}
                 </button>
@@ -447,7 +447,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[250px] overflow-y-auto pr-2 scrollbar-thin">
               {isEditMode ? (
                 facilityStrings.map((facStr, idx) => (
-                  <div key={idx} className="bg-gray-100 border border-gray-200 text-[#000000] font-bold p-4 rounded-[18px] flex items-center justify-center text-center text-[14px]">
+                  <div key={idx} className="bg-gray-100 border border-gray-200 text-brand-primary font-bold p-4 rounded-[18px] flex items-center justify-center text-center text-[14px]">
                     {typeof facStr === 'string' ? facStr : (facStr as unknown as { name?: string })?.name || 'Unknown'}
                   </div>
                 ))
@@ -460,11 +460,11 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                 }
                 const isChecked = form.facilityIds.includes(fac.id);
                 return (
-                  <label 
-                    key={fac.id} 
+                  <label
+                    key={fac.id}
                     className={`group flex items-center gap-3 cursor-pointer p-4 rounded-[18px] transition-all border-2 ${
-                      isChecked 
-                        ? 'bg-[#000000] border-[#000000] shadow-md shadow-[#000000]/10' 
+                      isChecked
+                        ? 'bg-brand-primary border-brand-primary shadow-md shadow-brand-primary/10'
                         : 'bg-white border-gray-100 hover:border-gray-200 hover:bg-gray-50'
                     }`}
                   >
@@ -472,27 +472,27 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
                       isChecked ? 'bg-white border-white' : 'bg-transparent border-gray-300'
                     }`}>
                       {isChecked && (
-                        <svg className="w-3.5 h-3.5 text-[#000000] fill-current" viewBox="0 0 20 20">
+                        <svg className="w-3.5 h-3.5 text-brand-primary fill-current" viewBox="0 0 20 20">
                           <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" />
                         </svg>
                       )}
                     </div>
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       className="hidden"
                       checked={isChecked}
                       onChange={(e) => {
                         const checked = e.target.checked;
                         setForm(prev => ({
                           ...prev,
-                          facilityIds: checked 
+                          facilityIds: checked
                             ? [...prev.facilityIds, fac.id]
                             : prev.facilityIds.filter(id => id !== fac.id)
                         }));
                       }}
                     />
                     <span className={`text-[14px] font-bold transition-colors ${
-                      isChecked ? 'text-white' : 'text-[#000000]'
+                      isChecked ? 'text-white' : 'text-brand-primary'
                     }`}>
                       {facName as string}
                     </span>
@@ -506,7 +506,7 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
           {/* Image Upload — Hero + Gallery */}
           <div className="space-y-6">
             <div>
-              <label className="text-[#000000] font-bold text-[15px] flex items-center gap-2 mb-1">
+              <label className="text-brand-primary font-bold text-[15px] flex items-center gap-2 mb-1">
                 <span className="w-2 h-2 rounded-full bg-amber-400" />
                 Hero / Cover Image
               </label>
@@ -533,8 +533,8 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
             </div>
 
             <div>
-              <label className="text-[#000000] font-bold text-[15px] flex items-center gap-2 mb-1">
-                <span className="w-2 h-2 rounded-full bg-[#000000]" />
+              <label className="text-brand-primary font-bold text-[15px] flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 rounded-full bg-brand-primary" />
                 Gallery Images
               </label>
               <p className="text-[12px] text-gray-400 mb-3">Additional images shown in the project gallery. You can add multiple.</p>
@@ -569,12 +569,12 @@ export default function AddProjectModal({ isOpen, onClose, onSuccess, editData }
 
         {/* Footer */}
         <div className="p-10 pt-0 border-t border-gray-100 flex gap-6 shrink-0 bg-gray-50/30 rounded-b-[32px]">
-          <button onClick={onClose} 
-            className="flex-1 py-5 rounded-2xl border border-gray-200 text-[#000000] font-bold hover:bg-white hover:border-[#000000]/20 transition-all cursor-pointer shadow-sm active:scale-[0.98]">
+          <button onClick={onClose}
+            className="flex-1 py-5 rounded-2xl border border-gray-200 text-brand-primary font-bold hover:bg-white hover:border-brand-primary/20 transition-all cursor-pointer shadow-sm active:scale-[0.98]">
             Cancel
           </button>
           <button onClick={handleSubmit} disabled={isLoading}
-            className="flex-[2] py-5 rounded-2xl bg-[#000000] hover:bg-[#1a304a] text-white font-bold transition-all cursor-pointer shadow-lg shadow-[#000000]/20 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]">
+            className="flex-[2] py-5 rounded-2xl bg-brand-primary hover:bg-brand-primary-hover text-white font-bold transition-all cursor-pointer shadow-lg shadow-brand-primary/20 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]">
             {isLoading ? 'Processing...' : isEditMode ? 'Save Project Changes' : 'Create New Project'}
           </button>
         </div>
