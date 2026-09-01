@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node ./node_modules/next/dist/bin/next dev",
-    "build": "node ./node_modules/next/dist/bin/next build",
-    "build:monsterasp": "node ./node_modules/next/dist/bin/next build && node scripts/prepare-monsterasp.js",
+    "build": "node build.js",
+    "build:monsterasp": "node build.js && node scripts/prepare-monsterasp.js",
     "start": "node server.js",
     "lint": "eslint"
   },
