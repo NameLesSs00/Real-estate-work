@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "build:monsterasp": "next build && node scripts/prepare-monsterasp.js",
+    "dev": "node ./node_modules/next/dist/bin/next dev",
+    "build": "node ./node_modules/next/dist/bin/next build",
+    "build:monsterasp": "node ./node_modules/next/dist/bin/next build && node scripts/prepare-monsterasp.js",
     "start": "node server.js",
     "lint": "eslint"
   },
