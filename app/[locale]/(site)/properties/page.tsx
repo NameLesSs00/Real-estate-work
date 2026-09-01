@@ -35,6 +35,8 @@ const PROPERTY_TYPE_LABEL: Record<string, string> = {
   '5': 'Chalet',    'Chalet': 'Chalet',
 };
 
+const PROPERTY_PAGE_SIZE = 6;
+
 export interface FilterState {
   searchTerm: string;
   location: string;
@@ -99,6 +101,8 @@ function PropertiesPageContent() {
     try {
       // Reset pagination if needed (usually handled by calling fetchUnits(1, ...))
       
+      const normalizedUnitType = f.unitType?.toLowerCase();
+      const isBuyOnly = normalizedUnitType === 'buy';
       const isResaleOnly = f.status?.toLowerCase() === 'resale';
       const isPrimaryOnly = f.status?.toLowerCase() === 'primary';
       // const isAny = !f.status;
@@ -115,7 +119,7 @@ function PropertiesPageContent() {
           Country: f.country || undefined,
           PropertyType: propertyTypeName || undefined,
           PageNumber: page,
-          PageSize: 6, 
+          PageSize: PROPERTY_PAGE_SIZE, 
         });
         
         const items = Array.isArray(data) ? data : (data.items || []);
@@ -141,8 +145,8 @@ function PropertiesPageContent() {
         setUnits(mappedUnits);
         setTotalPages(data.totalPages || 1);
         setTotalCount(data.totalCount || items.length);
-      } else if (isPrimaryOnly) {
-        // --- PRIMARY ONLY ---
+      } else if (isPrimaryOnly || isBuyOnly) {
+        // --- BUY / PRIMARY UNITS ---
         const data = await getUnitsFiltered({
           SearchTerm: f.searchTerm || undefined,
           UnitType: 'Buy',
@@ -153,7 +157,7 @@ function PropertiesPageContent() {
           Status: isPrimaryOnly ? 'primary' : undefined,
           LocationId: f.locationId ? Number(f.locationId) : undefined,
           PageNumber: page,
-          PageSize: 6,
+          PageSize: PROPERTY_PAGE_SIZE,
           Language: language,
         });
         
@@ -181,7 +185,7 @@ function PropertiesPageContent() {
             Status: 'primary',
             LocationId: f.locationId ? Number(f.locationId) : undefined,
             PageNumber: page,
-            PageSize: 4, // Fetch slightly fewer since we combine
+            PageSize: PROPERTY_PAGE_SIZE,
             Language: language,
           }),
           getUnitOutsides({
@@ -193,7 +197,7 @@ function PropertiesPageContent() {
             Country: f.country || undefined,
             PropertyType: f.propertyType ? PROPERTY_TYPE_MAP[f.propertyType] || f.propertyType : undefined,
             PageNumber: page,
-            PageSize: 4,
+            PageSize: PROPERTY_PAGE_SIZE,
           })
         ]);
 
