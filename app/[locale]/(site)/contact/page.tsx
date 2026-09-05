@@ -9,14 +9,16 @@ import { useLanguage } from "@/lib/contexts/LanguageContext";
 const BASE = "/assists/contactUs";
 
 const infoCards = [
-  { icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: "Info@thegate-realestate.com", href: "mailto:Info@thegate-realestate.com" },
+  { icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: "info@therock-realestate.com", href: "mailto:info@therock-realestate.com" },
   { icon: `${BASE}/phone.png`, titleKey: 'contactPage.info.phone', content: "01200339790", href: "tel:01200339790" },
   { icon: `${BASE}/locatoin.png`, titleKey: 'contactPage.info.address', content: "Hurghada, El Kawther", href: "https://maps.google.com" },
-  { icon: `${BASE}/fire.png`, titleKey: 'contactPage.info.follow', socials: [
-    { label: "Instagram", href: "https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" },
-    { label: "Facebook", href: "https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" },
-    { label: "WhatsApp", href: "https://wa.me/01200339790" },
-  ]},
+  {
+    icon: `${BASE}/fire.png`, titleKey: 'contactPage.info.follow', socials: [
+      { label: "Instagram", href: "https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" },
+      { label: "Facebook", href: "https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" },
+      { label: "WhatsApp", href: "https://wa.me/01200339790" },
+    ]
+  },
 ];
 
 export default function ContactPage() {
@@ -61,20 +63,20 @@ export default function ContactPage() {
       {/* Parallax Hero Banner */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image 
-            src={`${BASE}/bgImage.png`} 
-            alt={t('contactPage.title') as string} 
-            fill 
+          <Image
+            src={`${BASE}/bgImage.png`}
+            alt={t('contactPage.title') as string}
+            fill
             className="object-cover"
             priority
           />
           <div className="absolute inset-0 bg-black/60"></div>
         </div>
         <div className="relative z-10 text-center px-6 mt-12">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.8 }} 
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
             className="text-[48px] md:text-[64px] font-radley text-white leading-tight"
           >
             {t('contactPage.title') as string}
@@ -85,17 +87,17 @@ export default function ContactPage() {
       {/* Split Content Section */}
       <section className="relative z-20 -mt-24 px-6 pb-24">
         <div className="max-w-[1440px] mx-auto bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col lg:flex-row">
-          
+
           {/* Left Column: Contact Info */}
           <div className="lg:w-2/5 bg-brand-primary text-white p-10 md:p-14 flex flex-col justify-between">
             <div>
               <h2 className="text-[36px] font-radley mb-10 leading-tight">{t('projectDetails.getInTouch') as string}</h2>
-              
+
               <div className="flex flex-col gap-10">
                 {infoCards.map((card) => (
-                  <motion.div 
-                    key={card.titleKey} 
-                    whileHover={{ x: 5 }} 
+                  <motion.div
+                    key={card.titleKey}
+                    whileHover={{ x: 5 }}
                     className="flex items-start gap-5 group"
                   >
                     <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center shrink-0 group-hover:bg-brand-secondary transition-colors mt-1">
@@ -124,7 +126,7 @@ export default function ContactPage() {
           {/* Right Column: Form */}
           <div className="lg:w-3/5 p-10 md:p-14 bg-white">
             <h2 className="text-[32px] font-radley text-brand-primary mb-8">{t('contactPage.form.title') as string}</h2>
-            
+
             {success && (
               <div className="mb-8 p-5 bg-green-50 border border-green-100 rounded-2xl text-green-700 font-semibold text-[15px]">
                 ✅ {t('contactPage.form.success') as string}
@@ -145,7 +147,7 @@ export default function ContactPage() {
                   <input name="lastName" value={form.lastName} onChange={handleChange} type="text" placeholder={t('contactPage.form.placeholderLastName') as string} required className="w-full border-b-2 border-brand-divider py-3 text-[15px] text-brand-primary outline-none focus:border-brand-secondary transition-colors placeholder:text-brand-muted-light" />
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="text-[13px] font-semibold text-gray-500">{t('contactPage.form.email') as string} *</label>
@@ -191,11 +193,11 @@ export default function ContactPage() {
                   <input name="agreed" type="checkbox" checked={form.agreed} onChange={handleChange} required className="w-5 h-5 rounded border-gray-300 accent-brand-secondary cursor-pointer" />
                   <span className="text-[13px] text-gray-500 max-w-xs leading-snug">{t('contactPage.form.agreed') as string}</span>
                 </label>
-                <motion.button 
-                  whileHover={{ scale: 1.05 }} 
-                  whileTap={{ scale: 0.95 }} 
-                  type="submit" 
-                  disabled={loading} 
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  type="submit"
+                  disabled={loading}
                   className="bg-brand-primary text-white px-10 py-4 rounded-full font-bold text-[15px] hover:bg-brand-secondary shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {loading ? t('contactPage.form.sending') as string : t('contactPage.form.submit') as string}
