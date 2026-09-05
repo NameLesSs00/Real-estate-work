@@ -1,0 +1,167 @@
+import type { LucideIcon } from 'lucide-react';
+import {
+  Accessibility,
+  Armchair,
+  Bath,
+  Bed,
+  BedDouble,
+  BedSingle,
+  Binoculars,
+  Blocks,
+  Box,
+  Boxes,
+  BriefcaseBusiness,
+  Building,
+  Building2,
+  Car,
+  Castle,
+  CircleDollarSign,
+  Columns3,
+  Compass,
+  CookingPot,
+  Crown,
+  Cuboid,
+  DoorOpen,
+  DraftingCompass,
+  Factory,
+  Fence,
+  Flower2,
+  Gem,
+  Grid2X2,
+  Home,
+  Hotel,
+  House,
+  KeyRound,
+  Landmark,
+  Layers,
+  Map,
+  MapPinHouse,
+  MapPinned,
+  Maximize2,
+  Mountain,
+  PanelTop,
+  ParkingCircle,
+  Ruler,
+  Sofa,
+  Store,
+  Warehouse,
+} from 'lucide-react';
+
+export const DEFAULT_PROJECT_TYPE_ICON_NAME = 'Building2';
+
+export const PROJECT_TYPE_ICONS = {
+  Accessibility,
+  Armchair,
+  Bath,
+  Bed,
+  BedDouble,
+  BedSingle,
+  Binoculars,
+  Blocks,
+  Box,
+  Boxes,
+  BriefcaseBusiness,
+  Building,
+  Building2,
+  Car,
+  Castle,
+  CircleDollarSign,
+  Columns3,
+  Compass,
+  CookingPot,
+  Crown,
+  Cuboid,
+  DoorOpen,
+  DraftingCompass,
+  Factory,
+  Fence,
+  Flower2,
+  Gem,
+  Grid2X2,
+  Home,
+  Hotel,
+  House,
+  KeyRound,
+  Landmark,
+  Layers,
+  Map,
+  MapPinHouse,
+  MapPinned,
+  Maximize2,
+  Mountain,
+  PanelTop,
+  ParkingCircle,
+  Ruler,
+  Sofa,
+  Store,
+  Warehouse,
+} satisfies Record<string, LucideIcon>;
+
+export type ProjectTypeIconName = keyof typeof PROJECT_TYPE_ICONS;
+
+export type ProjectTypeIconOption = {
+  name: ProjectTypeIconName;
+  label: string;
+  category: string;
+};
+
+export const PROJECT_TYPE_ICON_OPTIONS: ProjectTypeIconOption[] = [
+  { name: 'Building2', label: 'Apartment Building', category: 'Core Types' },
+  { name: 'House', label: 'Villa', category: 'Core Types' },
+  { name: 'Home', label: 'Townhouse', category: 'Core Types' },
+  { name: 'Hotel', label: 'Studio', category: 'Core Types' },
+  { name: 'Building', label: 'Duplex', category: 'Core Types' },
+  { name: 'MapPinHouse', label: 'Standalone Home', category: 'Core Types' },
+  { name: 'Warehouse', label: 'Loft', category: 'Core Types' },
+  { name: 'Landmark', label: 'Compound', category: 'Core Types' },
+  { name: 'Castle', label: 'Luxury Estate', category: 'Core Types' },
+
+  { name: 'BedSingle', label: 'One Bedroom', category: 'Bedroom Layouts' },
+  { name: 'Bed', label: 'Two Bedroom', category: 'Bedroom Layouts' },
+  { name: 'BedDouble', label: 'Three Bedroom', category: 'Bedroom Layouts' },
+  { name: 'Sofa', label: 'Living Room Suite', category: 'Bedroom Layouts' },
+  { name: 'Armchair', label: 'Compact Suite', category: 'Bedroom Layouts' },
+  { name: 'Bath', label: 'Ensuite Layout', category: 'Bedroom Layouts' },
+  { name: 'CookingPot', label: 'Kitchen-Focused Unit', category: 'Bedroom Layouts' },
+
+  { name: 'Layers', label: 'Multi-Floor Unit', category: 'Building Layouts' },
+  { name: 'Columns3', label: 'Triplex', category: 'Building Layouts' },
+  { name: 'PanelTop', label: 'Penthouse', category: 'Building Layouts' },
+  { name: 'Blocks', label: 'Cluster Homes', category: 'Building Layouts' },
+  { name: 'Cuboid', label: 'Modern Block', category: 'Building Layouts' },
+  { name: 'Box', label: 'Cabin Unit', category: 'Building Layouts' },
+  { name: 'Boxes', label: 'Grouped Units', category: 'Building Layouts' },
+  { name: 'Grid2X2', label: 'Residential Complex', category: 'Building Layouts' },
+  { name: 'Maximize2', label: 'Large Layout', category: 'Building Layouts' },
+  { name: 'Ruler', label: 'Measured Layout', category: 'Building Layouts' },
+  { name: 'DraftingCompass', label: 'Custom Plan', category: 'Building Layouts' },
+
+  { name: 'Mountain', label: 'Chalet', category: 'Lifestyle Types' },
+  { name: 'Flower2', label: 'Garden Home', category: 'Lifestyle Types' },
+  { name: 'Fence', label: 'Gated Residence', category: 'Lifestyle Types' },
+  { name: 'Binoculars', label: 'View Residence', category: 'Lifestyle Types' },
+  { name: 'Compass', label: 'Destination Home', category: 'Lifestyle Types' },
+  { name: 'Map', label: 'Master Plan', category: 'Lifestyle Types' },
+  { name: 'MapPinned', label: 'Prime Location', category: 'Lifestyle Types' },
+  { name: 'ParkingCircle', label: 'Parking-Included Unit', category: 'Lifestyle Types' },
+  { name: 'Car', label: 'Driveway Home', category: 'Lifestyle Types' },
+  { name: 'DoorOpen', label: 'Private Entrance', category: 'Lifestyle Types' },
+  { name: 'KeyRound', label: 'Ready To Move', category: 'Lifestyle Types' },
+  { name: 'Accessibility', label: 'Accessible Unit', category: 'Lifestyle Types' },
+
+  { name: 'Store', label: 'Retail Unit', category: 'Commercial' },
+  { name: 'BriefcaseBusiness', label: 'Office Space', category: 'Commercial' },
+  { name: 'Factory', label: 'Industrial Property', category: 'Commercial' },
+  { name: 'CircleDollarSign', label: 'Investment Property', category: 'Commercial' },
+  { name: 'Crown', label: 'Premium Collection', category: 'Commercial' },
+  { name: 'Gem', label: 'Signature Property', category: 'Commercial' },
+];
+
+export const PROJECT_TYPE_ICON_CATEGORIES = Array.from(
+  new Set(PROJECT_TYPE_ICON_OPTIONS.map((option) => option.category))
+);
+
+export function getProjectTypeIcon(iconName?: string | null): LucideIcon {
+  if (!iconName) return PROJECT_TYPE_ICONS[DEFAULT_PROJECT_TYPE_ICON_NAME];
+  return PROJECT_TYPE_ICONS[iconName as ProjectTypeIconName] ?? PROJECT_TYPE_ICONS[DEFAULT_PROJECT_TYPE_ICON_NAME];
+}

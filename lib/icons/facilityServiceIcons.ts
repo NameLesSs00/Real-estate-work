@@ -1,0 +1,170 @@
+import type { LucideIcon } from 'lucide-react';
+import {
+  Accessibility,
+  Armchair,
+  Baby,
+  Bike,
+  Blinds,
+  BriefcaseBusiness,
+  Building2,
+  Bus,
+  Camera,
+  Car,
+  Cctv,
+  CigaretteOff,
+  Dog,
+  DoorOpen,
+  Dumbbell,
+  Fence,
+  Flower2,
+  House,
+  KeyRound,
+  Lamp,
+  Laptop,
+  Lightbulb,
+  LockKeyhole,
+  MonitorSmartphone,
+  PackageCheck,
+  ParkingCircle,
+  PawPrint,
+  Router,
+  ScanFace,
+  ShieldCheck,
+  Shirt,
+  ShowerHead,
+  Snowflake,
+  Sofa,
+  Star,
+  Sun,
+  Thermometer,
+  TrainFront,
+  TreePalm,
+  Trees,
+  Utensils,
+  Warehouse,
+  WashingMachine,
+  Waves,
+  Wifi,
+  Zap,
+} from 'lucide-react';
+
+export const DEFAULT_ICON_NAME = 'Star';
+
+export const FACILITY_SERVICE_ICONS = {
+  Accessibility,
+  Armchair,
+  Baby,
+  Bike,
+  Blinds,
+  BriefcaseBusiness,
+  Building2,
+  Bus,
+  Camera,
+  Car,
+  Cctv,
+  CigaretteOff,
+  Dog,
+  DoorOpen,
+  Dumbbell,
+  Fence,
+  Flower2,
+  House,
+  KeyRound,
+  Lamp,
+  Laptop,
+  Lightbulb,
+  LockKeyhole,
+  MonitorSmartphone,
+  PackageCheck,
+  ParkingCircle,
+  PawPrint,
+  Router,
+  ScanFace,
+  ShieldCheck,
+  Shirt,
+  ShowerHead,
+  Snowflake,
+  Sofa,
+  Star,
+  Sun,
+  Thermometer,
+  TrainFront,
+  TreePalm,
+  Trees,
+  Utensils,
+  Warehouse,
+  WashingMachine,
+  Waves,
+  Wifi,
+  Zap,
+} satisfies Record<string, LucideIcon>;
+
+export type FacilityServiceIconName = keyof typeof FACILITY_SERVICE_ICONS;
+
+export type FacilityServiceIconOption = {
+  name: FacilityServiceIconName;
+  label: string;
+  category: string;
+};
+
+export const FACILITY_SERVICE_ICON_OPTIONS: FacilityServiceIconOption[] = [
+  { name: 'House', label: 'Villa or Home', category: 'General' },
+  { name: 'Building2', label: 'Residential Building', category: 'General' },
+  { name: 'Accessibility', label: 'Accessible Entry', category: 'General' },
+
+  { name: 'ShieldCheck', label: '24/7 Security Guards', category: 'Security and Access' },
+  { name: 'Camera', label: 'CCTV Video Surveillance', category: 'Security and Access' },
+  { name: 'Cctv', label: 'Camera Monitoring', category: 'Security and Access' },
+  { name: 'Fence', label: 'Gated Community', category: 'Security and Access' },
+  { name: 'LockKeyhole', label: 'Smart Lock Entry', category: 'Security and Access' },
+  { name: 'DoorOpen', label: 'Controlled Building Access', category: 'Security and Access' },
+  { name: 'KeyRound', label: 'Key Fob Access', category: 'Security and Access' },
+  { name: 'ScanFace', label: 'Secure Resident Entry', category: 'Security and Access' },
+  { name: 'MonitorSmartphone', label: 'Video Intercom', category: 'Security and Access' },
+  { name: 'PackageCheck', label: 'Secure Package Lockers', category: 'Security and Access' },
+  { name: 'CigaretteOff', label: 'Smoke-Free Facility', category: 'Security and Access' },
+
+  { name: 'Snowflake', label: 'Air Conditioning', category: 'Climate and Comfort' },
+  { name: 'Thermometer', label: 'Heating and Climate Control', category: 'Climate and Comfort' },
+  { name: 'Wifi', label: 'High-Speed Wi-Fi', category: 'Climate and Comfort' },
+  { name: 'Router', label: 'Internet Ready', category: 'Climate and Comfort' },
+  { name: 'WashingMachine', label: 'In-Unit Washer and Dryer', category: 'Climate and Comfort' },
+  { name: 'Sun', label: 'Private Balcony or Patio', category: 'Climate and Comfort' },
+  { name: 'Blinds', label: 'Window Coverings', category: 'Climate and Comfort' },
+  { name: 'Shirt', label: 'Walk-In Closets', category: 'Climate and Comfort' },
+  { name: 'Lightbulb', label: 'Smart Lighting', category: 'Climate and Comfort' },
+  { name: 'Lamp', label: 'Furnished Comfort', category: 'Climate and Comfort' },
+
+  { name: 'Baby', label: "Children's Playground", category: 'Community Spaces' },
+  { name: 'Waves', label: 'Swimming Pool', category: 'Community Spaces' },
+  { name: 'Dumbbell', label: 'Fitness Center', category: 'Community Spaces' },
+  { name: 'Sofa', label: 'Resident Lounge', category: 'Community Spaces' },
+  { name: 'Armchair', label: 'Clubhouse Seating', category: 'Community Spaces' },
+  { name: 'Utensils', label: 'Outdoor Dining Area', category: 'Community Spaces' },
+  { name: 'BriefcaseBusiness', label: 'Business Center', category: 'Community Spaces' },
+  { name: 'Laptop', label: 'Co-working Space', category: 'Community Spaces' },
+  { name: 'Trees', label: 'Landscaped Gardens', category: 'Community Spaces' },
+  { name: 'TreePalm', label: 'Resort Outdoor Areas', category: 'Community Spaces' },
+  { name: 'Flower2', label: 'Green Courtyard', category: 'Community Spaces' },
+
+  { name: 'ParkingCircle', label: 'Covered or Reserved Parking', category: 'Parking and Transport' },
+  { name: 'Car', label: 'Resident Parking', category: 'Parking and Transport' },
+  { name: 'Warehouse', label: 'Secure Garage', category: 'Parking and Transport' },
+  { name: 'Zap', label: 'EV Charging Station', category: 'Parking and Transport' },
+  { name: 'Bike', label: 'Bike Storage', category: 'Parking and Transport' },
+  { name: 'Bus', label: 'Shuttle or Transit Access', category: 'Parking and Transport' },
+  { name: 'TrainFront', label: 'Near Rail Transport', category: 'Parking and Transport' },
+
+  { name: 'PawPrint', label: 'Pet-Friendly Facility', category: 'Pet Facilities' },
+  { name: 'Dog', label: 'Dog Park or Dog Run', category: 'Pet Facilities' },
+  { name: 'ShowerHead', label: 'Pet Washing Station', category: 'Pet Facilities' },
+];
+
+export const FACILITY_SERVICE_ICON_CATEGORIES = Array.from(
+  new Set(FACILITY_SERVICE_ICON_OPTIONS.map((option) => option.category))
+);
+
+export function getFacilityServiceIcon(iconName?: string | null): LucideIcon {
+  if (!iconName) return FACILITY_SERVICE_ICONS[DEFAULT_ICON_NAME];
+  return FACILITY_SERVICE_ICONS[iconName as FacilityServiceIconName] ?? FACILITY_SERVICE_ICONS[DEFAULT_ICON_NAME];
+}

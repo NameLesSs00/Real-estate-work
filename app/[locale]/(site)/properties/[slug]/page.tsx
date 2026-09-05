@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const dynamic = "force-dynamic";
-import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight, Check, Banknote, CreditCard, Calendar } from "lucide-react";
-import { getUnitById, resolveProjectImageUrl } from "@/lib/api/projects";
-import { getServices } from "@/lib/api/services";
-import { getFacilities } from "@/lib/api/facilities";
+import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight, Banknote, CreditCard, Calendar } from "lucide-react";
+import { resolveProjectImageUrl } from "@/lib/api/projects";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CopyLinkButton from "@/components/CopyLinkButton";
 import LeadForm from "./components/LeadForm";
 import ImageGallery from "@/components/ImageGallery";
 import UnitReviews from "./components/UnitReviews";
+import { getFacilityServiceIcon } from "@/lib/icons/facilityServiceIcons";
 
 async function getTranslations(locale: string) {
   try {
@@ -33,50 +33,21 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
   const t = await getTranslations(locale);
 
-  const isExplicitlyOutside = slug.startsWith("out-");
   // Handle out-ID-name or ID-name
-  const baseSlug = isExplicitlyOutside ? slug.replace("out-", "") : slug;
+  const baseSlug = slug.replace("out-", "");
   const idString = baseSlug.split("-")[0];
   const unitId = parseInt(idString, 10);
 
   if (isNaN(unitId)) notFound();
 
   let unitData: any;
-  let isOutside = false;
-  let allServices: any[] = [];
-  let allFacilities: any[] = [];
+
 
   try {
-    const [servicesData, facilitiesData] = await Promise.all([
-      getServices(),
-      getFacilities()
-    ]);
-    allServices = servicesData;
-    allFacilities = facilitiesData;
-  } catch (err) {
-    console.error("Failed to fetch auxiliary data:", err);
-  }
-
-  if (isExplicitlyOutside) {
-    try {
-      const { getUnitOutsideById } = await import("@/lib/api/unitOutsides");
-      unitData = await getUnitOutsideById(unitId, locale);
-      isOutside = true;
-    } catch {
-      notFound();
-    }
-  } else {
-    try {
-      unitData = await getUnitById(unitId, locale);
-    } catch {
-      try {
-        const { getUnitOutsideById } = await import("@/lib/api/unitOutsides");
-        unitData = await getUnitOutsideById(unitId, locale);
-        isOutside = true;
-      } catch {
-        notFound();
-      }
-    }
+    const { getUnitOutsideById } = await import("@/lib/api/unitOutsides");
+    unitData = await getUnitOutsideById(unitId, locale);
+  } catch {
+    notFound();
   }
 
   // Unified data extractor mapped directly to the backend JSON format
@@ -84,7 +55,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
     if (!val) return "";
     if (typeof val === 'string' && val.trim() !== '') return val;
     if (typeof val === 'object') {
-      const locStr = val[locale] || val.en || val.de || val.pl;
+      const locStr = val[locale] || val.en || val.de || val.it;
       if (typeof locStr === 'string' && locStr.trim() !== '') return locStr;
     }
     return "";
@@ -100,22 +71,14 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const propertyBedrooms = d.noBedRoom || d.NoBedRoom || 0;
   const propertyBathrooms = d.noBathRoom || d.NoBathRoom || 0;
   const propertyKitchens = d.noKitchen || d.NoKitchen || 0;
-  const propertyFloorName = extractString(d.floorName) || extractString(d.FloorName) || "";
   const propertyFloorNum = d.floorNumber || d.FloorNumber || 0;
   const unitTypeName = extractString(d.unitType) || extractString(d.UnitType) || "";
   const unitStatusName = extractString(d.unitStatus) || extractString(d.UnitStatus) || "";
-  const unitView = isOutside ? "" : (extractString(d.view) || extractString(d.View) || "");
   const propertyType = extractString(d.propertyType) || extractString(d.PropertyType) || "Property";
   const unitMarkerId = extractString(d.markerId) || extractString(d.MarkerId) || "";
   const projName = extractString(d.projectName) || extractString(d.ProjectName) || "";
-  const locName = extractString(d.location?.name) ||
-    extractString(d.locationName) ||
-    extractString(d.LocationName) ||
-    "";
 
-  const propertyLocation = isOutside 
-    ? [extractString(d.city || d.City), extractString(d.country || d.Country), extractString(d.street || d.Street)].filter(Boolean).join(' - ')
-    : (locName || propertyFloorName || "");
+  const propertyLocation = [extractString(d.city || d.City), extractString(d.country || d.Country), extractString(d.street || d.Street)].filter(Boolean).join(' - ');
 
   const unitImages = (d.imageUrls?.length ? d.imageUrls : null) ||
     (d.ImageUrls?.length ? d.ImageUrls : null) ||
@@ -133,6 +96,18 @@ export default async function PropertyDetailsPage({ params }: Props) {
     .filter(Boolean) as string[];
   
   const paymentPlans = (d.paymentPlans || d.PaymentPlans || d.paymentPlan || d.PaymentPlan || []) as any[];
+  const services = ((d.services || d.Services || []) as any[])
+    .map((service) => {
+      if (typeof service === 'string') {
+        return { name: service, icon: null };
+      }
+
+      return {
+        name: extractString(service?.name || service?.Name) || 'Unknown',
+        icon: service?.icon ?? service?.Icon ?? null,
+      };
+    })
+    .filter((service) => service.name);
 
   if (allResolvedImages.length === 0) {
     allResolvedImages.push(`${BASE}/mainImg.png`);
@@ -181,7 +156,6 @@ export default async function PropertyDetailsPage({ params }: Props) {
                   <div className="flex items-center gap-2">
                     {unitTypeName && <span className="bg-brand-secondary-soft text-brand-primary px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitTypeName}</span>}
                     {unitStatusName && <span className="bg-amber-50 text-amber-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">{unitStatusName}</span>}
-                    {unitView && <span className="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">View: {unitView}</span>}
                     {unitMarkerId && <span className="bg-purple-50 text-purple-600 px-2 py-0.5 rounded-md text-[11px] font-bold uppercase">ID: {unitMarkerId}</span>}
                   </div>
                 </div>
@@ -230,54 +204,32 @@ export default async function PropertyDetailsPage({ params }: Props) {
           </div>
         </div>
 
-        {/* ── Features & Services ── */}
-        {!isOutside && (() => {
-          const combinedIds = Array.from(new Set([
-            ...(d.services || d.Services || []),
-            ...(d.facilities || d.Facilities || [])
-          ]));
-          if (combinedIds.length === 0) return null;
 
-          return (
-            <div className="bg-white border border-brand-divider rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
-              <div className="flex items-center gap-3 mb-8">
-                <h2 className="text-[20px] font-bold text-brand-primary font-poppins">
-                  {t.projectDetails.featuresServices || "Features & Services"}
-                </h2>
-                <div className="h-px flex-1 bg-gray-100"></div>
-              </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {combinedIds.map((id: any, i: number) => {
-                  const numericId = Number(id);
-                  const foundService = allServices.find(s => s.id === numericId);
-                  const foundFacility = allFacilities.find(f => f.id === numericId);
-                  const nameObj = foundService?.name || foundFacility?.name;
-                  
-                  let localizedName = "";
-                  if (typeof nameObj === 'string') {
-                    localizedName = nameObj;
-                  } else if (nameObj) {
-                    localizedName = nameObj[locale] || nameObj.en || nameObj.de || nameObj.pl || `Item ${numericId}`;
-                  } else {
-                    localizedName = `Feature ${numericId}`;
-                  }
 
-                  return (
-                    <div key={i} className="flex items-center gap-4 group p-3 rounded-xl hover:bg-gray-50 transition-all border border-transparent hover:border-gray-100">
-                      <div className="w-8 h-8 rounded-full bg-brand-primary/5 flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all">
-                        <Check size={16} strokeWidth={3} />
-                      </div>
-                      <span className="text-[14px] md:text-[15px] font-medium text-brand-muted group-hover:text-brand-primary transition-colors">
-                        {localizedName}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
+        {services.length > 0 && (
+          <div className="bg-white border border-brand-divider rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="text-[20px] font-bold text-brand-primary font-poppins">
+                {t.projectDetails.featuresServices || "Features & Services"}
+              </h2>
+              <div className="h-px flex-1 bg-gray-100"></div>
             </div>
-          );
-        })()}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {services.map((service, index) => {
+                const ServiceIcon = getFacilityServiceIcon(service.icon);
+
+                return (
+                  <div key={`${service.name}-${index}`} className="flex items-center gap-3 rounded-2xl bg-admin-bg px-4 py-3 text-brand-primary">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-brand-primary shadow-sm">
+                      <ServiceIcon size={18} />
+                    </span>
+                    <span className="text-[14px] font-semibold">{service.name}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* ── Description ── */}
         <div className="bg-brand-bg border border-brand-divider rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">

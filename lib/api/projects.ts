@@ -3,6 +3,7 @@ import { ApiResponse } from './auth';
 import { getHeaders } from './common';
 import { Facility } from './facilities';
 import { Service } from './services';
+import type { ProjectType } from './projectTypes';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -39,6 +40,13 @@ export interface Project {
   logoImage: string;
   locationId: number | null;
   locationName: string;
+  deliveryDate?: string;
+  isFurniture?: boolean;
+  furnitureType?: string | FurnitureType;
+  isFeature?: boolean;
+  prices?: ProjectPrice[];
+  projectTypes?: ProjectType[];
+  projectTypeIds?: number[];
   imageUrls: string[];
   units?: ApiUnit[];
   facilities?: number[] | string[];
@@ -48,21 +56,6 @@ export interface Project {
   updatedBy: string;
   updatedAt: string | null;
 }
-
-export interface ProjectImagePricelist {
-  id: number;
-  projectId: number;
-  name: string;
-  imageUrl: string;
-  displayOrder: number;
-}
-
-export interface ProjectImagePricelistPayload {
-  name: string;
-  displayOrder: number;
-  image?: File | null;
-}
-
 
 export interface ProjectsPage {
   items: Project[];
@@ -76,8 +69,38 @@ export interface ProjectsPage {
 export interface LocalizedString {
   en: string;
   de: string;
-  pl: string;
+  it: string;
   [key: string]: string;
+}
+
+export type FurnitureType = 0 | 1 | 2;
+
+export interface ProjectPrice {
+  id?: number;
+  currency: string;
+  minimumPrice: number;
+  maximumPrice: number;
+}
+
+export interface ProjectFilters {
+  projectTypeId?: number;
+  minimumPrice?: number;
+  maximumPrice?: number;
+  priceCurrency?: string;
+  currency?: string;
+  isFurniture?: boolean;
+  furnitureType?: FurnitureType;
+  deliveryDateFrom?: string;
+  deliveryDateTo?: string;
+  isFeature?: boolean;
+  featureId?: number;
+  facilityId?: number;
+  locationId?: number;
+  developerId?: number;
+  searchTerm?: string;
+  search?: string;
+  sortBy?: string;
+  sortDirection?: string;
 }
 
 export interface CreateProjectPayload {
@@ -85,7 +108,13 @@ export interface CreateProjectPayload {
   description: LocalizedString;
   developerId: number | null;
   locationId: number | null;
-  facilityIds?: number[];
+  deliveryDate: string;
+  isFurniture: boolean;
+  furnitureType: FurnitureType;
+  isFeature: boolean;
+  projectTypeIds: number[];
+  facilityIds: number[];
+  prices: ProjectPrice[];
 }
 
 export interface UpdateProjectPayload {
@@ -94,7 +123,13 @@ export interface UpdateProjectPayload {
   description: LocalizedString;
   developerId: number | null;
   locationId: number | null;
-  facilityIds?: number[];
+  deliveryDate: string;
+  isFurniture: boolean;
+  furnitureType: FurnitureType;
+  isFeature: boolean;
+  projectTypeIds: number[];
+  facilityIds: number[];
+  prices: ProjectPrice[];
   Facilities?: { id: number }[];
 }
 
@@ -256,12 +291,35 @@ export function resolveProjectImageUrl(path: string | null): string | null {
 // ─── Project Endpoints ────────────────────────────────────────────────────────
 
 /** GET /api/Projects?pageNumber=N&pageSize=M */
-export async function getProjects(pageNumber = 1, pageSize = 10, lang?: string): Promise<ProjectsPage> {
+export async function getProjects(pageNumber = 1, pageSize = 10, lang?: string, filters: ProjectFilters = {}): Promise<ProjectsPage> {
   try {
-    const res = await fetch(
-      `${API_BASE_URL}/api/Projects?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-      { headers: { ...getHeaders(lang) } }
-    );
+    const params = new URLSearchParams({
+      PageNumber: String(pageNumber),
+      PageSize: String(pageSize),
+    });
+
+    if (filters.projectTypeId !== undefined) params.set('ProjectTypeId', String(filters.projectTypeId));
+    if (filters.minimumPrice !== undefined) params.set('MinimumPrice', String(filters.minimumPrice));
+    if (filters.maximumPrice !== undefined) params.set('MaximumPrice', String(filters.maximumPrice));
+    if (filters.priceCurrency) params.set('PriceCurrency', filters.priceCurrency);
+    if (filters.currency) params.set('Currency', filters.currency);
+    if (filters.isFurniture !== undefined) params.set('IsFurniture', String(filters.isFurniture));
+    if (filters.furnitureType !== undefined) params.set('FurnitureType', String(filters.furnitureType));
+    if (filters.deliveryDateFrom) params.set('DeliveryDateFrom', filters.deliveryDateFrom);
+    if (filters.deliveryDateTo) params.set('DeliveryDateTo', filters.deliveryDateTo);
+    if (filters.isFeature !== undefined) params.set('IsFeature', String(filters.isFeature));
+    if (filters.featureId !== undefined) params.set('FeatureId', String(filters.featureId));
+    if (filters.facilityId !== undefined) params.set('FacilityId', String(filters.facilityId));
+    if (filters.locationId !== undefined) params.set('LocationId', String(filters.locationId));
+    if (filters.developerId !== undefined) params.set('DeveloperId', String(filters.developerId));
+    if (filters.searchTerm) params.set('SearchTerm', filters.searchTerm);
+    if (filters.search) params.set('Search', filters.search);
+    if (filters.sortBy) params.set('SortBy', filters.sortBy);
+    if (filters.sortDirection) params.set('SortDirection', filters.sortDirection);
+
+    const res = await fetch(`${API_BASE_URL}/api/Projects?${params.toString()}`, {
+      headers: { ...getHeaders(lang) },
+    });
     if (!res.ok) {
       const text = await res.text();
       console.warn('[Projects] Fetch failed:', res.status, text);
@@ -416,140 +474,6 @@ export async function deleteProjectImage(id: number, imageUrl?: string): Promise
     const text = await res.text();
     console.error('[Projects] Image delete failed:', res.status, text);
     throw new Error('Failed to delete project image.');
-  }
-}
-
-// Project image pricelists
-
-/** GET /api/projects/{projectId}/image-pricelists */
-export async function getProjectImagePricelists(projectId: number): Promise<ProjectImagePricelist[]> {
-  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists`, {
-    headers: { ...getHeaders() },
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    console.error('[ProjectImagePricelists] Fetch failed:', res.status, text);
-    throw new Error('Failed to load price list images.');
-  }
-
-  const json: ApiResponse<ProjectImagePricelist[]> = await res.json();
-  if (!json.success || !json.data) {
-    console.error('[ProjectImagePricelists] Fetch error:', json.message, json.errors);
-    throw new Error(json.message || 'Failed to load price list images.');
-  }
-
-  return json.data;
-}
-
-/** GET /api/projects/{projectId}/image-pricelists/{id} */
-export async function getProjectImagePricelist(projectId: number, id: number): Promise<ProjectImagePricelist> {
-  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists/${id}`, {
-    headers: { ...getHeaders() },
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    console.error('[ProjectImagePricelists] Fetch by ID failed:', res.status, text);
-    throw new Error('Failed to load price list image.');
-  }
-
-  const json: ApiResponse<ProjectImagePricelist> = await res.json();
-  if (!json.success || !json.data) {
-    console.error('[ProjectImagePricelists] Fetch by ID error:', json.message, json.errors);
-    throw new Error(json.message || 'Failed to load price list image.');
-  }
-
-  return json.data;
-}
-
-/** POST /api/projects/{projectId}/image-pricelists */
-export async function createProjectImagePricelist(
-  projectId: number,
-  payload: ProjectImagePricelistPayload
-): Promise<number> {
-  if (!payload.image) {
-    throw new Error('Price list image is required.');
-  }
-
-  const formData = new FormData();
-  formData.append('ProjectId', String(projectId));
-  formData.append('Name', payload.name);
-  formData.append('Image', payload.image);
-  formData.append('DisplayOrder', String(payload.displayOrder));
-
-  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists`, {
-    method: 'POST',
-    headers: { ...getHeaders() },
-    body: formData,
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    console.error('[ProjectImagePricelists] Create failed:', res.status, text);
-    throw new Error('Failed to create price list image.');
-  }
-
-  const json: ApiResponse<number> = await res.json();
-  if (!json.success || !json.data) {
-    console.error('[ProjectImagePricelists] Create error:', json.message, json.errors);
-    throw new Error(json.message || 'Failed to create price list image.');
-  }
-
-  return json.data;
-}
-
-/** PUT /api/projects/{projectId}/image-pricelists/{id} */
-export async function updateProjectImagePricelist(
-  projectId: number,
-  id: number,
-  payload: ProjectImagePricelistPayload
-): Promise<number> {
-  const formData = new FormData();
-  formData.append('Id', String(id));
-  formData.append('ProjectId', String(projectId));
-  formData.append('Name', payload.name);
-  if (payload.image) formData.append('Image', payload.image);
-  formData.append('DisplayOrder', String(payload.displayOrder));
-
-  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists/${id}`, {
-    method: 'PUT',
-    headers: { ...getHeaders() },
-    body: formData,
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    console.error('[ProjectImagePricelists] Update failed:', res.status, text);
-    throw new Error('Failed to update price list image.');
-  }
-
-  const json: ApiResponse<number> = await res.json();
-  if (!json.success || !json.data) {
-    console.error('[ProjectImagePricelists] Update error:', json.message, json.errors);
-    throw new Error(json.message || 'Failed to update price list image.');
-  }
-
-  return json.data;
-}
-
-/** DELETE /api/projects/{projectId}/image-pricelists/{id} */
-export async function deleteProjectImagePricelist(projectId: number, id: number): Promise<void> {
-  const res = await fetch(`${API_BASE_URL}/api/projects/${projectId}/image-pricelists/${id}`, {
-    method: 'DELETE',
-    headers: { ...getHeaders() },
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    console.error('[ProjectImagePricelists] Delete failed:', res.status, text);
-    throw new Error('Failed to delete price list image.');
-  }
-
-  const json: ApiResponse<number> = await res.json();
-  if (!json.success) {
-    console.error('[ProjectImagePricelists] Delete error:', json.message, json.errors);
-    throw new Error(json.message || 'Failed to delete price list image.');
   }
 }
 

@@ -6,18 +6,36 @@ import { LocalizedString } from './projects';
 export interface Service {
   id: number;
   name: string | LocalizedString;
+  icon: string | null;
 }
 
 export interface CreateServicePayload {
-  name: { en: string; de: string; pl: string };
+  name: { en: string; de: string; it: string };
+  icon?: string | null;
 }
 
 export interface UpdateServicePayload {
   id: number;
-  name: { en: string; de: string; pl: string };
+  name: { en: string; de: string; it: string };
+  icon?: string | null;
 }
 
+type ServiceApiItem = {
+  id?: number;
+  Id?: number;
+  name?: string | LocalizedString;
+  Name?: string | LocalizedString;
+  icon?: string | null;
+  Icon?: string | null;
+};
 
+function normalizeService(item: ServiceApiItem): Service {
+  return {
+    id: item.id !== undefined ? item.id : (item.Id ?? 0),
+    name: item.name !== undefined ? item.name : (item.Name ?? ''),
+    icon: item.icon !== undefined ? item.icon : (item.Icon ?? null),
+  };
+}
 
 /** GET /api/Services */
 export async function getServices(): Promise<Service[]> {
@@ -38,10 +56,7 @@ export async function getServices(): Promise<Service[]> {
     else if (json.success === false) throw new Error(json.message || 'Failed to fetch services.');
 
     // Normalize keys in case the API returns PascalCase
-    return items.map((item: { id?: number; Id?: number; name?: string; Name?: string }) => ({
-      id: item.id !== undefined ? item.id : (item.Id ?? 0),
-      name: item.name !== undefined ? item.name : (item.Name ?? ''),
-    }));
+    return items.map((item: ServiceApiItem) => normalizeService(item));
   } catch (error) {
     console.warn('Network error when fetching services:', error);
     return [];
@@ -59,10 +74,7 @@ export async function getServiceById(id: number, lang: string = 'en'): Promise<S
   try {
     const json = JSON.parse(text);
     const item = json.data ?? json;
-    return {
-      id: item.id !== undefined ? item.id : (item.Id ?? 0),
-      name: item.name !== undefined ? item.name : (item.Name ?? '')
-    };
+    return normalizeService(item);
   } catch {
     throw new Error('Failed to parse service.');
   }
@@ -70,7 +82,7 @@ export async function getServiceById(id: number, lang: string = 'en'): Promise<S
 
 /** POST /api/Services */
 export async function createService(payload: CreateServicePayload): Promise<number> {
-  const { name } = payload;
+  const { name, icon = null } = payload;
   
   const res = await fetch(`${API_BASE_URL}/api/Services`, {
     method: 'POST',
@@ -78,7 +90,7 @@ export async function createService(payload: CreateServicePayload): Promise<numb
       'Content-Type': 'application/json',
       ...getHeaders() 
     },
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, icon }),
   });
   const text = await res.text();
   console.log('[Services] Create Response:', text);
@@ -97,7 +109,7 @@ export async function createService(payload: CreateServicePayload): Promise<numb
 
 /** PUT /api/Services */
 export async function updateService(payload: UpdateServicePayload): Promise<number> {
-  const { id, name } = payload;
+  const { id, name, icon = null } = payload;
 
   const res = await fetch(`${API_BASE_URL}/api/Services`, {
     method: 'PUT',
@@ -105,7 +117,7 @@ export async function updateService(payload: UpdateServicePayload): Promise<numb
       'Content-Type': 'application/json',
       ...getHeaders() 
     },
-    body: JSON.stringify({ id, name }),
+    body: JSON.stringify({ id, name, icon }),
   });
   const text = await res.text();
   console.log('[Services] Update Response:', text);

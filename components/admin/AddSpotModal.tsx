@@ -53,8 +53,8 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
     setIsLoading(true);
     setError('');
     try {
-      const cityPayload = { en: form.city, de: form.city, pl: form.city };
-      const districtPayload = { en: form.district, de: form.district, pl: form.district };
+      const cityPayload = { en: form.city, de: form.city, it: form.city };
+      const districtPayload = { en: form.district, de: form.district, it: form.district };
 
       if (isEditMode && editData) {
         await updateLocation({

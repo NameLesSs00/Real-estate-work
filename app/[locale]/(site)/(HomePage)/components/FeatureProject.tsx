@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { ArrowRight, Check, Loader2, MapPin } from 'lucide-react';
+import { ArrowRight, Loader2, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
@@ -12,6 +12,7 @@ import { getServices, Service } from '@/lib/api/services';
 import './FeatureProject.css';
 import { slugify } from '@/lib/utils';
 import { BRAND_LOGOS } from '@/lib/brand';
+import { getFacilityServiceIcon } from '@/lib/icons/facilityServiceIcons';
 
 const DEFAULT_LOGO = BRAND_LOGOS.markColor;
 
@@ -77,13 +78,13 @@ const FeatureProject = () => {
   // Map facility IDs to names
   const projectFacilities = (activeProject.facilities || [])
     .map((fId) => {
-      if (typeof fId === 'string') return fId;
+      if (typeof fId === 'string') return { name: fId, icon: null };
       const service = services.find((s) => s.id === fId);
       if (!service) return null;
-      if (typeof service.name === 'object') return service.name[language] || service.name.en;
-      return service.name;
+      const name = typeof service.name === 'object' ? service.name[language] || service.name.en : service.name;
+      return { name, icon: service.icon };
     })
-    .filter(Boolean) as string[];
+    .filter(Boolean) as { name: string; icon: string | null }[];
 
   return (
     <section className="feature-project-section overflow-hidden" aria-labelledby="feature-project-heading">
@@ -169,20 +170,24 @@ const FeatureProject = () => {
                   <>
                     <h4 className="details-grid-title">{t('featureProject.projectDetails') as string}</h4>
                     <div className="details-cards-grid">
-                      {projectFacilities.slice(0, 6).map((facName, index) => (
-                        <motion.div
-                          key={index}
-                          initial={{ opacity: 0, y: 15 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
-                          className="detail-info-card"
-                        >
-                          <div className="detail-info-icon-wrapper" aria-hidden="true">
-                            <Check size={16} />
-                          </div>
-                          <span className="detail-info-value">{facName}</span>
-                        </motion.div>
-                      ))}
+                      {projectFacilities.slice(0, 6).map((facility, index) => {
+                        const FacilityIcon = getFacilityServiceIcon(facility.icon);
+
+                        return (
+                          <motion.div
+                            key={`${facility.name}-${index}`}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
+                            className="detail-info-card"
+                          >
+                            <div className="detail-info-icon-wrapper" aria-hidden="true">
+                              <FacilityIcon size={16} />
+                            </div>
+                            <span className="detail-info-value">{facility.name}</span>
+                          </motion.div>
+                        );
+                      })}
                     </div>
                   </>
                 )}

@@ -20,8 +20,8 @@ interface Props {
 }
 
 const EMPTY = {
-  name: { en: '', de: '', pl: '' },
-  description: { en: '', de: '', pl: '' },
+  name: { en: '', de: '', it: '' },
+  description: { en: '', de: '', it: '' },
   price: '' as number | '',
   currencyCode: 'USD',
   area: '' as number | '',
@@ -59,7 +59,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [langTab, setLangTab] = useState<'en' | 'de' | 'pl'>('en');
+  const [langTab, setLangTab] = useState<'en' | 'de' | 'it'>('en');
 
   // Reset / populate on open
   useEffect(() => {
@@ -78,19 +78,19 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
           const [enData, deData, plData] = await Promise.all([
             getUnitOutsideById(editData.id, 'en'),
             getUnitOutsideById(editData.id, 'de'),
-            getUnitOutsideById(editData.id, 'pl')
+            getUnitOutsideById(editData.id, 'it')
           ]);
 
           setForm({
             name: { 
               en: enData.name ?? '', 
               de: deData.name ?? '', 
-              pl: plData.name ?? '' 
+              it: plData.name ?? '' 
             },
             description: { 
               en: enData.description ?? '', 
               de: deData.description ?? '', 
-              pl: plData.description ?? '' 
+              it: plData.description ?? '' 
             },
             price: enData.price ?? '',
             currencyCode: enData.currencyCode || 'USD',
@@ -151,7 +151,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
     };
 
   const setLangField =
-    (field: 'name' | 'description', lang: 'en' | 'de' | 'pl') =>
+    (field: 'name' | 'description', lang: 'en' | 'de' | 'it') =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((prev) => ({
         ...prev,
@@ -219,12 +219,12 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
       // Localized Name
       fd.append('Name.En', form.name.en);
       fd.append('Name.De', form.name.de || form.name.en);
-      fd.append('Name.Pl', form.name.pl || form.name.en);
+      fd.append('Name.It', form.name.it || form.name.en);
       
       // Localized Description
       fd.append('Description.En', form.description.en);
       fd.append('Description.De', form.description.de || form.description.en);
-      fd.append('Description.Pl', form.description.pl || form.description.en);
+      fd.append('Description.It', form.description.it || form.description.en);
       
       // Numbers & Strings
       fd.append('Price', String(Number(form.price) || 0));
@@ -305,7 +305,7 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
   const LANG_TABS = [
     { key: 'en', label: 'English', color: 'bg-brand-secondary-soft text-brand-secondary' },
     { key: 'de', label: 'German', color: 'bg-amber-50 text-amber-600' },
-    { key: 'pl', label: 'Polish', color: 'bg-red-50 text-red-600' },
+    { key: 'it', label: 'Italian', color: 'bg-green-50 text-green-700' },
   ] as const;
 
   return (

@@ -1,0 +1,490 @@
+{
+  "header": {
+    "home": "Home",
+    "projects": "Progetti",
+    "buy": "Acquista",
+    "primary": "Nuovo Costruito",
+    "resale": "Rivendita",
+    "rent": "Affitta",
+    "about": "Chi Siamo",
+    "contact": "Contattaci",
+    "blogs": "Blog",
+    "faq": "FAQ",
+    "listProperty": "Inserisci la tua Proprietà",
+    "locations": [
+      "El Gouna",
+      "El kawther",
+      "Arabia",
+      "Al Ahyaa",
+      "Sheraton",
+      "Makadi Bay"
+    ],
+    "language": "Lingua"
+  },
+  "footer": {
+    "about": "The Rook Real Estate Investment è stata fondata con la passione di connettere le persone con le loro case dei sogni e gli investimenti ideali. Comprendiamo che il settore immobiliare non riguarda solo le transazioni; riguarda decisioni che cambiano la vita.",
+    "usefulLinks": "Azione rapida",
+    "stayConnected": "Seguici",
+    "newsletter": "Iscriviti alla nostra newsletter per rimanere aggiornato sulle novità e le uscite.",
+    "subscribe": "Iscriviti",
+    "placeholder": "Inserisci la tua email",
+    "copyright": "Tutti i diritti riservati.",
+    "privacy": "Informativa sulla Privacy",
+    "terms": "Termini di Servizio",
+    "contactTitle": "Contattaci"
+  },
+  "hero": {
+    "title": "Scopri la Tua Prossima <br /> Proprietà di Investimento",
+    "searchLabel": "Cerca per nome della proprietà, descrizione",
+    "searchPlaceholder": "Cerca per nome della proprietà, descrizione",
+    "filters": "Filtri",
+    "hide": "Nascondi",
+    "search": "Cerca",
+    "propertyType": "Tipo di Proprietà",
+    "allTypes": "Tutti i Tipi",
+    "location": "Posizione",
+    "allLocations": "Tutte le Posizioni",
+    "minPrice": "Prezzo di Partenza",
+    "maxPrice": "Prezzo Massimo",
+    "noMin": "Nessun minimo",
+    "noMax": "Nessun massimo"
+  },
+  "whoWeAre": {
+    "tag": "CHI SIAMO",
+    "title": "Il Tuo Partner Immobiliare di Fiducia",
+    "subtitle": "Ci impegniamo ad aiutarti a scoprire proprietà eccezionali in posizioni privilegiate, unendo qualità, trasparenza e un'esperienza fluida e su misura per le tue esigenze.",
+    "visionTitle": "La Nostra Visione",
+    "visionText": "Ridefinire l'esperienza immobiliare rendendola più trasparente, accessibile e adatta agli stili di vita moderni. Miriamo a connettere le persone con spazi che ispirano veramente come vivono, lavorano e crescono.",
+    "missionTitle": "La Nostra Missione",
+    "missionText": "Guidare i nostri clienti in ogni fase del loro viaggio immobiliare con onestà, competenza e cura. Ci impegniamo a fornire un servizio eccezionale, selezioni di proprietà curate e un'esperienza senza soluzione di continuità che costruisce fiducia a lungo termine.",
+    "viewMore": "Vedi di Più"
+  },
+  "howItWorks": {
+    "tag": "COME FUNZIONA",
+    "title": "Un Modo Semplice per Trovare la Tua Proprietà Perfetta",
+    "step1": "Esplora proprietà curate che corrispondono alle tue esigenze e al tuo budget.",
+    "step2": "Connettiti con i nostri esperti per una guida personalizzata.",
+    "step3": "Prenota una visita e trova la tua proprietà ideale con facilità.",
+    "headlineTop": "Appassionati",
+    "headlineBottom": "di Essere Diversi",
+    "accent": "esperienza",
+    "readMore": "Leggi di Più",
+    "cards": {
+      "sell": {
+        "title": "Vendi la Tua Casa",
+        "desc": "Facciamo una valutazione gratuita per assicurarci che tu voglia iniziare a vendere."
+      },
+      "buy": {
+        "title": "Compra una Casa",
+        "desc": "Facciamo una valutazione gratuita per assicurarci che tu voglia iniziare ad acquistare."
+      },
+      "rent": {
+        "title": "Affitta una Casa",
+        "desc": "Facciamo una valutazione gratuita per assicurarci che tu voglia iniziare ad affittare."
+      }
+    }
+  },
+  "categories": {
+    "tag": "ANNUNCI IN EVIDENZA",
+    "title": "Sfoglia Proprietà per <span>Categoria</span>",
+    "subtitle": "Presentiamo case in categorie chiare e organizzate in modo che i visitatori possano esplorare rapidamente i tipi di proprietà che corrispondono alle loro esigenze, interessi e obiettivi di acquisto.",
+    "types": {
+      "apartments": "Appartamenti",
+      "villas": "Ville",
+      "houses": "Case",
+      "studio": "Monolocali"
+    },
+    "listings": "Annunci"
+  },
+  "exploreUnits": {
+    "tag": "UNITÀ POPOLARI",
+    "title": "Unità in Evidenza",
+    "subtitle": "Unità premium accuratamente selezionate nelle posizioni più ricercate.",
+    "tabs": {
+      "hotDeal": "Offerta Imperdibile",
+      "recommended": "Consigliato",
+      "bestPrice": "Miglior Prezzo"
+    },
+    "noUnits": "Nessuna unità disponibile.",
+    "showMore": "Mostra Più Proprietà"
+  },
+  "popularSpots": {
+    "tag": "Luoghi Popolari",
+    "title": "Esplora Posizioni Privilegiate",
+    "subtitle": "Dalle lagune di El Gouna alle spiagge di Sahl Hasheesh — trova il tuo angolo perfetto sul Mar Rosso.",
+    "exploreArea": "Esplora l'Area",
+    "property": "Proprietà",
+    "properties": "Proprietà",
+    "headline": "Scopri il Meglio dell'Egitto",
+    "accent": "Destinazioni"
+  },
+  "featureProject": {
+    "tag": "PROGETTI IN EVIDENZA",
+    "title": "Proprietà Eccezionali, Accuratamente Selezionate per Te",
+    "subtitle": "Scopri una selezione curata di progetti immobiliari orientati al futuro in posizioni privilegiate, progettati per qualità, innovazione e forte valore di investimento offrendo uno stile di vita moderno e crescita a lungo termine.",
+    "priceStart": "Prezzo a Partire Da",
+    "projectDetails": "Dettagli del Progetto",
+    "getInTouch": "Mettiti in Contatto",
+    "viewProjectDetails": "Vedi Dettagli del Progetto",
+    "showMore": "Mostra Più Progetti",
+    "labels": {
+      "totalUnits": "Unità Totali",
+      "buildingFloors": "Piani dell'Edificio",
+      "deliveryDate": "Data di Consegna",
+      "status": "Stato",
+      "spaces": "Spazi"
+    },
+    "locationTbd": "Posizione da definire",
+    "fallbackDescription": "Scopri uno stile di vita premium in questo eccezionale sviluppo, progettato con un'architettura moderna e finiture di alta qualità.",
+    "developerLogo": "Logo dello sviluppatore"
+  },
+  "articles": {
+    "tag": "ULTIMI ARTICOLI",
+    "title": "Approfondimenti e Ispirazione",
+    "subtitle": "Esplora gli approfondimenti degli esperti, le tendenze immobiliari e i consigli pratici per aiutarti a prendere decisioni informate e trovare la proprietà perfetta con fiducia.",
+    "readMore": "Leggi di Più",
+    "showMore": "Mostra Più Blog"
+  },
+  "faq": {
+    "tag": "ULTIMI ARTICOLI",
+    "title": "Domande Frequenti",
+    "subtitle": "Trova risposte rapide alle domande più comuni su acquisto, investimento e possesso di proprietà. Tutto ciò di cui hai bisogno per prendere decisioni sicure.",
+    "questions": [
+      {
+        "q": "Quali tipi di proprietà sono disponibili?",
+        "a": "Offriamo appartamenti, ville e proprietà di investimento in posizioni privilegiate."
+      },
+      {
+        "q": "Posso programmare una visita della proprietà online?",
+        "a": "Sì, puoi programmare facilmente una visita tramite il nostro sistema di prenotazione online o contattando direttamente i nostri agenti."
+      },
+      {
+        "q": "Offrite piani di pagamento?",
+        "a": "Forniamo opzioni di pagamento flessibili e soluzioni di finanziamento su misura per le tue esigenze finanziarie."
+      },
+      {
+        "q": "È un buon momento per investire nel settore immobiliare?",
+        "a": "Con le attuali tendenze del mercato e l'apprezzamento delle proprietà, è un momento eccellente per investimenti a lungo termine."
+      }
+    ],
+    "viewAll": "Vedi Tutte le FAQ"
+  },
+  "aboutPage": {
+    "visionTitle": "La Nostra Visione",
+    "visionText": "Ridefinire il settore immobiliare di lusso in Egitto curando un portafoglio esclusivo di proprietà straordinarie. Ci sforziamo di elevare lo standard di vita, offrendo eleganza ineguagliabile e un'esperienza di vita su misura per la nostra stimata clientela.",
+    "missionTitle": "La Nostra Missione",
+    "missionText": "Ci dedichiamo a fornire un servizio di prim'ordine e personalizzato che supera le aspettative. Combinando una profonda esperienza di mercato con un'integrità senza compromessi, guidiamo i nostri clienti verso investimenti eccezionali e le case dei loro sogni.",
+    "journeyTitle": "La Nostra Eredità",
+    "journeyText": "Nata dalla passione per la genialità architettonica e la vita raffinata, The Rook Real Estate Investment si è evoluta nella principale boutique immobiliare di lusso della regione. Il nostro viaggio è definito da un impegno per l'eccellenza, abbinando acquirenti esigenti a proprietà veramente magnifiche.",
+    "offerTitle": "Servizi Esclusivi",
+    "offers": {
+      "sales": {
+        "title": "Acquisizioni di Lusso",
+        "text": "Scopri una collezione meticolosamente curata delle tenute, attici e capolavori architettonici più prestigiosi dell'Egitto."
+      },
+      "rentals": {
+        "title": "Locazioni Premium",
+        "text": "Vivi l'esperienza dell'élite con il nostro portafoglio di proprietà in affitto di fascia alta, che offrono comfort e raffinatezza senza pari."
+      },
+      "investment": {
+        "title": "Ricchezza Strategica",
+        "text": "Sblocca rendimenti eccezionali attraverso opportunità di investimento esclusive, guidate dalla nostra profonda conoscenza del mercato del lusso."
+      }
+    },
+    "ctaTitle": "Vivi lo Straordinario",
+    "ctaSubtitle": "Connettiti con i nostri consulenti d'élite per iniziare il tuo viaggio verso una vita di lusso ineguagliabile.",
+    "contactBtn": "Contattaci"
+  },
+  "projects": {
+    "title": "Esplora i Progetti",
+    "subtitle": "Sfoglia progetti residenziali curati di sviluppatori fidati in tutte le destinazioni più promettenti dell'Egitto.",
+    "loading": "Caricamento progetti...",
+    "error": "Impossibile caricare i progetti.",
+    "tryAgain": "Riprova",
+    "noResults": "Nessun progetto trovato.",
+    "noLocation": "Posizione non elencata",
+    "location": "Posizione",
+    "units": "Unità",
+    "countLabel": "progetti disponibili",
+    "developedBy": "Sviluppato da",
+    "noDeveloper": "Sviluppatore non elencato",
+    "unitsAvailable": "unità disponibili",
+    "viewDetails": "Vedi Dettagli",
+    "showMore": "Mostra di Più",
+    "loadingMore": "Caricamento...",
+    "allLoaded": "Tutti i progetti caricati.",
+    "filters": {
+      "needsFinishing": "Da rifinire",
+      "semiFinished": "Semi rifinito",
+      "fullyFinished": "Completamente rifinito",
+      "sortName": "Nome",
+      "sortPrice": "Prezzo",
+      "sortDelivery": "Data di consegna",
+      "sortNewest": "Più recenti",
+      "invalidPrice": "Inserisci un prezzo valido.",
+      "priceOrderError": "Il prezzo minimo non può superare il prezzo massimo.",
+      "dateOrderError": "La data iniziale non può essere successiva alla data finale.",
+      "allLocations": "Tutte le posizioni",
+      "allDevelopers": "Tutti gli sviluppatori",
+      "allProjectTypes": "Tutti i tipi di progetto",
+      "allFacilities": "Tutte le strutture",
+      "minPrice": "Prezzo minimo",
+      "maxPrice": "Prezzo massimo",
+      "anyCurrency": "Qualsiasi valuta",
+      "anyFinishing": "Qualsiasi rifinitura",
+      "furnitureIncluded": "Arredamento incluso",
+      "featuredOnly": "Solo in evidenza",
+      "deliveryFrom": "Consegna da",
+      "deliveryTo": "Consegna a",
+      "ascending": "Crescente",
+      "descending": "Decrescente",
+      "searchPlaceholder": "Cerca per nome o descrizione del progetto",
+      "searching": "Ricerca...",
+      "apply": "Cerca",
+      "filters": "Filtri",
+      "clear": "Cancella filtri",
+      "noFilteredResults": "Nessun progetto corrisponde a questi filtri.",
+      "close": "Chiudi filtri",
+      "title": "Filtra Progetti",
+      "active": "filtri attivi",
+      "searchKeywords": "Parole chiave",
+      "locationDeveloper": "Posizione e sviluppatore",
+      "projectDetails": "Dettagli progetto",
+      "priceRange": "Fascia di prezzo",
+      "finishingAndFlags": "Rifinitura e opzioni",
+      "delivery": "Consegna",
+      "sorting": "Ordinamento",
+      "sortBy": "Ordina per",
+      "sortDirection": "Direzione"
+    }
+  },
+  "projectDetails": {
+    "backToProjects": "Torna ai Progetti",
+    "loading": "Caricamento progetto...",
+    "notFound": "Progetto non trovato.",
+    "developerSubtitle": "Sviluppatore del progetto",
+    "getInTouch": "Mettiti in Contatto",
+    "fullName": "Nome Completo",
+    "phoneNumber": "Numero di Telefono",
+    "email": "Email",
+    "message": "Messaggio",
+    "agreeTerms": "Accetto i Termini di Utilizzo e l'Informativa sulla Privacy",
+    "terms": "Termini di Utilizzo",
+    "privacy": "Informativa sulla Privacy",
+    "bookVisit": "Prenota una Visita",
+    "requestSent": "Richiesta Inviata!",
+    "requestSentSubtitle": "Il nostro team si metterà in contatto con te a breve.",
+    "sendAnother": "Invia un'altra richiesta",
+    "description": "Descrizione",
+    "noDescription": "Nessuna descrizione disponibile.",
+    "priceLists": "Listini Prezzi",
+    "noPriceLists": "Nessun listino prezzi disponibile.",
+    "viewPriceList": "Vedi listino prezzi",
+    "facilities": "Servizi (Facilities)",
+    "overview": "Panoramica",
+    "featuresServices": "Caratteristiche e Servizi",
+    "reviews": "Recensioni",
+    "commentsLater": "La sezione commenti verrà aggiunta in seguito",
+    "propertyType": "Tipo di Proprietà",
+    "bedrooms": "Camere da Letto",
+    "bathrooms": "Bagni",
+    "kitchens": "Cucine",
+    "areaSize": "Dimensione dell'Area",
+    "floor": "Piano",
+    "paymentPlans": "Piani di Pagamento",
+    "installment": "Rata",
+    "cash": "Contanti",
+    "months": "Mesi",
+    "downPayment": "Anticipo",
+    "commission": "Commissione",
+    "title": "Dettagli della Proprietà",
+    "price": "Prezzo",
+    "pricing": "Prezzi",
+    "projectTypes": "Tipi di progetto",
+    "availableUnits": "Unità disponibili",
+    "unit": "Unità",
+    "moreUnits": "altre unità disponibili",
+    "deliveryDate": "Data di consegna",
+    "finishingStatus": "Stato delle finiture",
+    "furnitureIncluded": "Arredamento incluso",
+    "featured": "In evidenza",
+    "yes": "Sì",
+    "no": "No",
+    "notSpecified": "Non specificato",
+    "needsFinishing": "Da rifinire",
+    "semiFinished": "Semi rifinito",
+    "fullyFinished": "Completamente rifinito",
+    "from": "Da",
+    "to": "a",
+    "priceOnRequest": "Prezzo su richiesta",
+    "noPaymentPlans": "Piani di pagamento disponibili su richiesta.",
+    "duration": "Durata",
+    "cashPayment": "Pagamento in contanti"
+  },
+  "contactPage": {
+    "title": "Mettiti in Contatto con The Rook Real Estate Investment",
+    "subtitle": "Benvenuto nella pagina dei contatti di The Rook Real Estate Investment. Siamo qui per assisterti con qualsiasi domanda, richiesta o feedback tu possa avere.",
+    "info": {
+      "email": "Email",
+      "phone": "Telefono",
+      "address": "Sede Centrale",
+      "follow": "Seguici"
+    },
+    "form": {
+      "title": "Connettiamoci",
+      "subtitle": "Utilizza il modulo sottostante per metterti in contatto con The Rook Real Estate Investment.",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "email": "Email",
+      "phone": "Telefono",
+      "inquiryType": "Tipo di Richiesta",
+      "source": "Come Hai Saputo di Noi?",
+      "message": "Messaggio",
+      "agreed": "Accetto i Termini di Utilizzo e l'Informativa sulla Privacy",
+      "submit": "Invia Richiesta",
+      "sending": "Invio...",
+      "success": "La tua richiesta è stata inviata con successo! Ti risponderemo presto.",
+      "errorAgreed": "Si prega di accettare i Termini di Utilizzo e l'Informativa sulla Privacy.",
+      "errorRequired": "Si prega di compilare tutti i campi obbligatori.",
+      "placeholderFirstName": "Inserisci il Nome",
+      "placeholderLastName": "Inserisci il Cognome",
+      "placeholderEmail": "Inserisci la tua Email",
+      "placeholderPhone": "Inserisci il Numero di Telefono",
+      "placeholderMessage": "Inserisci qui il tuo Messaggio..",
+      "inquiryOptions": {
+        "buy": "Comprare una Proprietà",
+        "sell": "Vendere una Proprietà",
+        "rent": "Affittare una Proprietà",
+        "investment": "Richiesta di Investimento",
+        "other": "Altro"
+      },
+      "sourceOptions": {
+        "social": "Social Media",
+        "referral": "Amico / Passaparola",
+        "search": "Motore di Ricerca",
+        "ads": "Pubblicità",
+        "seo": "SEO",
+        "other": "Altro"
+      }
+    },
+    "cta": {
+      "title": "Inizia Oggi il Tuo Viaggio Immobiliare",
+      "subtitle": "La proprietà dei tuoi sogni è a portata di clic.",
+      "btn": "Esplora le Proprietà"
+    }
+  },
+  "propertiesPage": {
+    "hero": {
+      "title": "Trova la Proprietà dei Tuoi Sogni",
+      "subtitle": "Esplora la nostra selezione curata di proprietà, ognuna offre una storia unica e la possibilità di ridefinire la tua vita."
+    },
+    "grid": {
+      "title": "Tutte le Proprietà",
+      "filter": "Mostra Filtri",
+      "loading": "Caricamento...",
+      "showing": "Visualizzazione di",
+      "results": "risultati",
+      "noResults": "Nessuna proprietà trovata",
+      "adjustFilters": "Prova a modificare i filtri di ricerca.",
+      "loadError": "Impossibile caricare le proprietà. Riprova.",
+      "findProperty": "Trova Proprietà"
+    },
+    "pagination": {
+      "prev": "Prec",
+      "next": "Succ",
+      "page": "Pagina",
+      "of": "di"
+    },
+    "sidebar": {
+      "title": "Filtri",
+      "searchKeywords": "Parole Chiave di Ricerca",
+      "placeholderSearch": "es. Skyline...",
+      "country": "Paese",
+      "placeholderCountry": "es. Egitto...",
+      "location": "Posizione",
+      "status": "Stato della Proprietà",
+      "propertyType": "Tipo di Proprietà",
+      "any": "Qualsiasi",
+      "apartment": "Appartamento",
+      "villa": "Villa",
+      "townhouse": "Villetta a Schiera",
+      "studio": "Monolocale",
+      "penthouse": "Attico",
+      "category": "Categoria",
+      "buy": "Acquista",
+      "rent": "Affitta",
+      "priceRange": "Fascia di Prezzo",
+      "min": "Min",
+      "max": "Max",
+      "resetAll": "Ripristina Tutto",
+      "apply": "Applica Filtri",
+      "currency": "Valuta",
+      "allCategories": "Tutte le Categorie",
+      "chalet": "Chalet"
+    }
+  },
+  "propertyCard": {
+    "status": {
+      "sale": "Vendita",
+      "rent": "Affitto",
+      "sold": "Venduto",
+      "primary": "Nuovo Costruito",
+      "resale": "Rivendita",
+      "featured": "In Evidenza"
+    },
+    "details": {
+      "bedroom": "Camera da Letto",
+      "bathroom": "Bagno",
+      "viewDetails": "Vedi Dettagli",
+      "area": "Area",
+      "instalment": "Rata",
+      "cash": "Contanti",
+      "saveProperty": "Salva proprietà",
+      "size": "Dimensione"
+    },
+    "fallback": {
+      "untitled": "Unità Senza Titolo",
+      "unit": "Unità",
+      "unknownLocation": "Posizione Sconosciuta"
+    }
+  },
+  "faqPage": {
+    "tag": "SUPPORTO",
+    "title": "Domande Frequenti",
+    "subtitle": "Tutto quello che c'è da sapere sull'acquisto e la vendita con The Rook Real Estate Investment.",
+    "loading": "Caricamento domande...",
+    "noQuestions": "Nessuna FAQ disponibile al momento. Torna presto!"
+  },
+  "bestListings": {
+    "title": "Migliori Annunci Disponibili",
+    "accent": "migliori",
+    "noListings": "Nessun annuncio trovato.",
+    "loadMore": "Carica Altri Annunci"
+  },
+  "listPropertyPage": {
+    "title": "Aggiungi Proprietà",
+    "basicInfo": "Informazioni di Base",
+    "propertyTitle": "Titolo della Proprietà",
+    "price": "Prezzo",
+    "unitSize": "Dimensione dell'Unità",
+    "saleOrRent": "Tipo di Annuncio",
+    "rooms": "Stanze",
+    "propertyDescription": "Descrizione della Proprietà",
+    "address": "Indirizzo",
+    "city": "Città",
+    "propertyMedia": "File Multimediali della Proprietà",
+    "propertyImages": "Immagini della Proprietà",
+    "uploadImages": "Carica immagini",
+    "browseFiles": "Sfoglia File",
+    "clientDetails": "Dettagli del Cliente"
+  },
+  "finestServices": {
+    "title": "I Migliori Servizi",
+    "subtitle": "Sperimenta un servizio immobiliare raffinato basato su posizioni privilegiate, guida fidata e opportunità accuratamente selezionate in tutto l'Egitto.",
+    "stats": {
+      "currentListingVolume": "VOLUME ATTUALE DEGLI ANNUNCI",
+      "totalSold": "TOTALE VENDUTO 2020 - 2024",
+      "lifetimeSales": "VOLUME DELLE VENDITE A VITA"
+    }
+  }
+}

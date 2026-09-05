@@ -7,10 +7,10 @@ import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { getPaymentPlanType } from '@/lib/utils';
 
 import PropertyCard from '@/components/PropertyCard';
-import { getUnitsFiltered } from '@/lib/api/units';
+
 import { getUnitOutsides } from '@/lib/api/unitOutsides';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
-import { getLocations, Location } from '@/lib/api/locations';
+
 import { ChevronLeft, ChevronRight, Filter, X, ChevronDown } from 'lucide-react';
 import './properties.css';
 
@@ -44,8 +44,6 @@ export interface FilterState {
   minPrice: string;
   maxPrice: string;
   currency: string;
-  unitType: string;   // Buy listings only
-  status: string;     // primary/resale
   locationId: string;
   country: string;
 }
@@ -59,7 +57,7 @@ export default function PropertiesPage() {
 }
 
 function PropertiesPageContent() {
-  const { t, getLocalized, language } = useLanguage();
+  const { t, getLocalized } = useLanguage();
   const searchParams = useSearchParams();
   const [units, setUnits] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,16 +65,10 @@ function PropertiesPageContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [filters, setFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', unitType: '', status: '', locationId: '', country: '' });
-  const [draftFilters, setDraftFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', unitType: '', status: '', locationId: '', country: '' });
+  const [filters, setFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', locationId: '', country: '' });
+  const [draftFilters, setDraftFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', locationId: '', country: '' });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [locations, setLocations] = useState<Location[]>([]);
 
-  useEffect(() => {
-    getLocations(1).then(data => {
-      setLocations(data.items || []);
-    }).catch(err => console.error('[Properties] Failed to load locations:', err));
-  }, []);
 
   const openSidebar = () => {
     setDraftFilters(filters);
@@ -89,7 +81,7 @@ function PropertiesPageContent() {
   };
 
   const clearFilters = () => {
-    const empty = { searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', unitType: '', status: '', locationId: '', country: '' };
+    const empty = { searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', locationId: '', country: '' };
     setDraftFilters(empty);
     handleSearch(empty);
     setIsSidebarOpen(false);
@@ -101,134 +93,42 @@ function PropertiesPageContent() {
     try {
       // Reset pagination if needed (usually handled by calling fetchUnits(1, ...))
       
-      const normalizedUnitType = f.unitType?.toLowerCase();
-      const isBuyOnly = normalizedUnitType === 'buy';
-      const isResaleOnly = f.status?.toLowerCase() === 'resale';
-      const isPrimaryOnly = f.status?.toLowerCase() === 'primary';
-      // const isAny = !f.status;
+      const propertyTypeName = f.propertyType ? PROPERTY_TYPE_MAP[f.propertyType] || f.propertyType : undefined;
+      const data = await getUnitOutsides({
+        SearchTerm: f.searchTerm || undefined,
+        MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
+        MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
+        Currency: f.currency || undefined,
+        City: f.location || undefined,
+        Country: f.country || undefined,
+        PropertyType: propertyTypeName || undefined,
+        PageNumber: page,
+        PageSize: PROPERTY_PAGE_SIZE, 
+      });
+      
+      const items = Array.isArray(data) ? data : (data.items || []);
+      let mappedUnits = items.map((u: any) => ({
+        ...u,
+        isResale: true,
+        mappedId: `out-${u.id}`,
+        resolvedName: typeof u.name === 'string' ? u.name : (u.name?.en || u.name?.de || u.name?.it || 'Unit'),
+        locationName: `${u.city || ''}${u.city && u.country ? ', ' : ''}${u.country || ''}`,
+        unitStatus: 'Resale',
+        unitType: u.type,
+        propertyTypeLabel: PROPERTY_TYPE_LABEL[String(u.propertyType)] || String(u.propertyType || 'Unit'),
+        imageUrls: u.images?.sort((a: any, b: any) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0)).map((img: any) => img.imageUrl) || []
+      }));
 
-      if (isResaleOnly) {
-        // --- RESALE ONLY ---
-        const propertyTypeName = f.propertyType ? PROPERTY_TYPE_MAP[f.propertyType] || f.propertyType : undefined;
-        const data = await getUnitOutsides({
-          SearchTerm: f.searchTerm || undefined,
-          MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
-          MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
-          Currency: f.currency || undefined,
-          City: f.location || undefined,
-          Country: f.country || undefined,
-          PropertyType: propertyTypeName || undefined,
-          PageNumber: page,
-          PageSize: PROPERTY_PAGE_SIZE, 
-        });
-        
-        const items = Array.isArray(data) ? data : (data.items || []);
-        let mappedUnits = items.map((u: any) => ({
-          ...u,
-          isResale: true,
-          mappedId: `out-${u.id}`,
-          resolvedName: typeof u.name === 'string' ? u.name : (u.name?.en || u.name?.de || u.name?.pl || 'Unit'),
-          locationName: `${u.city || ''}${u.city && u.country ? ', ' : ''}${u.country || ''}`,
-          unitStatus: 'Resale',
-          unitType: u.type,
-          propertyTypeLabel: PROPERTY_TYPE_LABEL[String(u.propertyType)] || String(u.propertyType || 'Unit'),
-          imageUrls: u.images?.sort((a: any, b: any) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0)).map((img: any) => img.imageUrl) || []
-        }));
-
-        // Frontend filter fallback
-        if (f.currency) {
-          mappedUnits = mappedUnits.filter((u: any) => 
-            (u.currencyCode || u.currency || 'EGP').toUpperCase() === f.currency.toUpperCase()
-          );
-        }
-
-        setUnits(mappedUnits);
-        setTotalPages(data.totalPages || 1);
-        setTotalCount(data.totalCount || items.length);
-      } else if (isPrimaryOnly || isBuyOnly) {
-        // --- BUY / PRIMARY UNITS ---
-        const data = await getUnitsFiltered({
-          SearchTerm: f.searchTerm || undefined,
-          UnitType: 'Buy',
-          MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
-          MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
-          Currency: f.currency || undefined,
-          PropertyType: f.propertyType || undefined,
-          Status: isPrimaryOnly ? 'primary' : undefined,
-          LocationId: f.locationId ? Number(f.locationId) : undefined,
-          PageNumber: page,
-          PageSize: PROPERTY_PAGE_SIZE,
-          Language: language,
-        });
-        
-        let finalItems = data.items || [];
-        if (f.currency) {
-          finalItems = finalItems.filter((u: any) => 
-            (u.currencyCode || u.currency || 'EGP').toUpperCase() === f.currency.toUpperCase()
-          );
-        }
-        setUnits(finalItems);
-        setTotalPages(data.totalPages || 1);
-        setTotalCount(data.totalCount);
-      } else {
-        // --- ANY (BOTH PRIMARY & RESALE) ---
-        // Fetch 3 from each to make a total of 6? Or 6 from each? 
-        // Let's do 6 from each to ensure we have enough data.
-        const [primaryData, resaleData] = await Promise.all([
-          getUnitsFiltered({
-            SearchTerm: f.searchTerm || undefined,
-            UnitType: 'Buy',
-            MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
-            MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
-            Currency: f.currency || undefined,
-            PropertyType: f.propertyType || undefined,
-            Status: 'primary',
-            LocationId: f.locationId ? Number(f.locationId) : undefined,
-            PageNumber: page,
-            PageSize: PROPERTY_PAGE_SIZE,
-            Language: language,
-          }),
-          getUnitOutsides({
-            SearchTerm: f.searchTerm || undefined,
-            MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
-            MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
-            Currency: f.currency || undefined,
-            City: f.location || undefined,
-            Country: f.country || undefined,
-            PropertyType: f.propertyType ? PROPERTY_TYPE_MAP[f.propertyType] || f.propertyType : undefined,
-            PageNumber: page,
-            PageSize: PROPERTY_PAGE_SIZE,
-          })
-        ]);
-
-        const pItems = primaryData.items || [];
-        const rItems = Array.isArray(resaleData) ? resaleData : (resaleData.items || []);
-        
-        const mappedResale = rItems.map((u: any) => ({
-          ...u,
-          isResale: true,
-          mappedId: `out-${u.id}`,
-          resolvedName: typeof u.name === 'string' ? u.name : (u.name?.en || u.name?.de || u.name?.pl || 'Unit'),
-          locationName: `${u.city || ''}${u.city && u.country ? ', ' : ''}${u.country || ''}`,
-          unitStatus: 'Resale',
-          unitType: u.type,
-          propertyTypeLabel: PROPERTY_TYPE_LABEL[String(u.propertyType)] || String(u.propertyType || 'Unit'),
-          imageUrls: u.images?.sort((a: any, b: any) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0)).map((img: any) => img.imageUrl) || []
-        }));
-
-        let combined = [...pItems, ...mappedResale];
-        
-        // Frontend filter fallback
-        if (f.currency) {
-          combined = combined.filter((u: any) => 
-            (u.currencyCode || u.currency || 'EGP').toUpperCase() === f.currency.toUpperCase()
-          );
-        }
-
-        setUnits(combined);
-        setTotalPages(Math.max(primaryData.totalPages || 1, resaleData.totalPages || 1));
-        setTotalCount((primaryData.totalCount || 0) + (resaleData.totalCount || 0));
+      // Frontend filter fallback
+      if (f.currency) {
+        mappedUnits = mappedUnits.filter((u: any) => 
+          (u.currencyCode || u.currency || 'EGP').toUpperCase() === f.currency.toUpperCase()
+        );
       }
+
+      setUnits(mappedUnits);
+      setTotalPages(data.totalPages || 1);
+      setTotalCount(data.totalCount || items.length);
       setCurrentPage(page);
     } catch (err) {
       setError(t('propertiesPage.grid.loadError'));
@@ -236,7 +136,7 @@ function PropertiesPageContent() {
     } finally {
       setLoading(false);
     }
-  }, [language, t]);
+  }, [t]);
 
   useEffect(() => {
     // Read filters from searchParams
@@ -247,21 +147,14 @@ function PropertiesPageContent() {
       minPrice: searchParams.get('minPrice') || '',
       maxPrice: searchParams.get('maxPrice') || '',
       currency: searchParams.get('currency') || '',
-      unitType: searchParams.get('unitType') || searchParams.get('type') || '', 
-      status: searchParams.get('status') || '',
       locationId: searchParams.get('locationId') || '',
       country: searchParams.get('country') || '',
     };
     
-    // Special case: keep legacy numeric type query support, but never fetch rentals.
-    // If it's a number, it's propertyType.
-    if (initialFilters.unitType === 'Rent') {
-      initialFilters.unitType = '';
-    } else if (initialFilters.unitType === 'Buy') {
-      // correctly assigned
-    } else if (initialFilters.unitType && !isNaN(Number(initialFilters.unitType))) {
-      initialFilters.propertyType = initialFilters.unitType;
-      initialFilters.unitType = '';
+    // Check if propertyType was passed via legacy parameters
+    const legacyType = searchParams.get('type') || searchParams.get('unitType');
+    if (legacyType && !isNaN(Number(legacyType))) {
+      initialFilters.propertyType = legacyType;
     }
 
     setFilters(initialFilters);
@@ -408,48 +301,20 @@ function PropertiesPageContent() {
                 />
               </div>
 
-              {/* Country (Resale Only) */}
-              {draftFilters.status?.toLowerCase() === 'resale' && (
-                <div className="space-y-4">
-                  <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.country') as string}</label>
-                  <input 
-                    type="text" 
-                    placeholder={t('propertiesPage.sidebar.placeholderCountry') as string} 
-                    value={draftFilters.country}
-                    onChange={(e) => setDraftFilters({ ...draftFilters, country: e.target.value })}
-                    onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-                    className="w-full bg-transparent border-b-2 border-brand-divider py-3 text-[16px] text-brand-primary placeholder:text-brand-muted-light focus:outline-none focus:border-brand-secondary transition-colors"
-                  />
-                </div>
-              )}
+              {/* Country */}
+              <div className="space-y-4">
+                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.country') as string}</label>
+                <input 
+                  type="text" 
+                  placeholder={t('propertiesPage.sidebar.placeholderCountry') as string} 
+                  value={draftFilters.country}
+                  onChange={(e) => setDraftFilters({ ...draftFilters, country: e.target.value })}
+                  onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
+                  className="w-full bg-transparent border-b-2 border-brand-divider py-3 text-[16px] text-brand-primary placeholder:text-brand-muted-light focus:outline-none focus:border-brand-secondary transition-colors"
+                />
+              </div>
               
-              {/* Location */}
-              {draftFilters.status?.toLowerCase() !== 'resale' && (
-                <div className="space-y-4">
-                  <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.location') || 'Location'}</label>
-                  <div className="relative">
-                    <select 
-                      value={draftFilters.locationId}
-                      onChange={(e) => {
-                        const locId = e.target.value;
-                        const locName = locations.find(l => l.id.toString() === locId)?.city || '';
-                        setDraftFilters({ ...draftFilters, locationId: locId, location: locName });
-                      }}
-                      className="w-full bg-transparent border-b-2 border-brand-divider py-3 text-[16px] text-brand-primary focus:outline-none focus:border-brand-secondary transition-colors appearance-none cursor-pointer"
-                    >
-                      <option value="" className="text-gray-500">{t('propertiesPage.sidebar.any') as string}</option>
-                      {locations.map(loc => (
-                    <option key={loc.id} value={loc.id} className="text-brand-primary">
-                          {loc.city}{loc.district && loc.district !== '-' ? ` - ${loc.district}` : ''}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                      <ChevronDown size={18} />
-                    </div>
-                  </div>
-                </div>
-              )}
+
 
               {/* Property Type */}
               <div className="space-y-4">
@@ -474,25 +339,7 @@ function PropertiesPageContent() {
                 </div>
               </div>
 
-              {/* Status (Primary/Resale) */}
-              <div className="space-y-4">
-                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.status') || 'Property Status'}</label>
-                <div className="flex flex-wrap gap-3">
-                  {[
-                    { value: '', label: t('propertiesPage.sidebar.any') as string },
-                    { value: 'primary', label: t('header.primary') || 'Primary' },
-                    { value: 'resale', label: t('header.resale') || 'Resale' },
-                  ].map(status => (
-                    <button 
-                      key={status.value}
-                      onClick={() => setDraftFilters({ ...draftFilters, status: status.value })}
-                      className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.status === status.value ? 'bg-brand-secondary text-white border-brand-secondary shadow-md' : 'bg-white text-brand-primary border-brand-divider hover:border-brand-secondary hover:text-brand-secondary'}`}
-                    >
-                      {status.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+
 
               {/* Price Range */}
               <div className="space-y-4">
@@ -535,6 +382,7 @@ function PropertiesPageContent() {
                     <option value="EGP" className="text-brand-primary">EGP</option>
                     <option value="USD" className="text-brand-primary">USD</option>
                     <option value="EUR" className="text-brand-primary">EUR</option>
+                    <option value="GBP" className="text-brand-primary">GBP</option>
                   </select>
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                     <ChevronDown size={18} />

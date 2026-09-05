@@ -47,14 +47,15 @@ const Footer = () => {
             </li>
             <li><Link href={`/${language}/about`} className="hover:text-brand-secondary hover:translate-x-1 inline-block transition-all">{t('header.about')}</Link></li>
             <li>
-              <Link href={`/${language}/properties`} className="flex items-center gap-2 hover:text-brand-secondary hover:translate-x-1 transition-all w-fit">
-                {t('header.buy')} 
+              <Link href={`/${language}/properties?unitType=Buy&status=resale`} className="flex items-center gap-2 hover:text-brand-secondary hover:translate-x-1 transition-all w-fit">
+                {t('header.resale')} 
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                 </svg>
               </Link>
             </li>
             <li><Link href={`/${language}/blogs`} className="hover:text-brand-secondary hover:translate-x-1 inline-block transition-all">{t('header.blogs')}</Link></li>
+            <li><Link href={`/${language}/faq`} className="hover:text-brand-secondary hover:translate-x-1 inline-block transition-all">{t('header.faq')}</Link></li>
             <li><Link href={`/${language}/contact`} className="hover:text-brand-secondary hover:translate-x-1 inline-block transition-all">{t('header.contact')}</Link></li>
           </ul>
         </div>

@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { DollarSign } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 import AddProjectModal from '@/components/admin/AddProjectModal';
 import DeleteProjectModal from '@/components/admin/DeleteProjectModal';
 import ProjectDetailsModal from '@/components/admin/ProjectDetailsModal';
-import ProjectPriceListsModal from '@/components/admin/ProjectPriceListsModal';
+import ProjectPaymentPlansModal from '@/components/admin/ProjectPaymentPlansModal';
 import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 
 export default function ProjectsPage() {
@@ -28,8 +28,8 @@ export default function ProjectsPage() {
   const [deletingName, setDeletingName] = useState('');
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [viewingId, setViewingId] = useState<number | null>(null);
-  const [isPriceListsModalOpen, setIsPriceListsModalOpen] = useState(false);
-  const [priceListsProject, setPriceListsProject] = useState<Project | null>(null);
+  const [isPaymentPlansModalOpen, setIsPaymentPlansModalOpen] = useState(false);
+  const [paymentPlansProject, setPaymentPlansProject] = useState<Project | null>(null);
 
   const fetchProjects = useCallback(async (page = 1) => {
     setIsLoading(true);
@@ -73,9 +73,9 @@ export default function ProjectsPage() {
     setIsDeleteModalOpen(true);
   };
 
-  const handlePriceLists = (project: Project) => {
-    setPriceListsProject(project);
-    setIsPriceListsModalOpen(true);
+  const handlePaymentPlans = (project: Project) => {
+    setPaymentPlansProject(project);
+    setIsPaymentPlansModalOpen(true);
   };
 
   const handleSuccess = () => fetchProjects(currentPage);
@@ -245,11 +245,11 @@ export default function ProjectsPage() {
                             />
                           </button>
                           <button
-                            onClick={() => handlePriceLists(project)}
+                            onClick={() => handlePaymentPlans(project)}
                             className="p-2.5 bg-gray-50 hover:bg-emerald-600 text-gray-500 hover:text-white rounded-xl transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md"
-                            title="Price Lists"
+                            title="Payment Plans"
                           >
-                            <DollarSign size={20} strokeWidth={2.5} />
+                            <CreditCard size={20} strokeWidth={2.5} />
                           </button>
                           <button 
                             onClick={() => handleDelete(project)} 
@@ -319,12 +319,13 @@ export default function ProjectsPage() {
         onClose={() => setIsDetailsModalOpen(false)}
         projectId={viewingId}
         onUpdate={handleSuccess}
+        onManagePaymentPlans={handlePaymentPlans}
       />
 
-      <ProjectPriceListsModal
-        isOpen={isPriceListsModalOpen}
-        onClose={() => setIsPriceListsModalOpen(false)}
-        project={priceListsProject}
+      <ProjectPaymentPlansModal
+        isOpen={isPaymentPlansModalOpen}
+        onClose={() => setIsPaymentPlansModalOpen(false)}
+        project={paymentPlansProject}
       />
     </div>
   );

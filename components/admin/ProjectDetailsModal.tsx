@@ -4,19 +4,24 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import Image from 'next/image';
+import { CreditCard } from 'lucide-react';
 import { getProjectById, uploadProjectImages, deleteProjectImage, resolveProjectImageUrl, Project } from '@/lib/api/projects';
+import { getProjectPaymentPlans, ProjectPaymentPlan } from '@/lib/api/projectPaymentPlans';
 
 interface ProjectDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   projectId: number | null;
   onUpdate?: () => void;
+  onManagePaymentPlans?: (project: Project) => void;
 }
 
-export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpdate }: ProjectDetailsModalProps) {
+export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpdate, onManagePaymentPlans }: ProjectDetailsModalProps) {
   useBodyScrollLock(isOpen);
   useEscapeKey(onClose, isOpen);
   const [project, setProject] = useState<Project | null>(null);
+  const [paymentPlans, setPaymentPlans] = useState<ProjectPaymentPlan[]>([]);
+  const [isPaymentPlansLoading, setIsPaymentPlansLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -28,11 +33,15 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
     try {
       const data = await getProjectById(projectId);
       setProject(data);
+      setIsPaymentPlansLoading(true);
+      const plansPage = await getProjectPaymentPlans(projectId, { pageNumber: 1, pageSize: 50 });
+      setPaymentPlans(plansPage.items);
     } catch (err) {
       console.error('[ProjectDetailsModal]', err);
       setError('Failed to load project details.');
     } finally {
       setIsLoading(false);
+      setIsPaymentPlansLoading(false);
     }
   }, [projectId]);
 
@@ -81,6 +90,8 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
   };
 
   const formatDate = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const formatPaymentAmount = (value: number) => `EUR ${value.toLocaleString()}`;
+  const getPaymentStatus = (status: string | number) => String(status).toLowerCase() === 'sold' || status === 1 ? 'Sold' : 'Approved';
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
@@ -132,6 +143,70 @@ export default function ProjectDetailsModal({ isOpen, onClose, projectId, onUpda
                   <p className="text-brand-primary text-[15px] leading-relaxed">{project.description}</p>
                 </div>
               )}
+
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-[18px] font-bold text-brand-primary">
+                    Payment Plans <span className="text-[14px] font-normal text-gray-400">({paymentPlans.length})</span>
+                  </h4>
+                  {onManagePaymentPlans && (
+                    <button
+                      type="button"
+                      onClick={() => onManagePaymentPlans(project)}
+                      className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-[13px] font-bold text-brand-primary transition-colors hover:bg-gray-50"
+                    >
+                      <CreditCard size={15} />
+                      Manage Plans
+                    </button>
+                  )}
+                </div>
+
+                {isPaymentPlansLoading ? (
+                  <div className="flex items-center justify-center rounded-2xl bg-gray-50 py-8">
+                    <div className="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : paymentPlans.length === 0 ? (
+                  <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-gray-400">
+                    <p className="text-[14px] font-semibold">No project payment plans yet.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {paymentPlans.map((plan) => {
+                      const status = getPaymentStatus(plan.status);
+                      const isCash = String(plan.paymentType).toLowerCase() === 'cash';
+
+                      return (
+                        <div key={plan.id} className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+                          <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+                            <div>
+                              <p className="text-[11px] font-bold uppercase text-gray-400">Type</p>
+                              <p className="mt-1 text-[14px] font-black text-brand-primary">{plan.paymentType}</p>
+                            </div>
+                            <div>
+                              <p className="text-[11px] font-bold uppercase text-gray-400">Down Payment</p>
+                              <p className="mt-1 text-[14px] font-black text-brand-primary">{formatPaymentAmount(plan.installmentDownPayment)}</p>
+                            </div>
+                            <div>
+                              <p className="text-[11px] font-bold uppercase text-gray-400">Duration</p>
+                              <p className="mt-1 text-[14px] font-black text-brand-primary">{isCash ? 'Cash' : `${plan.installmentMonths} mo`}</p>
+                            </div>
+                            <div>
+                              <p className="text-[11px] font-bold uppercase text-gray-400">Commission</p>
+                              <p className="mt-1 text-[14px] font-black text-brand-primary">{plan.commissionRate === null ? '-' : `${plan.commissionRate}%`}</p>
+                            </div>
+                            <div>
+                              <p className="text-[11px] font-bold uppercase text-gray-400">Status</p>
+                              <span className={`mt-1 inline-flex rounded-full px-3 py-1 text-[11px] font-black ${status === 'Approved' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
+                                {status}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
 
               {/* Images */}
               <div>

@@ -17,8 +17,8 @@ interface AddUnitModalProps {
 }
 
 const EMPTY_FORM = {
-  name: { en: '', de: '', pl: '' },
-  description: { en: '', de: '', pl: '' },
+  name: { en: '', de: '', it: '' },
+  description: { en: '', de: '', it: '' },
   price: '' as number | '',
   propertyType: 0,
   noBathRoom: '',
@@ -51,7 +51,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
   const [isAddingService, setIsAddingService] = useState(false);
-  const [newServiceName, setNewServiceName] = useState({ en: '', de: '', pl: '' });
+  const [newServiceName, setNewServiceName] = useState({ en: '', de: '', it: '' });
   const [isSubmittingQuick, setIsSubmittingQuick] = useState(false);
 
   const isEditMode = !!editData;
@@ -116,7 +116,7 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
           const [enData, deData, plData] = await Promise.all([
             getUnitById(editData.id, 'en'),
             getUnitById(editData.id, 'de'),
-            getUnitById(editData.id, 'pl')
+            getUnitById(editData.id, 'it')
           ]);
 
           const [detail, extraPlans] = await Promise.all([
@@ -129,12 +129,12 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
             name: {
               en: (enData.Name || enData.name || '') as string,
               de: (deData.Name || deData.name || '') as string,
-              pl: (plData.Name || plData.name || '') as string
+              it: (plData.Name || plData.name || '') as string
             },
             description: {
               en: (enData.Description || enData.description || '') as string,
               de: (deData.Description || deData.description || '') as string,
-              pl: (plData.Description || plData.description || '') as string
+              it: (plData.Description || plData.description || '') as string
             },
             price: enData.Price || (enData.price as number) || 0,
             propertyType: getPropertyTypeValue(enData.PropertyType || (enData.propertyType as string) || ''),
@@ -505,21 +505,21 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 </div>
               </div>
 
-              {/* Polish */}
+              {/* Italian */}
               <div className="bg-white border border-gray-100 rounded-[32px] p-8 shadow-sm space-y-6 transition-all hover:shadow-md">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-[10px] font-black uppercase tracking-wider">Polish</span>
-                  <div className="h-px flex-1 bg-red-50"></div>
+                  <span className="px-3 py-1 bg-green-50 text-green-700 rounded-lg text-[10px] font-black uppercase tracking-wider">Italian</span>
+                  <div className="h-px flex-1 bg-green-50"></div>
                 </div>
                 <div className="space-y-6">
                   <div className="space-y-3">
-                    <label className="text-brand-primary font-bold text-[15px]">Nazwa Jednostki (PL)</label>
-                    <input type="text" value={form.name.pl || ''} onChange={set('name', 'pl')} placeholder="Nazwa po polsku"
+                    <label className="text-brand-primary font-bold text-[15px]">Unit Name (IT)</label>
+                    <input type="text" value={form.name.it || ''} onChange={set('name', 'it')} placeholder="Nome in italiano"
                       className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                   <div className="space-y-3">
-                    <label className="text-brand-primary font-bold text-[15px]">Opis (PL)</label>
-                    <textarea value={form.description.pl || ''} onChange={set('description', 'pl')} placeholder="Opis po polsku..." rows={4}
+                    <label className="text-brand-primary font-bold text-[15px]">Description (IT)</label>
+                    <textarea value={form.description.it || ''} onChange={set('description', 'it')} placeholder="Descrizione in italiano..." rows={4}
                       className="w-full border border-gray-100 bg-gray-50/30 rounded-2xl px-6 py-4 focus:outline-none focus:ring-4 focus:ring-brand-primary/5 text-brand-primary placeholder-gray-400 resize-none font-medium transition-all focus:bg-white focus:border-brand-primary/20" />
                   </div>
                 </div>
@@ -730,8 +730,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                     <input
                       placeholder="PL Name"
                       className="text-xs p-2 rounded border border-gray-200 outline-none focus:ring-1 focus:ring-brand-primary/20"
-                      value={newServiceName.pl}
-                      onChange={e => setNewServiceName({...newServiceName, pl: e.target.value})}
+                      value={newServiceName.it}
+                      onChange={e => setNewServiceName({...newServiceName, it: e.target.value})}
                     />
                   </div>
                   <button
@@ -740,8 +740,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                     onClick={async () => {
                       setIsSubmittingQuick(true);
                       try {
-                        const newId = await createService({ name: newServiceName });
-                        setNewServiceName({ en: '', de: '', pl: '' });
+                        const newId = await createService({ name: newServiceName, icon: null });
+                        setNewServiceName({ en: '', de: '', it: '' });
                         setIsAddingService(false);
                         await fetchData();
 
@@ -769,8 +769,8 @@ export default function AddUnitModal({ isOpen, onClose, onSuccess, projectId, ed
                 {services.map((ser) => {
                     let serName = ser.name;
                     if (typeof ser.name === 'object' && ser.name !== null) {
-                      const nameObj = ser.name as { en?: string; de?: string; pl?: string };
-                      serName = nameObj.en || nameObj.de || nameObj.pl || 'Unknown';
+                      const nameObj = ser.name as { en?: string; de?: string; it?: string };
+                      serName = nameObj.en || nameObj.de || nameObj.it || 'Unknown';
                     }
                     const isChecked = form.servicesIds.includes(ser.id);
                     return (

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { ACCESS_TOKEN_KEY } from '@/lib/auth/tokens';
 
-const locales = ['en', 'de', 'pl'];
+const locales = ['en', 'de', 'it'];
 const defaultLocale = 'en';
 const iisnodePipeSegment = /\/pipe\/[0-9a-f-]{36}/gi;
 

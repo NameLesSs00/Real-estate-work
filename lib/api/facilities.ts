@@ -10,6 +10,35 @@ function authHeader(): Record<string, string> {
 export interface Facility {
   id: number;
   name: string | LocalizedString;
+  icon: string | null;
+}
+
+export interface CreateFacilityPayload {
+  name: { en: string; de: string; it: string };
+  icon?: string | null;
+}
+
+export interface UpdateFacilityPayload {
+  id: number;
+  name: { en: string; de: string; it: string };
+  icon?: string | null;
+}
+
+type FacilityApiItem = {
+  id?: number;
+  Id?: number;
+  name?: string | LocalizedString;
+  Name?: string | LocalizedString;
+  icon?: string | null;
+  Icon?: string | null;
+};
+
+function normalizeFacility(item: FacilityApiItem): Facility {
+  return {
+    id: item.id !== undefined ? item.id : (item.Id ?? 0),
+    name: item.name !== undefined ? item.name : (item.Name ?? ''),
+    icon: item.icon !== undefined ? item.icon : (item.Icon ?? null),
+  };
 }
 
 /** GET /api/Facilities */
@@ -24,8 +53,8 @@ export async function getFacilities(): Promise<Facility[]> {
       return [];
     }
     const json = await res.json();
-    if (Array.isArray(json)) return json;
-    return json.data ?? [];
+    const items: FacilityApiItem[] = Array.isArray(json) ? json : (json.data ?? []);
+    return items.map(normalizeFacility);
   } catch (error) {
     console.warn('Network error when fetching facilities:', error);
     return [];
@@ -40,15 +69,17 @@ export async function getFacilityById(id: number, lang: string = 'en'): Promise<
   });
   if (!res.ok) throw new Error('Failed to fetch facility.');
   const json = await res.json();
-  return json.data ?? json;
+  return normalizeFacility(json.data ?? json);
 }
 
 /** POST /api/Facilities */
-export async function createFacility(name: { en: string; de: string; pl: string }): Promise<number> {
+export async function createFacility(payload: CreateFacilityPayload): Promise<number> {
+  const { name, icon = null } = payload;
+
   const res = await fetch(`${API_BASE_URL}/api/Facilities`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...authHeader() },
-    body: JSON.stringify({ name }),
+    body: JSON.stringify({ name, icon }),
   });
   if (!res.ok) throw new Error('Failed to create facility.');
   const text = await res.text();
@@ -61,11 +92,13 @@ export async function createFacility(name: { en: string; de: string; pl: string 
 }
 
 /** PUT /api/Facilities */
-export async function updateFacility(id: number, name: { en: string; de: string; pl: string }): Promise<number> {
+export async function updateFacility(payload: UpdateFacilityPayload): Promise<number> {
+  const { id, name, icon = null } = payload;
+
   const res = await fetch(`${API_BASE_URL}/api/Facilities`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...authHeader() },
-    body: JSON.stringify({ id, name }),
+    body: JSON.stringify({ id, name, icon }),
   });
   if (!res.ok) throw new Error('Failed to update facility.');
   const text = await res.text();

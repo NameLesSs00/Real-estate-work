@@ -5,8 +5,8 @@ import { useParams, useRouter, usePathname } from 'next/navigation';
 import enTranslations from '../../public/locales/en.json';
 import { BRAND_NAME } from '@/lib/brand';
 
-export type Language = 'en' | 'de' | 'pl';
-const SUPPORTED_LANGUAGES: Language[] = ['en', 'de', 'pl'];
+export type Language = 'en' | 'de' | 'it';
+const SUPPORTED_LANGUAGES: Language[] = ['en', 'de', 'it'];
 
 type TranslationValue = string | number | boolean | null | { [key: string]: TranslationValue } | TranslationValue[];
 

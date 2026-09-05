@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { getFacilities, getFacilityById, createFacility, updateFacility, deleteFacility, Facility } from '@/lib/api/facilities';
 import ConfirmDialog from '@/components/admin/ConfirmDialog';
+import IconPicker from '@/components/admin/IconPicker';
+import { getFacilityServiceIcon } from '@/lib/icons/facilityServiceIcons';
 
 export default function FacilitiesPage() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -19,11 +21,13 @@ export default function FacilitiesPage() {
 
   // Add Facility state
   const [showAdd, setShowAdd] = useState(false);
-  const [newName, setNewName] = useState({ en: '', de: '', pl: '' });
+  const [newName, setNewName] = useState({ en: '', de: '', it: '' });
+  const [newIcon, setNewIcon] = useState<string | null>(null);
 
   // Edit Facility state
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingName, setEditingName] = useState({ en: '', de: '', pl: '' });
+  const [editingName, setEditingName] = useState({ en: '', de: '', it: '' });
+  const [editingIcon, setEditingIcon] = useState<string | null>(null);
   const [isFetchingDetails, setIsFetchingDetails] = useState<number | null>(null);
 
   // Delete state
@@ -56,9 +60,10 @@ export default function FacilitiesPage() {
     if (!newName.en) return;
     setLoading(true);
     try {
-      await createFacility(newName);
+      await createFacility({ name: newName, icon: newIcon });
       notify('success', 'Facility added successfully!');
-      setNewName({ en: '', de: '', pl: '' });
+      setNewName({ en: '', de: '', it: '' });
+      setNewIcon(null);
       setShowAdd(false);
       fetchFacilities();
     } catch {
@@ -71,9 +76,10 @@ export default function FacilitiesPage() {
   const handleUpdate = async (id: number) => {
     setLoading(true);
     try {
-      await updateFacility(id, editingName);
+      await updateFacility({ id, name: editingName, icon: editingIcon });
       notify('success', 'Facility updated successfully!');
       setEditingId(null);
+      setEditingIcon(null);
       fetchFacilities();
     } catch {
       notify('error', 'Failed to update facility.');
@@ -84,14 +90,15 @@ export default function FacilitiesPage() {
 
   const handleEditClick = async (facility: Facility) => {
     setEditingId(facility.id);
+    setEditingIcon(facility.icon ?? null);
     
     // Fallback based on list data
-    const nameObjRaw = typeof facility.name === 'object' ? facility.name : { en: facility.name, de: facility.name, pl: facility.name };
+    const nameObjRaw = typeof facility.name === 'object' ? facility.name : { en: facility.name, de: facility.name, it: facility.name };
     const nameObj = nameObjRaw as Record<string, string>;
     setEditingName({
       en: nameObj.en || nameObj.En || '',
       de: nameObj.de || nameObj.De || '',
-      pl: nameObj.pl || nameObj.Pl || ''
+      it: nameObj.it || nameObj.It || ''
     });
 
     try {
@@ -101,18 +108,19 @@ export default function FacilitiesPage() {
       const [enRes, deRes, plRes] = await Promise.all([
         getFacilityById(facility.id, 'en'),
         getFacilityById(facility.id, 'de'),
-        getFacilityById(facility.id, 'pl')
+        getFacilityById(facility.id, 'it')
       ]);
 
       const enName = enRes.name as Record<string, string>;
       const deName = deRes.name as Record<string, string>;
-      const plName = plRes.name as Record<string, string>;
+      const itName = plRes.name as Record<string, string>;
 
       setEditingName({
         en: typeof enRes.name === 'string' ? enRes.name : enName?.en || enName?.En || '',
         de: typeof deRes.name === 'string' ? deRes.name : deName?.de || deName?.De || '',
-        pl: typeof plRes.name === 'string' ? plRes.name : plName?.pl || plName?.Pl || ''
+        it: typeof plRes.name === 'string' ? plRes.name : itName?.it || itName?.It || ''
       });
+      setEditingIcon(enRes.icon ?? facility.icon ?? null);
     } catch (e) {
       console.error('Failed to fetch full facility details:', e);
     } finally {
@@ -144,7 +152,7 @@ export default function FacilitiesPage() {
   const getDisplayName = (f: Facility) => {
     if (typeof f.name === 'object' && f.name !== null) {
       const nameObj = f.name as Record<string, string>;
-      return nameObj.en || nameObj.de || nameObj.pl || 'Unknown';
+      return nameObj.en || nameObj.de || nameObj.it || 'Unknown';
     }
     return f.name;
   };
@@ -197,7 +205,7 @@ export default function FacilitiesPage() {
               className="overflow-hidden mb-10"
             >
               <form onSubmit={handleAdd} className="bg-white p-8 rounded-[32px] shadow-sm border border-gray-100 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                   <div className="space-y-2">
                     <label className="text-[14px] font-bold text-brand-primary ml-1">English Name</label>
                     <input 
@@ -221,16 +229,17 @@ export default function FacilitiesPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-brand-primary ml-1">Polish Name</label>
+                    <label className="text-[14px] font-bold text-brand-primary ml-1">Italian Name</label>
                     <input 
                       type="text" 
-                      value={newName.pl}
-                      onChange={(e) => setNewName({...newName, pl: e.target.value})}
+                      value={newName.it}
+                      onChange={(e) => setNewName({...newName, it: e.target.value})}
                       placeholder="e.g. Basen"
                       className="w-full bg-admin-bg border border-gray-100 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all"
                       required
                     />
                   </div>
+                  <IconPicker value={newIcon} onChange={setNewIcon} />
                 </div>
                 <div className="flex justify-end pt-2">
                   <button 
@@ -264,14 +273,30 @@ export default function FacilitiesPage() {
             <thead className="bg-gray-50/50">
               <tr className="text-brand-primary text-[14px] font-bold uppercase tracking-wider">
                 <th className="px-8 py-6 w-24">ID</th>
+                <th className="px-8 py-6 w-56">Icon</th>
                 <th className="px-8 py-6">Name</th>
                 <th className="px-8 py-6 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {filteredFacilities.map((facility) => (
+              {filteredFacilities.map((facility) => {
+                const FacilityIcon = getFacilityServiceIcon(facility.icon);
+
+                return (
                 <tr key={facility.id} className="hover:bg-gray-50/30 transition-colors group">
                   <td className="px-8 py-6 font-mono text-sm text-gray-400">#{facility.id}</td>
+                  <td className="px-8 py-6">
+                    {editingId === facility.id ? (
+                      <IconPicker value={editingIcon} onChange={setEditingIcon} compact />
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-primary-soft text-brand-primary">
+                          <FacilityIcon size={20} />
+                        </span>
+                        <span className="text-[12px] font-semibold text-gray-400">{facility.icon ?? 'Default'}</span>
+                      </div>
+                    )}
+                  </td>
                   <td className="px-8 py-6">
                     {editingId === facility.id ? (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -288,10 +313,10 @@ export default function FacilitiesPage() {
                           placeholder="DE"
                         />
                         <input 
-                          value={editingName.pl}
-                          onChange={e => setEditingName({...editingName, pl: e.target.value})}
+                          value={editingName.it}
+                          onChange={e => setEditingName({...editingName, it: e.target.value})}
                           className="bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-primary/10"
-                          placeholder="PL"
+                          placeholder="IT"
                         />
                       </div>
                     ) : (
@@ -303,7 +328,7 @@ export default function FacilitiesPage() {
                       {editingId === facility.id ? (
                         <>
                           <button onClick={() => handleUpdate(facility.id)} className="p-2 text-green-600 hover:bg-green-50 rounded-xl transition-all"><CheckCircle2 size={20} /></button>
-                          <button onClick={() => setEditingId(null)} className="p-2 text-gray-400 hover:bg-gray-50 rounded-xl transition-all"><X size={20} /></button>
+                          <button onClick={() => { setEditingId(null); setEditingIcon(null); }} className="p-2 text-gray-400 hover:bg-gray-50 rounded-xl transition-all"><X size={20} /></button>
                         </>
                       ) : (
                         <>
@@ -320,10 +345,11 @@ export default function FacilitiesPage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
               {filteredFacilities.length === 0 && (
                 <tr>
-                  <td colSpan={3} className="px-8 py-20 text-center text-gray-400">
+                  <td colSpan={4} className="px-8 py-20 text-center text-gray-400">
                     <p className="text-lg">No facilities found.</p>
                   </td>
                 </tr>

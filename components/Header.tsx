@@ -2,28 +2,20 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { ChevronDown, ChevronUp, X, Globe } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { X, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import BrandLogo from '@/components/BrandLogo';
+import { BRAND_NAME } from '@/lib/brand';
 
 const Header = () => {
   const pathname = usePathname();
-  const router = useRouter();
-  const { language, setLanguage, t, tRaw } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
-
-  const translatedLocations = tRaw('header.locations');
-  const locations = Array.isArray(translatedLocations)
-    ? translatedLocations.filter((loc): loc is string => typeof loc === 'string')
-    : [];
 
   const isHomePage = pathname === `/${language}` || pathname === '/';
   const isTransparentHomeHeader = isHomePage && !isScrolled;
@@ -35,9 +27,6 @@ const Header = () => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null);
-      }
       if (langRef.current && !langRef.current.contains(event.target as Node)) {
         setShowLangMenu(false);
       }
@@ -74,71 +63,6 @@ const Header = () => {
     </svg>
   );
 
-  const handleDropdownClick = (title: string) => {
-    if (activeDropdown === title) {
-      // If title is "Buy" (or localized version), go to /properties?unitType=Buy
-      const buyTitle = t('header.buy');
-      if (title === buyTitle) {
-        router.push(`/${language}/properties?unitType=Buy`);
-      } else {
-        router.push(`/${language}/properties`);
-      }
-      setActiveDropdown(null);
-    } else {
-      setActiveDropdown(title);
-    }
-  };
-
-  const NavDropdown = ({ title, type, items }: { title: string, type?: string, items?: { label: string, href: string }[] }) => (
-    <div className="relative">
-      <button 
-        onClick={() => handleDropdownClick(title)}
-        className={`flex items-center gap-2 text-[0.9375rem] font-medium ${textColorClass} hover:text-brand-secondary transition-colors py-2 outline-none cursor-pointer`}
-      >
-        {title}
-        <ChevronDown size={16} className={`transition-transform duration-300 ${activeDropdown === title ? 'rotate-180' : ''}`} />
-      </button>
-      
-      <AnimatePresence>
-        {activeDropdown === title && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white shadow-[0_15px_50px_rgba(0,0,0,0.12)] rounded-2xl p-6 ${items ? 'min-w-[200px]' : 'min-w-[450px]'} border border-gray-100 z-[100]`}
-          >
-            <div className={`grid ${items ? 'grid-cols-1' : 'grid-cols-2'} gap-x-12 gap-y-1`}>
-              {items ? (
-                items.map((item) => (
-                  <Link 
-                    key={item.label} 
-                    href={`/${language}${item.href}`}
-                    onClick={() => setActiveDropdown(null)}
-                    className="text-brand-primary hover:text-brand-secondary py-3 text-[0.9375rem] font-semibold transition-colors border-b border-brand-divider last:border-0 hover:translate-x-1 transition-transform"
-                  >
-                    {item.label}
-                  </Link>
-                ))
-              ) : (
-                Array.isArray(locations) && locations.map((loc) => (
-                  <Link 
-                    key={loc} 
-                    href={`/${language}/properties?type=${type}&location=${loc}`}
-                    onClick={() => setActiveDropdown(null)}
-                    className="text-brand-primary hover:text-brand-secondary py-3 text-[0.9375rem] font-medium transition-colors border-b border-brand-divider last:border-0 hover:translate-x-1 transition-transform"
-                  >
-                    {loc}
-                  </Link>
-                ))
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-
   // Hide header on admin pages
   if (pathname?.startsWith('/admin')) return null;
 
@@ -147,19 +71,28 @@ const Header = () => {
       <div className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${headerBgClass}`}>
         <header className="w-full max-w-[1440px] mx-auto px-6 md:px-12 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link href={`/${language}`}>
+          <div className="min-w-0 flex-shrink-0">
+            <Link href={`/${language}`} className="flex min-w-0 items-center gap-3">
               <BrandLogo
                 variant="light"
                 lockup="mark"
                 priority
-                className="h-[60px] w-[65px] md:h-[78px] md:w-[84px] object-contain transition-all duration-300"
+                className="h-[52px] w-[56px] shrink-0 object-contain transition-all duration-300 md:h-[62px] md:w-[67px]"
               />
+              <span className="hidden min-w-0 flex-col leading-tight sm:flex">
+                <span className="truncate font-radley text-[24px] text-white md:text-[28px]">
+                  The Rook
+                </span>
+                <span className="truncate text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80 md:text-[12px]">
+                  Real Estate Investment
+                </span>
+              </span>
+              <span className="sr-only">{BRAND_NAME}</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6" ref={dropdownRef}>
+          <nav className="hidden lg:flex items-center gap-6">
             <div className="flex items-center gap-6">
               <Link
                 href={`/${language}`}
@@ -174,13 +107,12 @@ const Header = () => {
                 {t('header.projects')}
               </Link>
               
-              <NavDropdown 
-                title={t('header.buy')} 
-                items={[
-                  { label: t('header.primary'), href: "/properties?unitType=Buy&status=primary" },
-                  { label: t('header.resale'), href: "/properties?unitType=Buy&status=resale" }
-                ]} 
-              />
+              <Link
+                href={`/${language}/properties?unitType=Buy&status=resale`}
+                className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-brand-secondary transition-colors`}
+              >
+                {t('header.resale')}
+              </Link>
 
               <Link href={`/${language}/about`} className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-brand-secondary transition-colors`}>{t('header.about')}</Link>
               <Link href={`/${language}/contact`} className={`text-[0.9375rem] font-medium ${textColorClass} hover:text-brand-secondary transition-colors`}>{t('header.contact')}</Link>
@@ -208,7 +140,7 @@ const Header = () => {
                     >
                       <button onClick={() => { setLanguage('en'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-brand-bg transition-colors ${language === 'en' ? 'font-bold text-brand-secondary' : 'text-brand-primary'}`}>English</button>
                       <button onClick={() => { setLanguage('de'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-brand-bg transition-colors ${language === 'de' ? 'font-bold text-brand-secondary' : 'text-brand-primary'}`}>Deutsch</button>
-                      <button onClick={() => { setLanguage('pl'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-brand-bg transition-colors ${language === 'pl' ? 'font-bold text-brand-secondary' : 'text-brand-primary'}`}>Polski</button>
+                      <button onClick={() => { setLanguage('it'); setShowLangMenu(false); }} className={`w-full text-left px-4 py-2 hover:bg-brand-bg transition-colors ${language === 'it' ? 'font-bold text-brand-secondary' : 'text-brand-primary'}`}>Italiano</button>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -248,11 +180,22 @@ const Header = () => {
           >
             {/* Header of Menu */}
             <div className="flex items-center justify-between py-8 px-8">
-              <BrandLogo
-                variant="charcoal"
-                lockup="mark"
-                className="h-[80px] w-[86px] object-contain"
-              />
+              <Link href={`/${language}`} onClick={() => setIsMenuOpen(false)} className="flex min-w-0 items-center gap-3">
+                <BrandLogo
+                  variant="charcoal"
+                  lockup="mark"
+                  className="h-[60px] w-[65px] shrink-0 object-contain"
+                />
+                <span className="min-w-0 flex flex-col leading-tight">
+                  <span className="truncate font-radley text-[25px] text-brand-primary">
+                    The Rook
+                  </span>
+                  <span className="truncate text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-muted">
+                    Real Estate Investment
+                  </span>
+                </span>
+                <span className="sr-only">{BRAND_NAME}</span>
+              </Link>
               <button 
                 onClick={() => setIsMenuOpen(false)} 
                 className="text-brand-primary p-2"
@@ -266,47 +209,7 @@ const Header = () => {
               <Link href={`/${language}`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-brand-primary border-b border-brand-divider pb-2">{t('header.home')}</Link>
               <Link href={`/${language}/projects`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-brand-primary border-b border-brand-divider pb-2">{t('header.projects')}</Link>
               
-              {/* Buy Mobile */}
-              <div>
-                <button 
-                  onClick={() => {
-                    if (mobileExpanded === 'buy') {
-                      router.push(`/${language}/properties?unitType=Buy`);
-                      setIsMenuOpen(false);
-                    } else {
-                      setMobileExpanded('buy');
-                    }
-                  }}
-                  className="w-full flex items-center justify-between text-[20px] font-semibold text-brand-primary border-b border-brand-divider pb-2 cursor-pointer"
-                >
-                  {t('header.buy')}
-                  {mobileExpanded === 'buy' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </button>
-                <AnimatePresence>
-                  {mobileExpanded === 'buy' && (
-                    <motion.div 
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden bg-brand-bg rounded-xl mt-2"
-                    >
-                      {[
-                        { label: t('header.primary'), href: "/properties?unitType=Buy&status=primary" },
-                        { label: t('header.resale'), href: "/properties?unitType=Buy&status=resale" }
-                      ].map(item => (
-                        <Link 
-                          key={item.label} 
-                          href={`/${language}${item.href}`}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block px-6 py-3 text-brand-primary font-medium border-b border-brand-divider last:border-0"
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <Link href={`/${language}/properties?unitType=Buy&status=resale`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-brand-primary border-b border-brand-divider pb-2">{t('header.resale')}</Link>
 
               <Link href={`/${language}/about`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-brand-primary border-b border-brand-divider pb-2">{t('header.about')}</Link>
               <Link href={`/${language}/contact`} onClick={() => setIsMenuOpen(false)} className="text-[20px] font-semibold text-brand-primary border-b border-brand-divider pb-2">{t('header.contact')}</Link>
@@ -332,7 +235,7 @@ const Header = () => {
               <div className="mt-6 pt-6 border-t border-gray-100">
                 <p className="text-[12px] font-semibold text-brand-secondary uppercase tracking-[0.2em] mb-3">{t('header.language')}</p>
                 <div className="flex gap-3">
-                  {(['en', 'de', 'pl'] as const).map((lang) => (
+                  {(['en', 'de', 'it'] as const).map((lang) => (
                     <button
                       key={lang}
                       onClick={() => { setLanguage(lang); setIsMenuOpen(false); }}
@@ -342,7 +245,7 @@ const Header = () => {
                           : 'bg-transparent text-brand-primary border-brand-divider hover:border-brand-secondary'
                       }`}
                     >
-                      {lang === 'en' ? 'EN' : lang === 'de' ? 'DE' : 'PL'}
+                      {lang === 'en' ? 'EN' : lang === 'de' ? 'DE' : 'IT'}
                     </button>
                   ))}
                 </div>

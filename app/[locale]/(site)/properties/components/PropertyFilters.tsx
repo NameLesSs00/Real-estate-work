@@ -39,7 +39,7 @@ const PropertyFilters = ({ onSearch }: Props) => {
   }, []);
 
   const handleSearch = () => {
-    onSearch({ searchTerm, location, propertyType, unitType: 'Buy', minPrice, maxPrice, currency: 'EGP', status: '', locationId: '', country: '' });
+    onSearch({ searchTerm, location, propertyType, minPrice, maxPrice, currency: 'EGP', locationId: '', country: '' });
   };
   const selectedPropertyType = PROPERTY_TYPES.find((type) => type.value === propertyType);
 

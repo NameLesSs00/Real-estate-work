@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import { UnitDetail } from '@/lib/api/projects';
+import { getFacilityServiceIcon } from '@/lib/icons/facilityServiceIcons';
 
 const InfoCard = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <div className="bg-brand-secondary-soft rounded-2xl px-6 py-5">
@@ -61,8 +62,8 @@ export default function UnitInfo({ unit }: UnitInfoProps) {
         <div className="bg-brand-secondary-soft rounded-2xl px-6 py-5">
           <p className="text-[13px] text-gray-500 font-medium mb-2">Description</p>
           <p className="text-brand-primary text-[15px] leading-relaxed">
-            {typeof unit.Description === 'object' ? (unit.Description.en || unit.Description.de || unit.Description.pl) : 
-             (typeof unit.description === 'object' ? (unit.description.en || unit.description.de || unit.description.pl) : (unit.Description || unit.description))}
+            {typeof unit.Description === 'object' ? (unit.Description.en || unit.Description.de || unit.Description.it) :
+             (typeof unit.description === 'object' ? (unit.description.en || unit.description.de || unit.description.it) : (unit.Description || unit.description))}
           </p>
         </div>
       )}
@@ -74,9 +75,13 @@ export default function UnitInfo({ unit }: UnitInfoProps) {
             <p className="text-[13px] text-gray-500 font-medium mb-3">Services</p>
             <div className="flex flex-wrap gap-2">
               {(unit.Services || unit.services)!.map((s, i) => {
-                const name = typeof s.name === 'string' ? s.name : (s.name?.en || s.name?.de || s.name?.pl || 'Unknown');
+                const name = typeof s.name === 'string' ? s.name : (s.name?.en || s.name?.de || s.name?.it || 'Unknown');
+                const ServiceIcon = getFacilityServiceIcon(s.icon);
                 return (
-                  <span key={i} className="px-3 py-1 bg-white rounded-full text-[13px] text-brand-primary font-medium border border-gray-200">{name}</span>
+                  <span key={i} className="inline-flex items-center gap-2 px-3 py-1 bg-white rounded-full text-[13px] text-brand-primary font-medium border border-gray-200">
+                    <ServiceIcon size={14} />
+                    {name}
+                  </span>
                 );
               })}
             </div>

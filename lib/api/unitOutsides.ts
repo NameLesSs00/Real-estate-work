@@ -72,8 +72,8 @@ export interface UnitOutsideFilters {
 }
 
 export interface CreateUnitOutsidePayload {
-  name: { en: string; de: string; pl: string };
-  description: { en: string; de: string; pl: string };
+  name: { en: string; de: string; it: string };
+  description: { en: string; de: string; it: string };
   price: number;
   currencyCode: string;
   area: number;

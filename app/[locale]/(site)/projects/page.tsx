@@ -5,10 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Building2, Loader2, MapPin, SearchX } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
+import { getProjects, resolveProjectImageUrl, Project, type ProjectFilters as ProjectFiltersQuery } from '@/lib/api/projects';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { slugify } from '@/lib/utils';
 import { BRAND_LOGOS } from '@/lib/brand';
+import ProjectFilters, { EMPTY_PROJECT_FILTERS, type ProjectFilterValues } from './components/ProjectFilters';
 
 const DEFAULT_IMAGE = '/assists/defaultImage.png';
 const DEFAULT_DEVELOPER_LOGO = BRAND_LOGOS.markColor;
@@ -30,6 +31,43 @@ const itemVariants: Variants = {
   },
 };
 
+const hasActiveFilters = (filters: ProjectFilterValues) => Object.values(filters).some(Boolean);
+
+const toOptionalNumber = (value: string) => {
+  if (!value) return undefined;
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : undefined;
+};
+
+const toOptionalBoolean = (value: string) => {
+  if (value === '') return undefined;
+  return value === 'true';
+};
+
+const buildProjectFilters = (filters: ProjectFilterValues): ProjectFiltersQuery => {
+  const searchTerm = filters.searchTerm.trim();
+
+  return {
+    projectTypeId: toOptionalNumber(filters.projectTypeId),
+    minimumPrice: toOptionalNumber(filters.minimumPrice),
+    maximumPrice: toOptionalNumber(filters.maximumPrice),
+    priceCurrency: filters.priceCurrency || undefined,
+    currency: filters.priceCurrency || undefined,
+    isFurniture: toOptionalBoolean(filters.isFurniture),
+    furnitureType: toOptionalNumber(filters.furnitureType) as ProjectFiltersQuery['furnitureType'],
+    deliveryDateFrom: filters.deliveryDateFrom || undefined,
+    deliveryDateTo: filters.deliveryDateTo || undefined,
+    isFeature: toOptionalBoolean(filters.isFeature),
+    facilityId: toOptionalNumber(filters.facilityId),
+    locationId: toOptionalNumber(filters.locationId),
+    developerId: toOptionalNumber(filters.developerId),
+    searchTerm: searchTerm || undefined,
+    search: searchTerm || undefined,
+    sortBy: filters.sortBy || undefined,
+    sortDirection: filters.sortDirection || undefined,
+  };
+};
+
 export default function ProjectsPage() {
   const { t, getLocalized, language } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
@@ -39,12 +77,13 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeFilters, setActiveFilters] = useState<ProjectFilterValues>(EMPTY_PROJECT_FILTERS);
 
   const fetchPage = useCallback(async (pageNumber: number) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getProjects(pageNumber, 9, language);
+      const data = await getProjects(pageNumber, 9, language, buildProjectFilters(activeFilters));
       setProjects((prev) => (pageNumber === 1 ? data.items : [...prev, ...data.items]));
       setTotalCount(data.totalCount || data.items.length);
       setHasMore(data.hasNextPage);
@@ -54,7 +93,7 @@ export default function ProjectsPage() {
       setLoading(false);
       setInitialLoading(false);
     }
-  }, [language, t]);
+  }, [activeFilters, language, t]);
 
   useEffect(() => {
     setPage(1);
@@ -62,11 +101,27 @@ export default function ProjectsPage() {
     fetchPage(1);
   }, [fetchPage]);
 
+  const handleApplyFilters = (filters: ProjectFilterValues) => {
+    setProjects([]);
+    setPage(1);
+    setInitialLoading(true);
+    setActiveFilters({ ...filters });
+  };
+
+  const handleClearFilters = () => {
+    setProjects([]);
+    setPage(1);
+    setInitialLoading(true);
+    setActiveFilters({ ...EMPTY_PROJECT_FILTERS });
+  };
+
   const handleShowMore = () => {
     const nextPage = page + 1;
     setPage(nextPage);
     fetchPage(nextPage);
   };
+
+  const filtersAreActive = hasActiveFilters(activeFilters);
 
   return (
     <div className="min-h-screen bg-brand-bg pt-32 font-poppins text-brand-primary">
@@ -101,7 +156,14 @@ export default function ProjectsPage() {
       </section>
 
       <section className="bg-brand-primary-soft px-5 py-12 sm:px-6 md:px-10 md:py-16">
-        <div className="mx-auto max-w-[1280px]">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-8">
+          <ProjectFilters
+            values={activeFilters}
+            onApply={handleApplyFilters}
+            onClear={handleClearFilters}
+            isLoading={loading}
+          />
+
           {initialLoading && (
             <div className="flex min-h-[360px] flex-col items-center justify-center gap-4 rounded-[24px] border border-brand-divider bg-white text-brand-muted">
               <Loader2 className="animate-spin text-brand-primary" size={36} />
@@ -114,7 +176,11 @@ export default function ProjectsPage() {
               <SearchX className="text-brand-primary" size={38} />
               <p className="text-[16px] font-semibold text-status-danger">{error}</p>
               <button
-                onClick={() => fetchPage(1)}
+                onClick={() => {
+                  setPage(1);
+                  setInitialLoading(true);
+                  fetchPage(1);
+                }}
                 className="rounded-full bg-brand-primary px-7 py-3 text-[14px] font-bold text-white transition-all hover:bg-brand-primary"
               >
                 {t('projects.tryAgain')}
@@ -127,7 +193,18 @@ export default function ProjectsPage() {
               {projects.length === 0 ? (
                 <div className="flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-[24px] border border-brand-divider bg-white px-6 text-center text-brand-muted shadow-sm">
                   <SearchX className="text-brand-primary" size={38} />
-                  <p className="text-[17px] font-semibold">{t('projects.noResults')}</p>
+                  <p className="text-[17px] font-semibold">
+                    {filtersAreActive ? t('projects.filters.noFilteredResults') : t('projects.noResults')}
+                  </p>
+                  {filtersAreActive && (
+                    <button
+                      type="button"
+                      onClick={handleClearFilters}
+                      className="rounded-full bg-brand-primary px-6 py-3 text-[14px] font-bold text-white transition-all hover:bg-brand-primary"
+                    >
+                      {t('projects.filters.clear')}
+                    </button>
+                  )}
                 </div>
               ) : (
                 <AnimatePresence mode="popLayout">
@@ -138,7 +215,6 @@ export default function ProjectsPage() {
                       const heroImage = resolveProjectImageUrl(project.imageUrls?.[0]) || DEFAULT_IMAGE;
                       const developerLogo = resolveProjectImageUrl(project.logoImage) || DEFAULT_DEVELOPER_LOGO;
                       const projectHref = `/${language}/projects/${project.id}-${slugify(localizedName || project.name)}`;
-                      const unitCount = project.units?.length ?? 0;
 
                       return (
                         <motion.article
@@ -196,10 +272,7 @@ export default function ProjectsPage() {
                               {localizedDesc || t('projectDetails.noDescription')}
                             </p>
 
-                            <div className="mt-auto flex items-center justify-between gap-4 pt-6">
-                              <span className="rounded-full bg-brand-bg px-4 py-2 text-[12px] font-bold text-brand-primary">
-                                {unitCount} {t('projects.unitsAvailable')}
-                              </span>
+                            <div className="mt-auto flex items-center justify-end gap-4 pt-6">
                               <Link
                                 href={projectHref}
                                 className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-5 py-3 text-[14px] font-bold text-white transition-all hover:bg-brand-primary"
