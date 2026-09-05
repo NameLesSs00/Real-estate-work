@@ -6,15 +6,18 @@ import Articles from "./components/Articles";
 import FinestServices from "./components/FinestServices";
 import HowItWorks from "./components/HowItWorks";
 import FeatureProject from "./components/FeatureProject";
+import { getLocations } from "@/lib/api/locations";
 
 
-export default function Home() {
+export default async function Home() {
+  const locationsPage = await getLocations({ isFeature: true, pageSize: 5 });
+
   return (
     <main className="flex-1">
       <Hero />
       <BestListings />
       <HowItWorks />
-      <PopularSpots />
+      <PopularSpots spots={locationsPage.items} />
       <FeatureProject />
       <Articles />
       <FinestServices />

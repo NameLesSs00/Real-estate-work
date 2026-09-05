@@ -222,7 +222,20 @@ async function readLocationCommandResponse(res: Response, fallback: string): Pro
   const text = await res.text();
   if (!res.ok) {
     console.error('[Locations] Command failed:', res.status, text);
-    throw new Error(text || fallback);
+    let errorMessage = fallback;
+    try {
+      const json = JSON.parse(text);
+      if (json.errors) {
+        if (Array.isArray(json.errors)) errorMessage = json.errors.join(' ');
+        else if (typeof json.errors === 'object') {
+          const vals = Object.values(json.errors).flat();
+          if (vals.length > 0) errorMessage = vals.join(' ');
+        }
+      } else if (json.message) {
+        errorMessage = json.message;
+      }
+    } catch {}
+    throw new Error(errorMessage);
   }
 
   if (!text) return true;
@@ -333,7 +346,20 @@ export async function deleteLocation(id: number): Promise<void> {
   if (!res.ok) {
     const text = await res.text();
     console.error('[Locations] Delete failed:', res.status, text);
-    throw new Error('Failed to delete location.');
+    let errorMessage = 'Failed to delete location.';
+    try {
+      const json = JSON.parse(text);
+      if (json.errors) {
+        if (Array.isArray(json.errors)) errorMessage = json.errors.join(' ');
+        else if (typeof json.errors === 'object') {
+          const vals = Object.values(json.errors).flat();
+          if (vals.length > 0) errorMessage = vals.join(' ');
+        }
+      } else if (json.message) {
+        errorMessage = json.message;
+      }
+    } catch {}
+    throw new Error(errorMessage);
   }
 }
 

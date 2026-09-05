@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { ArrowRight, Building2, Loader2, MapPin, SearchX } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { getProjects, resolveProjectImageUrl, Project, type ProjectFilters as ProjectFiltersQuery } from '@/lib/api/projects';
+import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { slugify } from '@/lib/utils';
 import { BRAND_LOGOS } from '@/lib/brand';
@@ -31,97 +32,195 @@ const itemVariants: Variants = {
   },
 };
 
+const PAGE_SIZE = 9;
+
 const hasActiveFilters = (filters: ProjectFilterValues) => Object.values(filters).some(Boolean);
 
-const toOptionalNumber = (value: string) => {
-  if (!value) return undefined;
-  const numberValue = Number(value);
-  return Number.isFinite(numberValue) ? numberValue : undefined;
-};
 
-const toOptionalBoolean = (value: string) => {
-  if (value === '') return undefined;
-  return value === 'true';
-};
 
-const buildProjectFilters = (filters: ProjectFilterValues): ProjectFiltersQuery => {
-  const searchTerm = filters.searchTerm.trim();
 
-  return {
-    projectTypeId: toOptionalNumber(filters.projectTypeId),
-    minimumPrice: toOptionalNumber(filters.minimumPrice),
-    maximumPrice: toOptionalNumber(filters.maximumPrice),
-    priceCurrency: filters.priceCurrency || undefined,
-    currency: filters.priceCurrency || undefined,
-    isFurniture: toOptionalBoolean(filters.isFurniture),
-    furnitureType: toOptionalNumber(filters.furnitureType) as ProjectFiltersQuery['furnitureType'],
-    deliveryDateFrom: filters.deliveryDateFrom || undefined,
-    deliveryDateTo: filters.deliveryDateTo || undefined,
-    isFeature: toOptionalBoolean(filters.isFeature),
-    facilityId: toOptionalNumber(filters.facilityId),
-    locationId: toOptionalNumber(filters.locationId),
-    developerId: toOptionalNumber(filters.developerId),
-    searchTerm: searchTerm || undefined,
-    search: searchTerm || undefined,
-    sortBy: filters.sortBy || undefined,
-    sortDirection: filters.sortDirection || undefined,
-  };
-};
+/** Apply all active filters to a list of projects client-side */
+function applyClientFilters(projects: Project[], filters: ProjectFilterValues): Project[] {
+  let result = [...projects];
+
+  const searchTerm = filters.searchTerm.trim().toLowerCase();
+  if (searchTerm) {
+    result = result.filter((p) => {
+      const name = typeof p.name === 'string' ? p.name : Object.values(p.name || {}).join(' ');
+      const desc = typeof p.description === 'string' ? p.description : Object.values(p.description || {}).join(' ');
+      return (
+        name.toLowerCase().includes(searchTerm) ||
+        desc.toLowerCase().includes(searchTerm) ||
+        (p.developerName || '').toLowerCase().includes(searchTerm) ||
+        (p.locationName || '').toLowerCase().includes(searchTerm)
+      );
+    });
+  }
+
+  if (filters.locationId) {
+    const id = Number(filters.locationId);
+    result = result.filter((p) => p.locationId === id);
+  }
+
+  if (filters.developerId) {
+    const id = Number(filters.developerId);
+    result = result.filter((p) => p.developerId === id);
+  }
+
+  if (filters.projectTypeId) {
+    const id = Number(filters.projectTypeId);
+    result = result.filter((p) =>
+      (p.projectTypeIds || []).includes(id) ||
+      (p.projectTypes || []).some((pt) => pt.id === id)
+    );
+  }
+
+  if (filters.facilityId) {
+    const id = Number(filters.facilityId);
+    result = result.filter((p) =>
+      (p.facilityIds || []).includes(id) ||
+      (p.facilities || []).some((f) => (typeof f === 'number' ? f === id : (f as { id?: number }).id === id))
+    );
+  }
+
+  if (filters.minimumPrice) {
+    const min = Number(filters.minimumPrice);
+    result = result.filter((p) =>
+      (p.prices || []).some((price) => price.minimumPrice >= min || price.maximumPrice >= min)
+    );
+  }
+
+  if (filters.maximumPrice) {
+    const max = Number(filters.maximumPrice);
+    result = result.filter((p) =>
+      (p.prices || []).some((price) => price.minimumPrice <= max || price.maximumPrice <= max)
+    );
+  }
+
+  if (filters.priceCurrency) {
+    const currency = filters.priceCurrency.toLowerCase();
+    result = result.filter((p) =>
+      (p.prices || []).some((price) => price.currency?.toLowerCase() === currency)
+    );
+  }
+
+  if (filters.isFurniture === 'true') {
+    result = result.filter((p) => p.isFurniture === true);
+  }
+
+  if (filters.furnitureType) {
+    const ft = Number(filters.furnitureType);
+    result = result.filter((p) => {
+      const type = typeof p.furnitureType === 'number' ? p.furnitureType : Number(p.furnitureType);
+      return type === ft;
+    });
+  }
+
+  if (filters.isFeature === 'true') {
+    result = result.filter((p) => p.isFeature === true);
+  }
+
+  if (filters.deliveryDateFrom) {
+    const from = new Date(filters.deliveryDateFrom);
+    result = result.filter((p) => p.deliveryDate && new Date(p.deliveryDate) >= from);
+  }
+
+  if (filters.deliveryDateTo) {
+    const to = new Date(filters.deliveryDateTo);
+    result = result.filter((p) => p.deliveryDate && new Date(p.deliveryDate) <= to);
+  }
+
+  // Sorting
+  if (filters.sortBy) {
+    const dir = filters.sortDirection === 'Desc' ? -1 : 1;
+    result.sort((a, b) => {
+      if (filters.sortBy === 'MinimumPrice') {
+        const aPrice = (a.prices || [])[0]?.minimumPrice ?? 0;
+        const bPrice = (b.prices || [])[0]?.minimumPrice ?? 0;
+        return (aPrice - bPrice) * dir;
+      }
+      if (filters.sortBy === 'DeliveryDate') {
+        const aDate = a.deliveryDate ? new Date(a.deliveryDate).getTime() : 0;
+        const bDate = b.deliveryDate ? new Date(b.deliveryDate).getTime() : 0;
+        return (aDate - bDate) * dir;
+      }
+      if (filters.sortBy === 'CreatedAt') {
+        const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return (aDate - bDate) * dir;
+      }
+      // Name
+      const aName = typeof a.name === 'string' ? a.name : String(Object.values(a.name || {})[0] ?? '');
+      const bName = typeof b.name === 'string' ? b.name : String(Object.values(b.name || {})[0] ?? '');
+      return aName.localeCompare(bName) * dir;
+    });
+  }
+
+  return result;
+}
 
 export default function ProjectsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-brand-bg animate-pulse" />}>
+      <ProjectsPageContent />
+    </Suspense>
+  );
+}
+
+function ProjectsPageContent() {
   const { t, getLocalized, language } = useLanguage();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const searchParams = useSearchParams();
+  const [allProjects, setAllProjects] = useState<Project[]>([]);
   const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeFilters, setActiveFilters] = useState<ProjectFilterValues>(EMPTY_PROJECT_FILTERS);
+  const [activeFilters, setActiveFilters] = useState<ProjectFilterValues>(() => ({
+    ...EMPTY_PROJECT_FILTERS,
+    locationId: searchParams.get('locationId') || '',
+  }));
 
-  const fetchPage = useCallback(async (pageNumber: number) => {
+  // Fetch ALL projects once; filtering is done client-side
+  const fetchAllProjects = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getProjects(pageNumber, 9, language, buildProjectFilters(activeFilters));
-      setProjects((prev) => (pageNumber === 1 ? data.items : [...prev, ...data.items]));
-      setTotalCount(data.totalCount || data.items.length);
-      setHasMore(data.hasNextPage);
+      // Fetch with a large page size to get all projects (backend does not support filtering)
+      const data = await getProjects(1, 200, language);
+      setAllProjects(data.items);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t('projects.error'));
     } finally {
       setLoading(false);
       setInitialLoading(false);
     }
-  }, [activeFilters, language, t]);
+  }, [language, t]);
 
   useEffect(() => {
-    setPage(1);
     setInitialLoading(true);
-    fetchPage(1);
-  }, [fetchPage]);
+    fetchAllProjects();
+  }, [fetchAllProjects]);
 
   const handleApplyFilters = (filters: ProjectFilterValues) => {
-    setProjects([]);
     setPage(1);
-    setInitialLoading(true);
     setActiveFilters({ ...filters });
   };
 
   const handleClearFilters = () => {
-    setProjects([]);
     setPage(1);
-    setInitialLoading(true);
     setActiveFilters({ ...EMPTY_PROJECT_FILTERS });
   };
 
-  const handleShowMore = () => {
-    const nextPage = page + 1;
-    setPage(nextPage);
-    fetchPage(nextPage);
-  };
-
+  // Apply client-side filters and paginate
+  const filteredProjects = applyClientFilters(allProjects, activeFilters);
+  const totalCount = filteredProjects.length;
+  const hasMore = page * PAGE_SIZE < totalCount;
+  const displayedProjects = filteredProjects.slice(0, page * PAGE_SIZE);
   const filtersAreActive = hasActiveFilters(activeFilters);
+
+  const handleShowMore = () => {
+    setPage((p) => p + 1);
+  };
 
   return (
     <div className="min-h-screen bg-brand-bg pt-32 font-poppins text-brand-primary">
@@ -177,9 +276,8 @@ export default function ProjectsPage() {
               <p className="text-[16px] font-semibold text-status-danger">{error}</p>
               <button
                 onClick={() => {
-                  setPage(1);
                   setInitialLoading(true);
-                  fetchPage(1);
+                  fetchAllProjects();
                 }}
                 className="rounded-full bg-brand-primary px-7 py-3 text-[14px] font-bold text-white transition-all hover:bg-brand-primary"
               >
@@ -190,7 +288,7 @@ export default function ProjectsPage() {
 
           {!initialLoading && !error && (
             <motion.div variants={containerVariants} initial="hidden" animate="visible" className="flex flex-col gap-10">
-              {projects.length === 0 ? (
+              {displayedProjects.length === 0 ? (
                 <div className="flex min-h-[320px] flex-col items-center justify-center gap-4 rounded-[24px] border border-brand-divider bg-white px-6 text-center text-brand-muted shadow-sm">
                   <SearchX className="text-brand-primary" size={38} />
                   <p className="text-[17px] font-semibold">
@@ -209,7 +307,7 @@ export default function ProjectsPage() {
               ) : (
                 <AnimatePresence mode="popLayout">
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                    {projects.map((project) => {
+                    {displayedProjects.map((project) => {
                       const localizedName = getLocalized(project.name);
                       const localizedDesc = getLocalized(project.description);
                       const heroImage = resolveProjectImageUrl(project.imageUrls?.[0]) || DEFAULT_IMAGE;
@@ -289,7 +387,7 @@ export default function ProjectsPage() {
                 </AnimatePresence>
               )}
 
-              {hasMore && projects.length > 0 && (
+              {hasMore && displayedProjects.length > 0 && (
                 <div className="flex justify-center">
                   <button
                     onClick={handleShowMore}
@@ -311,7 +409,7 @@ export default function ProjectsPage() {
                 </div>
               )}
 
-              {!hasMore && projects.length > 0 && (
+              {!hasMore && displayedProjects.length > 0 && (
                 <p className="text-center text-[14px] font-medium text-brand-muted">
                   {t('projects.allLoaded')}
                 </p>

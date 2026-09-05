@@ -55,7 +55,23 @@ export async function login(payload: LoginPayload): Promise<AuthTokens> {
   if (!res.ok) {
     const errorText = await res.text();
     console.error('[Auth] Login HTTP error:', res.status, errorText);
-    throw new Error('Invalid email or password.');
+    let errorMessage = 'Invalid email or password.';
+    try {
+      const json = JSON.parse(errorText);
+      if (json.errors) {
+        if (Array.isArray(json.errors)) {
+          errorMessage = json.errors.join(' ');
+        } else if (typeof json.errors === 'object') {
+          const vals = Object.values(json.errors).flat();
+          if (vals.length > 0) errorMessage = vals.join(' ');
+        }
+      } else if (json.message) {
+        errorMessage = json.message;
+      }
+    } catch {
+      // fallback to default
+    }
+    throw new Error(errorMessage);
   }
 
   const json: ApiResponse<AuthTokens> = await res.json();
@@ -115,9 +131,13 @@ export async function addAdmin(payload: AddAdminPayload): Promise<void> {
   if (!res.ok) {
     const json = await res.json().catch(() => ({}));
     let errorMessage = json.message || 'Failed to add admin.';
-    
-    if (Array.isArray(json.errors)) {
-      errorMessage = json.errors.join(' ');
+    if (json.errors) {
+      if (Array.isArray(json.errors)) {
+        errorMessage = json.errors.join(' ');
+      } else if (typeof json.errors === 'object') {
+        const vals = Object.values(json.errors).flat();
+        if (vals.length > 0) errorMessage = vals.join(' ');
+      }
     } else if (Array.isArray(json)) {
       errorMessage = json.join(' ');
     }
@@ -145,9 +165,13 @@ export async function updatePassword(payload: UpdatePasswordPayload): Promise<vo
   if (!res.ok) {
     const json = await res.json().catch(() => ({}));
     let errorMessage = json.message || 'Failed to update password.';
-    
-    if (Array.isArray(json.errors)) {
-      errorMessage = json.errors.join(' ');
+    if (json.errors) {
+      if (Array.isArray(json.errors)) {
+        errorMessage = json.errors.join(' ');
+      } else if (typeof json.errors === 'object') {
+        const vals = Object.values(json.errors).flat();
+        if (vals.length > 0) errorMessage = vals.join(' ');
+      }
     } else if (Array.isArray(json)) {
       errorMessage = json.join(' ');
     }

@@ -374,18 +374,20 @@ export default function ProjectFilters({ values, onApply, onClear, isLoading = f
                 <label className={labelClass}>{t('projects.filters.priceRange')}</label>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <input
-                    type="number"
-                    min={0}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={draft.minimumPrice}
-                    onChange={(event) => updateDraft('minimumPrice', event.target.value)}
+                    onChange={(event) => updateDraft('minimumPrice', event.target.value.replace(/[^0-9]/g, ''))}
                     className={textInputClass}
                     placeholder={t('projects.filters.minPrice')}
                   />
                   <input
-                    type="number"
-                    min={0}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={draft.maximumPrice}
-                    onChange={(event) => updateDraft('maximumPrice', event.target.value)}
+                    onChange={(event) => updateDraft('maximumPrice', event.target.value.replace(/[^0-9]/g, ''))}
                     className={textInputClass}
                     placeholder={t('projects.filters.maxPrice')}
                   />
