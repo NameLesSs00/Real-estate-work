@@ -1,16 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { Check, ChevronDown, ImagePlus, Loader2, Plus, Trash2, X } from 'lucide-react';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
+import { getServices, type Service } from '@/lib/api/services';
+import { getFacilityServiceIcon } from '@/lib/icons/facilityServiceIcons';
 import {
-  createUnitOutside,
-  updateUnitOutside,
   addUnitOutsideImages,
+  createUnitOutside,
   getUnitOutsideById,
-  UnitOutside,
+  UNIT_OUTSIDE_CURRENCIES,
+  UNIT_OUTSIDE_PROPERTY_TYPES,
+  type UnitOutside,
+  type UnitOutsideImage,
+  type UnitOutsidePrice,
+  updateUnitOutside,
+  deleteUnitOutsideImage,
 } from '@/lib/api/unitOutsides';
+import { API_DOMAIN } from '@/lib/api/config';
 
 interface Props {
   isOpen: boolean;
@@ -19,276 +29,385 @@ interface Props {
   editData?: UnitOutside | null;
 }
 
-const EMPTY = {
+type Lang = 'en' | 'de' | 'it';
+
+interface PlanDraft {
+  id?: number;
+  commissionRate: number | '';
+  installmentMothes: number | '';
+  installmentDownPayment: number | '';
+  paymentType: string;
+}
+
+interface FormState {
+  name: Record<Lang, string>;
+  description: Record<Lang, string>;
+  prices: UnitOutsidePrice[];
+  area: number | '';
+  noBedRoom: number | '';
+  noBathRoom: number | '';
+  noKitchen: number | '';
+  noFloor: number | '';
+  country: string;
+  city: string;
+  street: string;
+  propertyType: string;
+  floorNumber: number | '';
+  floorName: string;
+  view: string;
+  type: string;
+  isFeatured: boolean;
+  serviceIds: number[];
+  paymentPlans: PlanDraft[];
+}
+
+const makePrices = (prices: UnitOutsidePrice[] = []): UnitOutsidePrice[] =>
+  UNIT_OUTSIDE_CURRENCIES.map((currency) => {
+    const existing = prices.find((price) => price.currency?.toUpperCase() === currency);
+    return {
+      id: existing?.id,
+      currency,
+      price: existing?.price ?? 0,
+    };
+  });
+
+const EMPTY: FormState = {
   name: { en: '', de: '', it: '' },
   description: { en: '', de: '', it: '' },
-  price: '' as number | '',
-  currencyCode: 'USD',
-  area: '' as number | '',
-  noBedRoom: '' as number | '',
-  noBathRoom: '' as number | '',
-  noKitchen: '' as number | '',
+  prices: makePrices(),
+  area: '',
+  noBedRoom: '',
+  noBathRoom: '',
+  noKitchen: '',
+  noFloor: '',
   country: '',
   city: '',
   street: '',
   propertyType: 'Apartment',
-  floorNumber: '' as number | '',
+  floorNumber: '',
   floorName: '',
   view: '',
   type: 'Buy',
   isFeatured: false,
-  paymentPlans: [] as {
-    id?: number;
-    commissionRate: number | '';
-    installmentMothes: number | '';
-    installmentDownPayment: number | '';
-    paymentType: string;
-  }[],
+  serviceIds: [],
+  paymentPlans: [],
 };
 
+const LANG_TABS = [
+  { key: 'en', label: 'English' },
+  { key: 'de', label: 'German' },
+  { key: 'it', label: 'Italian' },
+] as const;
+
+const LISTING_TYPES = ['Buy', 'Rent'] as const;
+
 const inputCls =
-  'w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 text-brand-primary placeholder-gray-400 bg-white text-[14px]';
+  'w-full rounded-xl border border-brand-divider bg-white px-4 py-3 text-[14px] font-semibold text-brand-primary outline-none transition focus:border-brand-secondary focus:ring-4 focus:ring-brand-primary/5 placeholder:text-brand-muted-light';
+
+const labelCls = 'text-[13px] font-bold text-brand-primary';
+
+const getLocalizedValue = (value: string | Record<string, string> | null | undefined, lang: Lang) => {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  return value[lang] || value.en || value.de || value.it || '';
+};
+
+function resolveImageUrl(url: string): string {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  return `${API_DOMAIN}${url.startsWith('/') ? '' : '/'}${url}`;
+}
 
 export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editData }: Props) {
   useBodyScrollLock(isOpen);
   useEscapeKey(onClose, isOpen);
 
-  const isEdit = !!editData;
-  const [form, setForm] = useState(EMPTY);
+  const { getLocalized } = useLanguage();
+  const isEdit = Boolean(editData);
+  const [form, setForm] = useState<FormState>(EMPTY);
+  const [services, setServices] = useState<Service[]>([]);
+  const [existingImages, setExistingImages] = useState<UnitOutsideImage[]>([]);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [deletingImageId, setDeletingImageId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [langTab, setLangTab] = useState<'en' | 'de' | 'it'>('en');
+  const [langTab, setLangTab] = useState<Lang>('en');
 
-  // Reset / populate on open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    let mounted = true;
+    getServices()
+      .then((items) => {
+        if (mounted) setServices(items);
+      })
+      .catch(() => {
+        if (mounted) setServices([]);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     if (!isOpen) {
       setForm(EMPTY);
+      setExistingImages([]);
       setImageFiles([]);
       setImagePreviews([]);
       setError('');
       setLangTab('en');
       return;
     }
-    if (isEdit && editData) {
-      (async () => {
-        setIsLoading(true);
-        try {
-          const [enData, deData, plData] = await Promise.all([
-            getUnitOutsideById(editData.id, 'en'),
-            getUnitOutsideById(editData.id, 'de'),
-            getUnitOutsideById(editData.id, 'it')
-          ]);
 
-          setForm({
-            name: { 
-              en: enData.name ?? '', 
-              de: deData.name ?? '', 
-              it: plData.name ?? '' 
-            },
-            description: { 
-              en: enData.description ?? '', 
-              de: deData.description ?? '', 
-              it: plData.description ?? '' 
-            },
-            price: enData.price ?? '',
-            currencyCode: enData.currencyCode || 'USD',
-            area: enData.area ?? '',
-            noBedRoom: enData.noBedRoom ?? '',
-            noBathRoom: enData.noBathRoom ?? '',
-            noKitchen: enData.noKitchen ?? '',
-            country: enData.country ?? '',
-            city: enData.city ?? '',
-            street: enData.street ?? '',
-            propertyType: (enData.propertyType ?? '').toString(),
-            floorNumber: enData.floorNumber ?? '',
-            floorName: enData.floorName ?? '',
-            view: (enData.view ?? '').toString(),
-            type: 'Buy',
-            isFeatured: enData.isFeatured ?? false,
-            paymentPlans: (enData.paymentPlans ?? []).map((p) => ({
-              id: p.id,
-              commissionRate: p.commissionRate ?? 0,
-              installmentMothes: p.installmentMothes ?? 0,
-              installmentDownPayment: p.installmentDownPayment ?? 0,
-              paymentType: p.paymentType ?? 'Installment',
-            })),
-          });
-        } catch {
-          setError('Failed to load unit data.');
-        } finally {
-          setIsLoading(false);
-        }
-      })();
-    } else {
-      setForm(EMPTY);
+    if (!isEdit || !editData) {
+      setForm({ ...EMPTY, prices: makePrices() });
+      setExistingImages([]);
+      return;
     }
+
+    let mounted = true;
+    setIsLoading(true);
+    setError('');
+
+    Promise.all([
+      getUnitOutsideById(editData.id, 'en'),
+      getUnitOutsideById(editData.id, 'de'),
+      getUnitOutsideById(editData.id, 'it'),
+    ])
+      .then(([enData, deData, itData]) => {
+        if (!mounted) return;
+        setForm({
+          name: {
+            en: getLocalizedValue(enData.name, 'en'),
+            de: getLocalizedValue(deData.name, 'de'),
+            it: getLocalizedValue(itData.name, 'it'),
+          },
+          description: {
+            en: getLocalizedValue(enData.description, 'en'),
+            de: getLocalizedValue(deData.description, 'de'),
+            it: getLocalizedValue(itData.description, 'it'),
+          },
+          prices: makePrices(enData.prices),
+          area: enData.area ?? '',
+          noBedRoom: enData.noBedRoom ?? '',
+          noBathRoom: enData.noBathRoom ?? '',
+          noKitchen: enData.noKitchen ?? '',
+          noFloor: enData.noFloor ?? '',
+          country: enData.country ?? '',
+          city: enData.city ?? '',
+          street: enData.street ?? '',
+          propertyType: enData.propertyType || 'Apartment',
+          floorNumber: enData.floorNumber ?? '',
+          floorName: enData.floorName ?? '',
+          view: enData.view ?? '',
+          type: enData.type || 'Buy',
+          isFeatured: enData.isFeatured ?? false,
+          serviceIds: enData.serviceIds ?? [],
+          paymentPlans: (enData.paymentPlans ?? []).map((plan) => {
+            const isCashPlan = plan.paymentType === 'Cash';
+
+            return {
+              id: plan.id,
+              commissionRate: isCashPlan ? 0 : plan.commissionRate ?? 0,
+              installmentMothes: isCashPlan ? 0 : plan.installmentMothes ?? 0,
+              installmentDownPayment: isCashPlan ? 0 : plan.installmentDownPayment ?? 0,
+              paymentType: plan.paymentType ?? 'Installment',
+            };
+          }),
+        });
+        setExistingImages(enData.images ?? []);
+      })
+      .catch(() => setError('Failed to load unit data.'))
+      .finally(() => {
+        if (mounted) setIsLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
   }, [isOpen, isEdit, editData]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    setImageFiles((prev) => [...prev, ...files]);
-    setImagePreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))]);
+  const selectedServices = useMemo(() => {
+    return services.filter((service) => form.serviceIds.includes(service.id));
+  }, [form.serviceIds, services]);
+
+  const updateField = <K extends keyof FormState>(field: K, value: FormState[K]) => {
+    setForm((current) => ({ ...current, [field]: value }));
+    setError('');
   };
 
-  const removeImage = (i: number) => {
-    setImageFiles((prev) => prev.filter((_, idx) => idx !== i));
-    setImagePreviews((prev) => prev.filter((_, idx) => idx !== i));
-  };
-
-  const setField = (field: keyof typeof EMPTY) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-      const val =
-        e.target.type === 'checkbox'
-          ? (e.target as HTMLInputElement).checked
-          : e.target.type === 'number'
-          ? e.target.value === ''
-            ? ''
-            : Number(e.target.value)
-          : e.target.value;
-      setForm((prev) => ({ ...prev, [field]: val }));
-    };
-
-  const setLangField =
-    (field: 'name' | 'description', lang: 'en' | 'de' | 'it') =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setForm((prev) => ({
-        ...prev,
-        [field]: { ...(prev[field] as Record<string, string>), [lang]: e.target.value },
-      }));
-    };
-
-  const updatePlan = (i: number, key: string, val: string | number) =>
-    setForm((prev) => ({
-      ...prev,
-      paymentPlans: prev.paymentPlans.map((p, idx) => (idx === i ? { ...p, [key]: val } : p)),
+  const updateLangField = (field: 'name' | 'description', lang: Lang, value: string) => {
+    setForm((current) => ({
+      ...current,
+      [field]: { ...current[field], [lang]: value },
     }));
+    setError('');
+  };
+
+  const updatePrice = (currency: string, value: string) => {
+    const numericValue = Number(value) || 0;
+    setForm((current) => ({
+      ...current,
+      prices: current.prices.map((price) => price.currency === currency ? { ...price, price: numericValue } : price),
+    }));
+    setError('');
+  };
+
+  const updatePlan = (index: number, key: keyof PlanDraft, value: string | number) => {
+    setForm((current) => ({
+      ...current,
+      paymentPlans: current.paymentPlans.map((plan, planIndex) => {
+        if (planIndex !== index) return plan;
+
+        if (key === 'paymentType') {
+          if (value === 'Cash') {
+            return {
+              ...plan,
+              paymentType: 'Cash',
+              commissionRate: 0,
+              installmentMothes: 0,
+              installmentDownPayment: 0,
+            };
+          }
+
+          return {
+            ...plan,
+            paymentType: String(value),
+            commissionRate: plan.commissionRate ?? 0,
+            installmentMothes: plan.installmentMothes ?? 1,
+            installmentDownPayment: plan.installmentDownPayment ?? 0,
+          };
+        }
+
+        return { ...plan, [key]: value };
+      }),
+    }));
+    setError('');
+  };
+
+  const toggleService = (serviceId: number) => {
+    setForm((current) => ({
+      ...current,
+      serviceIds: current.serviceIds.includes(serviceId)
+        ? current.serviceIds.filter((id) => id !== serviceId)
+        : [...current.serviceIds, serviceId],
+    }));
+    setError('');
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
+    setImageFiles((current) => [...current, ...files]);
+    setImagePreviews((current) => [...current, ...files.map((file) => URL.createObjectURL(file))]);
+  };
+
+  const removeImage = (index: number) => {
+    setImageFiles((current) => current.filter((_, itemIndex) => itemIndex !== index));
+    setImagePreviews((current) => current.filter((_, itemIndex) => itemIndex !== index));
+  };
+
+  const removeExistingImage = async (imageId: number) => {
+    if (!editData) return;
+
+    setDeletingImageId(imageId);
+    setError('');
+    try {
+      await deleteUnitOutsideImage(editData.id, imageId);
+      setExistingImages((current) => current.filter((image) => image.id !== imageId));
+      onSuccess();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to delete image.');
+    } finally {
+      setDeletingImageId(null);
+    }
+  };
+
+  const validate = () => {
+    if (!form.name.en.trim()) return 'English name is required.';
+    if (!form.description.en.trim()) return 'English description is required.';
+    if (!form.country.trim()) return 'Country is required.';
+    if (!form.city.trim()) return 'City is required.';
+    if (!form.street.trim()) return 'Street is required.';
+    if (!form.area || Number(form.area) <= 0) return 'Area must be greater than 0.';
+    if (form.noBedRoom === '') return 'Number of bedrooms is required.';
+    if (form.noBathRoom === '') return 'Number of bathrooms is required.';
+    if (form.noKitchen === '') return 'Number of kitchens is required.';
+    if (form.noFloor === '') return 'Number of floors is required.';
+    if (form.floorNumber === '') return 'Floor number is required.';
+    if (!form.view.trim()) return 'View is required.';
+    if (!LISTING_TYPES.includes(form.type as typeof LISTING_TYPES[number])) return 'Listing type is required.';
+    if (form.prices.some((price) => !price.currency || Number(price.price) <= 0)) return 'Please enter prices for USD, EGP, EUR, and GBP.';
+    if (form.paymentPlans.some((plan) => plan.paymentType === 'Installment' && Number(plan.installmentMothes) <= 0)) {
+      return 'Installment plans must have months greater than 0.';
+    }
+    return '';
+  };
 
   const handleSubmit = async () => {
-    if (!form.name.en.trim()) { setError('English name is required.'); return; }
-    if (!form.description.en.trim()) { setError('English description is required.'); return; }
-    if (!form.price || Number(form.price) <= 0) { setError('Price must be greater than 0.'); return; }
-    if (!form.country.trim()) { setError('Country is required.'); return; }
-    if (!form.city.trim()) { setError('City is required.'); return; }
-    if (!form.street.trim()) { setError('Street is required.'); return; }
-    if (!form.area || Number(form.area) <= 0) { setError('Area must be greater than 0.'); return; }
-    if (form.noBedRoom === '') { setError('Number of bedrooms is required.'); return; }
-    if (form.noBathRoom === '') { setError('Number of bathrooms is required.'); return; }
-    if (form.noKitchen === '') { setError('Number of kitchens is required.'); return; }
-    if (form.floorNumber === '') { setError('Floor number is required.'); return; }
-    if (!form.view.trim()) { setError('View is required.'); return; }
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
 
-    // Remove VIEW_MAPPING as view is now a custom string input
-
-
-
-    const validatedPlans = form.paymentPlans.map((p) => {
-      const isCash = p.paymentType === 'Cash';
+    const paymentPlan = form.paymentPlans.map((plan) => {
+      const isCash = plan.paymentType === 'Cash';
       return {
-        Id: p.id,
-        id: p.id,
-        CommissionRate: Number(p.commissionRate) || 0,
-        commissionRate: Number(p.commissionRate) || 0,
-        InstallmentMothes: isCash ? 0 : (Number(p.installmentMothes) || 0),
-        installmentMothes: isCash ? 0 : (Number(p.installmentMothes) || 0),
-        InstallmentDownPayment: isCash ? 0 : (Number(p.installmentDownPayment) || 0),
-        installmentDownPayment: isCash ? 0 : (Number(p.installmentDownPayment) || 0),
-        PaymentType: p.paymentType,
-        paymentType: p.paymentType,
+        commissionRate: isCash ? 0 : Number(plan.commissionRate) || 0,
+        installmentMothes: isCash ? 0 : Number(plan.installmentMothes) || 0,
+        installmentDownPayment: isCash ? 0 : Number(plan.installmentDownPayment) || 0,
+        paymentType: plan.paymentType,
       };
     });
 
-    if (validatedPlans.some(p => p.PaymentType === 'Installment' && p.InstallmentMothes <= 0)) {
-      setError('Installment plans must have months greater than 0.');
-      return;
-    }
+    const payload = {
+      name: {
+        en: form.name.en.trim(),
+        de: form.name.de.trim() || form.name.en.trim(),
+        it: form.name.it.trim() || form.name.en.trim(),
+      },
+      description: {
+        en: form.description.en.trim(),
+        de: form.description.de.trim() || form.description.en.trim(),
+        it: form.description.it.trim() || form.description.en.trim(),
+      },
+      price: 0,
+      currencyCode: 'EGP',
+      area: Number(form.area) || 0,
+      noBathRoom: Number(form.noBathRoom) || 0,
+      noBedRoom: Number(form.noBedRoom) || 0,
+      noKitchen: Number(form.noKitchen) || 0,
+      country: form.country.trim(),
+      city: form.city.trim(),
+      street: form.street.trim(),
+      propertyType: form.propertyType,
+      floorNumber: Number(form.floorNumber) || 0,
+      view: form.view.trim(),
+      type: form.type,
+      floorName: form.floorName.trim(),
+      isFeatured: form.isFeatured,
+      isSoldOutside: false,
+      noFloor: Number(form.noFloor) || 0,
+      prices: form.prices.map((price) => ({ id: price.id, currency: price.currency, price: Number(price.price) || 0 })),
+      paymentPlan,
+      serviceIds: form.serviceIds,
+    };
 
     setIsLoading(true);
     setError('');
     try {
-      const viewValue = form.view.toString();
-      const propTypeValue = form.propertyType;
-      const fd = new FormData();
-      
-      // Basic Info
       if (isEdit && editData) {
-        fd.append('Id', String(editData.id));
-      }
-      
-      // Localized Name
-      fd.append('Name.En', form.name.en);
-      fd.append('Name.De', form.name.de || form.name.en);
-      fd.append('Name.It', form.name.it || form.name.en);
-      
-      // Localized Description
-      fd.append('Description.En', form.description.en);
-      fd.append('Description.De', form.description.de || form.description.en);
-      fd.append('Description.It', form.description.it || form.description.en);
-      
-      // Numbers & Strings
-      fd.append('Price', String(Number(form.price) || 0));
-      fd.append('CurrencyCode', form.currencyCode);
-      fd.append('Area', String(Number(form.area) || 0));
-      fd.append('NoBathRoom', String(Number(form.noBathRoom) || 0));
-      fd.append('NoBedRoom', String(Number(form.noBedRoom) || 0));
-      fd.append('NoKitchen', String(Number(form.noKitchen) || 0));
-      fd.append('NoKithchen', String(Number(form.noKitchen) || 0));
-      fd.append('Country', form.country);
-      fd.append('City', form.city);
-      fd.append('Street', form.street);
-      fd.append('PropertyType', String(propTypeValue));
-      fd.append('FloorNumber', String(Number(form.floorNumber) || 0));
-      fd.append('FloorName', form.floorName);
-      fd.append('View', String(viewValue));
-      fd.append('Type', 'Buy');
-      fd.append('Status', 'Resale');
-      fd.append('IsFeatured', String(form.isFeatured));
-      
-      // Payment Plans
-      form.paymentPlans.forEach((p, i) => {
-        const isCash = p.paymentType === 'Cash';
-        if (p.id) fd.append(`PaymentPlan[${i}].id`, String(p.id));
-        fd.append(`PaymentPlan[${i}].commissionRate`, String(Number(p.commissionRate) || 0));
-        fd.append(`PaymentPlan[${i}].installmentMothes`, String(isCash ? 0 : (Number(p.installmentMothes) || 0)));
-        fd.append(`PaymentPlan[${i}].installmentDownPayment`, String(isCash ? 0 : (Number(p.installmentDownPayment) || 0)));
-        fd.append(`PaymentPlan[${i}].paymentType`, p.paymentType);
-      });
-
-      // Images
-      imageFiles.forEach((f) => fd.append('Images', f));
-
-      if (isEdit) {
-        await updateUnitOutside(fd);
+        await updateUnitOutside(editData.id, { ...payload, id: editData.id });
+        if (imageFiles.length > 0) {
+          await addUnitOutsideImages(editData.id, imageFiles);
+        }
       } else {
-        const newId = await createUnitOutside({
-          name: form.name,
-          description: form.description,
-          price: Number(form.price) || 0,
-          currencyCode: form.currencyCode,
-          area: Number(form.area) || 0,
-          noBathRoom: Number(form.noBathRoom) || 0,
-          noBedRoom: Number(form.noBedRoom) || 0,
-          noKitchen: Number(form.noKitchen) || 0,
-          country: form.country,
-          city: form.city,
-          street: form.street,
-          propertyType: propTypeValue,
-          floorNumber: Number(form.floorNumber) || 0,
-          view: viewValue,
-          type: 'Buy',
-          status: 'Resale',
-          floorName: form.floorName,
-          isFeatured: form.isFeatured,
-          paymentPlans: form.paymentPlans.map(p => ({
-            commissionRate: Number(p.commissionRate) || 0,
-            installmentMothes: p.paymentType === 'Cash' ? 0 : (Number(p.installmentMothes) || 0),
-            installmentDownPayment: p.paymentType === 'Cash' ? 0 : (Number(p.installmentDownPayment) || 0),
-            paymentType: p.paymentType
-          })),
-        });
+        const newId = await createUnitOutside(payload);
         if (imageFiles.length > 0 && newId) {
-          await addUnitOutsideImages(Number(newId), imageFiles).catch(() => {});
+          await addUnitOutsideImages(Number(newId), imageFiles);
         }
       }
       onSuccess();
@@ -302,320 +421,401 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
 
   if (!isOpen) return null;
 
-  const LANG_TABS = [
-    { key: 'en', label: 'English', color: 'bg-brand-secondary-soft text-brand-secondary' },
-    { key: 'de', label: 'German', color: 'bg-amber-50 text-amber-600' },
-    { key: 'it', label: 'Italian', color: 'bg-green-50 text-green-700' },
-  ] as const;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
-      <div
-        className="bg-white rounded-[32px] w-full max-w-[1100px] max-h-[94vh] flex flex-col shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="bg-brand-primary rounded-t-[32px] px-8 py-6 flex items-center justify-between shrink-0">
-          <h2 className="text-white text-[22px] font-bold">
-            {isEdit ? 'Edit Resale Unit' : 'Add Resale Unit'}
-          </h2>
-          <button onClick={onClose} className="hover:rotate-90 transition-transform duration-300 cursor-pointer border-none bg-transparent outline-none">
-            <Image src="/admin/units/addUnit/close-square.png" alt="Close" width={28} height={28} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 font-inter backdrop-blur-sm">
+      <div className="flex max-h-[94vh] w-full max-w-[1120px] flex-col overflow-hidden rounded-[28px] bg-white shadow-2xl">
+        <div className="flex shrink-0 items-center justify-between bg-brand-primary px-6 py-5 sm:px-8">
+          <div>
+            <h2 className="text-[22px] font-bold text-white">{isEdit ? 'Edit Resale Unit' : 'Add Resale Unit'}</h2>
+            <p className="mt-1 text-[13px] font-semibold text-white/60">Use multi-currency prices from the new resale endpoint.</p>
+          </div>
+          <button type="button" onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-white transition hover:bg-white/20">
+            <X size={20} />
           </button>
         </div>
 
-        <div className="p-8 overflow-y-auto space-y-8 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto bg-admin-bg p-5 sm:p-8">
           {isLoading && isEdit ? (
             <div className="flex justify-center py-20">
-              <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
+              <Loader2 className="animate-spin text-brand-primary" size={38} />
             </div>
           ) : (
-            <>
-              {/* ── Language Tabs ── */}
-              <div className="space-y-4">
-                <div className="flex gap-2 bg-gray-100 p-1 rounded-2xl w-fit">
-                  {LANG_TABS.map((t) => (
+            <div className="space-y-7">
+              <section className="rounded-[22px] border border-brand-divider bg-white p-5 shadow-sm sm:p-6">
+                <div className="mb-5 flex flex-wrap gap-2">
+                  {LANG_TABS.map((tab) => (
                     <button
-                      key={t.key}
+                      key={tab.key}
                       type="button"
-                      onClick={() => setLangTab(t.key)}
-                      className={`px-5 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer ${
-                        langTab === t.key ? `${t.color} shadow-sm` : 'text-gray-500 hover:text-brand-primary'
+                      onClick={() => setLangTab(tab.key)}
+                      className={`rounded-xl px-4 py-2 text-[13px] font-bold transition ${
+                        langTab === tab.key ? 'bg-brand-primary text-white' : 'bg-brand-primary-soft text-brand-muted hover:text-brand-primary'
                       }`}
                     >
-                      {t.label}
+                      {tab.label}
                     </button>
                   ))}
                 </div>
-
-                <div className="bg-white border border-gray-100 rounded-[24px] p-6 shadow-sm space-y-5">
+                <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-brand-primary">
-                      Unit Name ({langTab.toUpperCase()}) {langTab === 'en' && '*'}
-                    </label>
+                    <label className={labelCls}>Unit Name ({langTab.toUpperCase()}) {langTab === 'en' && '*'}</label>
                     <input
                       type="text"
                       value={form.name[langTab]}
-                      onChange={setLangField('name', langTab)}
-                      placeholder={`Name in ${LANG_TABS.find((t) => t.key === langTab)?.label}`}
+                      onChange={(event) => updateLangField('name', langTab, event.target.value)}
                       className={inputCls}
+                      placeholder={`Name in ${LANG_TABS.find((tab) => tab.key === langTab)?.label}`}
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[14px] font-bold text-brand-primary">
-                      Description ({langTab.toUpperCase()}) {langTab === 'en' && '*'}
-                    </label>
+                    <label className={labelCls}>Description ({langTab.toUpperCase()}) {langTab === 'en' && '*'}</label>
                     <textarea
-                      rows={3}
+                      rows={4}
                       value={form.description[langTab]}
-                      onChange={setLangField('description', langTab)}
-                      placeholder="Description..."
+                      onChange={(event) => updateLangField('description', langTab, event.target.value)}
                       className={`${inputCls} resize-none`}
+                      placeholder="Description..."
                     />
                   </div>
                 </div>
-              </div>
+              </section>
 
-              {/* ── Location ── */}
-              <div className="space-y-3">
-                <h3 className="text-[15px] font-bold text-brand-primary flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-primary" /> Location
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-[13px] font-semibold text-brand-primary">Country *</label>
-                    <input type="text" value={form.country} onChange={setField('country')} placeholder="e.g. Egypt" className={inputCls} />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[13px] font-semibold text-brand-primary">City *</label>
-                    <input type="text" value={form.city} onChange={setField('city')} placeholder="e.g. Cairo" className={inputCls} />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[13px] font-semibold text-brand-primary">Street *</label>
-                    <input type="text" value={form.street} onChange={setField('street')} placeholder="e.g. 10 Nile St" className={inputCls} />
-                  </div>
+              <section className="rounded-[22px] border border-brand-divider bg-white p-5 shadow-sm sm:p-6">
+                <div className="mb-5 flex items-center justify-between gap-4">
+                  <h3 className="text-[17px] font-black text-brand-primary">Pricing</h3>
+                  <span className="rounded-full bg-brand-primary-soft px-3 py-1 text-[12px] font-bold text-brand-muted">
+                    Required in 4 currencies
+                  </span>
                 </div>
-              </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                  {form.prices.map((price) => (
+                    <div key={price.currency} className="rounded-2xl border border-brand-divider bg-brand-bg p-4">
+                      <label className="mb-2 block text-[12px] font-black uppercase tracking-[0.12em] text-brand-primary">
+                        {price.currency}
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={price.price || ''}
+                        onChange={(event) => updatePrice(price.currency, event.target.value)}
+                        className={inputCls}
+                        placeholder="0"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
 
-              {/* ── Price & Currency ── */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="space-y-2 col-span-2">
-                  <label className="text-[13px] font-semibold text-brand-primary">Price *</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      value={form.price}
-                      onChange={(e) => setForm((p) => ({ ...p, price: e.target.value ? Number(e.target.value) : '' }))}
-                      placeholder="0"
-                      className={`flex-1 ${inputCls}`}
-                    />
-                    <select
-                      value={form.currencyCode}
-                      onChange={(e) => setForm((p) => ({ ...p, currencyCode: e.target.value }))}
-                      className="w-24 border border-gray-200 rounded-xl px-3 py-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 text-brand-primary bg-white font-bold text-[13px]"
-                    >
-                      {['USD', 'EUR', 'EGP'].map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
+              <section className="rounded-[22px] border border-brand-divider bg-white p-5 shadow-sm sm:p-6">
+                <h3 className="mb-5 text-[17px] font-black text-brand-primary">Location and Details</h3>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div className="space-y-2">
+                    <label className={labelCls}>Country *</label>
+                    <input value={form.country} onChange={(event) => updateField('country', event.target.value)} className={inputCls} placeholder="Egypt" />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-brand-primary">Area (m²) *</label>
-                  <input type="number" value={form.area} onChange={(e) => setForm((p) => ({ ...p, area: e.target.value ? Number(e.target.value) : '' }))} min={0} className={inputCls} />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-brand-primary">Property Type *</label>
-                  <select value={form.propertyType} onChange={setField('propertyType')} className={inputCls}>
-                    {[
-                      { label: 'Apartment', value: 'Apartment' },
-                      { label: 'Villa', value: 'Villa' },
-                      { label: 'Townhouse', value: 'Townhouse' },
-                      { label: 'Studio', value: 'Studio' },
-                      { label: 'Penthouse', value: 'Penthouse' },
-                    ].map((t) => (
-                      <option key={t.value} value={t.value}>{t.label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* ── Details Grid ── */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[
-                  { label: 'Bedrooms', field: 'noBedRoom' },
-                  { label: 'Bathrooms', field: 'noBathRoom' },
-                  { label: 'Kitchens', field: 'noKitchen' },
-                  { label: 'Floor Number', field: 'floorNumber' },
-                ] .map(({ label, field }) => (
-                  <div key={field} className="space-y-2">
-                    <label className="text-[13px] font-semibold text-brand-primary">{label} *</label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={form[field as keyof typeof form] as number | ''}
-                      onChange={(e) => setForm((p) => ({ ...p, [field]: e.target.value ? Number(e.target.value) : '' }))}
-                      className={inputCls}
-                    />
+                  <div className="space-y-2">
+                    <label className={labelCls}>City *</label>
+                    <input value={form.city} onChange={(event) => updateField('city', event.target.value)} className={inputCls} placeholder="Hurghada" />
                   </div>
-                ))}
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-brand-primary">Floor Name</label>
-                  <input type="text" value={form.floorName} onChange={setField('floorName')} placeholder="e.g. Ground" className={inputCls} />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-brand-primary">View *</label>
-                  <input 
-                    type="text" 
-                    value={form.view} 
-                    onChange={setField('view')} 
-                    placeholder="e.g. Sea View" 
-                    className={inputCls} 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-brand-primary">Listing Type *</label>
-                  <select value={form.type} onChange={setField('type')} className={inputCls}>
-                    <option value="Buy">Buy</option>
-                  </select>
-                </div>
-                <div className="space-y-2 flex flex-col justify-end">
-                  <label className="flex items-center gap-3 cursor-pointer p-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                  <div className="space-y-2">
+                    <label className={labelCls}>Street *</label>
+                    <input value={form.street} onChange={(event) => updateField('street', event.target.value)} className={inputCls} placeholder="Street" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className={labelCls}>Property Type *</label>
+                    <div className="relative">
+                      <select value={form.propertyType} onChange={(event) => updateField('propertyType', event.target.value)} className={`${inputCls} appearance-none pr-10`}>
+                        {UNIT_OUTSIDE_PROPERTY_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted" size={16} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className={labelCls}>Listing Type *</label>
+                    <div className="relative">
+                      <select value={form.type} onChange={(event) => updateField('type', event.target.value)} className={`${inputCls} appearance-none pr-10`}>
+                        {LISTING_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted" size={16} />
+                    </div>
+                  </div>
+                  {[
+                    ['area', 'Area (m2) *'],
+                    ['noBedRoom', 'Bedrooms *'],
+                    ['noBathRoom', 'Bathrooms *'],
+                    ['noKitchen', 'Kitchens *'],
+                    ['noFloor', 'Building Floors *'],
+                    ['floorNumber', 'Unit Floor *'],
+                  ].map(([field, label]) => (
+                    <div key={field} className="space-y-2">
+                      <label className={labelCls}>{label}</label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={form[field as keyof FormState] as number | ''}
+                        onChange={(event) => updateField(field as keyof FormState, (event.target.value ? Number(event.target.value) : '') as never)}
+                        className={inputCls}
+                      />
+                    </div>
+                  ))}
+                  <div className="space-y-2">
+                    <label className={labelCls}>Floor Name</label>
+                    <input value={form.floorName} onChange={(event) => updateField('floorName', event.target.value)} className={inputCls} placeholder="Ground" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className={labelCls}>View *</label>
+                    <input value={form.view} onChange={(event) => updateField('view', event.target.value)} className={inputCls} placeholder="Sea View" />
+                  </div>
+                  <label className="flex min-h-[48px] cursor-pointer items-center justify-between gap-4 self-end rounded-xl border border-brand-divider bg-brand-bg px-4 py-3">
+                    <span className="text-[14px] font-bold text-brand-primary">Featured Unit</span>
                     <input
                       type="checkbox"
                       checked={form.isFeatured}
-                      onChange={(e) => setForm((p) => ({ ...p, isFeatured: e.target.checked }))}
-                      className="w-4 h-4 accent-brand-primary cursor-pointer"
+                      onChange={(event) => updateField('isFeatured', event.target.checked)}
+                      className="h-5 w-5 accent-brand-primary"
                     />
-                    <span className="text-[13px] font-semibold text-brand-primary">Featured</span>
                   </label>
                 </div>
-              </div>
+              </section>
 
-              {/* ── Payment Plans ── */}
-              <div className="space-y-4 pt-2 border-t border-gray-100">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-[15px] font-bold text-brand-primary">Payment Plans</h3>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm((p) => ({
-                        ...p,
-                        paymentPlans: [
-                          ...p.paymentPlans,
-                          { commissionRate: 0, installmentMothes: 0, installmentDownPayment: 0, paymentType: 'Installment' },
-                        ],
-                      }))
-                    }
-                    className="text-sm bg-gray-100 hover:bg-gray-200 text-brand-primary px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer"
-                  >
-                    + Add Plan
-                  </button>
-                </div>
-                {form.paymentPlans.map((plan, i) => (
-                  <div key={i} className="flex items-start gap-4 p-5 border border-gray-200 rounded-2xl bg-gray-50/50">
-                    <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div className="space-y-1.5">
-                        <label className="text-[12px] font-semibold text-gray-600">Type</label>
-                        <select
-                          value={plan.paymentType}
-                          onChange={(e) => updatePlan(i, 'paymentType', e.target.value)}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 bg-white"
-                        >
-                          <option value="Installment">Installment</option>
-                          <option value="Cash">Cash</option>
-                        </select>
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="text-[12px] font-semibold text-gray-600">Commission %</label>
-                        <input
-                          type="number" min={0} max={100}
-                          value={plan.commissionRate}
-                          onChange={(e) => updatePlan(i, 'commissionRate', e.target.value ? Number(e.target.value) : 0)}
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
-                        />
-                      </div>
-                      {plan.paymentType === 'Installment' ? (
-                        <>
-                          <div className="space-y-1.5">
-                            <label className="text-[12px] font-semibold text-gray-600">Months</label>
-                            <input
-                              type="number" min={0}
-                              value={plan.installmentMothes}
-                              onChange={(e) => updatePlan(i, 'installmentMothes', e.target.value ? Number(e.target.value) : 0)}
-                              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
-                            />
-                          </div>
-                          <div className="space-y-1.5">
-                            <label className="text-[12px] font-semibold text-gray-600">Down Payment %</label>
-                            <input
-                              type="number" min={0} max={100}
-                              value={plan.installmentDownPayment}
-                              onChange={(e) => updatePlan(i, 'installmentDownPayment', e.target.value ? Number(e.target.value) : 0)}
-                              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
-                            />
-                          </div>
-                        </>
-                      ) : (
-                        <div className="space-y-1.5 col-span-2 flex flex-col justify-center">
-                           <label className="text-[12px] font-semibold text-gray-600">Cash Amount</label>
-                           <p className="text-[14px] font-bold text-brand-primary">{form.currencyCode} {form.price.toLocaleString()}</p>
-                        </div>
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setForm((p) => ({ ...p, paymentPlans: p.paymentPlans.filter((_, idx) => idx !== i) }))}
-                      className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors mt-5 cursor-pointer"
-                    >✕</button>
+              <section className="rounded-[22px] border border-brand-divider bg-white p-5 shadow-sm sm:p-6">
+                <div className="mb-5 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-[17px] font-black text-brand-primary">Services</h3>
+                    <p className="mt-1 text-[13px] font-semibold text-brand-muted">Optional. Select any services included with this resale unit.</p>
                   </div>
-                ))}
-              </div>
-
-              {/* ── Image Upload (create only) ── */}
-              {!isEdit && (
-                <div className="space-y-3 pt-2 border-t border-gray-100">
-                  <h3 className="text-[15px] font-bold text-brand-primary">Images</h3>
-                  <label className="border-2 border-dashed border-gray-200 hover:border-brand-primary/30 bg-gray-50/50 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors">
-                    <span className="text-2xl">🖼️</span>
-                    <p className="text-gray-600 font-semibold text-sm">Click to upload images</p>
-                    <p className="text-gray-400 text-xs">You can upload multiple files</p>
-                    <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageChange} />
-                  </label>
-                  {imagePreviews.length > 0 && (
-                    <div className="flex flex-wrap gap-3">
-                      {imagePreviews.map((src, i) => (
-                        <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border-2 border-gray-200 group">
-                          <Image src={src} alt="" fill className="object-cover" />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(i)}
-                            className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-500 text-white rounded-full text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
-                          >×</button>
-                        </div>
-                      ))}
-                    </div>
+                  {selectedServices.length > 0 && (
+                    <span className="rounded-full bg-status-success-bg px-3 py-1 text-[12px] font-bold text-status-success">
+                      {selectedServices.length} selected
+                    </span>
                   )}
                 </div>
-              )}
-            </>
-          )}
+                {services.length === 0 ? (
+                  <p className="rounded-xl bg-brand-bg px-4 py-3 text-[14px] font-semibold text-brand-muted">No services available.</p>
+                ) : (
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {services.map((service) => {
+                      const checked = form.serviceIds.includes(service.id);
+                      const ServiceIcon = getFacilityServiceIcon(service.icon);
+                      return (
+                        <button
+                          key={service.id}
+                          type="button"
+                          onClick={() => toggleService(service.id)}
+                          className={`flex min-h-[52px] items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition ${
+                            checked ? 'border-brand-primary bg-brand-primary text-white' : 'border-brand-divider bg-white text-brand-primary hover:border-brand-secondary'
+                          }`}
+                        >
+                          <span className="flex min-w-0 items-center gap-3">
+                            <span
+                              className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${
+                                checked ? 'bg-white/15 text-white' : 'bg-brand-secondary/10 text-brand-secondary'
+                              }`}
+                            >
+                              <ServiceIcon size={18} />
+                            </span>
+                            <span className="line-clamp-1 text-[14px] font-bold">{getLocalized(service.name)}</span>
+                          </span>
+                          {checked && <Check size={17} className="shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
 
-          {/* Error */}
-          {error && (
-            <div className="bg-red-50 border border-red-100 text-red-600 text-[13px] font-medium px-4 py-3 rounded-xl">
-              {error}
+              <section className="rounded-[22px] border border-brand-divider bg-white p-5 shadow-sm sm:p-6">
+                <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h3 className="text-[17px] font-black text-brand-primary">Payment Plans</h3>
+                    <p className="mt-1 text-[13px] font-semibold text-brand-muted">Optional. It is okay to leave this empty.</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => updateField('paymentPlans', [
+                      ...form.paymentPlans,
+                      { commissionRate: 0, installmentMothes: 1, installmentDownPayment: 0, paymentType: 'Installment' },
+                    ])}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-primary px-4 py-2.5 text-[13px] font-bold text-white"
+                  >
+                    <Plus size={16} />
+                    Add Plan
+                  </button>
+                </div>
+
+                {form.paymentPlans.length === 0 ? (
+                  <p className="rounded-xl bg-brand-bg px-4 py-3 text-[14px] font-semibold text-brand-muted">No payment plans added.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {form.paymentPlans.map((plan, index) => {
+                      const isCash = plan.paymentType === 'Cash';
+                      const disabledInputClass = isCash ? 'cursor-not-allowed bg-gray-100 text-brand-muted-light' : '';
+
+                      return (
+                        <div key={index} className="rounded-2xl border border-brand-divider bg-brand-bg p-4 sm:p-5">
+                          <div className="mb-4 flex items-center justify-between gap-3">
+                            <div>
+                              <p className="text-[14px] font-black text-brand-primary">Plan {index + 1}</p>
+                              <p className="mt-0.5 text-[12px] font-semibold text-brand-muted">
+                                {isCash ? 'Cash plan keeps the other fields at 0.' : 'Installment plan needs months; commission and down payment can be zero.'}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => updateField('paymentPlans', form.paymentPlans.filter((_, planIndex) => planIndex !== index))}
+                              className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-red-50 text-red-600 transition hover:bg-red-100"
+                              aria-label={`Remove plan ${index + 1}`}
+                            >
+                              <Trash2 size={17} />
+                            </button>
+                          </div>
+
+                          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                            <div className="space-y-2">
+                              <label className={labelCls}>Payment Type</label>
+                              <div className="relative">
+                                <select
+                                  value={plan.paymentType}
+                                  onChange={(event) => updatePlan(index, 'paymentType', event.target.value)}
+                                  className={`${inputCls} appearance-none pr-10`}
+                                >
+                                  <option value="Installment">Installment</option>
+                                  <option value="Cash">Cash</option>
+                                </select>
+                                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted" size={16} />
+                              </div>
+                            </div>
+
+                            <div className="space-y-2">
+                              <label className={labelCls}>Commission Rate (%)</label>
+                              <input
+                                type="number"
+                                min={0}
+                                max={100}
+                                disabled={isCash}
+                                value={isCash ? 0 : plan.commissionRate ?? ''}
+                                onChange={(event) => updatePlan(index, 'commissionRate', event.target.value ? Number(event.target.value) : 0)}
+                                className={`${inputCls} ${disabledInputClass}`}
+                                placeholder="0"
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <label className={labelCls}>Installment Months</label>
+                              <input
+                                type="number"
+                                min={0}
+                                disabled={isCash}
+                                value={isCash ? 0 : plan.installmentMothes ?? ''}
+                                onChange={(event) => updatePlan(index, 'installmentMothes', event.target.value ? Number(event.target.value) : 0)}
+                                className={`${inputCls} ${disabledInputClass}`}
+                                placeholder="12"
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <label className={labelCls}>Down Payment (%)</label>
+                              <input
+                                type="number"
+                                min={0}
+                                max={100}
+                                disabled={isCash}
+                                value={isCash ? 0 : plan.installmentDownPayment ?? ''}
+                                onChange={(event) => updatePlan(index, 'installmentDownPayment', event.target.value ? Number(event.target.value) : 0)}
+                                className={`${inputCls} ${disabledInputClass}`}
+                                placeholder="0"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+
+              <section className="rounded-[22px] border border-brand-divider bg-white p-5 shadow-sm sm:p-6">
+                <h3 className="mb-4 text-[17px] font-black text-brand-primary">Images</h3>
+                {isEdit && (
+                  <div className="mb-5">
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <p className="text-[13px] font-bold text-brand-primary">Current Images</p>
+                      {existingImages.length > 0 && (
+                        <span className="text-[12px] font-semibold text-brand-muted">{existingImages.length} uploaded</span>
+                      )}
+                    </div>
+                    {existingImages.length === 0 ? (
+                      <p className="rounded-xl bg-brand-bg px-4 py-3 text-[13px] font-semibold text-brand-muted">No images uploaded yet.</p>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+                        {existingImages.map((image, index) => (
+                          <div key={image.id} className="group relative aspect-square overflow-hidden rounded-xl border border-brand-divider bg-brand-bg">
+                            <Image
+                              src={resolveImageUrl(image.imageUrl)}
+                              alt={`Unit image ${index + 1}`}
+                              fill
+                              className="object-cover"
+                              unoptimized
+                            />
+                            {image.isPrimary && (
+                              <span className="absolute left-2 top-2 rounded-lg bg-brand-secondary px-2 py-1 text-[10px] font-black uppercase text-white">
+                                Primary
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => removeExistingImage(image.id)}
+                              disabled={deletingImageId === image.id || isLoading}
+                              className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-red-600 text-white opacity-100 shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60 sm:opacity-0 sm:group-hover:opacity-100"
+                              aria-label={`Delete image ${index + 1}`}
+                            >
+                              {deletingImageId === image.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+                <label className="flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-brand-divider bg-brand-bg px-5 py-8 text-center transition hover:border-brand-secondary">
+                  <ImagePlus className="text-brand-secondary" size={30} />
+                  <span className="text-[14px] font-bold text-brand-primary">{isEdit ? 'Add more images' : 'Upload images'}</span>
+                  <span className="text-[12px] font-semibold text-brand-muted">You can select multiple files.</span>
+                  <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageChange} />
+                </label>
+                {imagePreviews.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    {imagePreviews.map((src, index) => (
+                      <div key={src} className="relative h-20 w-20 overflow-hidden rounded-xl border border-brand-divider">
+                        <Image src={src} alt="" fill className="object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full bg-red-600 text-white"
+                        >
+                          <X size={13} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              {error && (
+                <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-[14px] font-semibold text-red-600">
+                  {error}
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        {/* Footer */}
-        <div className="px-8 py-5 border-t border-gray-100 shrink-0 flex justify-end gap-3 bg-white rounded-b-[32px]">
+        <div className="flex shrink-0 flex-col-reverse gap-3 border-t border-brand-divider bg-white px-5 py-4 sm:flex-row sm:justify-end sm:px-8">
           <button
             type="button"
             onClick={onClose}
             disabled={isLoading}
-            className="px-8 py-3.5 rounded-2xl border border-gray-200 text-[15px] font-semibold text-admin-muted hover:bg-gray-50 transition-all disabled:opacity-50 cursor-pointer"
+            className="rounded-2xl border border-brand-divider px-8 py-3.5 text-[15px] font-bold text-brand-primary transition hover:bg-brand-bg disabled:opacity-50"
           >
             Cancel
           </button>
@@ -623,18 +823,10 @@ export default function AddUnitOutsideModal({ isOpen, onClose, onSuccess, editDa
             type="button"
             onClick={handleSubmit}
             disabled={isLoading}
-            className="px-10 py-3.5 rounded-2xl bg-brand-primary text-white text-[15px] font-semibold hover:bg-brand-primary-hover active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-primary px-9 py-3.5 text-[15px] font-bold text-white transition hover:bg-brand-primary-hover disabled:opacity-60"
           >
-            {isLoading ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                {isEdit ? 'Saving…' : 'Creating…'}
-              </>
-            ) : isEdit ? (
-              'Save Changes'
-            ) : (
-              'Create Unit'
-            )}
+            {isLoading && <Loader2 size={17} className="animate-spin" />}
+            {isEdit ? 'Save Changes' : 'Create Unit'}
           </button>
         </div>
       </div>

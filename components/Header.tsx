@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import BrandLogo from '@/components/BrandLogo';
 import { BRAND_NAME } from '@/lib/brand';
+import { CONTACT_FACEBOOK_URL, CONTACT_WHATSAPP_URL } from '@/lib/contactDetails';
 
 const Header = () => {
   const pathname = usePathname();
@@ -55,14 +56,6 @@ const Header = () => {
     </svg>
   );
 
-  const InstagramIcon = ({ size = 20 }: { size?: number }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-    </svg>
-  );
-
   // Hide header on admin pages
   if (pathname?.startsWith('/admin')) return null;
 
@@ -81,7 +74,7 @@ const Header = () => {
               />
               <span className="hidden min-w-0 flex-col leading-tight sm:flex">
                 <span className="truncate font-radley text-[24px] text-white md:text-[28px]">
-                  The Rook
+                  The Rock
                 </span>
                 <span className="truncate text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80 md:text-[12px]">
                   Real Estate Investment
@@ -188,7 +181,7 @@ const Header = () => {
                 />
                 <span className="min-w-0 flex flex-col leading-tight">
                   <span className="truncate font-radley text-[25px] text-brand-primary">
-                    The Rook
+                    The Rock
                   </span>
                   <span className="truncate text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-muted">
                     Real Estate Investment
@@ -226,9 +219,8 @@ const Header = () => {
               </div>
 
               <div className="flex items-center justify-center gap-8 mt-4">
-                <a href="https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-social-facebook transition-colors"><FacebookIcon size={28} /></a>
-                <a href="https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-social-instagram transition-colors"><InstagramIcon size={28} /></a>
-                <a href="https://wa.me/01200339790" target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-social-whatsapp transition-colors"><WhatsAppIcon size={28} /></a>
+                <a href={CONTACT_FACEBOOK_URL} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-social-facebook transition-colors"><FacebookIcon size={28} /></a>
+                <a href={CONTACT_WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:text-social-whatsapp transition-colors"><WhatsAppIcon size={28} /></a>
               </div>
 
               {/* Language Switcher */}

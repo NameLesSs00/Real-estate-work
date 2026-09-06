@@ -3,6 +3,7 @@
 export const dynamic = "force-dynamic";
 import { Home, MapPin, BedDouble, Bath, Utensils, Maximize2, Layers, ChevronRight, Banknote, CreditCard, Calendar } from "lucide-react";
 import { resolveProjectImageUrl } from "@/lib/api/projects";
+import { getUnitOutsideDisplayPrice } from "@/lib/api/unitOutsides";
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -38,14 +39,25 @@ export default async function PropertyDetailsPage({ params }: Props) {
   const idString = baseSlug.split("-")[0];
   const unitId = parseInt(idString, 10);
 
+
+
   if (isNaN(unitId)) notFound();
 
   let unitData: any;
 
 
+  let allServices: any[] = [];
+
   try {
     const { getUnitOutsideById } = await import("@/lib/api/unitOutsides");
-    unitData = await getUnitOutsideById(unitId, locale);
+    const { getServices } = await import("@/lib/api/services");
+
+    const [unitDataRes, servicesRes] = await Promise.all([
+      getUnitOutsideById(unitId, locale),
+      getServices()
+    ]);
+    unitData = unitDataRes;
+    allServices = servicesRes;
   } catch {
     notFound();
   }
@@ -65,13 +77,20 @@ export default async function PropertyDetailsPage({ params }: Props) {
 
   const propertyName = extractString(d.name) || extractString(d.Name) || "Untitled Property";
   const propertyDescription = extractString(d.description) || extractString(d.Description) || "";
-  const propertyPrice = d.price || d.Price || 0;
-  const propertyCurrency = d.currencyCode || d.CurrencyCode || "USD";
+  const allPrices = d.prices || d.Prices || [];
+  const displayPrice = getUnitOutsideDisplayPrice({
+    prices: allPrices,
+    price: d.price || d.Price || 0,
+    currencyCode: d.currencyCode || d.CurrencyCode || "EGP",
+  }, "EGP");
+  const propertyPrice = displayPrice.price;
+  const propertyCurrency = displayPrice.currency;
   const propertyArea = d.area || d.Area || 0;
   const propertyBedrooms = d.noBedRoom || d.NoBedRoom || 0;
   const propertyBathrooms = d.noBathRoom || d.NoBathRoom || 0;
   const propertyKitchens = d.noKitchen || d.NoKitchen || 0;
   const propertyFloorNum = d.floorNumber || d.FloorNumber || 0;
+  const propertyNoFloor = d.noFloor || d.NoFloor || 0;
   const unitTypeName = extractString(d.unitType) || extractString(d.UnitType) || "";
   const unitStatusName = extractString(d.unitStatus) || extractString(d.UnitStatus) || "";
   const propertyType = extractString(d.propertyType) || extractString(d.PropertyType) || "Property";
@@ -96,18 +115,20 @@ export default async function PropertyDetailsPage({ params }: Props) {
     .filter(Boolean) as string[];
   
   const paymentPlans = (d.paymentPlans || d.PaymentPlans || d.paymentPlan || d.PaymentPlan || []) as any[];
-  const services = ((d.services || d.Services || []) as any[])
-    .map((service) => {
-      if (typeof service === 'string') {
-        return { name: service, icon: null };
-      }
+  
+  const rawServiceIds = (d.serviceIds || d.ServiceIds || d.services || d.Services || []) as any[];
+  const unitServiceIds = rawServiceIds.map(s => {
+    if (typeof s === 'object') return s.id || s.Id || s.serviceId || s.ServiceId;
+    return parseInt(s, 10);
+  }).filter(Boolean);
 
-      return {
-        name: extractString(service?.name || service?.Name) || 'Unknown',
-        icon: service?.icon ?? service?.Icon ?? null,
-      };
-    })
-    .filter((service) => service.name);
+  const services = unitServiceIds
+    .map(id => allServices.find(s => s.id === id))
+    .filter(Boolean)
+    .map(service => ({
+      name: extractString(service!.name) || 'Unknown',
+      icon: service!.icon,
+    }));
 
   if (allResolvedImages.length === 0) {
     allResolvedImages.push(`${BASE}/mainImg.png`);
@@ -120,6 +141,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
     { label: t.projectDetails.kitchens || "Kitchens", value: propertyKitchens, icon: <Utensils size={16} className="text-gray-500" /> },
     { label: t.projectDetails.areaSize || "Area Size", value: propertyArea ? `${propertyArea} M²` : null, icon: <Maximize2 size={16} className="text-gray-500" /> },
     { label: t.projectDetails.floor || "Floor", value: propertyFloorNum, icon: <Layers size={16} className="text-gray-500" /> },
+    { label: "Building Floors", value: propertyNoFloor, icon: <Layers size={16} className="text-gray-500" /> },
   ].filter(stat => stat.value !== null && stat.value !== undefined && stat.value !== 0 && stat.value !== "");
 
   return (
@@ -204,8 +226,27 @@ export default async function PropertyDetailsPage({ params }: Props) {
           </div>
         </div>
 
+        {/* ── Description ── */}
+        <div className="bg-white border border-brand-divider rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <h2 className="text-[20px] font-bold text-brand-primary font-poppins">
+              {t.projectDetails.description || "Description"}
+            </h2>
+            <div className="h-px flex-1 bg-gray-100"></div>
+          </div>
+          <div className="flex flex-col gap-4">
+            {propertyDescription
+              ? propertyDescription.split('\n\n').map((para, i) => (
+                  <p key={i} className="text-[15px] text-brand-muted leading-relaxed font-poppins">
+                    {para}
+                  </p>
+                ))
+              : <p className="text-[14px] text-gray-400 italic font-poppins">{t.projectDetails.noDescription || "No description provided."}</p>
+            }
+          </div>
+        </div>
 
-
+        {/* ── Features & Services ── */}
         {services.length > 0 && (
           <div className="bg-white border border-brand-divider rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
             <div className="flex items-center gap-3 mb-6">
@@ -214,10 +255,9 @@ export default async function PropertyDetailsPage({ params }: Props) {
               </h2>
               <div className="h-px flex-1 bg-gray-100"></div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {services.map((service, index) => {
                 const ServiceIcon = getFacilityServiceIcon(service.icon);
-
                 return (
                   <div key={`${service.name}-${index}`} className="flex items-center gap-3 rounded-2xl bg-admin-bg px-4 py-3 text-brand-primary">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-brand-primary shadow-sm">
@@ -231,26 +271,31 @@ export default async function PropertyDetailsPage({ params }: Props) {
           </div>
         )}
 
-        {/* ── Description ── */}
-        <div className="bg-brand-bg border border-brand-divider rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-[20px] font-bold text-brand-primary font-poppins">
-              {t.projectDetails.description || "Description"}
-            </h2>
-            <div className="h-px flex-1 bg-brand-divider"></div>
+        {/* ── Pricing ── */}
+        {allPrices.length > 0 && (
+          <div className="bg-white border border-brand-divider rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">
+            <div className="flex items-center gap-3 mb-6">
+              <h2 className="text-[20px] font-bold text-brand-primary font-poppins">
+                {t.projectDetails.pricing || "Pricing"}
+              </h2>
+              <div className="h-px flex-1 bg-gray-100"></div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {allPrices.map((price: any) => {
+                const currency = price.currency || price.Currency || "";
+                const amount = price.price || price.Price || 0;
+
+                return (
+                  <div key={currency} className="rounded-2xl border border-brand-divider bg-brand-bg px-5 py-4">
+                    <p className="text-[12px] font-bold uppercase tracking-wider text-brand-muted">{currency}</p>
+                    <p className="mt-2 text-[20px] font-black text-brand-primary">{amount.toLocaleString()}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="flex flex-col gap-4">
-            {propertyDescription
-              ? propertyDescription.split('\n\n').map((para, i) => (
-                  <p key={i} className="text-[15px] text-brand-muted leading-relaxed font-poppins">
-                    {para}
-                  </p>
-                ))
-              : <p className="text-[14px] text-gray-400 italic font-poppins">{t.projectDetails.noDescription || "No description provided."}</p>
-            }
-          </div>
-        </div>
-        
+        )}
+
         {/* ── Payment Plans ── */}
         {paymentPlans.length > 0 && (
           <div className="bg-white border border-brand-divider rounded-[24px] p-6 sm:p-8 shadow-sm mb-8">

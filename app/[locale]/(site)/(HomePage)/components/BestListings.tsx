@@ -2,33 +2,34 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import ListingCard from '@/components/ListingCard';
-import { getUnitsFiltered, UnitListItem } from '@/lib/api/units';
+import PropertyCard from '@/components/PropertyCard';
+import { getUnitOutsides, getUnitOutsideDisplayPrice, UnitOutside } from '@/lib/api/unitOutsides';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
+import { slugify } from '@/lib/utils';
 
 const BestListings = () => {
-  const { t, getLocalized, language } = useLanguage();
-  const [units, setUnits] = useState<UnitListItem[]>([]);
+  const { t, language, getLocalized } = useLanguage();
+  const [units, setUnits] = useState<UnitOutside[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadUnits() {
       setIsLoading(true);
       try {
-        const data = await getUnitsFiltered({ UnitType: 'Buy', PageNumber: 1, PageSize: 8, Language: language });
+        const data = await getUnitOutsides({ IsSoldOutside: false, PageNumber: 1, PageSize: 8 });
         setUnits(data.items || []);
       } catch (err) {
-        console.error('Failed to load units:', err);
+        console.error('Failed to load resale units:', err);
       } finally {
         setIsLoading(false);
       }
     }
     loadUnits();
-  }, [language]);
+  }, []);
 
   return (
-    <section className="pt-32 pb-20 px-6">
+    <section id="best-listings" className="pt-32 pb-20 px-6">
       <div className="container mx-auto max-w-[1280px]">
         
         {/* Header */}
@@ -46,7 +47,7 @@ const BestListings = () => {
 
         {/* Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {Array(8).fill(0).map((_, i) => (
               <div key={i} className="bg-gray-100 rounded-[24px] animate-pulse h-[360px]" />
             ))}
@@ -54,28 +55,35 @@ const BestListings = () => {
         ) : units.length === 0 ? (
           <div className="text-center py-20 text-gray-500 font-medium">{t('bestListings.noListings')}</div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {units.map((unit) => (
-              <ListingCard
-                key={unit.id}
-                id={unit.id}
-                title={getLocalized(unit.name) || t('propertyCard.fallback.untitled')}
-                type={unit.propertyType || t('propertyCard.fallback.unit')}
-                location={unit.locationName || t('propertyCard.fallback.unknownLocation')}
-                price={`${unit.currencyCode || unit.currency || 'EGP'} ${unit.price?.toLocaleString()}`}
-                beds={unit.noBedRoom || 0}
-                baths={unit.noBathRoom || 0}
-                area={`${unit.area || 0} m²`}
-                image={resolveProjectImageUrl(unit.imageUrls?.[0]) || '/assists/defaultImage.png'}
-                status={!unit.isActive ? 'Sold' : (unit.unitStatus || 'For Sale')}
-                unitType={unit.unitType}
-                featured={Math.random() > 0.5} // Simulating featured flag
-              />
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {units.map((unit) => {
+              const displayPrice = getUnitOutsideDisplayPrice(unit);
+              const unitName = getLocalized(unit.name) || 'Unit';
+              const primaryImage = unit.images?.sort((a, b) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0))?.[0]?.imageUrl;
+              const location = [unit.city, unit.country].filter(Boolean).join(', ');
+              const slug = `out-${unit.id}-${slugify(unitName)}`;
+
+              return (
+                <PropertyCard
+                  key={unit.id}
+                  id={slug}
+                  title={unitName}
+                  type={unit.propertyType || t('propertyCard.fallback.unit')}
+                  location={location || '—'}
+                  price={`${displayPrice.currency} ${displayPrice.price.toLocaleString()}`}
+                  beds={unit.noBedRoom}
+                  baths={unit.noBathRoom}
+                  area={`${unit.area} m²`}
+                  image={resolveProjectImageUrl(primaryImage) || '/assists/defaultImage.png'}
+                  status={!unit.isActive || unit.isSoldOutside ? 'Sold' : 'Resale'}
+                  unitType={unit.type}
+                />
+              );
+            })}
           </div>
         )}
 
-        {/* Load More Button */}
+        {/* Show All Button */}
         <div className="mt-16 flex justify-center">
           <Link 
             href={`/${language}/properties`}

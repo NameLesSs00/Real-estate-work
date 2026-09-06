@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins, Work_Sans, Radley, Allura, Inter, Dancing_Script } from "next/font/google";
 import "../globals.css";
 import { LanguageProvider } from "@/lib/contexts/LanguageContext";
+import { KeyValuesProvider } from "@/lib/contexts/KeyValuesContext";
 import TokenRefresher from "@/lib/auth/TokenRefresher";
 import { BRAND_LOGOS, BRAND_NAME } from "@/lib/brand";
 
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
     template: `%s | ${BRAND_NAME}`,
   },
   description: `Find your dream home with ${BRAND_NAME}. We offer a curated selection of premium properties, luxury villas, and exclusive apartments in Egypt's most sought-after locations.`,
-  keywords: [BRAND_NAME, "The Rook Real Estate", "Real Estate Egypt", "Property in Egypt", "Luxury Homes Egypt", "Buy Villas Egypt", "Apartments for Sale", "Premium Real Estate"],
+  keywords: [BRAND_NAME, "The Rock Real Estate", "Real Estate Egypt", "Property in Egypt", "Luxury Homes Egypt", "Buy Villas Egypt", "Apartments for Sale", "Premium Real Estate"],
   robots: {
     index: true,
     follow: true,
@@ -103,12 +104,14 @@ export default async function LocaleLayout({
       className={`${poppins.variable} ${workSans.variable} ${inter.variable} ${radley.variable} ${allura.variable} ${dancingScript.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-poppins bg-brand-bg">
-        <LanguageProvider>
-          <TokenRefresher />
-          <main className="flex-grow">
-            {children}
-          </main>
-        </LanguageProvider>
+        <KeyValuesProvider>
+          <LanguageProvider>
+            <TokenRefresher />
+            <main className="flex-grow">
+              {children}
+            </main>
+          </LanguageProvider>
+        </KeyValuesProvider>
       </body>
     </html>
   );

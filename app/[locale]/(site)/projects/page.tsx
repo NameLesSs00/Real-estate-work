@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowRight, Building2, Loader2, MapPin, SearchX } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { getProjects, resolveProjectImageUrl, Project } from '@/lib/api/projects';
+import { getProjects, resolveProjectImageUrl, Project, type ProjectFilters as ProjectApiFilters, type FurnitureType } from '@/lib/api/projects';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { slugify } from '@/lib/utils';
 import { BRAND_LOGOS } from '@/lib/brand';
@@ -36,128 +36,62 @@ const PAGE_SIZE = 9;
 
 const hasActiveFilters = (filters: ProjectFilterValues) => Object.values(filters).some(Boolean);
 
+const getProjectFiltersFromSearchParams = (searchParams: URLSearchParams): ProjectFilterValues => ({
+  ...EMPTY_PROJECT_FILTERS,
+  searchTerm: searchParams.get('searchTerm') || '',
+  locationId: searchParams.get('locationId') || '',
+  developerId: searchParams.get('developerId') || '',
+  projectTypeId: searchParams.get('projectTypeId') || '',
+  facilityId: searchParams.get('facilityId') || '',
+  minimumPrice: searchParams.get('minimumPrice') || '',
+  maximumPrice: searchParams.get('maximumPrice') || '',
+  priceCurrency: searchParams.get('priceCurrency') || '',
+  furnitureType: searchParams.get('furnitureType') || '',
+  isFurniture: searchParams.get('isFurniture') || '',
+  isFeature: searchParams.get('isFeature') || '',
+  deliveryDateFrom: searchParams.get('deliveryDateFrom') || '',
+  deliveryDateTo: searchParams.get('deliveryDateTo') || '',
+  sortBy: searchParams.get('sortBy') || '',
+  sortDirection: searchParams.get('sortDirection') || '',
+});
 
+const filtersAreEqual = (a: ProjectFilterValues, b: ProjectFilterValues) => {
+  return Object.keys(EMPTY_PROJECT_FILTERS).every((key) => a[key as keyof ProjectFilterValues] === b[key as keyof ProjectFilterValues]);
+};
 
+const toNumber = (value: string) => {
+  if (!value) return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+};
 
-/** Apply all active filters to a list of projects client-side */
-function applyClientFilters(projects: Project[], filters: ProjectFilterValues): Project[] {
-  let result = [...projects];
+const toBoolean = (value: string) => {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return undefined;
+};
 
-  const searchTerm = filters.searchTerm.trim().toLowerCase();
-  if (searchTerm) {
-    result = result.filter((p) => {
-      const name = typeof p.name === 'string' ? p.name : Object.values(p.name || {}).join(' ');
-      const desc = typeof p.description === 'string' ? p.description : Object.values(p.description || {}).join(' ');
-      return (
-        name.toLowerCase().includes(searchTerm) ||
-        desc.toLowerCase().includes(searchTerm) ||
-        (p.developerName || '').toLowerCase().includes(searchTerm) ||
-        (p.locationName || '').toLowerCase().includes(searchTerm)
-      );
-    });
-  }
+const buildApiFilters = (filters: ProjectFilterValues): ProjectApiFilters => {
+  const furnitureType = toNumber(filters.furnitureType);
 
-  if (filters.locationId) {
-    const id = Number(filters.locationId);
-    result = result.filter((p) => p.locationId === id);
-  }
-
-  if (filters.developerId) {
-    const id = Number(filters.developerId);
-    result = result.filter((p) => p.developerId === id);
-  }
-
-  if (filters.projectTypeId) {
-    const id = Number(filters.projectTypeId);
-    result = result.filter((p) =>
-      (p.projectTypeIds || []).includes(id) ||
-      (p.projectTypes || []).some((pt) => pt.id === id)
-    );
-  }
-
-  if (filters.facilityId) {
-    const id = Number(filters.facilityId);
-    result = result.filter((p) =>
-      (p.facilityIds || []).includes(id) ||
-      (p.facilities || []).some((f) => (typeof f === 'number' ? f === id : (f as { id?: number }).id === id))
-    );
-  }
-
-  if (filters.minimumPrice) {
-    const min = Number(filters.minimumPrice);
-    result = result.filter((p) =>
-      (p.prices || []).some((price) => price.minimumPrice >= min || price.maximumPrice >= min)
-    );
-  }
-
-  if (filters.maximumPrice) {
-    const max = Number(filters.maximumPrice);
-    result = result.filter((p) =>
-      (p.prices || []).some((price) => price.minimumPrice <= max || price.maximumPrice <= max)
-    );
-  }
-
-  if (filters.priceCurrency) {
-    const currency = filters.priceCurrency.toLowerCase();
-    result = result.filter((p) =>
-      (p.prices || []).some((price) => price.currency?.toLowerCase() === currency)
-    );
-  }
-
-  if (filters.isFurniture === 'true') {
-    result = result.filter((p) => p.isFurniture === true);
-  }
-
-  if (filters.furnitureType) {
-    const ft = Number(filters.furnitureType);
-    result = result.filter((p) => {
-      const type = typeof p.furnitureType === 'number' ? p.furnitureType : Number(p.furnitureType);
-      return type === ft;
-    });
-  }
-
-  if (filters.isFeature === 'true') {
-    result = result.filter((p) => p.isFeature === true);
-  }
-
-  if (filters.deliveryDateFrom) {
-    const from = new Date(filters.deliveryDateFrom);
-    result = result.filter((p) => p.deliveryDate && new Date(p.deliveryDate) >= from);
-  }
-
-  if (filters.deliveryDateTo) {
-    const to = new Date(filters.deliveryDateTo);
-    result = result.filter((p) => p.deliveryDate && new Date(p.deliveryDate) <= to);
-  }
-
-  // Sorting
-  if (filters.sortBy) {
-    const dir = filters.sortDirection === 'Desc' ? -1 : 1;
-    result.sort((a, b) => {
-      if (filters.sortBy === 'MinimumPrice') {
-        const aPrice = (a.prices || [])[0]?.minimumPrice ?? 0;
-        const bPrice = (b.prices || [])[0]?.minimumPrice ?? 0;
-        return (aPrice - bPrice) * dir;
-      }
-      if (filters.sortBy === 'DeliveryDate') {
-        const aDate = a.deliveryDate ? new Date(a.deliveryDate).getTime() : 0;
-        const bDate = b.deliveryDate ? new Date(b.deliveryDate).getTime() : 0;
-        return (aDate - bDate) * dir;
-      }
-      if (filters.sortBy === 'CreatedAt') {
-        const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        return (aDate - bDate) * dir;
-      }
-      // Name
-      const aName = typeof a.name === 'string' ? a.name : String(Object.values(a.name || {})[0] ?? '');
-      const bName = typeof b.name === 'string' ? b.name : String(Object.values(b.name || {})[0] ?? '');
-      return aName.localeCompare(bName) * dir;
-    });
-  }
-
-  return result;
-}
+  return {
+    searchTerm: filters.searchTerm.trim() || undefined,
+    locationId: toNumber(filters.locationId),
+    developerId: toNumber(filters.developerId),
+    projectTypeId: toNumber(filters.projectTypeId),
+    facilityId: toNumber(filters.facilityId),
+    minimumPrice: toNumber(filters.minimumPrice),
+    maximumPrice: toNumber(filters.maximumPrice),
+    priceCurrency: filters.priceCurrency || undefined,
+    furnitureType: furnitureType === undefined ? undefined : furnitureType as FurnitureType,
+    isFurniture: toBoolean(filters.isFurniture),
+    isFeature: toBoolean(filters.isFeature),
+    deliveryDateFrom: filters.deliveryDateFrom || undefined,
+    deliveryDateTo: filters.deliveryDateTo || undefined,
+    sortBy: filters.sortBy || undefined,
+    sortDirection: filters.sortDirection || undefined,
+  };
+};
 
 export default function ProjectsPage() {
   return (
@@ -170,24 +104,25 @@ export default function ProjectsPage() {
 function ProjectsPageContent() {
   const { t, getLocalized, language } = useLanguage();
   const searchParams = useSearchParams();
-  const [allProjects, setAllProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeFilters, setActiveFilters] = useState<ProjectFilterValues>(() => ({
-    ...EMPTY_PROJECT_FILTERS,
-    locationId: searchParams.get('locationId') || '',
-  }));
+  const [activeFilters, setActiveFilters] = useState<ProjectFilterValues>(() => getProjectFiltersFromSearchParams(searchParams));
 
-  // Fetch ALL projects once; filtering is done client-side
-  const fetchAllProjects = useCallback(async () => {
+  const fetchProjects = useCallback(async (pageNumber: number, filters: ProjectFilterValues, append = false) => {
     try {
       setLoading(true);
       setError(null);
-      // Fetch with a large page size to get all projects (backend does not support filtering)
-      const data = await getProjects(1, 200, language);
-      setAllProjects(data.items);
+      const data = await getProjects(pageNumber, PAGE_SIZE, language, buildApiFilters(filters));
+      setProjects((current) => append ? [...current, ...data.items] : data.items);
+      setTotalCount(data.totalCount);
+      setTotalPages(data.totalPages);
+      setHasNextPage(data.hasNextPage);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t('projects.error'));
     } finally {
@@ -197,9 +132,15 @@ function ProjectsPageContent() {
   }, [language, t]);
 
   useEffect(() => {
-    setInitialLoading(true);
-    fetchAllProjects();
-  }, [fetchAllProjects]);
+    const nextFilters = getProjectFiltersFromSearchParams(searchParams);
+    setPage(1);
+    setActiveFilters((current) => filtersAreEqual(current, nextFilters) ? current : nextFilters);
+  }, [searchParams]);
+
+  useEffect(() => {
+    setInitialLoading(page === 1);
+    fetchProjects(page, activeFilters, page > 1);
+  }, [activeFilters, fetchProjects, page]);
 
   const handleApplyFilters = (filters: ProjectFilterValues) => {
     setPage(1);
@@ -211,11 +152,8 @@ function ProjectsPageContent() {
     setActiveFilters({ ...EMPTY_PROJECT_FILTERS });
   };
 
-  // Apply client-side filters and paginate
-  const filteredProjects = applyClientFilters(allProjects, activeFilters);
-  const totalCount = filteredProjects.length;
-  const hasMore = page * PAGE_SIZE < totalCount;
-  const displayedProjects = filteredProjects.slice(0, page * PAGE_SIZE);
+  const hasMore = hasNextPage || page < totalPages;
+  const displayedProjects = projects;
   const filtersAreActive = hasActiveFilters(activeFilters);
 
   const handleShowMore = () => {
@@ -277,7 +215,7 @@ function ProjectsPageContent() {
               <button
                 onClick={() => {
                   setInitialLoading(true);
-                  fetchAllProjects();
+                  fetchProjects(1, activeFilters);
                 }}
                 className="rounded-full bg-brand-primary px-7 py-3 text-[14px] font-bold text-white transition-all hover:bg-brand-primary"
               >

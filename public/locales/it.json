@@ -22,7 +22,7 @@
     "language": "Lingua"
   },
   "footer": {
-    "about": "The Rook Real Estate Investment è stata fondata con la passione di connettere le persone con le loro case dei sogni e gli investimenti ideali. Comprendiamo che il settore immobiliare non riguarda solo le transazioni; riguarda decisioni che cambiano la vita.",
+    "about": "The Rock Real Estate Investment è stata fondata con la passione di connettere le persone con le loro case dei sogni e gli investimenti ideali. Comprendiamo che il settore immobiliare non riguarda solo le transazioni; riguarda decisioni che cambiano la vita.",
     "usefulLinks": "Azione rapida",
     "stayConnected": "Seguici",
     "newsletter": "Iscriviti alla nostra newsletter per rimanere aggiornato sulle novità e le uscite.",
@@ -44,8 +44,10 @@
     "allTypes": "Tutti i Tipi",
     "location": "Posizione",
     "allLocations": "Tutte le Posizioni",
+    "currency": "Valuta",
     "minPrice": "Prezzo di Partenza",
     "maxPrice": "Prezzo Massimo",
+    "priceOrderError": "Il prezzo massimo deve essere maggiore del prezzo minimo.",
     "noMin": "Nessun minimo",
     "noMax": "Nessun massimo"
   },
@@ -175,7 +177,7 @@
     "missionTitle": "La Nostra Missione",
     "missionText": "Ci dedichiamo a fornire un servizio di prim'ordine e personalizzato che supera le aspettative. Combinando una profonda esperienza di mercato con un'integrità senza compromessi, guidiamo i nostri clienti verso investimenti eccezionali e le case dei loro sogni.",
     "journeyTitle": "La Nostra Eredità",
-    "journeyText": "Nata dalla passione per la genialità architettonica e la vita raffinata, The Rook Real Estate Investment si è evoluta nella principale boutique immobiliare di lusso della regione. Il nostro viaggio è definito da un impegno per l'eccellenza, abbinando acquirenti esigenti a proprietà veramente magnifiche.",
+    "journeyText": "Nata dalla passione per la genialità architettonica e la vita raffinata, The Rock Real Estate Investment si è evoluta nella principale boutique immobiliare di lusso della regione. Il nostro viaggio è definito da un impegno per l'eccellenza, abbinando acquirenti esigenti a proprietà veramente magnifiche.",
     "offerTitle": "Servizi Esclusivi",
     "offers": {
       "sales": {
@@ -301,6 +303,8 @@
     "price": "Prezzo",
     "pricing": "Prezzi",
     "projectTypes": "Tipi di progetto",
+    "includes": "Include",
+    "startingPrice": "Prezzo di partenza",
     "availableUnits": "Unità disponibili",
     "unit": "Unità",
     "moreUnits": "altre unità disponibili",
@@ -322,8 +326,8 @@
     "cashPayment": "Pagamento in contanti"
   },
   "contactPage": {
-    "title": "Mettiti in Contatto con The Rook Real Estate Investment",
-    "subtitle": "Benvenuto nella pagina dei contatti di The Rook Real Estate Investment. Siamo qui per assisterti con qualsiasi domanda, richiesta o feedback tu possa avere.",
+    "title": "Mettiti in Contatto con The Rock Real Estate Investment",
+    "subtitle": "Benvenuto nella pagina dei contatti di The Rock Real Estate Investment. Siamo qui per assisterti con qualsiasi domanda, richiesta o feedback tu possa avere.",
     "info": {
       "email": "Email",
       "phone": "Telefono",
@@ -332,7 +336,7 @@
     },
     "form": {
       "title": "Connettiamoci",
-      "subtitle": "Utilizza il modulo sottostante per metterti in contatto con The Rook Real Estate Investment.",
+      "subtitle": "Utilizza il modulo sottostante per metterti in contatto con The Rock Real Estate Investment.",
       "firstName": "Nome",
       "lastName": "Cognome",
       "email": "Email",
@@ -344,6 +348,7 @@
       "submit": "Invia Richiesta",
       "sending": "Invio...",
       "success": "La tua richiesta è stata inviata con successo! Ti risponderemo presto.",
+      "successMessage": "La tua richiesta è stata inviata con successo! Ti risponderemo presto.",
       "errorAgreed": "Si prega di accettare i Termini di Utilizzo e l'Informativa sulla Privacy.",
       "errorRequired": "Si prega di compilare tutti i campi obbligatori.",
       "placeholderFirstName": "Inserisci il Nome",
@@ -351,6 +356,24 @@
       "placeholderEmail": "Inserisci la tua Email",
       "placeholderPhone": "Inserisci il Numero di Telefono",
       "placeholderMessage": "Inserisci qui il tuo Messaggio..",
+      "firstNamePlaceholder": "Inserisci il Nome",
+      "lastNamePlaceholder": "Inserisci il Cognome",
+      "emailPlaceholder": "Inserisci la tua Email",
+      "phonePlaceholder": "Inserisci il Numero di Telefono",
+      "messagePlaceholder": "Inserisci qui il tuo Messaggio...",
+      "agreeText": "Accetto i Termini di Utilizzo e l'Informativa sulla Privacy",
+      "hearFrom": "Come hai saputo di noi?",
+      "selectType": "Seleziona tipo di richiesta",
+      "selectSource": "Seleziona sorgente",
+      "generalInquiry": "Richiesta Generale",
+      "buying": "Acquisto",
+      "selling": "Vendita",
+      "renting": "Affitto",
+      "investment": "Investimento",
+      "socialMedia": "Social Media",
+      "friend": "Amico / Passaparola",
+      "advertisement": "Pubblicità",
+      "other": "Altro",
       "inquiryOptions": {
         "buy": "Comprare una Proprietà",
         "sell": "Vendere una Proprietà",
@@ -411,9 +434,12 @@
       "studio": "Monolocale",
       "penthouse": "Attico",
       "category": "Categoria",
+      "listingType": "Tipo di Annuncio",
       "buy": "Acquista",
       "rent": "Affitta",
-      "priceRange": "Fascia di Prezzo",
+      "bedrooms": "Camere",
+      "bathrooms": "Bagni",
+      "priceRange": "Fascia di prezzo",
       "min": "Min",
       "max": "Max",
       "resetAll": "Ripristina Tutto",
@@ -440,7 +466,9 @@
       "instalment": "Rata",
       "cash": "Contanti",
       "saveProperty": "Salva proprietà",
-      "size": "Dimensione"
+      "size": "Dimensione",
+      "forRent": "In Affitto",
+      "forBuy": "In Vendita"
     },
     "fallback": {
       "untitled": "Unità Senza Titolo",
@@ -451,7 +479,7 @@
   "faqPage": {
     "tag": "SUPPORTO",
     "title": "Domande Frequenti",
-    "subtitle": "Tutto quello che c'è da sapere sull'acquisto e la vendita con The Rook Real Estate Investment.",
+    "subtitle": "Tutto quello che c'è da sapere sull'acquisto e la vendita con The Rock Real Estate Investment.",
     "loading": "Caricamento domande...",
     "noQuestions": "Nessuna FAQ disponibile al momento. Torna presto!"
   },

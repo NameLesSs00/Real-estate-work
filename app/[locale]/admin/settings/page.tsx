@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { User, Shield, Users, ChevronLeft, ChevronRight, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { updatePassword, addAdmin, AddAdminPayload, UpdatePasswordPayload } from '@/lib/api/auth';
 import { getAdmins, updateAdmin, PaginatedAdmins, UpdateAdminPayload } from '@/lib/api/admins';
+import { getKeyValues, createKeyValue, updateKeyValue, KeyValue } from '@/lib/api/keyValues';
+import { Link2 } from 'lucide-react';
 
-type Tab = 'profile' | 'security' | 'admins';
+type Tab = 'profile' | 'security' | 'admins' | 'social';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<Tab>('profile');
@@ -37,6 +39,14 @@ export default function SettingsPage() {
     email: '',
     password: ''
   });
+
+  // Social Links State
+  const SOCIAL_KEYS = ['facebook', 'phone', 'whatsapp', 'instagram', 'email'] as const;
+  type SocialKey = typeof SOCIAL_KEYS[number];
+  const [socialLinks, setSocialLinks] = useState<Record<SocialKey, { id?: number; value: string }>>(
+    Object.fromEntries(SOCIAL_KEYS.map(k => [k, { value: '' }])) as Record<SocialKey, { id?: number; value: string }>
+  );
+  const [socialLoading, setSocialLoading] = useState(false);
 
 
   const showNotification = useCallback((type: 'success' | 'error', message: string) => {
@@ -83,10 +93,52 @@ export default function SettingsPage() {
     }
   }, [showNotification]);
 
+  // Fetch social links
+  const fetchSocialLinks = useCallback(async () => {
+    setSocialLoading(true);
+    try {
+      const data: KeyValue[] = await getKeyValues();
+      const updated = { ...Object.fromEntries(SOCIAL_KEYS.map(k => [k, { value: '' }])) } as Record<SocialKey, { id?: number; value: string }>;
+      data.forEach(kv => {
+        const k = kv.key.toLowerCase() as SocialKey;
+        if (SOCIAL_KEYS.includes(k)) {
+          updated[k] = { id: kv.id, value: kv.value };
+        }
+      });
+      setSocialLinks(updated);
+    } catch {
+      showNotification('error', 'Failed to load social links.');
+    } finally {
+      setSocialLoading(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showNotification]);
+
+  const handleSaveSocial = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSocialLoading(true);
+    try {
+      for (const key of SOCIAL_KEYS) {
+        const entry = socialLinks[key];
+        if (entry.id) {
+          await updateKeyValue({ id: entry.id, key, value: entry.value });
+        } else if (entry.value.trim()) {
+          await createKeyValue({ key, value: entry.value });
+        }
+      }
+      showNotification('success', 'Social links updated successfully.');
+      fetchSocialLinks();
+    } catch (err: unknown) {
+      showNotification('error', err instanceof Error ? err.message : String(err));
+    } finally {
+      setSocialLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // Initial fetch to get the current user's details and the team list
     fetchAdmins(1);
-  }, [fetchAdmins]);
+    fetchSocialLinks();
+  }, [fetchAdmins, fetchSocialLinks]);
 
 
 
@@ -176,6 +228,7 @@ export default function SettingsPage() {
             { id: 'profile', label: 'My Profile', icon: User },
             { id: 'security', label: 'Security', icon: Shield },
             { id: 'admins', label: 'Admin Management', icon: Users },
+            { id: 'social', label: 'Social Links', icon: Link2 },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -430,6 +483,34 @@ export default function SettingsPage() {
                   </button>
                 </div>
               )}
+            </div>
+          )}
+          {/* Social Links Tab */}
+          {activeTab === 'social' && (
+            <div className="max-w-xl">
+              <h2 className="text-2xl font-bold text-brand-primary mb-2 font-radley">Social Links</h2>
+              <p className="text-brand-muted text-[14px] mb-8">Set a value of <code className="bg-brand-bg px-1.5 py-0.5 rounded text-[13px]">#</code> to hide a link from the site.</p>
+              <form onSubmit={handleSaveSocial} className="space-y-5">
+                {SOCIAL_KEYS.map((key) => (
+                  <div key={key} className="space-y-2">
+                    <label className="text-[14px] font-bold text-brand-primary ml-1 capitalize">{key}</label>
+                    <input
+                      type="text"
+                      value={socialLinks[key].value}
+                      onChange={(e) => setSocialLinks(prev => ({ ...prev, [key]: { ...prev[key], value: e.target.value } }))}
+                      placeholder={key === 'phone' || key === 'whatsapp' ? 'Enter phone number...' : key === 'email' ? 'Enter email address...' : key === 'instagram' ? 'Enter URL or # to hide...' : 'Enter URL or # to hide...'}
+                      className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
+                    />
+                  </div>
+                ))}
+                <button
+                  disabled={socialLoading}
+                  className="bg-brand-primary text-white px-10 py-4 rounded-full font-bold text-[16px] shadow-lg hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 flex items-center gap-2"
+                >
+                  {socialLoading && <Loader2 className="animate-spin" size={20} />}
+                  Save Social Links
+                </button>
+              </form>
             </div>
           )}
 

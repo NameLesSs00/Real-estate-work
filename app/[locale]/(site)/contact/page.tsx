@@ -4,25 +4,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { createContact, ContactType, HearFrom } from "@/lib/api/contacts";
+import { useKeyValues } from "@/lib/contexts/KeyValuesContext";
 import { useLanguage } from "@/lib/contexts/LanguageContext";
 
 const BASE = "/assists/contactUs";
 
-const infoCards = [
-  { icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: "info@therock-realestate.com", href: "mailto:info@therock-realestate.com" },
-  { icon: `${BASE}/phone.png`, titleKey: 'contactPage.info.phone', content: "01200339790", href: "tel:01200339790" },
-  { icon: `${BASE}/locatoin.png`, titleKey: 'contactPage.info.address', content: "Hurghada, El Kawther", href: "https://maps.google.com" },
-  {
-    icon: `${BASE}/fire.png`, titleKey: 'contactPage.info.follow', socials: [
-      { label: "Instagram", href: "https://www.instagram.com/p/DXu6hy4l3E1/?igsh=eHVwa3A4YmlyM2sw" },
-      { label: "Facebook", href: "https://www.facebook.com/share/1Cjkb7qK75/?mibextid=wwXIfr" },
-      { label: "WhatsApp", href: "https://wa.me/01200339790" },
-    ]
-  },
-];
-
 export default function ContactPage() {
   const { t } = useLanguage();
+  const { get, getWhatsAppUrl } = useKeyValues();
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '', inquiryType: '', source: '', message: '', agreed: false });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -57,6 +46,27 @@ export default function ContactPage() {
       setLoading(false);
     }
   };
+
+  // Dynamic contact info from API
+  const phoneVal = get('phone');
+  const whatsappVal = get('whatsapp');
+  const emailVal = get('email');
+  const facebookVal = get('facebook');
+  const whatsappUrl = whatsappVal ? getWhatsAppUrl(whatsappVal) : null;
+
+  const infoCards = [
+    ...(emailVal ? [{ icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: emailVal, href: `mailto:${emailVal}` }] : []),
+    ...((phoneVal || whatsappVal) ? [{ icon: `${BASE}/phone.png`, titleKey: 'contactPage.info.phone', content: phoneVal || whatsappVal!, href: whatsappUrl || '#' }] : []),
+    { icon: `${BASE}/locatoin.png`, titleKey: 'contactPage.info.address', content: 'Hurghada, El Kawther', href: 'https://maps.google.com' },
+    ...((facebookVal || whatsappUrl) ? [{
+      icon: `${BASE}/fire.png`,
+      titleKey: 'contactPage.info.follow',
+      socials: [
+        ...(facebookVal ? [{ label: 'Facebook', href: facebookVal }] : []),
+        ...(whatsappUrl ? [{ label: 'WhatsApp', href: whatsappUrl }] : []),
+      ]
+    }] : []),
+  ];
 
   return (
     <main className="min-h-screen font-poppins overflow-hidden bg-brand-bg">
@@ -105,9 +115,9 @@ export default function ContactPage() {
                     </div>
                     <div className="flex-1">
                       <h3 className="text-[14px] text-gray-400 mb-2">{t(card.titleKey) as string}</h3>
-                      {card.socials ? (
+                      {'socials' in card ? (
                         <div className="flex flex-wrap gap-x-4 gap-y-2">
-                          {card.socials.map((s) => (
+                          {card.socials!.map((s) => (
                             <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="text-[15px] font-semibold text-white hover:text-brand-secondary transition-colors block">{s.label}</a>
                           ))}
                         </div>
@@ -128,83 +138,155 @@ export default function ContactPage() {
             <h2 className="text-[32px] font-radley text-brand-primary mb-8">{t('contactPage.form.title') as string}</h2>
 
             {success && (
-              <div className="mb-8 p-5 bg-green-50 border border-green-100 rounded-2xl text-green-700 font-semibold text-[15px]">
-                ✅ {t('contactPage.form.success') as string}
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-green-50 border border-green-100 text-green-700 rounded-xl font-medium"
+              >
+                {t('contactPage.form.successMessage') as string}
+              </motion.div>
             )}
+
             {error && (
-              <div className="mb-8 p-5 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-[14px]">{error}</div>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-red-50 border border-red-100 text-red-700 rounded-xl font-medium"
+              >
+                {error}
+              </motion.div>
             )}
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-gray-500">{t('contactPage.form.firstName') as string} *</label>
-                  <input name="firstName" value={form.firstName} onChange={handleChange} type="text" placeholder={t('contactPage.form.placeholderFirstName') as string} required className="w-full border-b-2 border-brand-divider py-3 text-[15px] text-brand-primary outline-none focus:border-brand-secondary transition-colors placeholder:text-brand-muted-light" />
+                <div className="space-y-2">
+                  <label className="text-[14px] font-bold text-brand-primary ml-1">{t('contactPage.form.firstName') as string} *</label>
+                  <input
+                    name="firstName"
+                    type="text"
+                    value={form.firstName}
+                    onChange={handleChange}
+                    placeholder={t('contactPage.form.firstNamePlaceholder') as string}
+                    className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
+                    required
+                  />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-gray-500">{t('contactPage.form.lastName') as string} *</label>
-                  <input name="lastName" value={form.lastName} onChange={handleChange} type="text" placeholder={t('contactPage.form.placeholderLastName') as string} required className="w-full border-b-2 border-brand-divider py-3 text-[15px] text-brand-primary outline-none focus:border-brand-secondary transition-colors placeholder:text-brand-muted-light" />
+                <div className="space-y-2">
+                  <label className="text-[14px] font-bold text-brand-primary ml-1">{t('contactPage.form.lastName') as string}</label>
+                  <input
+                    name="lastName"
+                    type="text"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    placeholder={t('contactPage.form.lastNamePlaceholder') as string}
+                    className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-gray-500">{t('contactPage.form.email') as string} *</label>
-                  <input name="email" value={form.email} onChange={handleChange} type="email" placeholder={t('contactPage.form.placeholderEmail') as string} required className="w-full border-b-2 border-brand-divider py-3 text-[15px] text-brand-primary outline-none focus:border-brand-secondary transition-colors placeholder:text-brand-muted-light" />
+                <div className="space-y-2">
+                  <label className="text-[14px] font-bold text-brand-primary ml-1">{t('contactPage.form.email') as string} *</label>
+                  <input
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder={t('contactPage.form.emailPlaceholder') as string}
+                    className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
+                    required
+                  />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-gray-500">{t('contactPage.form.phone') as string} *</label>
-                  <input name="phone" value={form.phone} onChange={handleChange} type="tel" placeholder={t('contactPage.form.placeholderPhone') as string} required className="w-full border-b-2 border-brand-divider py-3 text-[15px] text-brand-primary outline-none focus:border-brand-secondary transition-colors placeholder:text-brand-muted-light" />
+                <div className="space-y-2">
+                  <label className="text-[14px] font-bold text-brand-primary ml-1">{t('contactPage.form.phone') as string} *</label>
+                  <input
+                    name="phone"
+                    type="tel"
+                    value={form.phone}
+                    onChange={handleChange}
+                    placeholder={t('contactPage.form.phonePlaceholder') as string}
+                    className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
+                    required
+                  />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-gray-500">{t('contactPage.form.inquiryType') as string} *</label>
-                  <select name="inquiryType" value={form.inquiryType} onChange={handleChange} required className="w-full border-b-2 border-brand-divider py-3 text-[15px] text-brand-primary outline-none focus:border-brand-secondary transition-colors appearance-none cursor-pointer">
-                    <option value="" disabled>{t('contactPage.form.inquiryType') as string}</option>
-                    <option value="BuyUnit">{t('contactPage.form.inquiryOptions.buy') as string}</option>
-                    <option value="SellUnit">{t('contactPage.form.inquiryOptions.sell') as string}</option>
-                    <option value="Other">{t('contactPage.form.inquiryOptions.other') as string}</option>
+                <div className="space-y-2">
+                  <label className="text-[14px] font-bold text-brand-primary ml-1">{t('contactPage.form.inquiryType') as string}</label>
+                  <select
+                    name="inquiryType"
+                    value={form.inquiryType}
+                    onChange={handleChange}
+                    className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
+                  >
+                    <option value="">{t('contactPage.form.selectType') as string}</option>
+                    <option value="GeneralInquiry">{t('contactPage.form.generalInquiry') as string}</option>
+                    <option value="Buying">{t('contactPage.form.buying') as string}</option>
+                    <option value="Selling">{t('contactPage.form.selling') as string}</option>
+                    <option value="Renting">{t('contactPage.form.renting') as string}</option>
+                    <option value="Investment">{t('contactPage.form.investment') as string}</option>
                   </select>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-gray-500">{t('contactPage.form.source') as string} *</label>
-                  <select name="source" value={form.source} onChange={handleChange} required className="w-full border-b-2 border-brand-divider py-3 text-[15px] text-brand-primary outline-none focus:border-brand-secondary transition-colors appearance-none cursor-pointer">
-                    <option value="" disabled>{t('contactPage.form.source') as string}</option>
-                    <option value="SocialMedia">{t('contactPage.form.sourceOptions.social') as string}</option>
-                    <option value="Friend">{t('contactPage.form.sourceOptions.referral') as string}</option>
-                    <option value="SearchEngine">{t('contactPage.form.sourceOptions.search') as string}</option>
-                    <option value="Advertisement">{t('contactPage.form.sourceOptions.ads') as string}</option>
-                    <option value="SEO">{t('contactPage.form.sourceOptions.seo') as string}</option>
-                    <option value="Other">{t('contactPage.form.sourceOptions.other') as string}</option>
+                <div className="space-y-2">
+                  <label className="text-[14px] font-bold text-brand-primary ml-1">{t('contactPage.form.hearFrom') as string}</label>
+                  <select
+                    name="source"
+                    value={form.source}
+                    onChange={handleChange}
+                    className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary"
+                  >
+                    <option value="">{t('contactPage.form.selectSource') as string}</option>
+                    <option value="SocialMedia">{t('contactPage.form.socialMedia') as string}</option>
+                    <option value="Friend">{t('contactPage.form.friend') as string}</option>
+                    <option value="Advertisement">{t('contactPage.form.advertisement') as string}</option>
+                    <option value="Other">{t('contactPage.form.other') as string}</option>
                   </select>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 mt-4">
-                <label className="text-[13px] font-semibold text-gray-500">{t('contactPage.form.message') as string} *</label>
-                <textarea name="message" value={form.message} onChange={handleChange} placeholder={t('contactPage.form.placeholderMessage') as string} rows={4} required className="w-full border-b-2 border-brand-divider py-3 text-[15px] text-brand-primary outline-none focus:border-brand-secondary transition-colors resize-none placeholder:text-brand-muted-light" />
+              <div className="space-y-2">
+                <label className="text-[14px] font-bold text-brand-primary ml-1">{t('contactPage.form.message') as string}</label>
+                <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  rows={5}
+                  placeholder={t('contactPage.form.messagePlaceholder') as string}
+                  className="w-full bg-brand-bg border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-brand-primary/10 transition-all font-medium text-brand-primary resize-none"
+                />
               </div>
 
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mt-6">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input name="agreed" type="checkbox" checked={form.agreed} onChange={handleChange} required className="w-5 h-5 rounded border-gray-300 accent-brand-secondary cursor-pointer" />
-                  <span className="text-[13px] text-gray-500 max-w-xs leading-snug">{t('contactPage.form.agreed') as string}</span>
+              <div className="flex items-start gap-3">
+                <input
+                  name="agreed"
+                  id="agreed"
+                  type="checkbox"
+                  checked={form.agreed}
+                  onChange={handleChange}
+                  className="mt-1 w-5 h-5 accent-brand-primary cursor-pointer"
+                />
+                <label htmlFor="agreed" className="text-[14px] text-brand-primary/70 font-medium cursor-pointer leading-relaxed">
+                  {t('contactPage.form.agreeText') as string}
                 </label>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  type="submit"
-                  disabled={loading}
-                  className="bg-brand-primary text-white px-10 py-4 rounded-full font-bold text-[15px] hover:bg-brand-secondary shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {loading ? t('contactPage.form.sending') as string : t('contactPage.form.submit') as string}
-                </motion.button>
               </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-brand-primary text-white py-4 rounded-2xl font-bold text-[16px] shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2"
+              >
+                {loading && (
+                  <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                )}
+                {t('contactPage.form.submit') as string}
+              </button>
             </form>
           </div>
+
         </div>
       </section>
     </main>

@@ -6,7 +6,7 @@ import AddUnitOutsideModal from '@/components/admin/AddUnitOutsideModal';
 import DeleteUnitOutsideModal from '@/components/admin/DeleteUnitOutsideModal';
 import UnitOutsideDetailsModal from '@/components/admin/UnitOutsideDetailsModal';
 import MarkUnitOutsideSoldModal from '@/components/admin/MarkUnitOutsideSoldModal';
-import { getUnitOutsides, UnitOutside } from '@/lib/api/unitOutsides';
+import { getUnitOutsideDisplayPrice, getUnitOutsides, UnitOutside } from '@/lib/api/unitOutsides';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 export default function UnitsPage() {
@@ -31,7 +31,7 @@ export default function UnitsPage() {
   const fetchOutsideUnits = useCallback(async (page = 1) => {
     setOutsideLoading(true); setOutsideError('');
     try {
-      const data = await getUnitOutsides({ PageNumber: page, PageSize: 10 });
+      const data = await getUnitOutsides({ PageNumber: page, PageSize: 10, IsSoldOutside: false });
       setOutsideUnits(data.items); setOutsideTotalPages(data.totalPages);
       setOutsideTotalCount(data.totalCount); setOutsidePage(data.pageNumber);
     } catch (err) {
@@ -102,7 +102,7 @@ export default function UnitsPage() {
                 <p className="text-red-500">{outsideError}</p>
                 <button onClick={() => fetchOutsideUnits(outsidePage)} className="bg-brand-primary text-white px-6 py-2 rounded-full text-sm cursor-pointer">Retry</button>
               </div>
-            ) : outsideUnits.filter(u => u.name.toLowerCase().includes(outsideSearch.toLowerCase())).length === 0 ? (
+            ) : outsideUnits.filter(u => getLocalized(u.name).toLowerCase().includes(outsideSearch.toLowerCase())).length === 0 ? (
               <div className="flex items-center justify-center py-20">
                 <p className="text-admin-muted text-[17px]">
                   {outsideSearch ? 'No units match your search.' : 'No resale units yet. Click "Add Resale Unit" to create one!'}
@@ -127,8 +127,10 @@ export default function UnitsPage() {
                   </thead>
                   <tbody className="divide-y divide-gray-50">
                     {outsideUnits
-                      .filter(u => u.name.toLowerCase().includes(outsideSearch.toLowerCase()))
-                      .map((unit) => (
+                      .filter(u => getLocalized(u.name).toLowerCase().includes(outsideSearch.toLowerCase()))
+                      .map((unit) => {
+                        const displayPrice = getUnitOutsideDisplayPrice(unit, 'EGP');
+                        return (
                         <tr key={unit.id} className="hover:bg-gray-50/50 transition-colors">
                           <td className="py-6 px-6 max-w-[250px]">
                             <span
@@ -141,7 +143,7 @@ export default function UnitsPage() {
                             <span className="text-[14px] text-admin-muted font-medium">{unit.markerId || '—'}</span>
                           </td>
                           <td className="py-6 px-4">
-                            <span className="text-[15px] font-bold text-brand-primary">{unit.currencyCode} {unit.price.toLocaleString()}</span>
+                            <span className="text-[15px] font-bold text-brand-primary">{displayPrice.currency} {displayPrice.price.toLocaleString()}</span>
                           </td>
                           <td className="py-6 px-4">
                             <span className="text-[14px] text-admin-muted">{unit.city}, {unit.country}</span>
@@ -167,7 +169,7 @@ export default function UnitsPage() {
                           </td>
                           <td className="py-6 px-4">
                             <div className="flex items-center justify-end gap-2">
-                              {unit.isActive && (
+                              {unit.isActive && !unit.isSoldOutside && (
                                 <button
                                   onClick={() => setMarkSoldOutside(unit)}
                                   className="bg-status-warning-bg text-status-warning hover:bg-status-warning-border px-4 py-2 rounded-xl text-[13px] font-bold transition-all cursor-pointer mr-1 whitespace-nowrap shadow-sm hover:shadow-md"
@@ -187,7 +189,8 @@ export default function UnitsPage() {
                             </div>
                           </td>
                         </tr>
-                      ))}
+                      );
+                      })}
                   </tbody>
                 </table>
               </div>
@@ -216,7 +219,7 @@ export default function UnitsPage() {
         onClose={() => setDeletingOutside(null)}
         onSuccess={() => { fetchOutsideUnits(outsidePage); setDeletingOutside(null); setOutsideNotification({ type: 'success', message: 'Resale unit deleted.' }); setTimeout(() => setOutsideNotification(null), 3000); }}
         unitId={deletingOutside?.id ?? null}
-        unitName={deletingOutside?.name}
+        unitName={deletingOutside ? getLocalized(deletingOutside.name) : undefined}
       />
       <UnitOutsideDetailsModal
         isOpen={viewingOutsideId !== null}

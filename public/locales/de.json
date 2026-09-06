@@ -22,7 +22,7 @@
     "language": "Sprache"
   },
   "footer": {
-    "about": "The Rook Real Estate Investment wurde aus der Leidenschaft heraus gegründet, Menschen mit ihrem Traumhaus und idealen Investitionen zu verbinden. Wir verstehen, dass es bei Immobilien nicht nur um Transaktionen geht; es geht um lebensverändernde Entscheidungen.",
+    "about": "The Rock Real Estate Investment wurde aus der Leidenschaft heraus gegründet, Menschen mit ihrem Traumhaus und idealen Investitionen zu verbinden. Wir verstehen, dass es bei Immobilien nicht nur um Transaktionen geht; es geht um lebensverändernde Entscheidungen.",
     "usefulLinks": "Schnellzugriff",
     "stayConnected": "Folgen Sie uns",
     "newsletter": "Abonnieren Sie unseren Newsletter, um über Funktionen und Veröffentlichungen auf dem Laufenden zu bleiben.",
@@ -44,8 +44,10 @@
     "allTypes": "Alle Typen",
     "location": "Standort",
     "allLocations": "Alle Standorte",
+    "currency": "Währung",
     "minPrice": "Startpreis",
     "maxPrice": "Höchstpreis",
+    "priceOrderError": "Der Höchstpreis muss größer als der Mindestpreis sein.",
     "noMin": "Kein Minimum",
     "noMax": "Kein Maximum"
   },
@@ -301,6 +303,8 @@
     "price": "Preis",
     "pricing": "Preise",
     "projectTypes": "Projekttypen",
+    "includes": "Enthalten",
+    "startingPrice": "Startpreis",
     "availableUnits": "Verfügbare Einheiten",
     "unit": "Einheit",
     "moreUnits": "weitere Einheiten verfügbar",
@@ -322,8 +326,8 @@
     "cashPayment": "Barzahlung"
   },
   "contactPage": {
-    "title": "Kontaktieren Sie The Rook Real Estate Investment",
-    "subtitle": "Willkommen auf der Kontaktseite von The Rook Real Estate Investment. Wir sind hier, um Ihnen bei Anfragen, Wünschen oder Feedback behilflich zu sein.",
+    "title": "Kontaktieren Sie The Rock Real Estate Investment",
+    "subtitle": "Willkommen auf der Kontaktseite von The Rock Real Estate Investment. Wir sind hier, um Ihnen bei Anfragen, Wünschen oder Feedback behilflich zu sein.",
     "info": {
       "email": "E-Mail",
       "phone": "Telefon",
@@ -332,7 +336,7 @@
     },
     "form": {
       "title": "Lassen Sie uns vernetzen",
-      "subtitle": "Nutzen Sie das untenstehende Formular, um mit The Rook Real Estate Investment in Kontakt zu treten.",
+      "subtitle": "Nutzen Sie das untenstehende Formular, um mit The Rock Real Estate Investment in Kontakt zu treten.",
       "firstName": "Vorname",
       "lastName": "Nachname",
       "email": "E-Mail",
@@ -344,6 +348,7 @@
       "submit": "Anfrage senden",
       "sending": "Wird gesendet...",
       "success": "Ihre Anfrage wurde erfolgreich gesendet! Wir werden uns in Kürze bei Ihnen melden.",
+      "successMessage": "Ihre Anfrage wurde erfolgreich gesendet! Wir werden uns in Kürze bei Ihnen melden.",
       "errorAgreed": "Bitte stimmen Sie den Nutzungsbedingungen und der Datenschutzrichtlinie zu.",
       "errorRequired": "Bitte füllen Sie alle erforderlichen Felder aus.",
       "placeholderFirstName": "Vorname eingeben",
@@ -351,6 +356,24 @@
       "placeholderEmail": "E-Mail eingeben",
       "placeholderPhone": "Telefonnummer eingeben",
       "placeholderMessage": "Geben Sie hier Ihre Nachricht ein...",
+      "firstNamePlaceholder": "Vorname eingeben",
+      "lastNamePlaceholder": "Nachname eingeben",
+      "emailPlaceholder": "E-Mail eingeben",
+      "phonePlaceholder": "Telefonnummer eingeben",
+      "messagePlaceholder": "Geben Sie hier Ihre Nachricht ein...",
+      "agreeText": "Ich stimme den Nutzungsbedingungen und der Datenschutzrichtlinie zu",
+      "hearFrom": "Wie haben Sie von uns erfahren?",
+      "selectType": "Anfragetyp auswählen",
+      "selectSource": "Quelle auswählen",
+      "generalInquiry": "Allgemeine Anfrage",
+      "buying": "Kaufen",
+      "selling": "Verkaufen",
+      "renting": "Mieten",
+      "investment": "Investition",
+      "socialMedia": "Soziale Medien",
+      "friend": "Freund / Empfehlung",
+      "advertisement": "Werbung",
+      "other": "Sonstiges",
       "inquiryOptions": {
         "buy": "Eine Immobilie kaufen",
         "sell": "Eine Immobilie verkaufen",
@@ -411,9 +434,12 @@
       "studio": "Studio",
       "penthouse": "Penthouse",
       "category": "Kategorie",
+      "listingType": "Inseratstyp",
       "buy": "Kaufen",
       "rent": "Mieten",
-      "priceRange": "Preisspanne",
+      "bedrooms": "Schlafzimmer",
+      "bathrooms": "Badezimmer",
+      "priceRange": "Preisklasse",
       "min": "Min",
       "max": "Max",
       "resetAll": "Alles zurücksetzen",
@@ -440,7 +466,9 @@
       "instalment": "Ratenzahlung",
       "cash": "Barzahlung",
       "saveProperty": "Immobilie speichern",
-      "size": "Größe"
+      "size": "Größe",
+      "forRent": "Zu vermieten",
+      "forBuy": "Zum Kauf"
     },
     "fallback": {
       "untitled": "Unbenannte Einheit",
@@ -451,7 +479,7 @@
   "faqPage": {
     "tag": "UNTERSTÜTZUNG",
     "title": "Häufig gestellte Fragen",
-    "subtitle": "Alles, was Sie über das Kaufen und Verkaufen bei The Rook Real Estate Investment wissen müssen.",
+    "subtitle": "Alles, was Sie über das Kaufen und Verkaufen bei The Rock Real Estate Investment wissen müssen.",
     "loading": "Fragen werden geladen...",
     "noQuestions": "Zur Zeit sind keine FAQs verfügbar. Schauen Sie bald wieder vorbei!"
   },

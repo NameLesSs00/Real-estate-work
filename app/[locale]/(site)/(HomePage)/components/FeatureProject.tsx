@@ -123,8 +123,8 @@ const FeatureProject = () => {
                   <Image
                     src={projectImg}
                     alt={activeProject.name}
-                    width={800}
-                    height={600}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     className="project-main-img"
                     unoptimized
                   />

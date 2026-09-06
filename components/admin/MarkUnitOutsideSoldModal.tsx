@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import { markUnitOutsideSold, UnitOutside } from '@/lib/api/unitOutsides';
+import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 interface MarkUnitOutsideSoldModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function MarkUnitOutsideSoldModal({
   onSuccess,
 }: MarkUnitOutsideSoldModalProps) {
   useEscapeKey(onClose, isOpen);
+  const { getLocalized } = useLanguage();
   const [selectedPlanId, setSelectedPlanId] = useState<number | ''>('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -73,7 +75,7 @@ export default function MarkUnitOutsideSoldModal({
           <h2 className="text-[22px] font-bold text-brand-primary mb-1">Mark as Sold</h2>
           <p className="text-[14px] text-admin-muted leading-relaxed">
             You are marking{' '}
-            <span className="font-semibold text-brand-primary">&ldquo;{unit.name}&rdquo;</span> as
+            <span className="font-semibold text-brand-primary">&ldquo;{getLocalized(unit.name)}&rdquo;</span> as
             sold.
             <br />
             This action will deactivate the unit.
@@ -101,8 +103,8 @@ export default function MarkUnitOutsideSoldModal({
                 {plans.map((plan) => (
                   <option key={plan.id} value={plan.id}>
                     {plan.paymentType}
-                    {plan.installmentMothes > 0 ? ` — ${plan.installmentMothes} months` : ''}
-                    {plan.installmentDownPayment > 0
+                    {(plan.installmentMothes ?? 0) > 0 ? ` — ${plan.installmentMothes} months` : ''}
+                    {(plan.installmentDownPayment ?? 0) > 0
                       ? ` — ${plan.installmentDownPayment}% down`
                       : ''}
                   </option>

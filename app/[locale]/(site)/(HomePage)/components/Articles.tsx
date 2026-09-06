@@ -70,21 +70,28 @@ const Articles = () => {
         </motion.div>
 
         <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.2 }
-            }
-          }}
-          className="articles-grid"
-        >
-          {blogs.map((blog) => {
-            const blogUrl = `/${language}/blogs/${blog.id}-${generateSlug(blog.title)}`;
-            return (
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, margin: "-50px" }}
+  variants={{
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 }
+    }
+  }}
+  // 1. Replace "articles-grid" with this dynamic template literal
+  className={`grid gap-8 w-full ${
+    blogs.length === 1 
+      ? "grid-cols-1 max-w-[400px] mx-auto" 
+      : blogs.length === 2 
+      ? "grid-cols-1 md:grid-cols-2 max-w-[800px] mx-auto" 
+      : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+  }`}
+>
+  {blogs.map((blog) => {
+    const blogUrl = `/${language}/blogs/${blog.id}-${generateSlug(blog.title)}`;
+    return (
               <motion.div
                 key={blog.id}
                 variants={{
@@ -95,6 +102,7 @@ const Articles = () => {
                     transition: { duration: 0.7, ease: "easeOut" }
                   }
                 }}
+                // (Keep your existing Link and Image code exactly as is)
               >
                 <Link href={blogUrl} className="group block bg-white rounded-[24px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
                   <div className="relative w-full aspect-[4/5] overflow-hidden">
@@ -127,7 +135,7 @@ const Articles = () => {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="show-more-blogs-wrapper"
+          className="show-more-blogs-wrapper mt-10"
         >
           <Link href={`/${language}/blogs`} className="show-more-blogs-button inline-block text-center">
             {t('articles.showMore') as string}

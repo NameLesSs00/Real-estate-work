@@ -7,35 +7,20 @@ import { useLanguage } from '@/lib/contexts/LanguageContext';
 import { getPaymentPlanType } from '@/lib/utils';
 
 import PropertyCard from '@/components/PropertyCard';
+import PropertyFilters from './components/PropertyFilters';
 
-import { getUnitOutsides } from '@/lib/api/unitOutsides';
+
+import {
+  getUnitOutsideDisplayPrice,
+  getUnitOutsides,
+  normalizeUnitOutsidePropertyType,
+} from '@/lib/api/unitOutsides';
 import { resolveProjectImageUrl } from '@/lib/api/projects';
 
-import { ChevronLeft, ChevronRight, Filter, X, ChevronDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import './properties.css';
 
-// Maps the numeric propertyType button value to the string name the UnitOutsides API expects
-const PROPERTY_TYPE_MAP: Record<string, string> = {
-  '': '',
-  '0': 'Apartment',
-  '1': 'Villa',
-  '2': 'TownHouse',
-  '3': 'Studio',
-  '4': 'Penthouse',
-  '5': 'Chalet',
-};
-
-// Reverse map for display on cards
-const PROPERTY_TYPE_LABEL: Record<string, string> = {
-  '0': 'Apartment', 'Apartment': 'Apartment',
-  '1': 'Villa',     'Villa': 'Villa',
-  '2': 'TownHouse', 'TownHouse': 'TownHouse',
-  '3': 'Studio',    'Studio': 'Studio',
-  '4': 'Penthouse', 'Penthouse': 'Penthouse',
-  '5': 'Chalet',    'Chalet': 'Chalet',
-};
-
-const PROPERTY_PAGE_SIZE = 6;
+const PROPERTY_PAGE_SIZE = 50;
 
 export interface FilterState {
   searchTerm: string;
@@ -46,6 +31,9 @@ export interface FilterState {
   currency: string;
   locationId: string;
   country: string;
+  listingType?: string;
+  beds?: string;
+  baths?: string;
 }
 
 export default function PropertiesPage() {
@@ -65,8 +53,8 @@ function PropertiesPageContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [filters, setFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', locationId: '', country: '' });
-  const [draftFilters, setDraftFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', locationId: '', country: '' });
+  const [filters, setFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', locationId: '', country: '', listingType: '', beds: '', baths: '' });
+  const [draftFilters, setDraftFilters] = useState<FilterState>({ searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', locationId: '', country: '', listingType: '', beds: '', baths: '' });
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 
@@ -81,7 +69,7 @@ function PropertiesPageContent() {
   };
 
   const clearFilters = () => {
-    const empty = { searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', locationId: '', country: '' };
+    const empty = { searchTerm: '', location: '', propertyType: '', minPrice: '', maxPrice: '', currency: '', locationId: '', country: '', listingType: '', beds: '', baths: '' };
     setDraftFilters(empty);
     handleSearch(empty);
     setIsSidebarOpen(false);
@@ -91,17 +79,17 @@ function PropertiesPageContent() {
     setLoading(true);
     setError('');
     try {
-      // Reset pagination if needed (usually handled by calling fetchUnits(1, ...))
-      
-      const propertyTypeName = f.propertyType ? PROPERTY_TYPE_MAP[f.propertyType] || f.propertyType : undefined;
+      const propertyTypeName = normalizeUnitOutsidePropertyType(f.propertyType);
       const data = await getUnitOutsides({
         SearchTerm: f.searchTerm || undefined,
+        Search: f.searchTerm || undefined,
         MinPrice: f.minPrice ? Number(f.minPrice) : undefined,
         MaxPrice: f.maxPrice ? Number(f.maxPrice) : undefined,
         Currency: f.currency || undefined,
         City: f.location || undefined,
         Country: f.country || undefined,
         PropertyType: propertyTypeName || undefined,
+        IsSoldOutside: false,
         PageNumber: page,
         PageSize: PROPERTY_PAGE_SIZE, 
       });
@@ -115,20 +103,23 @@ function PropertiesPageContent() {
         locationName: `${u.city || ''}${u.city && u.country ? ', ' : ''}${u.country || ''}`,
         unitStatus: 'Resale',
         unitType: u.type,
-        propertyTypeLabel: PROPERTY_TYPE_LABEL[String(u.propertyType)] || String(u.propertyType || 'Unit'),
+        propertyTypeLabel: normalizeUnitOutsidePropertyType(u.propertyType) || String(u.propertyType || 'Unit'),
         imageUrls: u.images?.sort((a: any, b: any) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0)).map((img: any) => img.imageUrl) || []
       }));
 
-      // Frontend filter fallback
-      if (f.currency) {
-        mappedUnits = mappedUnits.filter((u: any) => 
-          (u.currencyCode || u.currency || 'EGP').toUpperCase() === f.currency.toUpperCase()
-        );
+      if (f.listingType) {
+        mappedUnits = mappedUnits.filter((u: any) => u.unitType?.toLowerCase() === f.listingType?.toLowerCase());
+      }
+      if (f.beds) {
+        mappedUnits = mappedUnits.filter((u: any) => (u.noBedRoom || 0) >= parseInt(f.beds as string, 10));
+      }
+      if (f.baths) {
+        mappedUnits = mappedUnits.filter((u: any) => (u.noBathRoom || 0) >= parseInt(f.baths as string, 10));
       }
 
       setUnits(mappedUnits);
       setTotalPages(data.totalPages || 1);
-      setTotalCount(data.totalCount || items.length);
+      setTotalCount(f.listingType || f.beds || f.baths ? mappedUnits.length : (data.totalCount || items.length));
       setCurrentPage(page);
     } catch (err) {
       setError(t('propertiesPage.grid.loadError'));
@@ -149,6 +140,9 @@ function PropertiesPageContent() {
       currency: searchParams.get('currency') || '',
       locationId: searchParams.get('locationId') || '',
       country: searchParams.get('country') || '',
+      listingType: searchParams.get('listingType') || '',
+      beds: searchParams.get('beds') || '',
+      baths: searchParams.get('baths') || '',
     };
     
     // Check if propertyType was passed via legacy parameters
@@ -224,24 +218,28 @@ function PropertiesPageContent() {
             </div>
           ) : !error && (
             <div className="properties-list-grid">
-              {units.map((unit) => (
-                <PropertyCard
-                  key={unit.mappedId || unit.id}
-                  id={unit.mappedId || unit.id}
-                  title={unit.resolvedName ?? getLocalized(unit.name)}
-                  type={unit.propertyTypeLabel || PROPERTY_TYPE_LABEL[String(unit.propertyType)] || t('propertyCard.fallback.unit')}
-                  location={unit.locationName || '—'}
-                  price={`${unit.currencyCode || unit.currency || 'EGP'} ${unit.price?.toLocaleString()}`}
-                  beds={unit.noBedRoom}
-                  baths={unit.noBathRoom}
-                  area={`${unit.area} m²`}
-                  image={resolveProjectImageUrl(unit.imageUrls?.[0]) || '/assists/defaultImage.png'}
-                  status={!unit.isActive ? 'Sold' : (unit.unitStatus || 'For Sale')}
-                  unitType={unit.unitType}
-                  isDefaultImage={!unit.imageUrls || unit.imageUrls.length === 0}
-                  paymentPlan={getPaymentPlanType(unit.paymentPlans)}
-                />
-              ))}
+              {units.map((unit) => {
+                const displayPrice = getUnitOutsideDisplayPrice(unit, filters.currency || undefined);
+
+                return (
+                  <PropertyCard
+                    key={unit.mappedId || unit.id}
+                    id={unit.mappedId || unit.id}
+                    title={unit.resolvedName ?? getLocalized(unit.name)}
+                    type={unit.propertyTypeLabel || t('propertyCard.fallback.unit')}
+                    location={unit.locationName || '—'}
+                    price={`${displayPrice.currency} ${displayPrice.price.toLocaleString()}`}
+                    beds={unit.noBedRoom}
+                    baths={unit.noBathRoom}
+                    area={`${unit.area} m²`}
+                    image={resolveProjectImageUrl(unit.imageUrls?.[0]) || '/assists/defaultImage.png'}
+                    status={!unit.isActive || unit.isSoldOutside ? 'Sold' : (unit.unitStatus || 'For Sale')}
+                    unitType={unit.unitType}
+                    isDefaultImage={!unit.imageUrls || unit.imageUrls.length === 0}
+                    paymentPlan={getPaymentPlanType(unit.paymentPlans)}
+                  />
+                );
+              })}
             </div>
           )}
 
@@ -272,145 +270,14 @@ function PropertiesPageContent() {
         </div>
       </section>
 
-      {/* Filters Sidebar */}
-      {isSidebarOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end font-poppins">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity" onClick={() => setIsSidebarOpen(false)} />
-          <div className="relative w-full sm:max-w-[480px] bg-brand-bg h-full shadow-2xl flex flex-col transform transition-transform duration-500 animate-in slide-in-from-right">
-            
-            {/* Header */}
-            <div className="flex items-center justify-between p-8 border-b border-gray-200 shrink-0 bg-white">
-              <h2 className="text-[28px] font-radley text-brand-primary">{t('propertiesPage.sidebar.title') as string}</h2>
-              <button onClick={() => setIsSidebarOpen(false)} className="p-2.5 bg-brand-bg rounded-full hover:bg-brand-divider transition-colors cursor-pointer text-brand-primary">
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto p-8 space-y-10">
-              
-              {/* Search Term */}
-              <div className="space-y-4">
-                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.searchKeywords') as string}</label>
-                <input 
-                  type="text" 
-                  placeholder={t('propertiesPage.sidebar.placeholderSearch') as string} 
-                  value={draftFilters.searchTerm}
-                  onChange={(e) => setDraftFilters({ ...draftFilters, searchTerm: e.target.value })}
-                  onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-                  className="w-full bg-transparent border-b-2 border-brand-divider py-3 text-[16px] text-brand-primary placeholder:text-brand-muted-light focus:outline-none focus:border-brand-secondary transition-colors"
-                />
-              </div>
-
-              {/* Country */}
-              <div className="space-y-4">
-                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.country') as string}</label>
-                <input 
-                  type="text" 
-                  placeholder={t('propertiesPage.sidebar.placeholderCountry') as string} 
-                  value={draftFilters.country}
-                  onChange={(e) => setDraftFilters({ ...draftFilters, country: e.target.value })}
-                  onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-                  className="w-full bg-transparent border-b-2 border-brand-divider py-3 text-[16px] text-brand-primary placeholder:text-brand-muted-light focus:outline-none focus:border-brand-secondary transition-colors"
-                />
-              </div>
-              
-
-
-              {/* Property Type */}
-              <div className="space-y-4">
-                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.propertyType') as string}</label>
-                <div className="flex flex-wrap gap-3">
-                  {[
-                    { value: '', label: t('propertiesPage.sidebar.any') as string },
-                    { value: '0', label: t('propertiesPage.sidebar.apartment') as string },
-                    { value: '1', label: t('propertiesPage.sidebar.villa') as string },
-                    { value: '2', label: t('propertiesPage.sidebar.townhouse') as string },
-                    { value: '3', label: t('propertiesPage.sidebar.studio') as string },
-                    { value: '4', label: t('propertiesPage.sidebar.penthouse') as string },
-                  ].map(type => (
-                    <button 
-                      key={type.value}
-                      onClick={() => setDraftFilters({ ...draftFilters, propertyType: type.value })}
-                      className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all duration-300 ${draftFilters.propertyType === type.value ? 'bg-brand-secondary text-white border-brand-secondary shadow-md' : 'bg-white text-brand-primary border-brand-divider hover:border-brand-secondary hover:text-brand-secondary'}`}
-                    >
-                      {type.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-
-
-              {/* Price Range */}
-              <div className="space-y-4">
-                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.priceRange') as string}</label>
-                <div className="flex items-center gap-4">
-                  <div className="flex-1 relative">
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-[14px] font-semibold">{draftFilters.currency || '$'}</span>
-                    <input 
-                      type="number" 
-                      placeholder={t('propertiesPage.sidebar.min') as string} 
-                      value={draftFilters.minPrice}
-                      onChange={(e) => setDraftFilters({ ...draftFilters, minPrice: e.target.value })}
-                      className="w-full bg-transparent border-b-2 border-brand-divider py-3 pl-6 text-[16px] text-brand-primary placeholder:text-brand-muted-light focus:outline-none focus:border-brand-secondary transition-colors"
-                    />
-                  </div>
-                  <div className="w-4 h-[2px] bg-gray-300" />
-                  <div className="flex-1 relative">
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-[14px] font-semibold">{draftFilters.currency || '$'}</span>
-                    <input 
-                      type="number" 
-                      placeholder={t('propertiesPage.sidebar.max') as string} 
-                      value={draftFilters.maxPrice}
-                      onChange={(e) => setDraftFilters({ ...draftFilters, maxPrice: e.target.value })}
-                      className="w-full bg-transparent border-b-2 border-brand-divider py-3 pl-6 text-[16px] text-brand-primary placeholder:text-brand-muted-light focus:outline-none focus:border-brand-secondary transition-colors"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Currency */}
-              <div className="space-y-4">
-                <label className="text-[13px] font-bold text-gray-500 uppercase tracking-widest">{t('propertiesPage.sidebar.currency') as string}</label>
-                <div className="relative">
-                  <select 
-                    value={draftFilters.currency}
-                    onChange={(e) => setDraftFilters({ ...draftFilters, currency: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-brand-divider py-3 text-[16px] text-brand-primary focus:outline-none focus:border-brand-secondary transition-colors appearance-none cursor-pointer"
-                  >
-                    <option value="" className="text-gray-500">{t('propertiesPage.sidebar.any') as string}</option>
-                    <option value="EGP" className="text-brand-primary">EGP</option>
-                    <option value="USD" className="text-brand-primary">USD</option>
-                    <option value="EUR" className="text-brand-primary">EUR</option>
-                    <option value="GBP" className="text-brand-primary">GBP</option>
-                  </select>
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                    <ChevronDown size={18} />
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-
-            {/* Footer Buttons */}
-            <div className="p-8 bg-white border-t border-gray-200 flex items-center gap-6 shrink-0">
-              <button 
-                onClick={clearFilters}
-                className="py-4 px-6 text-[15px] font-bold text-gray-500 hover:text-brand-primary transition-colors cursor-pointer whitespace-nowrap"
-              >
-                {t('propertiesPage.sidebar.resetAll') as string}
-              </button>
-              <button 
-                onClick={applyFilters}
-                className="flex-1 bg-brand-primary text-white py-4 rounded-full text-[15px] font-bold hover:bg-brand-secondary hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
-              >
-                {t('propertiesPage.sidebar.apply') as string}
-              </button>
-            </div>
-            
-          </div>
-        </div>
-      )}
+      <PropertyFilters 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+        draftFilters={draftFilters} 
+        setDraftFilters={setDraftFilters} 
+        applyFilters={applyFilters} 
+        clearFilters={clearFilters} 
+      />
     </div>
   );
 }

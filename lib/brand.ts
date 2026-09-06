@@ -1,4 +1,4 @@
-export const BRAND_NAME = 'The Rook Real Estate Investment';
+export const BRAND_NAME = 'The Rock Real Estate Investment';
 
 export const BRAND_LOGOS = {
   fullColor: '/brand/rook-logo-full-color.png',

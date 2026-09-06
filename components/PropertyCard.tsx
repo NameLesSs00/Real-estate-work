@@ -35,6 +35,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   area,
   image,
   status = 'For Sale',
+  unitType,
 }) => {
   const { t, language } = useLanguage();
   
@@ -57,8 +58,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         
         {/* Tags */}
-        <div className="absolute top-5 left-5 bg-white/95 backdrop-blur-sm text-brand-primary px-5 py-2 rounded-full font-poppins font-bold text-[15px] shadow-lg">
-          {price}
+        <div className="absolute top-5 left-5 flex flex-col items-start gap-2">
+          <div className="bg-white/95 backdrop-blur-sm text-brand-primary px-5 py-2 rounded-full font-poppins font-bold text-[15px] shadow-lg">
+            {price}
+          </div>
+          {unitType && (
+            <div className="bg-brand-primary text-white px-3 py-1 rounded-full font-poppins font-bold text-[11px] shadow-lg uppercase tracking-widest">
+               {unitType.toLowerCase() === 'rent' ? t('propertyCard.details.forRent') : t('propertyCard.details.forBuy')}
+            </div>
+          )}
         </div>
         <div className="absolute top-5 right-5 bg-brand-secondary text-white px-4 py-2 rounded-full font-poppins font-bold text-[12px] shadow-lg uppercase tracking-wider">
           {status === 'Sold'

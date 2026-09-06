@@ -22,7 +22,7 @@
     "language": "Language"
   },
   "footer": {
-    "about": "The Rook Real Estate Investment was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
+    "about": "The Rock Real Estate Investment was founded with a passion for connecting people with their dream homes and ideal investments. We understand that real estate is not just about transactions; it's about life-changing decisions.",
     "usefulLinks": "Quick action",
     "stayConnected": "Follow Us",
     "newsletter": "Join our newsletter to stay up to date on features and releases.",
@@ -44,8 +44,10 @@
     "allTypes": "All Types",
     "location": "Location",
     "allLocations": "All Locations",
+    "currency": "Currency",
     "minPrice": "Starting Price",
     "maxPrice": "Max Price",
+    "priceOrderError": "Maximum price must be greater than minimum price.",
     "noMin": "No minimum",
     "noMax": "No maximum"
   },
@@ -175,7 +177,7 @@
     "missionTitle": "Our Mission",
     "missionText": "We are dedicated to providing an elite, personalized service that transcends expectations. By blending deep market expertise with uncompromising integrity, we guide our clients toward exceptional investments and their ultimate dream homes.",
     "journeyTitle": "Our Legacy",
-    "journeyText": "Born from a passion for architectural brilliance and refined living, The Rook Real Estate Investment has evolved into the region's premier luxury real estate boutique. Our journey is defined by a commitment to excellence, matching discerning buyers with truly magnificent properties.",
+    "journeyText": "Born from a passion for architectural brilliance and refined living, The Rock Real Estate Investment has evolved into the region's premier luxury real estate boutique. Our journey is defined by a commitment to excellence, matching discerning buyers with truly magnificent properties.",
     "offerTitle": "Exclusive Services",
     "offers": {
       "sales": {
@@ -301,6 +303,8 @@
     "price": "Price",
     "pricing": "Pricing",
     "projectTypes": "Project Types",
+    "includes": "Includes",
+    "startingPrice": "Starting Price",
     "availableUnits": "Available Units",
     "unit": "Unit",
     "moreUnits": "more units available",
@@ -322,8 +326,8 @@
     "cashPayment": "Cash Payment"
   },
   "contactPage": {
-    "title": "Get in Touch with The Rook Real Estate Investment",
-    "subtitle": "Welcome to The Rook Real Estate Investment's Contact page. We're here to assist you with any inquiries, requests, or feedback you may have.",
+    "title": "Get in Touch with The Rock Real Estate Investment",
+    "subtitle": "Welcome to The Rock Real Estate Investment's Contact page. We're here to assist you with any inquiries, requests, or feedback you may have.",
     "info": {
       "email": "Email",
       "phone": "Phone",
@@ -332,7 +336,7 @@
     },
     "form": {
       "title": "Let's Connect",
-      "subtitle": "Use the form below to get in touch with The Rook Real Estate Investment.",
+      "subtitle": "Use the form below to get in touch with The Rock Real Estate Investment.",
       "firstName": "First Name",
       "lastName": "Last Name",
       "email": "Email",
@@ -344,6 +348,7 @@
       "submit": "Send Inquiry",
       "sending": "Sending...",
       "success": "Your inquiry has been sent successfully! We'll get back to you soon.",
+      "successMessage": "Your inquiry has been sent successfully! We'll get back to you soon.",
       "errorAgreed": "Please agree to the Terms of Use and Privacy Policy.",
       "errorRequired": "Please fill in all required fields.",
       "placeholderFirstName": "Enter First Name",
@@ -351,6 +356,24 @@
       "placeholderEmail": "Enter your Email",
       "placeholderPhone": "Enter Phone Number",
       "placeholderMessage": "Enter your Message here..",
+      "firstNamePlaceholder": "Enter First Name",
+      "lastNamePlaceholder": "Enter Last Name",
+      "emailPlaceholder": "Enter your Email",
+      "phonePlaceholder": "Enter Phone Number",
+      "messagePlaceholder": "Enter your Message here...",
+      "agreeText": "I agree to the Terms of Use and Privacy Policy",
+      "hearFrom": "How did you hear about us?",
+      "selectType": "Select inquiry type",
+      "selectSource": "Select source",
+      "generalInquiry": "General Inquiry",
+      "buying": "Buying",
+      "selling": "Selling",
+      "renting": "Renting",
+      "investment": "Investment",
+      "socialMedia": "Social Media",
+      "friend": "Friend / Referral",
+      "advertisement": "Advertisement",
+      "other": "Other",
       "inquiryOptions": {
         "buy": "Buy a Property",
         "sell": "Sell a Property",
@@ -411,8 +434,11 @@
       "studio": "Studio",
       "penthouse": "Penthouse",
       "category": "Category",
+      "listingType": "Listing Type",
       "buy": "Buy",
       "rent": "Rent",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
       "priceRange": "Price Range",
       "min": "Min",
       "max": "Max",
@@ -440,7 +466,9 @@
       "instalment": "Instalment",
       "cash": "Cash",
       "saveProperty": "Save property",
-      "size": "Size"
+      "size": "Size",
+      "forRent": "For Rent",
+      "forBuy": "For Buy"
     },
     "fallback": {
       "untitled": "Untitled Unit",
@@ -451,7 +479,7 @@
   "faqPage": {
     "tag": "SUPPORT",
     "title": "Frequently Asked Questions",
-    "subtitle": "Everything you need to know about buying and selling with The Rook Real Estate Investment.",
+    "subtitle": "Everything you need to know about buying and selling with The Rock Real Estate Investment.",
     "loading": "Loading questions...",
     "noQuestions": "No FAQs available at the moment. Check back soon!"
   },

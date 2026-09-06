@@ -123,7 +123,7 @@ export default function ProjectFilters({ values, onApply, onClear, isLoading = f
         const [locationsPage, developersPage, projectTypesPage, facilitiesList] = await Promise.all([
           getLocations({ pageNumber: 1, pageSize: 100 }),
           getDevelopers(1),
-          getProjectTypes({ pageNumber: 1, pageSize: 100 }),
+          getProjectTypes({ pageNumber: 1, pageSize: 10 }),
           getFacilities(),
         ]);
 

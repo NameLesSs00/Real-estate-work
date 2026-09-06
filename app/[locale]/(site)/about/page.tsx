@@ -2,12 +2,12 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { CONTACT_WHATSAPP_URL } from '@/lib/contactDetails';
 import { useLanguage } from '@/lib/contexts/LanguageContext';
 
 export default function AboutPage() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="flex flex-col min-h-screen bg-brand-bg overflow-hidden">
@@ -27,7 +27,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }} 
             className="text-[48px] md:text-[64px] font-radley text-white leading-tight"
           >
-            About The Rook Real Estate Investment
+            About The Rock Real Estate Investment
           </motion.h1>
         </div>
       </section>
@@ -176,12 +176,14 @@ export default function AboutPage() {
           <p className="text-[16px] md:text-[22px] font-poppins opacity-90 max-w-[750px]">
             {t('aboutPage.ctaSubtitle')}
           </p>
-          <Link 
-            href={`/${language}/contact`} 
+          <a
+            href={CONTACT_WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="mt-4 bg-white text-brand-primary px-14 py-4 rounded-full font-bold text-[18px] hover:bg-brand-bg transition-all transform hover:scale-105"
           >
             {t('aboutPage.contactBtn')}
-          </Link>
+          </a>
         </motion.div>
       </section>
     </div>

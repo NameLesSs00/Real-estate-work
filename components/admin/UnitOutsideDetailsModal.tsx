@@ -7,11 +7,13 @@ import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useEscapeKey } from '@/hooks/useEscapeKey';
 import {
   getUnitOutsideById,
+  getUnitOutsideDisplayPrice,
   addUnitOutsideImages,
   deleteUnitOutsideImage,
   UnitOutside,
 } from '@/lib/api/unitOutsides';
 import { API_DOMAIN } from '@/lib/api/config';
+import { getFacilityServiceIcon } from '@/lib/icons/facilityServiceIcons';
 
 interface UnitOutsideDetailsModalProps {
   isOpen: boolean;
@@ -103,6 +105,7 @@ export default function UnitOutsideDetailsModal({
   if (!isOpen) return null;
 
   const images = unit?.images ?? [];
+  const displayPrice = unit ? getUnitOutsideDisplayPrice(unit, 'EGP') : null;
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 font-inter">
@@ -219,12 +222,13 @@ export default function UnitOutsideDetailsModal({
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {[
                   { label: 'Marker ID', value: unit.markerId || '—' },
-                  { label: 'Price', value: `${unit.currencyCode} ${unit.price.toLocaleString()}` },
+                  { label: 'Price', value: displayPrice ? `${displayPrice.currency} ${displayPrice.price.toLocaleString()}` : '---' },
                   { label: 'Area', value: `${unit.area} m²` },
                   { label: 'Bedrooms', value: unit.noBedRoom },
                   { label: 'Bathrooms', value: unit.noBathRoom },
                   { label: 'Kitchens', value: unit.noKitchen },
                   { label: 'Floor', value: unit.floorName || unit.floorNumber },
+                  { label: 'Building Floors', value: unit.noFloor || '---' },
                   { label: 'Property Type', value: unit.propertyType },
                   { label: 'Type', value: unit.type },
                   { label: 'View', value: unit.view || '—' },
@@ -243,6 +247,41 @@ export default function UnitOutsideDetailsModal({
                   </div>
                 ))}
               </div>
+
+              {unit.prices && unit.prices.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-[16px] font-bold text-brand-primary">Prices</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {unit.prices.map((price) => (
+                      <div key={price.currency} className="rounded-2xl border border-gray-100 bg-gray-50 px-5 py-4">
+                        <p className="text-[11px] font-bold text-brand-muted-light uppercase tracking-wider mb-1">{price.currency}</p>
+                        <p className="text-[16px] font-black text-brand-primary">{price.price.toLocaleString()}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {unit.services && unit.services.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-[16px] font-bold text-brand-primary">Services</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {unit.services.map((service) => {
+                      const ServiceIcon = getFacilityServiceIcon(service.icon);
+
+                      return (
+                        <span
+                          key={service.id}
+                          className="inline-flex items-center gap-2 rounded-full border border-brand-divider bg-brand-bg px-4 py-2 text-[13px] font-bold text-brand-primary"
+                        >
+                          <ServiceIcon size={16} className="text-brand-secondary" />
+                          {getLocalized(service.name)}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Status badges */}
               <div className="flex flex-wrap gap-3">
@@ -301,14 +340,16 @@ export default function UnitOutsideDetailsModal({
                         {unit.paymentPlans.map((plan) => (
                           <tr key={plan.id} className="text-[14px]">
                             <td className="py-3 pr-6 font-bold text-brand-primary">{plan.paymentType}</td>
-                            <td className="py-3 pr-6 text-admin-muted">{plan.commissionRate}%</td>
                             <td className="py-3 pr-6 text-admin-muted">
-                              {plan.installmentMothes > 0 ? `${plan.installmentMothes} mo` : '—'}
+                              {plan.commissionRate !== null && plan.commissionRate !== undefined ? `${plan.commissionRate}%` : '---'}
                             </td>
                             <td className="py-3 pr-6 text-admin-muted">
-                              {plan.installmentDownPayment > 0
+                              {(plan.installmentMothes ?? 0) > 0 ? `${plan.installmentMothes} mo` : '---'}
+                            </td>
+                            <td className="py-3 pr-6 text-admin-muted">
+                              {(plan.installmentDownPayment ?? 0) > 0
                                 ? `${plan.installmentDownPayment}%`
-                                : '—'}
+                                : '---'}
                             </td>
                             <td className="py-3">
                               <span
@@ -334,7 +375,7 @@ export default function UnitOutsideDetailsModal({
 
         {/* Footer */}
         <div className="px-8 py-5 border-t border-gray-100 shrink-0 flex items-center justify-between bg-white">
-          {unit && unit.isActive && onMarkSold && (
+          {unit && unit.isActive && !unit.isSoldOutside && onMarkSold && (
             <button
               onClick={() => onMarkSold(unit)}
               className="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-8 py-3.5 rounded-2xl transition-all cursor-pointer border border-red-100"
@@ -344,7 +385,7 @@ export default function UnitOutsideDetailsModal({
           )}
           <div className="ml-auto flex items-center gap-3">
             <a
-              href={`/properties/out-${(() => {
+              href={`/${language}/properties/out-${(() => {
                 if (!unit?.id) return '';
                 if (!unit?.id) return '';
                 const rawName = getLocalized(unit.name) || '';

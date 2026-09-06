@@ -283,13 +283,13 @@ export default function ProjectDetailsPage({
   ];
 
   return (
-    <div className="min-h-screen bg-brand-primary-soft pt-32 font-poppins text-brand-primary">
-      <section className="bg-brand-bg px-5 pb-10 pt-8 sm:px-6 md:px-10 md:pb-14 md:pt-12">
+    <div className="min-h-screen bg-brand-primary-soft pt-24 font-poppins text-brand-primary md:pt-28">
+      <section className="px-5 pb-8 pt-5 sm:px-6 md:px-10 md:pb-10">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="mx-auto flex max-w-[1280px] flex-col gap-8"
+          className="mx-auto flex max-w-[1280px] flex-col gap-5"
         >
           <motion.nav variants={itemVariants} className="flex flex-wrap items-center gap-2 text-[13px] font-semibold text-brand-muted">
             <Link href={`/${language}/projects`} className="transition-colors hover:text-brand-primary">
@@ -299,337 +299,351 @@ export default function ProjectDetailsPage({
             <span className="text-brand-primary">{localizedName}</span>
           </motion.nav>
 
-          <motion.div variants={itemVariants} className="grid gap-8 lg:grid-cols-[1fr_380px] lg:items-end">
-            <div>
-              <div className="mb-4 flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center gap-2 rounded-full border border-brand-muted-light bg-white/75 px-4 py-2 text-[12px] font-bold uppercase tracking-[0.18em] text-brand-primary">
-                  <Building2 size={15} />
-                  {t('header.projects')}
-                </span>
-                {project.isFeature && (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-4 py-2 text-[12px] font-bold uppercase tracking-[0.14em] text-white">
-                    <Sparkles size={14} />
-                    {t('projectDetails.featured')}
-                  </span>
-                )}
-              </div>
-              <h1 className="font-radley text-[40px] leading-[1.05] text-brand-primary sm:text-[52px] md:text-[64px]">
-                {localizedName}
-              </h1>
-              <div className="mt-5 flex flex-wrap items-center gap-3">
-                <span className="inline-flex max-w-full items-center gap-2 rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-brand-muted shadow-sm">
-                  <MapPin size={17} className="shrink-0 text-brand-secondary" />
-                  <span className="truncate">{project.locationName || t('projects.noLocation')}</span>
-                </span>
-                {mainPrice && (
-                  <span className="inline-flex max-w-full items-center gap-2 rounded-full bg-white px-4 py-2 text-[14px] font-semibold text-brand-primary shadow-sm">
-                    <CircleDollarSign size={17} className="shrink-0 text-brand-secondary" />
-                    <span className="truncate">{getProjectPriceRange(mainPrice, t)}</span>
-                  </span>
-                )}
-              </div>
+          <motion.div variants={itemVariants} className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-stretch">
+            <div className="min-w-0 overflow-hidden rounded-[24px] border border-brand-divider bg-white p-3 shadow-[0_18px_55px_rgba(7,44,62,0.08)]">
+              <ImageGallery images={images} projectName={localizedName} />
             </div>
 
-            <div className="rounded-[24px] border border-brand-divider bg-white p-5 shadow-[0_18px_55px_rgba(7,44,62,0.08)]">
-              <p className="mb-4 text-[12px] font-bold uppercase tracking-[0.14em] text-brand-secondary">
-                {t('projects.developedBy')}
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="relative h-16 w-20 shrink-0 rounded-[18px] border border-brand-primary-soft bg-brand-primary-soft">
-                  <Image
-                    src={developerLogo}
-                    alt={project.developerName || t('featureProject.developerLogo')}
-                    fill
-                    sizes="80px"
-                    draggable={false}
-                    className="object-contain p-3"
-                  />
+            <aside className="flex rounded-[24px] border border-brand-divider bg-white p-6 shadow-[0_18px_55px_rgba(7,44,62,0.08)] sm:p-7">
+              <div className="flex min-w-0 flex-1 flex-col">
+                <div className="mb-4 flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-brand-divider bg-brand-primary-soft px-3.5 py-2 text-[12px] font-bold uppercase tracking-[0.12em] text-brand-primary">
+                    <Building2 size={14} />
+                    {t('header.projects')}
+                  </span>
+                  {project.isFeature && (
+                    <span className="inline-flex items-center gap-2 rounded-full bg-brand-primary px-3.5 py-2 text-[12px] font-bold uppercase tracking-[0.12em] text-white">
+                      <Sparkles size={14} />
+                      {t('projectDetails.featured')}
+                    </span>
+                  )}
                 </div>
-                <div className="min-w-0">
-                  <h2 className="truncate text-[20px] font-bold text-brand-primary">
-                    {project.developerName || t('projects.noDeveloper')}
-                  </h2>
-                  <p className="mt-1 text-[14px] font-medium text-brand-muted">
-                    {t('projectDetails.developerSubtitle')}
-                  </p>
+
+                <h1 className="font-radley text-[38px] leading-[1.02] text-brand-primary sm:text-[48px] lg:text-[52px]">
+                  {localizedName}
+                </h1>
+
+                <div className="mt-4 flex items-start gap-2 text-[15px] font-semibold leading-6 text-brand-muted">
+                  <MapPin size={18} className="mt-0.5 shrink-0 text-brand-secondary" />
+                  <span>{project.locationName || t('projects.noLocation')}</span>
+                </div>
+
+                <div className="my-6 h-px w-full bg-brand-primary-soft" />
+
+                <div className="flex items-center gap-4">
+                  <div className="relative h-20 w-28 shrink-0 rounded-[18px] border border-brand-primary-soft bg-white shadow-sm">
+                    <Image
+                      src={developerLogo}
+                      alt={project.developerName || t('featureProject.developerLogo')}
+                      fill
+                      sizes="112px"
+                      draggable={false}
+                      className="object-contain p-1.5"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-brand-secondary">
+                      {t('projects.developedBy')}
+                    </p>
+                    <h2 className="mt-1 truncate text-[18px] font-bold text-brand-primary">
+                      {project.developerName || t('projects.noDeveloper')}
+                    </h2>
+                  </div>
+                </div>
+
+                <div className="mt-auto grid grid-cols-1 gap-3 pt-6 sm:grid-cols-2 lg:grid-cols-1">
+                  <div className="rounded-[18px] bg-brand-bg p-4">
+                    <p className="text-[13px] font-bold text-brand-muted">{t('projectDetails.startingPrice')}</p>
+                    <p className="mt-1 text-[17px] font-bold leading-7 text-brand-primary">
+                      {mainPrice ? getProjectPriceRange(mainPrice, t) : t('projectDetails.priceOnRequest')}
+                    </p>
+                  </div>
+                  <div className="rounded-[18px] bg-brand-bg p-4">
+                    <p className="text-[13px] font-bold text-brand-muted">{t('projectDetails.deliveryDate')}</p>
+                    <p className="mt-1 text-[17px] font-bold leading-7 text-brand-primary">
+                      {formatDate(project.deliveryDate, language, t('projectDetails.notSpecified'))}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </aside>
           </motion.div>
+
+          <motion.section variants={itemVariants} className="grid gap-3 rounded-[24px] border border-brand-divider bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
+            {prices.length > 0 ? (
+              prices.map((price) => (
+                <div key={`${price.currency}-${price.id ?? price.minimumPrice}`} className="rounded-[18px] bg-brand-bg px-4 py-3">
+                  <div className="mb-1 flex items-center gap-2 text-[13px] font-bold text-brand-secondary">
+                    <CircleDollarSign size={15} />
+                    {price.currency}
+                  </div>
+                  <p className="text-[15px] font-bold leading-6 text-brand-primary">
+                    {getProjectPriceRange(price, t)}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-[18px] bg-brand-bg px-4 py-4 text-[15px] font-bold text-brand-primary sm:col-span-2 lg:col-span-4">
+                {t('projectDetails.priceOnRequest')}
+              </div>
+            )}
+          </motion.section>
         </motion.div>
       </section>
 
-      <section className="px-5 py-10 sm:px-6 md:px-10 md:py-14">
+      <section className="px-5 pb-14 sm:px-6 md:px-10">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={containerVariants}
-          className="mx-auto flex max-w-[1280px] flex-col gap-8"
+          className="mx-auto grid max-w-[1280px] gap-8 lg:grid-cols-[minmax(0,1fr)_340px]"
         >
-          <motion.div variants={itemVariants} className="overflow-hidden rounded-[24px] border border-brand-divider bg-white p-3 shadow-[0_18px_55px_rgba(7,44,62,0.08)]">
-            <ImageGallery images={images} projectName={localizedName} />
-          </motion.div>
+          <div className="flex min-w-0 flex-col gap-8">
+            <motion.section variants={itemVariants} className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm sm:p-8">
+              <div className="flex items-center gap-3">
+                <h2 className="text-[22px] font-bold text-brand-primary">
+                  {t('projectDetails.description')}
+                </h2>
+                <div className="h-px flex-1 bg-brand-primary-soft" />
+              </div>
+              <div className="mt-5 flex flex-col gap-4">
+                {localizedDesc ? (
+                  localizedDesc.split('\n\n').map((para, index) => (
+                    <p key={index} className="text-[16px] leading-8 text-brand-muted">
+                      {para}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-[15px] italic leading-8 text-brand-muted">
+                    {t('projectDetails.noDescription')}
+                  </p>
+                )}
+              </div>
+            </motion.section>
 
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_390px]">
-            <div className="flex min-w-0 flex-col gap-8">
+            {facilityItems.length > 0 && (
               <motion.section variants={itemVariants} className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm sm:p-8">
                 <div className="flex items-center gap-3">
                   <h2 className="text-[22px] font-bold text-brand-primary">
-                    {t('projectDetails.description')}
+                    {t('projectDetails.facilities')}
                   </h2>
                   <div className="h-px flex-1 bg-brand-primary-soft" />
                 </div>
-                <div className="mt-6 flex flex-col gap-4">
-                  {localizedDesc ? (
-                    localizedDesc.split('\n\n').map((para, index) => (
-                      <p key={index} className="text-[16px] leading-8 text-brand-muted">
-                        {para}
-                      </p>
-                    ))
-                  ) : (
-                    <p className="text-[15px] italic leading-8 text-brand-muted">
-                      {t('projectDetails.noDescription')}
-                    </p>
-                  )}
-                </div>
-              </motion.section>
-
-              {projectTypes.length > 0 && (
-                <motion.section variants={itemVariants} className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm sm:p-8">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-[22px] font-bold text-brand-primary">
-                      {t('projectDetails.projectTypes')}
-                    </h2>
-                    <div className="h-px flex-1 bg-brand-primary-soft" />
-                  </div>
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    {projectTypes.map((type) => (
-                      <span
-                        key={type.id}
-                        className="inline-flex items-center gap-2 rounded-full border border-brand-divider bg-brand-primary-soft px-4 py-2 text-[14px] font-bold text-brand-primary"
-                      >
-                        <Home size={16} className="text-brand-secondary" />
-                        {getLocalizedValue(type.name, language) || `${t('projectDetails.projectTypes')} ${type.id}`}
-                      </span>
-                    ))}
-                  </div>
-                </motion.section>
-              )}
-
-              {facilityItems.length > 0 && (
-                <motion.section variants={itemVariants} className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm sm:p-8">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-[22px] font-bold text-brand-primary">
-                      {t('projectDetails.facilities')}
-                    </h2>
-                    <div className="h-px flex-1 bg-brand-primary-soft" />
-                  </div>
-                  <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                    {facilityItems.map((facility) => {
-                      const FacilityIcon = getFacilityServiceIcon(facility.icon);
-
-                      return (
-                        <div key={facility.key} className="flex items-center gap-3 rounded-[18px] bg-brand-primary-soft p-4 text-brand-muted">
-                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-brand-primary shadow-sm">
-                            <FacilityIcon size={18} strokeWidth={2.5} />
-                          </span>
-                          <span className="text-[15px] font-semibold">{facility.name}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </motion.section>
-              )}
-
-              {units.length > 0 && (
-                <motion.section variants={itemVariants} className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm sm:p-8">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex min-w-0 flex-1 items-center gap-3">
-                      <h2 className="text-[22px] font-bold text-brand-primary">
-                        {t('projectDetails.availableUnits')}
-                      </h2>
-                      <div className="h-px flex-1 bg-brand-primary-soft" />
-                    </div>
-                    <span className="rounded-full bg-brand-primary-soft px-4 py-2 text-[13px] font-bold text-brand-primary">
-                      {units.length} {t('projects.units')}
-                    </span>
-                  </div>
-                  <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {units.slice(0, 6).map((unit: ApiUnit) => {
-                      const unitName = getLocalizedValue(unit.name, language) || t('projectDetails.unit');
-                      const unitImage = resolveProjectImageUrl(unit.imageUrls?.[0]) || DEFAULT_IMAGE;
-
-                      return (
-                        <div key={unit.id} className="overflow-hidden rounded-[20px] border border-brand-divider bg-brand-bg">
-                          <div className="relative aspect-[1.7] bg-brand-primary-soft">
-                            <Image
-                              src={unitImage}
-                              alt={unitName}
-                              fill
-                              sizes="(min-width: 1024px) 360px, 100vw"
-                              draggable={false}
-                              className="object-cover"
-                            />
-                          </div>
-                          <div className="p-4">
-                            <div className="flex items-start justify-between gap-3">
-                              <h3 className="line-clamp-2 text-[16px] font-bold text-brand-primary">{unitName}</h3>
-                              <span className="shrink-0 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-brand-primary">
-                                {unit.status || unit.type || t('projectDetails.unit')}
-                              </span>
-                            </div>
-                            <p className="mt-2 text-[15px] font-bold text-brand-primary">
-                              {formatPrice(unit.price, unit.currencyCode || 'EGP') || t('projectDetails.priceOnRequest')}
-                            </p>
-                            <div className="mt-4 grid grid-cols-3 gap-2 text-[12px] font-semibold text-brand-muted">
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2">
-                                <BedDouble size={14} />
-                                {unit.noBedRoom}
-                              </span>
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2">
-                                <Bath size={14} />
-                                {unit.noBathRoom}
-                              </span>
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2">
-                                <Ruler size={14} />
-                                {formatNumber(unit.area)}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {units.length > 6 && (
-                    <p className="mt-4 text-center text-[14px] font-semibold text-brand-muted">
-                      +{units.length - 6} {t('projectDetails.moreUnits')}
-                    </p>
-                  )}
-                </motion.section>
-              )}
-            </div>
-
-            <motion.aside variants={itemVariants} className="flex flex-col gap-6">
-              <section className="rounded-[24px] border border-brand-divider bg-brand-bg p-6 shadow-sm">
-                <h2 className="text-[22px] font-bold text-brand-primary">
-                  {t('projectDetails.overview')}
-                </h2>
-                <div className="mt-5 grid grid-cols-1 gap-3">
-                  {overviewItems.map((item) => {
-                    const Icon = item.icon;
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {facilityItems.map((facility) => {
+                    const FacilityIcon = getFacilityServiceIcon(facility.icon);
 
                     return (
-                      <div key={item.label} className="flex items-start gap-3 rounded-[18px] bg-white p-4">
-                        <Icon size={19} className="mt-0.5 shrink-0 text-brand-secondary" />
-                        <div>
-                          <p className="text-[13px] font-bold text-brand-primary">
-                            {item.label}
+                      <div key={facility.key} className="flex items-center gap-3 rounded-[18px] bg-brand-primary-soft p-4 text-brand-muted">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-brand-primary shadow-sm">
+                          <FacilityIcon size={18} strokeWidth={2.5} />
+                        </span>
+                        <span className="text-[15px] font-semibold">{facility.name}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.section>
+            )}
+
+            {projectTypes.length > 0 && (
+              <motion.section variants={itemVariants} className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm sm:p-8">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-[22px] font-bold text-brand-primary">
+                    {t('projectDetails.includes')}
+                  </h2>
+                  <div className="h-px flex-1 bg-brand-primary-soft" />
+                </div>
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {projectTypes.map((type) => (
+                    <div key={type.id} className="flex items-center gap-3 rounded-[18px] border border-brand-divider bg-brand-primary-soft p-4">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-brand-primary shadow-sm">
+                        <Home size={18} className="text-brand-secondary" />
+                      </span>
+                      <span className="text-[15px] font-bold text-brand-primary">
+                        {getLocalizedValue(type.name, language) || `${t('projectDetails.includes')} ${type.id}`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </motion.section>
+            )}
+
+            <motion.section variants={itemVariants} className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm sm:p-8">
+              <div className="flex items-center gap-3">
+                <h2 className="text-[22px] font-bold text-brand-primary">
+                  {t('projectDetails.paymentPlans')}
+                </h2>
+                <div className="h-px flex-1 bg-brand-primary-soft" />
+              </div>
+              <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+                {paymentPlans.length > 0 ? (
+                  paymentPlans.map((plan) => {
+                    const isCash = String(plan.paymentType).toLowerCase() === 'cash';
+                    const status = getPlanStatus(plan.status);
+                    const months = getPlanMonths(plan);
+
+                    return (
+                      <div key={plan.id} className="rounded-[20px] border border-brand-divider bg-brand-bg p-5">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-brand-primary shadow-sm">
+                              {isCash ? <Landmark size={19} /> : <CreditCard size={19} />}
+                            </span>
+                            <div>
+                              <h3 className="text-[17px] font-bold text-brand-primary">
+                                {isCash ? t('projectDetails.cashPayment') : t('projectDetails.installment')}
+                              </h3>
+                              <p className="mt-1 text-[13px] font-semibold text-brand-muted">{status}</p>
+                            </div>
+                          </div>
+                          <CheckCircle2 size={19} className="shrink-0 text-brand-secondary" />
+                        </div>
+                        <div className="mt-5 grid grid-cols-1 gap-3 text-[14px] font-semibold text-brand-muted">
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="inline-flex items-center gap-2">
+                              <WalletCards size={16} />
+                              {t('projectDetails.downPayment')}
+                            </span>
+                            <span className="font-bold text-brand-primary">{plan.installmentDownPayment}%</span>
+                          </div>
+                          {!isCash && months > 0 && (
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="inline-flex items-center gap-2">
+                                <Clock3 size={16} />
+                                {t('projectDetails.duration')}
+                              </span>
+                              <span className="font-bold text-brand-primary">
+                                {months} {t('projectDetails.months')}
+                              </span>
+                            </div>
+                          )}
+                          {plan.commissionRate !== null && (
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="inline-flex items-center gap-2">
+                                <Percent size={16} />
+                                {t('projectDetails.commission')}
+                              </span>
+                              <span className="font-bold text-brand-primary">{plan.commissionRate}%</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="rounded-[20px] border border-dashed border-brand-divider bg-brand-bg p-6 text-center text-[15px] font-semibold text-brand-muted md:col-span-2">
+                    {t('projectDetails.noPaymentPlans')}
+                  </div>
+                )}
+              </div>
+            </motion.section>
+
+            {units.length > 0 && (
+              <motion.section variants={itemVariants} className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm sm:p-8">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <h2 className="text-[22px] font-bold text-brand-primary">
+                      {t('projectDetails.availableUnits')}
+                    </h2>
+                    <div className="h-px flex-1 bg-brand-primary-soft" />
+                  </div>
+                  <span className="rounded-full bg-brand-primary-soft px-4 py-2 text-[13px] font-bold text-brand-primary">
+                    {units.length} {t('projects.units')}
+                  </span>
+                </div>
+                <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {units.slice(0, 6).map((unit: ApiUnit) => {
+                    const unitName = getLocalizedValue(unit.name, language) || t('projectDetails.unit');
+                    const unitImage = resolveProjectImageUrl(unit.imageUrls?.[0]) || DEFAULT_IMAGE;
+
+                    return (
+                      <div key={unit.id} className="overflow-hidden rounded-[20px] border border-brand-divider bg-brand-bg">
+                        <div className="relative aspect-[1.7] bg-brand-primary-soft">
+                          <Image
+                            src={unitImage}
+                            alt={unitName}
+                            fill
+                            sizes="(min-width: 1024px) 360px, 100vw"
+                            draggable={false}
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="p-4">
+                          <div className="flex items-start justify-between gap-3">
+                            <h3 className="line-clamp-2 text-[16px] font-bold text-brand-primary">{unitName}</h3>
+                            <span className="shrink-0 rounded-full bg-white px-3 py-1 text-[11px] font-bold text-brand-primary">
+                              {unit.status || unit.type || t('projectDetails.unit')}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-[15px] font-bold text-brand-primary">
+                            {formatPrice(unit.price, unit.currencyCode || 'EGP') || t('projectDetails.priceOnRequest')}
                           </p>
-                          <p className="mt-1 text-[15px] font-semibold leading-6 text-brand-muted">
-                            {item.value}
-                          </p>
+                          <div className="mt-4 grid grid-cols-3 gap-2 text-[12px] font-semibold text-brand-muted">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2">
+                              <BedDouble size={14} />
+                              {unit.noBedRoom}
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2">
+                              <Bath size={14} />
+                              {unit.noBathRoom}
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-2">
+                              <Ruler size={14} />
+                              {formatNumber(unit.area)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-              </section>
+                {units.length > 6 && (
+                  <p className="mt-4 text-center text-[14px] font-semibold text-brand-muted">
+                    +{units.length - 6} {t('projectDetails.moreUnits')}
+                  </p>
+                )}
+              </motion.section>
+            )}
+          </div>
 
-              <section className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm">
-                <h2 className="text-[22px] font-bold text-brand-primary">
-                  {t('projectDetails.pricing')}
-                </h2>
-                <div className="mt-5 flex flex-col gap-3">
-                  {prices.length > 0 ? (
-                    prices.map((price) => (
-                      <div key={`${price.currency}-${price.id ?? price.minimumPrice}`} className="rounded-[18px] border border-brand-divider bg-brand-bg p-4">
-                        <div className="mb-3 flex items-center justify-between gap-3">
-                          <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[13px] font-bold text-brand-primary shadow-sm">
-                            <CircleDollarSign size={15} className="text-brand-secondary" />
-                            {price.currency}
-                          </span>
-                        </div>
-                        <p className="text-[15px] font-bold leading-7 text-brand-primary">
-                          {getProjectPriceRange(price, t)}
+          <motion.aside variants={itemVariants} className="lg:sticky lg:top-28 lg:self-start">
+            <section className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-[0_18px_55px_rgba(7,44,62,0.08)]">
+              <h2 className="text-[22px] font-bold text-brand-primary">
+                {t('projectDetails.overview')}
+              </h2>
+              <div className="mt-5 grid grid-cols-1 gap-3">
+                {overviewItems.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <div key={item.label} className="flex items-start gap-3 rounded-[18px] bg-brand-bg p-4">
+                      <Icon size={19} className="mt-0.5 shrink-0 text-brand-secondary" />
+                      <div>
+                        <p className="text-[13px] font-bold text-brand-primary">
+                          {item.label}
+                        </p>
+                        <p className="mt-1 text-[15px] font-semibold leading-6 text-brand-muted">
+                          {item.value}
                         </p>
                       </div>
-                    ))
-                  ) : (
-                    <div className="rounded-[18px] border border-dashed border-brand-divider bg-brand-bg p-5 text-center text-[14px] font-semibold text-brand-muted">
-                      {t('projectDetails.priceOnRequest')}
                     </div>
-                  )}
+                  );
+                })}
+                <div className="flex items-start gap-3 rounded-[18px] bg-brand-bg p-4">
+                  <CircleDollarSign size={19} className="mt-0.5 shrink-0 text-brand-secondary" />
+                  <div>
+                    <p className="text-[13px] font-bold text-brand-primary">
+                      {t('projectDetails.startingPrice')}
+                    </p>
+                    <p className="mt-1 text-[15px] font-semibold leading-6 text-brand-muted">
+                      {mainPrice ? getProjectPriceRange(mainPrice, t) : t('projectDetails.priceOnRequest')}
+                    </p>
+                  </div>
                 </div>
-              </section>
-
-              <section className="rounded-[24px] border border-brand-divider bg-white p-6 shadow-sm">
-                <h2 className="text-[22px] font-bold text-brand-primary">
-                  {t('projectDetails.paymentPlans')}
-                </h2>
-                <div className="mt-5 flex flex-col gap-3">
-                  {paymentPlans.length > 0 ? (
-                    paymentPlans.map((plan) => {
-                      const isCash = String(plan.paymentType).toLowerCase() === 'cash';
-                      const status = getPlanStatus(plan.status);
-                      const months = getPlanMonths(plan);
-
-                      return (
-                        <div key={plan.id} className="rounded-[18px] border border-brand-divider bg-brand-bg p-4">
-                          <div className="flex items-start justify-between gap-3">
-                            <div className="flex items-center gap-3">
-                              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-brand-primary shadow-sm">
-                                {isCash ? <Landmark size={18} /> : <CreditCard size={18} />}
-                              </span>
-                              <div>
-                                <h3 className="text-[16px] font-bold text-brand-primary">
-                                  {isCash ? t('projectDetails.cashPayment') : t('projectDetails.installment')}
-                                </h3>
-                                <p className="mt-1 text-[13px] font-semibold text-brand-muted">{status}</p>
-                              </div>
-                            </div>
-                            <CheckCircle2 size={18} className="shrink-0 text-brand-secondary" />
-                          </div>
-                          <div className="mt-4 grid grid-cols-1 gap-2 text-[13px] font-semibold text-brand-muted">
-                            <div className="flex items-center justify-between gap-3">
-                              <span className="inline-flex items-center gap-2">
-                                <WalletCards size={15} />
-                                {t('projectDetails.downPayment')}
-                              </span>
-                              <span className="font-bold text-brand-primary">{plan.installmentDownPayment}%</span>
-                            </div>
-                            {!isCash && (
-                              <div className="flex items-center justify-between gap-3">
-                                <span className="inline-flex items-center gap-2">
-                                  <Clock3 size={15} />
-                                  {t('projectDetails.duration')}
-                                </span>
-                                <span className="font-bold text-brand-primary">
-                                  {months} {t('projectDetails.months')}
-                                </span>
-                              </div>
-                            )}
-                            {plan.commissionRate !== null && (
-                              <div className="flex items-center justify-between gap-3">
-                                <span className="inline-flex items-center gap-2">
-                                  <Percent size={15} />
-                                  {t('projectDetails.commission')}
-                                </span>
-                                <span className="font-bold text-brand-primary">{plan.commissionRate}%</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div className="rounded-[18px] border border-dashed border-brand-divider bg-brand-bg p-5 text-center text-[14px] font-semibold text-brand-muted">
-                      {t('projectDetails.noPaymentPlans')}
-                    </div>
-                  )}
-                </div>
-              </section>
-            </motion.aside>
-          </div>
+              </div>
+            </section>
+          </motion.aside>
         </motion.div>
       </section>
     </div>
