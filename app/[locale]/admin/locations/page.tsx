@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { Camera, Check, Edit2, ImageIcon, Loader2, MapPin, Plus, Search, Star, Trash2, X } from 'lucide-react';
+import { Camera, Check, Edit2, ImageIcon, ListOrdered, Loader2, MapPin, Plus, Search, Star, Trash2, X } from 'lucide-react';
 import {
   createLocation,
   deleteLocation,
@@ -25,6 +25,7 @@ interface LocationForm {
   locationImagePreview: string | null;
   currentImageUrl: string | null;
   isFeature: boolean;
+  displayOrder: number | '';
 }
 
 const EMPTY_FORM: LocationForm = {
@@ -34,6 +35,7 @@ const EMPTY_FORM: LocationForm = {
   locationImagePreview: null,
   currentImageUrl: null,
   isFeature: false,
+  displayOrder: 0,
 };
 
 const LANGUAGES: { key: LanguageKey; label: string; required?: boolean }[] = [
@@ -45,6 +47,16 @@ const LANGUAGES: { key: LanguageKey; label: string; required?: boolean }[] = [
 const getDisplayImage = (location: Location) => resolveLocationImageUrl(location.locationImageUrl || location.imageUrl);
 const getMainLocation = (location: Location) => location.mainLocation || location.city || '-';
 const getSubLocation = (location: Location) => location.subLocation || location.district || '';
+const getDisplayOrder = (location: Location) => location.displayOrder ?? 0;
+const getDisplayOrderRank = (location: Location) => {
+  const order = getDisplayOrder(location);
+  return order > 0 ? order : Number.MAX_SAFE_INTEGER;
+};
+const sortLocationsByDisplayOrder = (items: Location[]) => [...items].sort((a, b) => (
+  getDisplayOrderRank(a) - getDisplayOrderRank(b) ||
+  new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime() ||
+  a.id - b.id
+));
 
 export default function LocationsPage() {
   const [locations, setLocations] = useState<Location[]>([]);
@@ -96,13 +108,13 @@ export default function LocationsPage() {
 
   const filteredLocations = useMemo(() => {
     const term = searchQuery.trim().toLowerCase();
-    if (!term) return locations;
+    if (!term) return sortLocationsByDisplayOrder(locations);
 
-    return locations.filter((location) => (
+    return sortLocationsByDisplayOrder(locations.filter((location) => (
       getMainLocation(location).toLowerCase().includes(term) ||
       getSubLocation(location).toLowerCase().includes(term) ||
       location.country?.toLowerCase().includes(term)
-    ));
+    )));
   }, [locations, searchQuery]);
 
   const notify = (type: 'success' | 'error', message: string) => {
@@ -147,6 +159,7 @@ export default function LocationsPage() {
         locationImagePreview: null,
         currentImageUrl: location.locationImageUrl || location.imageUrl,
         isFeature: location.isFeature,
+        displayOrder: enRes.displayOrder ?? location.displayOrder ?? 0,
       });
       setIsEditing(true);
       setCurrentId(location.id);
@@ -193,6 +206,12 @@ export default function LocationsPage() {
       return;
     }
 
+    const displayOrder = Number(formData.displayOrder);
+    if (!Number.isInteger(displayOrder) || displayOrder < 0) {
+      setFormError('Homepage order must be 0 or a positive whole number.');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const payload = {
@@ -208,6 +227,7 @@ export default function LocationsPage() {
         },
         locationImage: formData.locationImage,
         isFeature: formData.isFeature,
+        displayOrder,
       };
 
       if (isEditing && currentId) {
@@ -367,6 +387,31 @@ export default function LocationsPage() {
                       <input id="location-image-upload" type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
                     </section>
 
+                    <section className="rounded-[20px] border border-gray-100 bg-white p-5 shadow-sm">
+                      <div className="mb-4 flex items-center gap-3">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-primary-soft text-brand-primary">
+                          <ListOrdered size={19} />
+                        </span>
+                        <div>
+                          <h3 className="text-[17px] font-bold text-brand-primary">Homepage Order</h3>
+                          <p className="text-[12px] font-medium text-gray-400">1 shows first. 0 means no priority.</p>
+                        </div>
+                      </div>
+                      <input
+                        type="number"
+                        min={0}
+                        step={1}
+                        value={formData.displayOrder}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          setFormData((prev) => ({ ...prev, displayOrder: value === '' ? '' : Number(value) }));
+                          setFormError('');
+                        }}
+                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-[14px] font-semibold text-brand-primary outline-none transition focus:border-brand-primary/30 focus:ring-4 focus:ring-brand-primary/5"
+                        placeholder="0"
+                      />
+                    </section>
+
                     <button
                       type="button"
                       onClick={() => setFormData((prev) => ({ ...prev, isFeature: !prev.isFeature }))}
@@ -426,12 +471,13 @@ export default function LocationsPage() {
 
         <div className="overflow-hidden rounded-[28px] border border-gray-100 bg-white shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[860px] text-left">
+            <table className="w-full min-w-[980px] text-left">
               <thead className="bg-gray-50/50">
                 <tr className="text-[13px] font-black uppercase text-brand-primary">
                   <th className="px-8 py-5">Image</th>
                   <th className="px-8 py-5">Main Location</th>
                   <th className="px-8 py-5">Sub Location</th>
+                  <th className="px-8 py-5">Homepage Order</th>
                   <th className="px-8 py-5">Featured</th>
                   <th className="px-8 py-5">Created</th>
                   <th className="px-8 py-5 text-right">Actions</th>
@@ -440,13 +486,13 @@ export default function LocationsPage() {
               <tbody className="divide-y divide-gray-50">
                 {loading && locations.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-8 py-16 text-center">
+                    <td colSpan={7} className="px-8 py-16 text-center">
                       <Loader2 className="mx-auto animate-spin text-gray-400" size={32} />
                     </td>
                   </tr>
                 ) : filteredLocations.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-8 py-20 text-center text-gray-400">
+                    <td colSpan={7} className="px-8 py-20 text-center text-gray-400">
                       <p className="text-lg">No locations found.</p>
                     </td>
                   </tr>
@@ -468,6 +514,11 @@ export default function LocationsPage() {
                         <p className="mt-1 text-[12px] font-mono text-gray-400">#{location.id}</p>
                       </td>
                       <td className="px-8 py-5 text-[14px] font-semibold text-gray-500">{getSubLocation(location) || '-'}</td>
+                      <td className="px-8 py-5">
+                        <span className={`inline-flex rounded-full px-3 py-1 text-[12px] font-black ${getDisplayOrder(location) > 0 ? 'bg-brand-primary-soft text-brand-primary' : 'bg-gray-50 text-gray-400'}`}>
+                          {getDisplayOrder(location) > 0 ? getDisplayOrder(location) : 'No priority'}
+                        </span>
+                      </td>
                       <td className="px-8 py-5">
                         <span className={`inline-flex rounded-full px-3 py-1 text-[12px] font-black ${location.isFeature ? 'bg-amber-50 text-amber-600' : 'bg-gray-50 text-gray-400'}`}>
                           {location.isFeature ? 'Featured' : 'Normal'}

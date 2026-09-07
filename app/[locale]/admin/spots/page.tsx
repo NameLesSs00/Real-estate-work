@@ -73,6 +73,11 @@ export default function SpotsPage() {
       (loc.street || '').toLowerCase().includes(q)
     );
   });
+  const displayedLocations = [...filteredLocations].sort((a, b) => {
+    const aOrder = a.displayOrder && a.displayOrder > 0 ? a.displayOrder : Number.MAX_SAFE_INTEGER;
+    const bOrder = b.displayOrder && b.displayOrder > 0 ? b.displayOrder : Number.MAX_SAFE_INTEGER;
+    return aOrder - bOrder || a.id - b.id;
+  });
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-GB', {
@@ -137,7 +142,7 @@ export default function SpotsPage() {
               Retry
             </button>
           </div>
-        ) : filteredLocations.length === 0 ? (
+        ) : displayedLocations.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-2">
             <p className="text-brand-muted font-poppins text-lg">No locations found.</p>
             {searchQuery && (
@@ -154,12 +159,13 @@ export default function SpotsPage() {
                   <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">District</th>
                   <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">Street</th>
                   <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">Country</th>
+                  <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">Order</th>
                   <th className="text-left px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">Created</th>
                   <th className="text-center px-6 py-4 text-[13px] font-semibold text-admin-muted uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-divider">
-                {filteredLocations.map((loc, idx) => (
+                {displayedLocations.map((loc, idx) => (
                   <tr key={loc.id} className="hover:bg-brand-bg transition-colors group">
                     <td className="px-6 py-4 text-[14px] text-brand-muted-light font-medium">
                       {(currentPage - 1) * 10 + idx + 1}
@@ -177,6 +183,9 @@ export default function SpotsPage() {
                     </td>
                     <td className="px-6 py-4 text-[14px] text-admin-muted">
                       {loc.country || <span className="text-brand-divider italic">—</span>}
+                    </td>
+                    <td className="px-6 py-4 text-[14px] text-admin-muted">
+                      {loc.displayOrder && loc.displayOrder > 0 ? loc.displayOrder : <span className="text-brand-divider italic">No priority</span>}
                     </td>
                     <td className="px-6 py-4 text-[13px] text-brand-muted-light">
                       {formatDate(loc.createdAt)}

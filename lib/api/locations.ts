@@ -15,6 +15,7 @@ export interface Location {
   subLocation: string;
   subLocationImageUrl: string | null;
   isFeature: boolean;
+  displayOrder: number;
   imageUrl: string | null;
   country: string;
   city: string;
@@ -48,6 +49,7 @@ export interface CreateLocationPayload {
   subLocation?: LocalizedString;
   locationImage?: File | null;
   isFeature?: boolean;
+  displayOrder?: number;
   city?: LocalizedString;
   district?: LocalizedString;
   street?: string;
@@ -73,6 +75,8 @@ type LocationApiItem = {
   SubLocationImageUrl?: string | null;
   isFeature?: boolean;
   IsFeature?: boolean;
+  displayOrder?: number;
+  DisplayOrder?: number;
   imageUrl?: string | null;
   ImageUrl?: string | null;
   country?: string;
@@ -128,6 +132,7 @@ const emptyLocation = (id: number): Location => ({
   subLocation: '',
   subLocationImageUrl: null,
   isFeature: false,
+  displayOrder: 0,
   imageUrl: null,
   country: '',
   city: '',
@@ -153,6 +158,7 @@ function normalizeLocation(item: LocationApiItem): Location {
     subLocation,
     subLocationImageUrl: item.subLocationImageUrl ?? item.SubLocationImageUrl ?? null,
     isFeature: item.isFeature ?? item.IsFeature ?? false,
+    displayOrder: item.displayOrder ?? item.DisplayOrder ?? 0,
     imageUrl: item.imageUrl ?? item.ImageUrl ?? locationImageUrl,
     country: item.country ?? item.Country ?? '',
     city: item.city ?? item.City ?? mainLocation,
@@ -179,11 +185,12 @@ function buildLocationsUrl(query: LocationsQuery = {}) {
   return `${API_BASE_URL}/api/Locations?${params.toString()}`;
 }
 
-function coerceLocationPayload(payload: CreateLocationPayload): Required<Pick<CreateLocationPayload, 'mainLocation' | 'subLocation' | 'isFeature'>> & Pick<CreateLocationPayload, 'locationImage'> {
+function coerceLocationPayload(payload: CreateLocationPayload): Required<Pick<CreateLocationPayload, 'mainLocation' | 'subLocation' | 'isFeature' | 'displayOrder'>> & Pick<CreateLocationPayload, 'locationImage'> {
   const mainLocation = payload.mainLocation ?? payload.city ?? { en: '', de: '', it: '' };
   const subLocation = payload.subLocation ?? payload.district ?? { en: '', de: '', it: '' };
   const mainEn = mainLocation.en.trim();
   const subEn = subLocation.en.trim();
+  const displayOrder = Number(payload.displayOrder ?? 0);
 
   return {
     mainLocation: {
@@ -198,6 +205,7 @@ function coerceLocationPayload(payload: CreateLocationPayload): Required<Pick<Cr
     },
     locationImage: payload.locationImage ?? null,
     isFeature: payload.isFeature ?? false,
+    displayOrder: Number.isFinite(displayOrder) && displayOrder > 0 ? Math.trunc(displayOrder) : 0,
   };
 }
 
@@ -213,6 +221,7 @@ function buildLocationFormData(payload: CreateLocationPayload | UpdateLocationPa
   formData.append('SubLocation.De', coerced.subLocation.de);
   formData.append('SubLocation.It', coerced.subLocation.it);
   formData.append('IsFeature', String(coerced.isFeature));
+  formData.append('DisplayOrder', String(coerced.displayOrder));
   if (coerced.locationImage) formData.append('LocationImage', coerced.locationImage);
 
   return formData;

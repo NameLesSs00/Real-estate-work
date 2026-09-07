@@ -13,7 +13,15 @@ interface AddSpotModalProps {
   editData?: Location | null;
 }
 
-const EMPTY_FORM = { city: '', district: '', street: '', country: '' };
+interface SpotForm {
+  city: string;
+  district: string;
+  street: string;
+  country: string;
+  displayOrder: number | '';
+}
+
+const EMPTY_FORM: SpotForm = { city: '', district: '', street: '', country: '', displayOrder: 0 };
 
 export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: AddSpotModalProps) {
   useBodyScrollLock(isOpen);
@@ -30,6 +38,7 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
         district: editData.district || '',
         street: editData.street || '',
         country: editData.country || '',
+        displayOrder: editData.displayOrder ?? 0,
       });
     } else {
       setForm(EMPTY_FORM);
@@ -41,13 +50,18 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
 
   const isEditMode = !!editData;
 
-  const handleChange = (field: keyof typeof EMPTY_FORM) =>
+  const handleChange = (field: 'city' | 'district' | 'street' | 'country') =>
     (e: React.ChangeEvent<HTMLInputElement>) =>
       setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
   const handleSubmit = async () => {
     if (!form.city.trim() || !form.district.trim()) {
       setError('City and District are required.');
+      return;
+    }
+    const displayOrder = Number(form.displayOrder);
+    if (!Number.isInteger(displayOrder) || displayOrder < 0) {
+      setError('Homepage order must be 0 or a positive whole number.');
       return;
     }
     setIsLoading(true);
@@ -65,6 +79,7 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
           country: form.country,
           latitude: "",
           longitude: "",
+          displayOrder,
         });
       } else {
         await createLocation({
@@ -74,6 +89,7 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
           country: form.country,
           latitude: "",
           longitude: "",
+          displayOrder,
         });
       }
       onSuccess();
@@ -155,6 +171,20 @@ export default function AddSpotModal({ isOpen, onClose, onSuccess, editData }: A
               placeholder="e.g. Egypt (optional)"
               className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 text-brand-primary placeholder-gray-400"
             />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-brand-primary font-semibold text-[15px]">Homepage Order</label>
+            <input
+              type="number"
+              min={0}
+              step={1}
+              value={form.displayOrder}
+              onChange={(e) => setForm((prev) => ({ ...prev, displayOrder: e.target.value === '' ? '' : Number(e.target.value) }))}
+              placeholder="0"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 text-brand-primary placeholder-gray-400"
+            />
+            <p className="text-[12px] text-brand-muted-light">1 shows first on the homepage. 0 means no priority.</p>
           </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}

@@ -55,9 +55,11 @@ const PopularSpots: React.FC<PopularSpotsProps> = ({ spots }) => {
           className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-[1200px] md:h-[600px]"
         >
           {spots.map((spot, index) => {
-            // First spot gets the large 2x2 area
             const isLarge = index === 0;
-            const imageUrl = resolveLocationImageUrl(spot.imageUrl) || '/assists/PopularSpots/Hurghada.png';
+            const imageUrl = resolveLocationImageUrl(spot.locationImageUrl || spot.imageUrl) || '/assists/PopularSpots/Hurghada.png';
+            const placementClass = isLarge
+              ? 'md:col-start-1 md:row-start-1 md:col-span-2 md:row-span-2'
+              : 'col-span-1 row-span-1';
             
             return (
               <motion.div 
@@ -66,7 +68,7 @@ const PopularSpots: React.FC<PopularSpotsProps> = ({ spots }) => {
                   hidden: { opacity: 0, scale: 0.95 }, 
                   visible: { opacity: 1, scale: 1, transition: { duration: 0.6 } } 
                 }} 
-                className={`group relative overflow-hidden rounded-[24px] shadow-lg ${isLarge ? 'md:col-span-2 md:row-span-2' : 'col-span-1 row-span-1'}`}
+                className={`group relative overflow-hidden rounded-[24px] shadow-lg ${placementClass}`}
               >
                 <Link href={`/${language}/projects?locationId=${spot.id}`} className="block w-full h-full relative">
                   <Image 
