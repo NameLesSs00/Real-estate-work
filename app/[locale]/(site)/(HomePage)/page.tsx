@@ -28,10 +28,10 @@ export default async function Home() {
   return (
     <main className="flex-1">
       <Hero />
-      <BestListings />
-      <HowItWorks />
       <PopularSpots spots={homepageLocations} />
       <FeatureProject />
+      <BestListings />
+      <HowItWorks />
       <Articles />
       <FinestServices />
       <FAQ />
