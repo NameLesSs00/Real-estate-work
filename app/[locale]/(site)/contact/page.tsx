@@ -57,6 +57,7 @@ export default function ContactPage() {
   const infoCards = [
     ...(emailVal ? [{ icon: `${BASE}/message.png`, titleKey: 'contactPage.info.email', content: emailVal, href: `mailto:${emailVal}` }] : []),
     ...((phoneVal || whatsappVal) ? [{ icon: `${BASE}/phone.png`, titleKey: 'contactPage.info.phone', content: phoneVal || whatsappVal!, href: whatsappUrl || '#' }] : []),
+    { icon: `${BASE}/phone.png`, titleKey: 'contactPage.info.phone', content: '+20 12 27978091', href: 'https://wa.me/201227978091' },
     { icon: `${BASE}/locatoin.png`, titleKey: 'contactPage.info.address', content: 'Hurghada, El Kawther', href: 'https://maps.google.com' },
     ...((facebookVal || whatsappUrl) ? [{
       icon: `${BASE}/fire.png`,
@@ -104,9 +105,9 @@ export default function ContactPage() {
               <h2 className="text-[36px] font-radley mb-10 leading-tight">{t('projectDetails.getInTouch') as string}</h2>
 
               <div className="flex flex-col gap-10">
-                {infoCards.map((card) => (
+                {infoCards.map((card, index) => (
                   <motion.div
-                    key={card.titleKey}
+                    key={`${card.titleKey}-${index}`}
                     whileHover={{ x: 5 }}
                     className="flex items-start gap-5 group"
                   >

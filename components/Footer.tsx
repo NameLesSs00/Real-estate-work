@@ -88,6 +88,19 @@ const Footer = () => {
                 </a>
               </li>
             )}
+            <li className="flex items-start gap-4 group">
+              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-brand-secondary transition-colors">
+                <Phone size={16} className="text-brand-secondary group-hover:text-white transition-colors" />
+              </div>
+              <a
+                href="https://wa.me/201227978091"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-brand-secondary transition-colors break-all mt-1"
+              >
+                +20 12 27978091
+              </a>
+            </li>
             {email && (
               <li className="flex items-start gap-4 group">
                 <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-brand-secondary transition-colors">
